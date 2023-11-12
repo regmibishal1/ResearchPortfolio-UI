@@ -11,5 +11,5 @@ import { NavbarComponent } from './Shared/navbar/navbar.component';
 	styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-	title = 'Research Portfolio';
+	title = "Research Portfolio"
 }
