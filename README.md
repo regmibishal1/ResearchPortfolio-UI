@@ -28,7 +28,7 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 
 ### Build for Pages
 
-Run `ng build --output-path docs --base-href https://regmibishal1.github.io/ResearchPortfolio-UI/`
+Run `ng deploy --base-href="https://regmibishal1.github.io/ResearchPortfolio-UI/"` in the terminal. This will build the project and deploy it to the github pages.
 
 ### Further help
 
