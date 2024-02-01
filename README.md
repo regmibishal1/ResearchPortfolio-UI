@@ -1,8 +1,8 @@
 # ResearchPortfolioUI
 
-(Angular Project)
+[Research Portfolio](https://regmibishal1.github.io/ResearchPortfolio-UI/)
 
-This is the UI that will demo most of my research work while in the process improve my undertanding of this framework and tools used along with it.
+This is the UI that will demo most of my research work while in the process improve my understanding of this framework and tools used along with it.
 
 ## Dev Notes
 
