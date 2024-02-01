@@ -1,3 +1,13 @@
+$base-title-font-size: 36px;
+$base-button-font-size: 24px;
+$base-font-size: 18px;
+
+.toolbar-container {
+	display: flex;
+	flex-direction: row;
+	font-size: $base-title-font-size;
+}
+
 .spacer {
 	flex: 1 1 auto;
 }
@@ -8,18 +18,22 @@
 }
 
 .nav-bar-container {
+	display: flex;
+	flex-direction: row;
 	width: 100%;
 	height: 100%;
-	border: 1px solid rgba(0, 0, 0, 0.5);
-}
-
-.sidenav-content {
-	display: flex;
-	height: 100%;
-	align-items: center;
-	justify-content: center;
 }
 
 .sidenav {
-	padding: 20px;
+	min-width: 100px;
+	display: flex;
+	flex-direction: column;
 }
+
+.sidenav-button {
+	padding: 5px;
+	width: 100%;
+	font-size: $base-button-font-size;
+}
+
+

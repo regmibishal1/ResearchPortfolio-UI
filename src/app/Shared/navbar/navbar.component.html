@@ -1,4 +1,4 @@
-<mat-toolbar>
+<mat-toolbar class="toolbar-container" color="primary">
 	<button
 		mat-icon-button
 		class="nav-bar-menu-icon-left"
@@ -12,10 +12,26 @@
 </mat-toolbar>
 <div class="page-content-with-sidebar">
 	<mat-drawer-container class="nav-bar-container" autosize>
-		<mat-drawer #drawer class="sidenav" mode="side"></mat-drawer>
+		<mat-drawer #drawer class="sidenav" mode="side">
+			<button
+				mat-stroked-button
+				class="sidenav-button"
+				[routerLink]="['']"
+				(click)="drawer.toggle()"
+			>
+				Home
+			</button>
+			<button
+				mat-stroked-button
+				class="sidenav-button"
+				[routerLink]="['/about']"
+				(click)="drawer.toggle()"
+			>
+				About
+			</button>
+		</mat-drawer>
 		<div class="page-content">
 			<ng-content></ng-content>
 		</div>
-		</mat-drawer-container>
-
+	</mat-drawer-container>
 </div>
