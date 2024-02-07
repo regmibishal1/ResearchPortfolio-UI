@@ -6,6 +6,13 @@ $base-font-size: 18px;
 	display: flex;
 	flex-direction: row;
 	font-size: $base-title-font-size;
+	background-color: black;
+	color: white;
+}
+
+.logo-button {
+	height: var(--mat-toolbar-standard-height);
+	width: var(--mat-toolbar-standard-height);
 }
 
 .spacer {
@@ -36,4 +43,9 @@ $base-font-size: 18px;
 	font-size: $base-button-font-size;
 }
 
+.page-content {
+	display: flex;
+	height: 100%;
+	width: 100%;
+}
 

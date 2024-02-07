@@ -1,4 +1,4 @@
-<mat-toolbar class="toolbar-container" color="primary">
+<mat-toolbar class="toolbar-container">
 	<button
 		mat-icon-button
 		class="nav-bar-menu-icon-left"
@@ -6,6 +6,16 @@
 		(click)="drawer.toggle()"
 	>
 		<mat-icon>menu</mat-icon>
+	</button>
+	<button
+		mat-stroked-button
+		class="logo-button"
+		[routerLink]="['']"
+	>
+		<img
+			class="logo-button"
+			src="./assets/favicon-trans.png" alt="Main Page Logo"
+		/>
 	</button>
 	<span>Research Portfolio</span>
 	<span class="spacer"></span>
