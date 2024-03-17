@@ -21,4 +21,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           npm install
-          npm run ng -- deploy --base-href="https://regmibishal1.github.io/ResearchPortfolio-UI/"
+          npm run ng deploy --base-href="https://regmibishal1.github.io/ResearchPortfolio-UI/"
