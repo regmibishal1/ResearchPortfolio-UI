@@ -1,5 +1,6 @@
 $base-title-font-size: 36px;
 $base-button-font-size: 24px;
+$base-button-font-size-small: 18px;
 $base-font-size: 18px;
 
 .toolbar-container {
@@ -11,8 +12,8 @@ $base-font-size: 18px;
 }
 
 .logo-button {
-	height: var(--mat-toolbar-standard-height);
-	width: var(--mat-toolbar-standard-height);
+	height: calc(var(--mat-toolbar-standard-height) - 10px);
+	width: calc(var(--mat-toolbar-standard-height) - 10px);
 }
 
 .spacer {
@@ -47,3 +48,18 @@ $base-font-size: 18px;
 	width: 100%;
 }
 
+
+@media only screen and (max-width: 600px) {
+	.title-text {
+		font-size: 24px;
+	}
+
+	.logo-button {
+		height: calc(var(--mat-toolbar-standard-height) - 30px);
+		width: calc(var(--mat-toolbar-standard-height) - 30px);
+	}
+
+	.sidenav-button {
+		font-size: $base-button-font-size-small;
+	}
+}

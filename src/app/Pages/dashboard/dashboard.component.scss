@@ -10,5 +10,6 @@
 }
 
 .page-logo {
-	height: 100%;
+	height: min(75vw, 75vh);
+	width: min(75vw, 75vh);
 }
