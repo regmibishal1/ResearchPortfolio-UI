@@ -19,7 +19,8 @@ jobs:
       - name: Prepare and deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EMAIL: ${{ secrets.EMAIL }}
         run: |
           npm install
           npm install angular-cli-ghpages@2.0.0-beta.2
-          npm run ng deploy --base-href="https://regmibishal1.github.io/ResearchPortfolio-UI/"
+          npm run ng deploy --base-href="https://regmibishal1.github.io/ResearchPortfolio-UI/" --name="regmibishal1" --email="$EMAIL"
