@@ -1,0 +1,37 @@
+<div class="auth-page">
+    <div class="container" [ngClass]="isLoginDivVisible ? 'active' :'' " id="container">
+        <div class="form-container sign-up" >
+            <form>
+                <h1>Create Account</h1>
+                <input type="text" name="firstname" [(ngModel)]="registerObj.firstname" placeholder="First Name">
+				<input type="text" name="lastname" [(ngModel)]="registerObj.lastname" placeholder="Last Name">
+                <input type="email" name="email" [(ngModel)]="registerObj.email" placeholder="Email">
+				<input type="text" name="username" [(ngModel)]="registerObj.username" placeholder="Username">
+                <input type="password" name="password"  [(ngModel)]="registerObj.password" placeholder="Password">
+                <button (click)="onRegister()">Sign Up</button>
+            </form>
+        </div>
+        <div class="form-container sign-in" >
+            <form>
+                <h1>Sign In</h1>
+                <input type="text" name="username" [(ngModel)]="loginObj.username" placeholder="Username">
+                <input type="password" name="password"   [(ngModel)]="loginObj.password" placeholder="Password">
+                <button (click)="onLogin()">Sign In</button>
+            </form>
+        </div>
+        <div class="toggle-container">
+            <div class="toggle">
+                <div class="toggle-panel toggle-left">
+                    <h1>Welcome Back!</h1>
+                    <p>Enter your personal details to use all of site features</p>
+                    <button type="button" class="hidden" id="login" (click)="isLoginDivVisible = false">Sign In</button>
+                </div>
+                <div class="toggle-panel toggle-right">
+                    <h1>Hello, Friend!</h1>
+                    <p>Register with your personal details to use all of site features</p>
+                    <button type="button" class="hidden" id="register" (click)="isLoginDivVisible = true">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

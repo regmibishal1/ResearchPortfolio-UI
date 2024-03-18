@@ -25,14 +25,12 @@ $base-font-size: 18px;
 }
 
 .nav-bar-container {
-	display: flex;
-	flex-direction: row;
 	width: 100%;
 	height: 100%;
 }
 
 .sidenav {
-	min-width: 100px;
+	min-width: 200px;
 	display: flex;
 	flex-direction: column;
 }
