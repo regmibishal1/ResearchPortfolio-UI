@@ -4,7 +4,9 @@
 	align-items: center;
 	justify-content: center;
 	height: 100%;
-	width: 100%;
+	width: 100vw;
+	background-color: #ffde64;
+    background: linear-gradient(to right, #e2e2e2, #ffde64);
 }
 
 .page-logo {

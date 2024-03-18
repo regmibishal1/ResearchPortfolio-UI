@@ -1,7 +1,13 @@
+.wip {
+	margin: 0px;
+	padding: 0px;
+}
+
 .about-me-page {
-	height: calc(100% - var(--mat-toolbar-standard-height));
 	width: calc(100% - 10px);
 	padding: 0px 5px;
+	background-color: #ffde64;
+    background: linear-gradient(to right, #e2e2e2, #ffde64);
 }
 
 .profile-picture {
