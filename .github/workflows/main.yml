@@ -24,5 +24,5 @@ jobs:
           git config --global user.email "$EMAIL"
           git config --global user.name "Bishal Regmi"
           npm install
-          ng add angular-cli-ghpages@2.0.0-beta.2
+          npm run ng add angular-cli-ghpages@2.0.0-beta.2
           npm run ng -- deploy --base-href="https://regmibishal1.github.io/ResearchPortfolio-UI/" --name="regmibishal1" --email="$EMAIL"
