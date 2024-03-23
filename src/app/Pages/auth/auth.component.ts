@@ -8,11 +8,13 @@ import {
 } from './auth.service';
 import { FormsModule } from '@angular/forms';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { finalize } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-auth',
 	standalone: true,
-	imports: [CommonModule, FormsModule],
+	imports: [CommonModule, FormsModule, MatProgressBarModule],
 	templateUrl: './auth.component.html',
 	styleUrl: './auth.component.scss',
 })
@@ -20,11 +22,15 @@ export class AuthComponent {
 	isLoginDivVisible: boolean = true;
 	registerObj: RegisterModel = new RegisterModel();
 	loginObj: LoginModel = new LoginModel();
+	isLoading: boolean = false;
 
 	constructor(private router: Router, private authService: AuthService, private _snackBar: MatSnackBar) {}
 
 	onRegister() {
-		this.authService.register(this.registerObj).subscribe({
+		this.isLoading = true;
+		this.authService.register(this.registerObj).pipe(
+			finalize(() => this.isLoading = false)
+			).subscribe({
 			next: () => {
 				this.openSnackBar('Registration successful!');
 				this.router.navigate(['/']);
@@ -36,7 +42,10 @@ export class AuthComponent {
 	}
 
 	onLogin() {
-		this.authService.login(this.loginObj).subscribe({
+		this.isLoading = true;
+		this.authService.login(this.loginObj).pipe(
+			finalize(() => this.isLoading = false)
+			).subscribe({
 			next: () => {
 				this.openSnackBar('Login successful!');
 				this.router.navigate(['/']);
@@ -45,10 +54,6 @@ export class AuthComponent {
 				this.openSnackBar(error.message);
 			},
 		});
-	}
-
-	onLogout() {
-		this.authService.logout();
 	}
 
 	openSnackBar(message: string) {

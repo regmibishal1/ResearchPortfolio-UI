@@ -1,13 +1,20 @@
 .auth-page{
     background-color: #ffde64;
     background: linear-gradient(to right, #e2e2e2, #ffde64);
-    display: flex;
+	height: 100%;
+	width: 100%;
+
+}
+
+.auth-container {
+	display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-	height: 100%;
-	width: calc(100% - 10px);
 	padding: 0px 5px;
+	height: calc(100% - 4px);
+	width: calc(100% - 10px);
+
 }
 
 .container{
