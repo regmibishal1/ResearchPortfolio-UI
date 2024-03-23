@@ -1,87 +1,60 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { AuthService } from './auth.service';
+import {
+	AuthService,
+	RegisterModel,
+	LoginModel,
+} from './auth.service';
 import { FormsModule } from '@angular/forms';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'app-auth',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './auth.component.html',
-  styleUrl: './auth.component.scss'
+	selector: 'app-auth',
+	standalone: true,
+	imports: [CommonModule, FormsModule],
+	templateUrl: './auth.component.html',
+	styleUrl: './auth.component.scss',
 })
 export class AuthComponent {
+	isLoginDivVisible: boolean = true;
+	registerObj: RegisterModel = new RegisterModel();
+	loginObj: LoginModel = new LoginModel();
 
-	isLoginDivVisible: boolean  = true;
-
-	registerObj: RegisterModel  = new RegisterModel();
-	loginObj: LoginModel  = new LoginModel();
-
-	constructor(private http: HttpClient, private router: Router, private authService: AuthService) { }
+	constructor(private router: Router, private authService: AuthService, private _snackBar: MatSnackBar) {}
 
 	onRegister() {
-		this.http.post<AuthResponse>('http://localhost:8080/api/v1/auth/register', this.registerObj).subscribe((response: AuthResponse) => {
-			this.authService.setAuthToken(response.access_token);
-			this.router.navigate(['/']);
+		this.authService.register(this.registerObj).subscribe({
+			next: () => {
+				this.openSnackBar('Registration successful!');
+				this.router.navigate(['/']);
+			},
+			error: (error: Error) => {
+				this.openSnackBar(error.message);
+			},
 		});
-		this.authService.login();
 	}
 
 	onLogin() {
-		this.http.post<AuthResponse>('http://localhost:8080/api/v1/auth/authenticate', this.loginObj).subscribe((response: AuthResponse) => {
-			this.authService.setAuthToken(response.access_token);
-			this.router.navigate(['/']);
+		this.authService.login(this.loginObj).subscribe({
+			next: () => {
+				this.openSnackBar('Login successful!');
+				this.router.navigate(['/']);
+			},
+			error: (error: Error) => {
+				this.openSnackBar(error.message);
+			},
 		});
-		this.authService.login();
 	}
 
 	onLogout() {
-		this.http.post('http://localhost:8080/api/v1/auth/logout', {}).subscribe((response) => {
-			console.log(response);
-		});
-		console.log('Logout');
-		alert('Logout Success');
 		this.authService.logout();
 	}
 
-}
-
-export class AuthResponse  {
-	access_token: string;
-	refresh_token: string;
-
-	constructor() {
-		this.access_token = "";
-		this.refresh_token = "";
-	}
-
-}
-
-export class RegisterModel  {
-	firstname: string;
-	lastname: string;
-	email: string;
-	username: string;
-	password: string;
-
-	constructor() {
-		this.firstname = "";
-		this.lastname = "";
-		this.email = "";
-		this.username = "";
-		this.password= "";
-	}
-}
-
-export class LoginModel  {
-	username: string;
-	password: string;
-
-	constructor() {
-		this.username = "";
-		this.password = "";
+	openSnackBar(message: string) {
+		this._snackBar.open(message, 'Close', {
+			duration: 5000,
+		});
 	}
 
 }

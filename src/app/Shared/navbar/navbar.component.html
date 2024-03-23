@@ -19,7 +19,7 @@
 	</button>
 	<span class="title-text">Research Portfolio</span>
 	<span class="spacer"></span>
-	<span class="login-menu">
+	<span class="login-menu" *ngIf="!isAuthenticated">
 		<button
 			mat-stroked-button
 			class="login-button"
@@ -28,7 +28,7 @@
 			Login
 		</button>
 	</span>
-	<!-- <span class="user-profile">
+	<span class="user-profile" *ngIf="isAuthenticated">
 		<button
 			mat-stroked-button
 			class="login-button"
@@ -39,10 +39,11 @@
 		<button
 			mat-stroked-button
 			class="login-button"
+			(click)="onLogout()"
 		>
 			Logout
 		</button>
-	</span> -->
+	</span>
 </mat-toolbar>
 <div class="page-content-with-sidebar">
 	<mat-drawer-container class="nav-bar-container" autosize>
