@@ -14,7 +14,6 @@ export class AuthService {
 	private refreshToken = new BehaviorSubject<string>(''); // Default to blank token
 	private apiURL: string = environment.apiBaseUrl + '/auth';
 
-
 	constructor(private http: HttpClient) {}
 
 	getAuthStatus(): Observable<boolean> {
