@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
 	providedIn: 'root',
@@ -11,7 +12,7 @@ export class AuthService {
 	private isAuthenticated = new BehaviorSubject<boolean>(false); // Default to not authenticated
 	private authToken = new BehaviorSubject<string>(''); // Default to blank token
 	private refreshToken = new BehaviorSubject<string>(''); // Default to blank token
-	private apiURL: string = 'http://localhost:8080/api/v1/auth';
+	private apiURL: string = environment.apiBaseUrl + '/auth';
 
 
 	constructor(private http: HttpClient) {}
