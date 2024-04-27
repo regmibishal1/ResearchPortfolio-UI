@@ -32,4 +32,4 @@ jobs:
           git config --global user.email "$EMAIL"
           git config --global user.name "Bishal Regmi"
           sed -i "s|%%REPLACE_ME%%|$API_URL|g" src/environments/environment.prod.ts
-          yarn run ng -- deploy --base-href="https://regmibishal1.github.io/ResearchPortfolio-UI/" --name="regmibishal1" --email="$EMAIL"
+          yarn run ng deploy --base-href="https://regmibishal1.github.io/ResearchPortfolio-UI/" --name="regmibishal1" --email="$EMAIL"
