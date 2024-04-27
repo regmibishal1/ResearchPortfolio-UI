@@ -8,6 +8,10 @@
 // Be sure that you only ever include this mixin once!
 @include mat.core();
 
+// Define a custom gold palette with more hues
+$custom-gold: mat.define-palette(mat.$amber-palette);
+
+
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
@@ -29,7 +33,7 @@ $ResearchPortfolio-UI-theme: mat.define-light-theme(
 		color: (
 			primary: $ResearchPortfolio-UI-primary,
 			accent: $ResearchPortfolio-UI-accent,
-			warn: $ResearchPortfolio-UI-warn,
+			warn: $custom-gold,
 		),
 	)
 );
