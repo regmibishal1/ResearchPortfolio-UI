@@ -15,7 +15,14 @@ jobs:
         with:
           node-version: 20.x
           cache: "npm"
-
+      - name: Run install
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: install
+      - name: Test the app
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: test
       - name: Prepare and deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -25,6 +32,6 @@ jobs:
           git config --global user.email "$EMAIL"
           git config --global user.name "Bishal Regmi"
           sed -i "s|%%REPLACE_ME%%|$API_URL|g" src/environments/environment.prod.ts
-          npm install
-          npm install angular-cli-ghpages@2.0.0-beta.2
-          npm run ng -- deploy --base-href="https://regmibishal1.github.io/ResearchPortfolio-UI/" --name="regmibishal1" --email="$EMAIL"
+          yarn
+          yarn add angular-cli-ghpages@2.0.0-beta.2
+          yarn dev ng -- deploy --base-href="https://regmibishal1.github.io/ResearchPortfolio-UI/" --name="regmibishal1" --email="$EMAIL"
