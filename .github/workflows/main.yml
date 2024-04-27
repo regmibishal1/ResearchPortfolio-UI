@@ -21,7 +21,7 @@ jobs:
           cmd: install
       - name: Test the app
         run: |
-          yarn test --browsers=ChromeHeadlessNoSandbox
+          yarn test --browsers=ChromeHeadlessNoSandbox --single-run
       - name: Prepare and deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
