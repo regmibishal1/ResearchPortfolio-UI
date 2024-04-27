@@ -20,9 +20,8 @@ jobs:
         with:
           cmd: install
       - name: Test the app
-        uses: borales/actions-yarn@v4
-        with:
-          cmd: test
+        run: |
+          yarn test --browsers=ChromeHeadlessNoSandbox
       - name: Prepare and deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
