@@ -1,8 +1,8 @@
 # ResearchPortfolioUI
 
-(Angular Project)
+[Research Portfolio](https://regmibishal1.github.io/ResearchPortfolio-UI/)
 
-This is the UI that will demo most of my research work while in the process improve my undertanding of this framework and tools used along with it.
+This is the UI that will demo most of my research work while in the process improve my understanding of this framework and tools used along with it.
 
 ## Dev Notes
 
@@ -25,6 +25,10 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 ### Running end-to-end tests
 
 Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+
+### Build for Pages
+
+Run `ng deploy --base-href="https://regmibishal1.github.io/ResearchPortfolio-UI/"` in the terminal. This will build the project and deploy it to the github pages.
 
 ### Further help
 
