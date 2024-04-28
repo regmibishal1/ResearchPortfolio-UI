@@ -8,8 +8,9 @@
 		"watch": "ng build --watch --configuration development",
 		"test": "ng test",
 		"test-cli": "ng test --watch=false --browsers=ChromeHeadless --code-coverage",
-		"lint": "ng lint",
-		"prepare": "husky || true"
+		"lint": "ng lint && yarn run pretty",
+		"prepare": "husky || true",
+    "pretty": "prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json}\""
 	},
 	"private": true,
 	"dependencies": {
