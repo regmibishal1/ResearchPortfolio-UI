@@ -1,4 +1,4 @@
 export const environment = {
-	production: true,
-	apiBaseUrl: '%%REPLACE_ME%%'
-  };
+  production: true,
+  apiBaseUrl: '%%REPLACE_ME%%',
+}
