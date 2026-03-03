@@ -5,12 +5,13 @@ import { AuthService, RegisterModel, LoginModel } from './auth.service'
 import { FormsModule } from '@angular/forms'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { MatProgressBarModule } from '@angular/material/progress-bar'
+import { MatIconModule } from '@angular/material/icon'
 import { finalize } from 'rxjs/operators'
 
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatProgressBarModule],
+  imports: [CommonModule, FormsModule, MatProgressBarModule, MatIconModule],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.scss',
 })
