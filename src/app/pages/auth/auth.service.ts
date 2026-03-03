@@ -9,12 +9,24 @@ import { environment } from '../../../environments/environment'
   providedIn: 'root',
 })
 export class AuthService {
-  private isAuthenticated = new BehaviorSubject<boolean>(false) // Default to not authenticated
-  private authToken = new BehaviorSubject<string>('') // Default to blank token
-  private refreshToken = new BehaviorSubject<string>('') // Default to blank token
+  private isAuthenticated = new BehaviorSubject<boolean>(false)
+  private authToken = new BehaviorSubject<string>('')
+  private refreshToken = new BehaviorSubject<string>('')
   private apiURL: string = environment.apiBaseUrl + '/auth'
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.checkInitialAuth()
+  }
+
+  private checkInitialAuth() {
+    const storedToken = localStorage.getItem('access_token')
+    const storedRefresh = localStorage.getItem('refresh_token')
+    if (storedToken) {
+      this.authToken.next(storedToken)
+      this.refreshToken.next(storedRefresh || '')
+      this.isAuthenticated.next(true)
+    }
+  }
 
   getAuthStatus(): Observable<boolean> {
     return this.isAuthenticated.asObservable()
@@ -24,31 +36,39 @@ export class AuthService {
     return this.authToken.asObservable()
   }
 
+  getAuthTokenValue(): string {
+    return this.authToken.value
+  }
+
+  private setSession(response: AuthResponse) {
+    localStorage.setItem('access_token', response.access_token)
+    localStorage.setItem('refresh_token', response.refresh_token)
+    this.authToken.next(response.access_token)
+    this.refreshToken.next(response.refresh_token)
+    this.isAuthenticated.next(true)
+  }
+
   register(data: RegisterModel) {
-    return this.http.post<AuthResponse>(this.apiURL + '/register', data).pipe(
-      tap((response: AuthResponse) => {
-        this.authToken.next(response.access_token)
-        this.refreshToken.next(response.refresh_token)
-        this.isAuthenticated.next(true)
-      }),
+    return this.http.post<AuthResponse>(`${this.apiURL}/register`, data).pipe(
+      tap((response: AuthResponse) => this.setSession(response)),
       catchError(this.handleError)
     )
   }
 
   login(data: LoginModel) {
-    return this.http.post<AuthResponse>(this.apiURL + '/authenticate', data).pipe(
-      tap((response: AuthResponse) => {
-        this.authToken.next(response.access_token)
-        this.refreshToken.next(response.refresh_token)
-        this.isAuthenticated.next(true)
-      }),
+    return this.http.post<AuthResponse>(`${this.apiURL}/authenticate`, data).pipe(
+      tap((response: AuthResponse) => this.setSession(response)),
       catchError(this.handleError)
     )
   }
 
   logout() {
-    return this.http.post<AuthResponse>(this.apiURL + '/logout', {}).pipe(
+    return this.http.post(`${this.apiURL}/logout`, {}).pipe(
       tap(() => {
+        localStorage.removeItem('access_token')
+        localStorage.removeItem('refresh_token')
+        this.authToken.next('')
+        this.refreshToken.next('')
         this.isAuthenticated.next(false)
       }),
       catchError(this.handleError)
