@@ -1,92 +1,123 @@
-<div class="about-me-page">
-  <h1 class="wip">WIP</h1>
-  <p>This page is a work in progress. Check back soon for updates!</p>
-  <h1>About Me</h1>
-  <div class="profile">
-    <img class="profile-picture" src="assets/profile-pic.jpg" alt="Profile Picture" />
-    <div class="description">
-      <p>
-        Welcome! I'm Bishal Regmi, a dedicated developer fueled by passion (and habit) and a
-        relentless drive for excellence. With a comprehensive background in both front-end and
-        back-end development, I navigate the dynamic landscape of web technologies and frameworks
-        with ease (mostly). Embracing a perpetual hunger for knowledge, I thrive on continuous
-        learning and honing my skills. Join me on this exhilarating journey of innovation and
-        creativity as we push the boundaries of what's possible in the digital realm.
-      </p>
-      <p>
-        With a solid foundation in software development, honed through successful projects utilizing
-        React and the .Net Framework, I am committed to continuous growth and excellence in my
-        field. Recognizing the importance of a versatile skill set in today’s dynamic technology
-        landscape, I am currently dedicating my efforts to mastering Angular and Java Spring Boot.
-        This strategic focus is driven by a desire to not only diversify my technical expertise but
-        also to enhance my ability to deliver innovative solutions. My dedication to expanding my
-        knowledge base is a testament to my hardworking nature and professional commitment to
-        staying at the forefront of technological advancements. Through this journey, I aim to
-        further solidify my capabilities in developing high-quality, scalable applications that meet
-        and exceed the evolving needs of the industry.
-      </p>
-    </div>
-  </div>
-  <div class="buffer"></div>
-  <div class="skills">
-    <h2>Skills</h2>
-    <ul class="skills-list">
-      <li>HTML5</li>
-      <li>CSS3</li>
-      <li>JavaScript</li>
-      <li>Angular</li>
-      <li>React</li>
-      <li>Bootstrap</li>
-    </ul>
-  </div>
-  <div class="education">
-    <h2>Education</h2>
-    <div class="education-details">
-      <h3>University of Maryland, Baltimore County</h3>
-      <p>Bachelor's Degree in Computer Science</p>
-      <p>Graduated in Spring 2021, GPA: 4.0</p>
+<div class="about-page">
+  <!-- ===== Header ===== -->
+  <section class="about-header">
+    <h1 class="page-title animate-in">About <span class="gold-text">Me</span></h1>
+    <p class="page-subtitle animate-in animate-in-delay-1">
+      Get to know who I am, what I do, and what drives me
+    </p>
+  </section>
 
-      <h3>University of Maryland, College Park</h3>
-      <p>Master's Degree in Data Science and Analytics</p>
-      <p>Graduated in Summer 2023, GPA: 4.0</p>
+  <!-- ===== Profile Section ===== -->
+  <section class="profile-section animate-in animate-in-delay-2">
+    <div class="profile-card glass">
+      <div class="profile-image-wrapper">
+        <img class="profile-image" src="assets/profile-pic.jpg" alt="Bishal Regmi" />
+        <div class="profile-image-ring"></div>
+      </div>
+      <div class="profile-info">
+        <h2 class="profile-name">Bishal Regmi</h2>
+        <p class="profile-role">Software Engineer & Data Scientist</p>
+        <p class="profile-bio">{{ bio }}</p>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <div class="experience">
-    <h2>Experience</h2>
-    <div class="experience-details">
-      <h3>T.Rowe Price</h3>
-      <p>Software Developer</p>
-      <p>2021 - Present</p>
-      <ul>
-        <li>Developed and maintained responsive web applications</li>
-        <li>Collaborated with designers and back-end developers to implement user interfaces</li>
-        <li>Optimized website performance and accessibility</li>
-      </ul>
-    </div>
-  </div>
+  <!-- ===== Skills Section ===== -->
+  <section class="skills-section">
+    <h2 class="section-title gold-text">Skills & Technologies</h2>
+    <p class="section-subtitle">Tools and technologies I work with daily</p>
 
-  <div class="projects">
-    <h2>Projects</h2>
-    <div class="projects">
-      <h3>Project 1</h3>
-      <p>Description of Project 1</p>
-      <h3>Project 2</h3>
-      <p>Description of Project 2</p>
-      <h3>Project 3</h3>
-      <p>Description of Project 3</p>
+    <div class="skills-categories">
+      <div
+        class="skill-category glass"
+        *ngFor="let category of skillCategories; let i = index"
+        [style.animation-delay]="i * 0.1 + 's'"
+      >
+        <div class="category-header">
+          <mat-icon class="category-icon">{{ category.icon }}</mat-icon>
+          <h3 class="category-name">{{ category.name }}</h3>
+        </div>
+        <div class="category-skills">
+          <span class="skill-badge" *ngFor="let skill of category.skills">{{ skill }}</span>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <div class="interests">
-    <h2>Interests</h2>
-    <div class="interests">
-      <ul>
-        <li>Web development</li>
-        <li>Data Science</li>
-        <li>Artificial Intelligence</li>
-      </ul>
+  <!-- ===== Experience Section ===== -->
+  <section class="timeline-section">
+    <h2 class="section-title gold-text">Experience</h2>
+    <p class="section-subtitle">My professional journey</p>
+
+    <div class="timeline">
+      <div
+        class="timeline-item"
+        *ngFor="let item of experience; let i = index"
+        [style.animation-delay]="i * 0.15 + 's'"
+      >
+        <div class="timeline-marker">
+          <mat-icon>{{ item.icon }}</mat-icon>
+        </div>
+        <div class="timeline-card glass">
+          <div class="timeline-card-header">
+            <div>
+              <h3 class="timeline-title">{{ item.title }}</h3>
+              <p class="timeline-subtitle">{{ item.subtitle }}</p>
+            </div>
+            <span class="timeline-date">{{ item.date }}</span>
+          </div>
+          <ul class="timeline-details">
+            <li *ngFor="let detail of item.description">{{ detail }}</li>
+          </ul>
+        </div>
+      </div>
     </div>
-  </div>
-  <div></div>
+  </section>
+
+  <!-- ===== Education Section ===== -->
+  <section class="timeline-section">
+    <h2 class="section-title gold-text">Education</h2>
+    <p class="section-subtitle">Academic background and achievements</p>
+
+    <div class="timeline">
+      <div
+        class="timeline-item"
+        *ngFor="let item of education; let i = index"
+        [style.animation-delay]="i * 0.15 + 's'"
+      >
+        <div class="timeline-marker">
+          <mat-icon>{{ item.icon }}</mat-icon>
+        </div>
+        <div class="timeline-card glass">
+          <div class="timeline-card-header">
+            <div>
+              <h3 class="timeline-title">{{ item.title }}</h3>
+              <p class="timeline-subtitle">{{ item.subtitle }}</p>
+            </div>
+            <span class="timeline-date">{{ item.date }}</span>
+          </div>
+          <ul class="timeline-details">
+            <li *ngFor="let detail of item.description">{{ detail }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Interests Section ===== -->
+  <section class="interests-section">
+    <h2 class="section-title gold-text">Interests</h2>
+    <p class="section-subtitle">What excites me in tech</p>
+
+    <div class="interests-grid">
+      <div
+        class="interest-card"
+        *ngFor="let interest of interests; let i = index"
+        [style.animation-delay]="i * 0.08 + 's'"
+      >
+        <span class="interest-icon">{{ interest.icon }}</span>
+        <span class="interest-name">{{ interest.name }}</span>
+      </div>
+    </div>
+  </section>
 </div>

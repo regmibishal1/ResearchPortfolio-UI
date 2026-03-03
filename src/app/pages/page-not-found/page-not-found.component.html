@@ -1,4 +1,22 @@
-<div class="page-not-found-page">
-  <h1 class="fourOfour-msg">404</h1>
-  <h1>Page Not Found</h1>
+<div class="not-found-page">
+  <div class="not-found-bg">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+  </div>
+
+  <div class="not-found-content">
+    <h1 class="error-code animate-in">
+      <span class="digit">4</span>
+      <span class="digit zero">0</span>
+      <span class="digit">4</span>
+    </h1>
+    <h2 class="error-title animate-in animate-in-delay-1">Page Not Found</h2>
+    <p class="error-message animate-in animate-in-delay-2">
+      Oops! The page you're looking for doesn't exist or has been moved.
+    </p>
+    <a class="btn-home animate-in animate-in-delay-3" [routerLink]="['']">
+      <mat-icon>home</mat-icon>
+      Back to Home
+    </a>
+  </div>
 </div>

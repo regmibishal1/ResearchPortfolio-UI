@@ -1,7 +1,121 @@
-<div class="dashboard-page">
-  <img
-    class="page-logo"
-    src="./assets/logo_ai_gen.png"
-    alt="Logo for this Research Portfolio Site"
-  />
-</div>
+<!-- ===== Hero Section ===== -->
+<section class="hero-section">
+  <div class="hero-bg">
+    <div class="particle particle-1"></div>
+    <div class="particle particle-2"></div>
+    <div class="particle particle-3"></div>
+    <div class="particle particle-4"></div>
+    <div class="particle particle-5"></div>
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+  </div>
+
+  <div class="hero-content animate-in">
+    <div class="hero-badge animate-in animate-in-delay-1">
+      <span class="badge-dot"></span>
+      <span>Available for opportunities</span>
+    </div>
+    <h1 class="hero-name animate-in animate-in-delay-2">
+      Hi, I'm <span class="gold-text">Bishal Regmi</span>
+    </h1>
+    <p class="hero-title animate-in animate-in-delay-3">Software Engineer & Data Scientist</p>
+    <p class="hero-subtitle animate-in animate-in-delay-4">
+      Building scalable applications and extracting insights from data.
+      <br />Passionate about full-stack development, machine learning, and distributed computing.
+    </p>
+    <div class="hero-actions animate-in animate-in-delay-5">
+      <a class="btn-primary" [routerLink]="['/project']">
+        <mat-icon>code</mat-icon>
+        View Projects
+      </a>
+      <a class="btn-secondary" [routerLink]="['/about']">
+        <mat-icon>person</mat-icon>
+        About Me
+      </a>
+    </div>
+  </div>
+
+  <div class="scroll-indicator animate-in animate-in-delay-5">
+    <div class="scroll-mouse">
+      <div class="scroll-dot"></div>
+    </div>
+    <span>Scroll to explore</span>
+  </div>
+</section>
+
+<!-- ===== Skills Section ===== -->
+<section class="skills-section">
+  <div class="section-container">
+    <h2 class="section-title gold-text">Tech Stack</h2>
+    <p class="section-subtitle">Technologies and tools I work with</p>
+
+    <div class="skills-grid">
+      <div
+        class="skill-chip"
+        *ngFor="let skill of skills; let i = index"
+        [style.animation-delay]="i * 0.05 + 's'"
+      >
+        <span class="skill-icon">{{ skill.icon }}</span>
+        <span class="skill-name">{{ skill.name }}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Featured Projects Section ===== -->
+<section class="featured-section">
+  <div class="section-container">
+    <h2 class="section-title gold-text">Featured Projects</h2>
+    <p class="section-subtitle">A selection of my recent work</p>
+
+    <div class="projects-grid">
+      <a
+        class="project-card glass"
+        *ngFor="let project of featuredProjects; let i = index"
+        [routerLink]="['/project']"
+        [style.animation-delay]="i * 0.1 + 's'"
+      >
+        <div class="project-icon">{{ project.icon }}</div>
+        <h3 class="project-title">{{ project.title }}</h3>
+        <p class="project-desc">{{ project.description }}</p>
+        <div class="project-tags">
+          <span class="tag" *ngFor="let tag of project.tags">{{ tag }}</span>
+        </div>
+        <div class="project-link">
+          <span>View Details</span>
+          <mat-icon>arrow_forward</mat-icon>
+        </div>
+      </a>
+    </div>
+
+    <div class="view-all-container">
+      <a class="btn-primary" [routerLink]="['/project']">
+        View All Projects
+        <mat-icon>arrow_forward</mat-icon>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-brand">
+      <img src="./assets/logo_ai_gen.png" alt="Logo" class="footer-logo" />
+      <span class="footer-name">Bishal Regmi</span>
+    </div>
+    <div class="footer-links">
+      <a
+        *ngFor="let link of socialLinks"
+        [href]="link.url"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="footer-social-link"
+      >
+        <mat-icon>{{ link.icon }}</mat-icon>
+        <span>{{ link.name }}</span>
+      </a>
+    </div>
+    <div class="footer-copy">&copy; {{ currentYear }} Bishal Regmi. All rights reserved.</div>
+  </div>
+</footer>

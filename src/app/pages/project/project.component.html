@@ -1,1 +1,79 @@
-<p>project works!</p>
+<div class="projects-page">
+  <!-- ===== Header ===== -->
+  <section class="projects-header">
+    <h1 class="page-title animate-in">My <span class="gold-text">Projects</span></h1>
+    <p class="page-subtitle animate-in animate-in-delay-1">
+      A showcase of my work in data science, machine learning, and full-stack development
+    </p>
+  </section>
+
+  <!-- ===== Filters ===== -->
+  <section class="filter-section animate-in animate-in-delay-2">
+    <button
+      class="filter-btn"
+      *ngFor="let category of categories"
+      [class.active]="activeFilter === category"
+      (click)="setFilter(category)"
+    >
+      {{ category }}
+    </button>
+  </section>
+
+  <!-- ===== Projects Grid ===== -->
+  <section class="projects-grid-section">
+    <div class="projects-grid">
+      <div
+        class="project-card glass"
+        *ngFor="let project of filteredProjects; let i = index"
+        [style.animation-delay]="i * 0.1 + 's'"
+      >
+        <div class="card-header">
+          <span class="card-icon">{{ project.icon }}</span>
+          <span class="card-category">{{ project.category }}</span>
+        </div>
+        <h3 class="card-title">{{ project.title }}</h3>
+        <p class="card-description">{{ project.description }}</p>
+        <div class="card-tags">
+          <span class="card-tag" *ngFor="let tag of project.tags">{{ tag }}</span>
+        </div>
+        <div class="card-actions">
+          <a
+            *ngIf="project.github"
+            [href]="project.github"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="card-link"
+          >
+            <mat-icon>code</mat-icon>
+            <span>Source</span>
+          </a>
+          <a
+            *ngIf="project.demo"
+            [href]="project.demo"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="card-link card-link-primary"
+          >
+            <mat-icon>open_in_new</mat-icon>
+            <span>Demo</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div class="empty-state" *ngIf="filteredProjects.length === 0">
+      <mat-icon>search_off</mat-icon>
+      <p>No projects found in this category.</p>
+    </div>
+  </section>
+
+  <!-- ===== Coming Soon Note ===== -->
+  <section class="coming-soon">
+    <div class="coming-soon-card glass">
+      <mat-icon>rocket_launch</mat-icon>
+      <h3>More Projects Coming Soon</h3>
+      <p>I'm constantly working on new projects. Check back for updates!</p>
+    </div>
+  </section>
+</div>
