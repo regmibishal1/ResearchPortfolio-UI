@@ -1,20 +1,120 @@
-.page-not-found-page {
-  background-color: #ffde64;
-  background: linear-gradient(to right, #e2e2e2, #ffde64);
+.not-found-page {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
   height: 100%;
-  width: calc(100vw - 10px);
-  padding: 0px 5px;
+  width: 100%;
+  background: var(--bg-primary);
+  overflow: hidden;
 }
 
-.fourOfour-msg {
-  font-size: 300px;
-  color: black;
-  margin: 0px;
-  text-shadow:
-    4px 4px 0px #ffde64,
-    7px 7px 0px #ffbc00;
+.not-found-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.gradient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.3;
+
+  &.orb-1 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(240, 192, 64, 0.3), transparent 70%);
+    top: 10%;
+    left: 20%;
+    animation: float 8s ease-in-out infinite;
+  }
+
+  &.orb-2 {
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(100, 100, 255, 0.15), transparent 70%);
+    bottom: 10%;
+    right: 20%;
+    animation: float 10s ease-in-out infinite reverse;
+  }
+}
+
+.not-found-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 24px;
+}
+
+.error-code {
+  margin: 0 0 16px;
+  line-height: 1;
+  user-select: none;
+}
+
+.digit {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(8rem, 20vw, 16rem);
+  font-weight: 800;
+  color: var(--text-primary);
+  display: inline-block;
+  animation: float 6s ease-in-out infinite;
+  text-shadow: 0 0 60px rgba(240, 192, 64, 0.15);
+
+  &.zero {
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: float 6s ease-in-out infinite 0.3s;
+  }
+}
+
+.error-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 12px;
+}
+
+.error-message {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin: 0 0 32px;
+  max-width: 400px;
+}
+
+.btn-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  background: var(--accent-gradient);
+  color: var(--bg-primary);
+  border-radius: var(--radius-md);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(240, 192, 64, 0.3);
+    color: var(--bg-primary);
+  }
+}
+
+@media (max-width: 768px) {
+  .error-message {
+    font-size: 0.9rem;
+  }
 }

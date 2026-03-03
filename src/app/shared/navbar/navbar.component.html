@@ -1,80 +1,83 @@
-<mat-toolbar class="toolbar-container">
-	<button
-		mat-icon-button
-		class="nav-bar-menu-icon-left"
-		aria-label="icon-button with menu icon"
-		(click)="drawer.toggle()"
-	>
-		<mat-icon>menu</mat-icon>
-	</button>
-	<button
-		mat-stroked-button
-		class="logo-button"
-		[routerLink]="['']"
-	>
-		<img
-			class="logo-button"
-			src="./assets/logo_ai_gen.png" alt="Main Page Logo"
-		/>
-	</button>
-	<span class="title-text">Research Portfolio</span>
-	<span class="spacer"></span>
-	<span class="login-menu" *ngIf="!isAuthenticated">
-		<button
-			mat-stroked-button
-			class="login-button"
-			[routerLink]="['/login']"
-		>
-			Login
-		</button>
-	</span>
-	<span class="user-profile" *ngIf="isAuthenticated">
-		<button
-			mat-stroked-button
-			class="login-button"
-			[routerLink]="['/profile']"
-		>
-			Profile
-		</button>
-		<button
-			mat-stroked-button
-			class="login-button"
-			(click)="onLogout()"
-		>
-			Logout
-		</button>
-	</span>
+<mat-toolbar class="toolbar-container glass">
+  <button
+    mat-icon-button
+    class="nav-menu-btn"
+    aria-label="Toggle navigation menu"
+    (click)="drawer.toggle()"
+  >
+    <mat-icon>menu</mat-icon>
+  </button>
+  <button mat-button class="logo-button" [routerLink]="['']">
+    <img class="logo-img" src="./assets/logo_ai_gen.png" alt="Bishal Regmi Portfolio Logo" />
+  </button>
+  <span class="title-text">Bishal Regmi</span>
+  <span class="spacer"></span>
+
+  <!-- Desktop nav links -->
+  <nav class="desktop-nav">
+    <a
+      mat-button
+      [routerLink]="['']"
+      routerLinkActive="nav-active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      >Home</a
+    >
+    <a mat-button [routerLink]="['/project']" routerLinkActive="nav-active">Projects</a>
+    <a mat-button [routerLink]="['/about']" routerLinkActive="nav-active">About</a>
+  </nav>
+
+  <span class="login-menu" *ngIf="!isAuthenticated">
+    <button mat-stroked-button class="login-btn" [routerLink]="['/login']">Login</button>
+  </span>
+  <span class="user-profile" *ngIf="isAuthenticated">
+    <button mat-stroked-button class="login-btn" [routerLink]="['/profile']">Profile</button>
+    <button mat-stroked-button class="login-btn" (click)="onLogout()">Logout</button>
+  </span>
 </mat-toolbar>
+
 <div class="page-content-with-sidebar">
-	<mat-drawer-container class="nav-bar-container" autosize>
-		<mat-drawer #drawer class="sidenav" mode="side">
-			<button
-				mat-stroked-button
-				class="sidenav-button"
-				[routerLink]="['']"
-				(click)="drawer.toggle()"
-			>
-				Home
-			</button>
-			<button
-				mat-stroked-button
-				class="sidenav-button"
-				[routerLink]="['/project']"
-				(click)="drawer.toggle()"
-			>
-				Projects
-			</button>
-			<button
-				mat-stroked-button
-				class="sidenav-button"
-				[routerLink]="['/about']"
-				(click)="drawer.toggle()"
-			>
-				About
-			</button>
-		</mat-drawer>
-		<div class="page-content">
-			<ng-content></ng-content>
-		</div>
-	</mat-drawer-container>
+  <mat-drawer-container class="nav-bar-container" autosize>
+    <mat-drawer #drawer class="sidenav glass" mode="over">
+      <div class="sidenav-header">
+        <img src="./assets/logo_ai_gen.png" alt="Logo" class="sidenav-logo" />
+        <span class="sidenav-title">Portfolio</span>
+      </div>
+      <div class="sidenav-links">
+        <button
+          mat-button
+          class="sidenav-button"
+          [routerLink]="['']"
+          routerLinkActive="sidenav-active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          (click)="drawer.toggle()"
+        >
+          <mat-icon>home</mat-icon>
+          <span>Home</span>
+        </button>
+        <button
+          mat-button
+          class="sidenav-button"
+          [routerLink]="['/project']"
+          routerLinkActive="sidenav-active"
+          (click)="drawer.toggle()"
+        >
+          <mat-icon>code</mat-icon>
+          <span>Projects</span>
+        </button>
+        <button
+          mat-button
+          class="sidenav-button"
+          [routerLink]="['/about']"
+          routerLinkActive="sidenav-active"
+          (click)="drawer.toggle()"
+        >
+          <mat-icon>person</mat-icon>
+          <span>About</span>
+        </button>
+      </div>
+    </mat-drawer>
+    <div class="page-content">
+      <ng-content></ng-content>
+    </div>
+  </mat-drawer-container>
 </div>
