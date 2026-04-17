@@ -1,7 +1,7 @@
 # ResearchPortfolio-UI
 
 Angular 17 frontend for my personal research portfolio.
-Live at **[regmibishal1.github.io/ResearchPortfolio-UI](https://regmibishal1.github.io/ResearchPortfolio-UI/)**.
+Live at **[bishalregmi.com](https://bishalregmi.com)**.
 
 Displays past projects, research work, and (eventually) interactive model demos backed by the FastAPI service.
 
@@ -9,7 +9,7 @@ Displays past projects, research work, and (eventually) interactive model demos 
 
 - Angular 17 (standalone components) + Angular Material
 - RxJS + HTTP interceptor for JWT auth
-- GitHub Pages for hosting (auto-deploys on merge to `main`)
+- Cloudflare Pages for hosting (auto-deploys on merge to `main`)
 
 ## Companion services
 
@@ -25,18 +25,24 @@ Both self-hosted on a NAS via Cloudflare Tunnel.
 ```bash
 yarn install
 yarn start              # http://localhost:4200
-yarn test               # CI-mode unit tests
-ng build                # production build -> dist/
+yarn test               # unit tests (headless)
+ng build                # production build -> dist/research-portfolio-ui/browser/
 ```
 
 Dev uses `http://localhost:8080/api/v1` for the auth API.
-Production uses `https://auth.bishalregmi.com/api/v1` — configured in `src/environments/environment.prod.ts`.
+Production API URL is injected at build time by Cloudflare Pages via the `API_URL` environment variable (substituted into `src/environments/environment.prod.ts`).
 
-## Deploy
+## Cloudflare Pages build settings
 
-Pushing to `main` triggers the GitHub Pages deploy via the workflow in `.github/workflows`.
-Manual deploy fallback:
+| Setting          | Value                                                                                           |
+| ---------------- | ----------------------------------------------------------------------------------------------- |
+| Build command    | `sed -i "s\|%%REPLACE_ME%%\|$API_URL\|g" src/environments/environment.prod.ts && npm run build` |
+| Output directory | `dist/research-portfolio-ui/browser`                                                            |
+| Node version     | `20`                                                                                            |
 
-```bash
-ng deploy --base-href="https://regmibishal1.github.io/ResearchPortfolio-UI/"
-```
+**Environment variables to set in CF Pages dashboard:**
+
+| Variable       | Value                                 |
+| -------------- | ------------------------------------- |
+| `API_URL`      | `https://auth.bishalregmi.com/api/v1` |
+| `NODE_VERSION` | `20`                                  |

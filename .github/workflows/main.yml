@@ -1,9 +1,9 @@
-name: Deploy to GitHub Pages via angular-cli-ghpages
+name: CI
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
-  build-and-deploy:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -15,21 +15,11 @@ jobs:
         with:
           node-version: 20.x
           cache: "npm"
-      - name: Run install
+
+      - name: Install dependencies
         uses: borales/actions-yarn@v4
         with:
           cmd: install
-      - name: Test the app
-        run: |
-          yarn
-          yarn test --browsers=ChromeHeadlessNoSandbox --watch=false
-      - name: Prepare and deploy
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          EMAIL: ${{ secrets.EMAIL }}
-          API_URL: ${{ secrets.API_URL }}
-        run: |
-          git config --global user.email "$EMAIL"
-          git config --global user.name "Bishal Regmi"
-          sed -i "s|%%REPLACE_ME%%|$API_URL|g" src/environments/environment.prod.ts
-          yarn run ng deploy --base-href="https://regmibishal1.github.io/ResearchPortfolio-UI/" --name="regmibishal1" --email="$EMAIL"
+
+      - name: Run tests
+        run: yarn test --browsers=ChromeHeadlessNoSandbox --watch=false
