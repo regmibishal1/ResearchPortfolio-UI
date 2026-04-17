@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  apiBaseUrl: '%%REPLACE_ME%%',
+  apiBaseUrl: '%%API_URL%%',
+  appUrl: '%%APP_URL%%',
 }
