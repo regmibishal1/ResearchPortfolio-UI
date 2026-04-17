@@ -36,4 +36,4 @@ Dev values are hardcoded in `src/environments/environment.ts`. Production values
 | -------------- | ----------------------------------------------------- |
 | `API_URL`      | Auth API base URL (e.g. `https://<auth-host>/api/v1`) |
 | `APP_URL`      | Public URL of this app                                |
-| `NODE_VERSION` | `20`                                                  |
+| `NODE_VERSION` | `22`                                                  |

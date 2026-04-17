@@ -11,6 +11,10 @@
 npm-debug.log
 yarn-error.log
 
+# Yarn 4 (commit .yarn/releases, ignore cache and install state)
+.yarn/cache
+.yarn/install-state.gz
+
 # IDEs and editors
 .idea/
 .project
