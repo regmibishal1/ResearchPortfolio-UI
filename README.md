@@ -1,39 +1,42 @@
-# ResearchPortfolioUI
+# ResearchPortfolio-UI
 
-[Research Portfolio](https://regmibishal1.github.io/ResearchPortfolio-UI/)
+Angular 17 frontend for my personal research portfolio.
+Live at **[regmibishal1.github.io/ResearchPortfolio-UI](https://regmibishal1.github.io/ResearchPortfolio-UI/)**.
 
-This is the UI that will demo most of my research work while in the process improve my understanding of this framework and tools used along with it.
+Displays past projects, research work, and (eventually) interactive model demos backed by the FastAPI service.
 
-## Dev Notes
+## Stack
 
-### Development server
+- Angular 17 (standalone components) + Angular Material
+- RxJS + HTTP interceptor for JWT auth
+- GitHub Pages for hosting (auto-deploys on merge to `main`)
 
-Run `yarn start` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Companion services
 
-### Code scaffolding
+| Service                   | Repo                        | Hostname               |
+| ------------------------- | --------------------------- | ---------------------- |
+| Auth API (Spring Boot)    | `ResearchPortfolio-AuthAPI` | `auth.bishalregmi.com` |
+| Resource/ML API (FastAPI) | `ResearchPortfolio-FastAPI` | `api.bishalregmi.com`  |
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Both self-hosted on a NAS via Cloudflare Tunnel.
 
-### Build
+## Development
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+```bash
+yarn install
+yarn start              # http://localhost:4200
+yarn test               # CI-mode unit tests
+ng build                # production build -> dist/
+```
 
-### Running unit tests
+Dev uses `http://localhost:8080/api/v1` for the auth API.
+Production uses `https://auth.bishalregmi.com/api/v1` — configured in `src/environments/environment.prod.ts`.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Deploy
 
-Also added another command `yarn test` to run the tests in CI/CD pipelines.
+Pushing to `main` triggers the GitHub Pages deploy via the workflow in `.github/workflows`.
+Manual deploy fallback:
 
-### Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-### Build for Pages
-
-Run `ng deploy --base-href="https://regmibishal1.github.io/ResearchPortfolio-UI/"` in the terminal. This will build the project and deploy it to the github pages.
-
-Upon merging into main or any pipeline run, it should also deploy the changes to github pages. No need to deploy manually.
-
-### Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+```bash
+ng deploy --base-href="https://regmibishal1.github.io/ResearchPortfolio-UI/"
+```
