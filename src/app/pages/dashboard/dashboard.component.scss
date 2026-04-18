@@ -504,3 +504,45 @@
     justify-content: center;
   }
 }
+
+// ===== Live Demo Section =====
+.demo-section {
+  background: var(--bg-secondary);
+  padding: 100px 0;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-accent), transparent);
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+  }
+
+  .section-subtitle {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .demo-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+}

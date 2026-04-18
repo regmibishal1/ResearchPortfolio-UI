@@ -1,0 +1,77 @@
+<mat-card class="explorer-card">
+  <mat-card-header>
+    <mat-card-title>Distribution Explorer</mat-card-title>
+    <mat-card-subtitle>
+      Live samples from the model server — tweak the parameters and hit Sample
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <!-- Controls -->
+    <div class="controls">
+      <mat-form-field appearance="outline" class="dist-select">
+        <mat-label>Distribution</mat-label>
+        <mat-select [(ngModel)]="selectedDistribution" (ngModelChange)="onDistributionChange()">
+          @for (d of distributions; track d.key) {
+            <mat-option [value]="d.key">{{ d.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <div class="params">
+        @for (param of config.params; track param.key) {
+          <div class="param-row">
+            <span class="param-label"
+              >{{ param.label }}:
+              <strong>{{ paramValues[param.key] ?? param.default }}</strong></span
+            >
+            <mat-slider
+              [min]="param.min"
+              [max]="param.max"
+              [step]="param.step"
+              class="param-slider"
+            >
+              <input matSliderThumb [(ngModel)]="paramValues[param.key]" />
+            </mat-slider>
+          </div>
+        }
+
+        <div class="param-row">
+          <span class="param-label"
+            >Samples: <strong>{{ nSamples }}</strong></span
+          >
+          <mat-slider [min]="500" [max]="10000" [step]="500" class="param-slider">
+            <input matSliderThumb [(ngModel)]="nSamples" />
+          </mat-slider>
+        </div>
+      </div>
+
+      <button mat-flat-button color="primary" (click)="sample()" [disabled]="loading">
+        @if (loading) {
+          <mat-spinner diameter="18" />
+        } @else {
+          Sample
+        }
+      </button>
+    </div>
+
+    <!-- Chart -->
+    <div class="chart-wrapper">
+      <canvas #chartCanvas></canvas>
+    </div>
+
+    <!-- Error -->
+    @if (error) {
+      <p class="error-msg">{{ error }}</p>
+    }
+
+    <!-- Stats chips -->
+    @if (result && !loading) {
+      <div class="stats-row">
+        @for (stat of statEntries; track stat.key) {
+          <mat-chip>{{ stat.key }}: {{ stat.value }}</mat-chip>
+        }
+      </div>
+    }
+  </mat-card-content>
+</mat-card>
