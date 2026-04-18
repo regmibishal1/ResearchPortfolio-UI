@@ -25,15 +25,16 @@ Dev values are hardcoded in `src/environments/environment.ts`. Production values
 
 ## Cloudflare Pages build settings
 
-| Setting          | Value                                                                                                                                                                     |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Build command    | `sed -i "s\|%%API_URL%%\|$API_URL\|g" src/environments/environment.prod.ts && sed -i "s\|%%APP_URL%%\|$APP_URL\|g" src/environments/environment.prod.ts && npm run build` |
-| Output directory | `dist/research-portfolio-ui/browser`                                                                                                                                      |
+| Setting          | Value                                                                                                                                                                                                                                                              |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Build command    | `sed -i "s\|%%API_URL%%\|$API_URL\|g" src/environments/environment.prod.ts && sed -i "s\|%%MODEL_API_URL%%\|$MODEL_API_URL\|g" src/environments/environment.prod.ts && sed -i "s\|%%APP_URL%%\|$APP_URL\|g" src/environments/environment.prod.ts && npm run build` |
+| Output directory | `dist/research-portfolio-ui/browser`                                                                                                                                                                                                                               |
 
 **Environment variables (set in CF Pages dashboard):**
 
-| Variable       | Purpose                                               |
-| -------------- | ----------------------------------------------------- |
-| `API_URL`      | Auth API base URL (e.g. `https://<auth-host>/api/v1`) |
-| `APP_URL`      | Public URL of this app                                |
-| `NODE_VERSION` | `22`                                                  |
+| Variable        | Purpose                                               |
+| --------------- | ----------------------------------------------------- |
+| `API_URL`       | Auth API base URL (e.g. `https://<auth-host>/api/v1`) |
+| `MODEL_API_URL` | FastAPI model server base URL                         |
+| `APP_URL`       | Public URL of this app                                |
+| `NODE_VERSION`  | `22`                                                  |

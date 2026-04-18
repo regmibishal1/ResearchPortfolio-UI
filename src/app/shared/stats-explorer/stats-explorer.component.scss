@@ -1,0 +1,83 @@
+.explorer-card {
+  background: #1e1e2e;
+  color: #cdd6f4;
+  border-radius: 12px;
+  padding: 8px;
+
+  mat-card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+  mat-card-subtitle {
+    color: #a6adc8;
+    margin-top: 4px;
+  }
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 16px;
+  margin: 16px 0 8px;
+}
+
+.dist-select {
+  width: 180px;
+  min-width: 160px;
+}
+
+.params {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-width: 220px;
+}
+
+.param-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.param-label {
+  min-width: 160px;
+  font-size: 0.85rem;
+  color: #a6adc8;
+  strong {
+    color: #89b4fa;
+  }
+}
+
+.param-slider {
+  flex: 1;
+}
+
+.chart-wrapper {
+  position: relative;
+  height: 240px;
+  margin: 16px 0 8px;
+  background: #181825;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.stats-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+
+  mat-chip {
+    font-size: 0.78rem;
+    background: #313244;
+    color: #cdd6f4;
+  }
+}
+
+.error-msg {
+  color: #f38ba8;
+  font-size: 0.85rem;
+  margin-top: 8px;
+}
