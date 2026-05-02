@@ -103,7 +103,10 @@ export class StatsExplorerComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.initChart()
-    this.sample()
+    // Defer initial sample to the next macrotask to avoid
+    // ExpressionChangedAfterCheckedError caused by setting `loading = true`
+    // synchronously inside ngAfterViewInit.
+    setTimeout(() => this.sample())
   }
 
   onDistributionChange(): void {
