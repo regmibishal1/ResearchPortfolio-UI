@@ -83,8 +83,8 @@ export class DashboardComponent {
   ]
 
   socialLinks = [
-    { name: 'GitHub', url: 'https://github.com', icon: 'code' },
-    { name: 'LinkedIn', url: 'https://linkedin.com', icon: 'work' },
-    { name: 'Email', url: 'mailto:contact@example.com', icon: 'email' },
+    { name: 'GitHub', url: 'https://github.com/regmibishal1/', icon: 'code' },
+    { name: 'LinkedIn', url: 'https://www.linkedin.com/in/bishalregmi/', icon: 'work' },
+    { name: 'Email', url: 'mailto:bregmi@terpmail.umd.edu', icon: 'email' },
   ]
 }
