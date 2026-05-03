@@ -7,6 +7,7 @@ import { MatSidenavModule } from '@angular/material/sidenav'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { RouterModule } from '@angular/router'
 import { AuthService } from '../../pages/auth/auth.service'
+import { FooterComponent } from '../footer/footer.component'
 import { Subscription } from 'rxjs'
 
 @Component({
@@ -19,6 +20,7 @@ import { Subscription } from 'rxjs'
     MatIconModule,
     MatSidenavModule,
     RouterModule,
+    FooterComponent,
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',

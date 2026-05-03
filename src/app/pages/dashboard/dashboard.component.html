@@ -109,26 +109,3 @@
     <app-stats-explorer />
   </div>
 </section>
-
-<!-- ===== Footer ===== -->
-<footer class="footer">
-  <div class="footer-content">
-    <div class="footer-brand">
-      <img src="./assets/logo_ai_gen.png" alt="Logo" class="footer-logo" />
-      <span class="footer-name">Bishal Regmi</span>
-    </div>
-    <div class="footer-links">
-      <a
-        *ngFor="let link of socialLinks"
-        [href]="link.url"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="footer-social-link"
-      >
-        <mat-icon>{{ link.icon }}</mat-icon>
-        <span>{{ link.name }}</span>
-      </a>
-    </div>
-    <div class="footer-copy">&copy; {{ currentYear }} Bishal Regmi. All rights reserved.</div>
-  </div>
-</footer>
