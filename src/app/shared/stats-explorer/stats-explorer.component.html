@@ -22,8 +22,7 @@
         @for (param of config.params; track param.key) {
           <div class="param-row">
             <span class="param-label"
-              >{{ param.label }}:
-              <strong>{{ paramValues[param.key] ?? param.default }}</strong></span
+              >{{ param.label }}: <strong>{{ paramValues[param.key] }}</strong></span
             >
             <mat-slider
               [min]="param.min"
