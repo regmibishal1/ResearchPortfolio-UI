@@ -177,9 +177,32 @@ export class StatsExplorerComponent implements AfterViewInit, OnDestroy {
           },
         },
         scales: {
-          x: { display: false },
+          x: {
+            display: true,
+            title: {
+              display: true,
+              text: 'Value',
+              color: '#aaa',
+            },
+            ticks: {
+              color: '#aaa',
+              maxTicksLimit: 8,
+              maxRotation: 0,
+              callback: (_val, index) => {
+                const label = this.chart?.data.labels?.[index]
+                if (typeof label !== 'string') return ''
+                return label.split('–')[0]
+              },
+            },
+            grid: { display: false },
+          },
           y: {
             beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Frequency',
+              color: '#aaa',
+            },
             ticks: { color: '#aaa' },
             grid: { color: 'rgba(255,255,255,0.05)' },
           },
