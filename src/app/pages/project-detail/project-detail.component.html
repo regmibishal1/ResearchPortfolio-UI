@@ -1,0 +1,115 @@
+<div class="detail-page" *ngIf="project">
+  <!-- ===== Back Nav ===== -->
+  <nav class="breadcrumb animate-in">
+    <a [routerLink]="['/project']" class="back-link">
+      <mat-icon>arrow_back</mat-icon>
+      <span>All Projects</span>
+    </a>
+  </nav>
+
+  <!-- ===== Hero ===== -->
+  <header class="detail-hero animate-in animate-in-delay-1">
+    <div class="hero-identity">
+      <div class="hero-icon">
+        <img
+          *ngIf="project.logo"
+          [src]="project.logo"
+          [alt]="project.title + ' logo'"
+          class="hero-logo"
+        />
+        <span *ngIf="!project.logo" class="hero-emoji">{{ project.icon }}</span>
+      </div>
+      <div class="hero-meta">
+        <div class="hero-badges">
+          <span class="category-badge">{{ project.category }}</span>
+          <span *ngIf="statusDisplay" class="status-badge" [ngClass]="statusDisplay.cssClass">
+            <span class="status-dot"></span>
+            {{ statusDisplay.label }}
+          </span>
+        </div>
+        <h1 class="hero-title">{{ project.title }}</h1>
+      </div>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="hero-actions">
+      <!-- Multiple repo links (e.g. Research Portfolio) -->
+      <ng-container *ngIf="project.repoLinks && project.repoLinks.length > 0">
+        <a
+          *ngFor="let repo of project.repoLinks"
+          [href]="repo.url"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="action-btn action-btn-secondary"
+        >
+          <mat-icon>code</mat-icon>
+          <span>{{ repo.label }}</span>
+        </a>
+      </ng-container>
+
+      <!-- Single GitHub link -->
+      <a
+        *ngIf="project.github && (!project.repoLinks || project.repoLinks.length === 0)"
+        [href]="project.github"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="action-btn action-btn-secondary"
+      >
+        <mat-icon>code</mat-icon>
+        <span>Source Code</span>
+      </a>
+
+      <!-- Demo link -->
+      <a
+        *ngIf="project.demo"
+        [href]="project.demo"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="action-btn action-btn-primary"
+      >
+        <mat-icon>open_in_new</mat-icon>
+        <span>Live Demo</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- ===== Body ===== -->
+  <div class="detail-body">
+    <!-- About -->
+    <section class="detail-section animate-in animate-in-delay-2">
+      <h2 class="section-heading">
+        <mat-icon>info_outline</mat-icon>
+        About the Project
+      </h2>
+      <p class="detail-description">{{ project.description }}</p>
+    </section>
+
+    <!-- Highlights -->
+    <section
+      class="detail-section animate-in animate-in-delay-3"
+      *ngIf="project.highlights && project.highlights.length > 0"
+    >
+      <h2 class="section-heading">
+        <mat-icon>star_outline</mat-icon>
+        Key Highlights
+      </h2>
+      <ul class="highlights-list">
+        <li *ngFor="let highlight of project.highlights" class="highlight-item">
+          <mat-icon class="check-icon">check_circle_outline</mat-icon>
+          <span>{{ highlight }}</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Tech Stack -->
+    <section class="detail-section animate-in animate-in-delay-4">
+      <h2 class="section-heading">
+        <mat-icon>layers</mat-icon>
+        Tech Stack
+      </h2>
+      <div class="tech-tags">
+        <span class="tech-tag" *ngFor="let tag of project.tags">{{ tag }}</span>
+      </div>
+    </section>
+  </div>
+</div>

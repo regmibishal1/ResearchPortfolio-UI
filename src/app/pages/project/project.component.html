@@ -26,6 +26,11 @@
         class="project-card glass"
         *ngFor="let project of filteredProjects; let i = index"
         [style.animation-delay]="i * 0.1 + 's'"
+        (click)="goToProject(project.id)"
+        role="button"
+        [attr.aria-label]="'View ' + project.title"
+        tabindex="0"
+        (keydown.enter)="goToProject(project.id)"
       >
         <div class="card-header">
           <span class="card-icon">
@@ -40,14 +45,24 @@
           <span class="card-category">{{ project.category }}</span>
         </div>
         <h3 class="card-title">{{ project.title }}</h3>
-        <p class="card-description">{{ project.description }}</p>
+        <p class="card-description">{{ project.shortDescription }}</p>
         <div class="card-tags">
           <span class="card-tag" *ngFor="let tag of project.tags">{{ tag }}</span>
         </div>
-        <div class="card-actions">
+        <div class="card-actions" (click)="$event.stopPropagation()">
           <a
-            *ngIf="project.github"
+            *ngIf="project.github && (!project.repoLinks || project.repoLinks.length === 0)"
             [href]="project.github"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="card-link"
+          >
+            <mat-icon>code</mat-icon>
+            <span>Source</span>
+          </a>
+          <a
+            *ngIf="project.repoLinks && project.repoLinks.length > 0"
+            [href]="project.repoLinks[0].url"
             target="_blank"
             rel="noopener noreferrer"
             class="card-link"
@@ -65,6 +80,13 @@
             <mat-icon>open_in_new</mat-icon>
             <span>Demo</span>
           </a>
+          <span
+            class="card-link card-details-hint"
+            *ngIf="!project.github && !project.repoLinks && !project.demo"
+          >
+            <mat-icon>arrow_forward</mat-icon>
+            <span>View Details</span>
+          </span>
         </div>
       </div>
     </div>
