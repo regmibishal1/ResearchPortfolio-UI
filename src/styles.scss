@@ -105,6 +105,18 @@ a:hover {
   background: var(--text-muted);
 }
 
+/* ===== Angular Material Layout Overrides ===== */
+/* mat-drawer-content has built-in height:100% + overflow:auto which creates
+   a second scroll container alongside the window scrollbar. Force it to flow
+   naturally so the browser window is the single scroll container. */
+.mat-drawer-container {
+  height: auto !important;
+}
+.mat-drawer-content {
+  height: auto !important;
+  overflow-y: visible !important;
+}
+
 /* ===== Utility Classes ===== */
 .glass {
   background: var(--bg-glass);
