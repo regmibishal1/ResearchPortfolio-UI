@@ -347,6 +347,15 @@ $toolbar-height: 64px;
 .project-icon {
   font-size: 2.5rem;
   margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.project-logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  object-fit: contain;
 }
 
 .project-title {
