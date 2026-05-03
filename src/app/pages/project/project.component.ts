@@ -8,6 +8,7 @@ interface Project {
   tags: string[]
   category: string
   icon: string
+  logo?: string
   github?: string
   demo?: string
 }
@@ -32,6 +33,7 @@ export class ProjectComponent {
       tags: ['Next.js', 'FastAPI', 'PostgreSQL', 'pgvector', 'AI/RAG', 'Cloudflare'],
       category: 'Full Stack',
       icon: '🗳️',
+      logo: 'assets/showupmd-logo.svg',
       demo: 'https://showupmd.org',
     },
     {

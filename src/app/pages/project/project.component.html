@@ -28,7 +28,15 @@
         [style.animation-delay]="i * 0.1 + 's'"
       >
         <div class="card-header">
-          <span class="card-icon">{{ project.icon }}</span>
+          <span class="card-icon">
+            <img
+              *ngIf="project.logo"
+              [src]="project.logo"
+              [alt]="project.title + ' logo'"
+              class="card-logo"
+            />
+            <ng-container *ngIf="!project.logo">{{ project.icon }}</ng-container>
+          </span>
           <span class="card-category">{{ project.category }}</span>
         </div>
         <h3 class="card-title">{{ project.title }}</h3>
