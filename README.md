@@ -1,11 +1,11 @@
 # ResearchPortfolio-UI
 
-Angular 17 frontend for my personal research portfolio — Angular Material, JWT auth, Cloudflare Pages hosting.
+Angular 17 frontend for my personal research portfolio — Angular Material, dark theme, Cloudflare Pages hosting.
 
 ## Stack
 
 - Angular 17 (standalone components) + Angular Material
-- RxJS + HTTP interceptor for JWT auth
+- RxJS + HTTP interceptor for JWT auth and API key headers
 - Cloudflare Pages (auto-deploys on merge to `main`)
 
 ## Companion services
@@ -25,16 +25,27 @@ Dev values are hardcoded in `src/environments/environment.ts`. Production values
 
 ## Cloudflare Pages build settings
 
-| Setting          | Value                                                                                                                                                                                                                                                              |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Build command    | `sed -i "s\|%%API_URL%%\|$API_URL\|g" src/environments/environment.prod.ts && sed -i "s\|%%MODEL_API_URL%%\|$MODEL_API_URL\|g" src/environments/environment.prod.ts && sed -i "s\|%%APP_URL%%\|$APP_URL\|g" src/environments/environment.prod.ts && npm run build` |
-| Output directory | `dist/research-portfolio-ui/browser`                                                                                                                                                                                                                               |
+| Setting          | Value                                |
+| ---------------- | ------------------------------------ |
+| Build command    | see below                            |
+| Output directory | `dist/research-portfolio-ui/browser` |
 
-**Environment variables (set in CF Pages dashboard):**
+**Build command** (substitutes `%%PLACEHOLDER%%` tokens in `environment.prod.ts`):
 
-| Variable        | Purpose                                               |
-| --------------- | ----------------------------------------------------- |
-| `API_URL`       | Auth API base URL (e.g. `https://<auth-host>/api/v1`) |
-| `MODEL_API_URL` | FastAPI model server base URL                         |
-| `APP_URL`       | Public URL of this app                                |
-| `NODE_VERSION`  | `22`                                                  |
+```bash
+sed -i "s|%%API_URL%%|$API_URL|g" src/environments/environment.prod.ts \
+  && sed -i "s|%%MODEL_API_URL%%|$MODEL_API_URL|g" src/environments/environment.prod.ts \
+  && sed -i "s|%%APP_URL%%|$APP_URL|g" src/environments/environment.prod.ts \
+  && sed -i "s|%%FASTAPI_API_KEY%%|$FASTAPI_API_KEY|g" src/environments/environment.prod.ts \
+  && npm run build
+```
+
+**Environment variables (set in Cloudflare Pages dashboard):**
+
+| Variable          | Purpose                                                                    |
+| ----------------- | -------------------------------------------------------------------------- |
+| `API_URL`         | Auth API base URL                                                          |
+| `MODEL_API_URL`   | FastAPI model server base URL                                              |
+| `APP_URL`         | Public URL of this app                                                     |
+| `FASTAPI_API_KEY` | Backend API key — copy from server `.env` after running `bootstrap_env.sh` |
+| `NODE_VERSION`    | `22`                                                                       |
