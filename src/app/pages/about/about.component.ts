@@ -6,6 +6,7 @@ interface SkillCategory {
   name: string
   icon: string
   skills: string[]
+  highlight?: string
 }
 
 interface TimelineItem {
@@ -13,6 +14,19 @@ interface TimelineItem {
   subtitle: string
   date: string
   description: string[]
+  icon: string
+}
+
+interface Certification {
+  name: string
+  issuer: string
+  icon: string
+  color: string
+}
+
+interface Stat {
+  value: string
+  label: string
   icon: string
 }
 
@@ -24,71 +38,125 @@ interface TimelineItem {
   styleUrl: './about.component.scss',
 })
 export class AboutComponent {
-  bio = `I'm a Software Engineer and Data Scientist with 4+ years of professional experience building production-grade applications and data-driven solutions at enterprise scale. I hold a B.S. in Computer Science from UMBC and an M.S. in Data Science & Analytics from the University of Maryland, College Park, both with a perfect 4.0 GPA.
+  stats: Stat[] = [
+    { value: '4+', label: 'Years Experience', icon: 'work_history' },
+    { value: '🔐', label: 'Secret Clearance', icon: '' },
+    { value: '☁️', label: 'AWS SA Certified', icon: '' },
+    { value: '💰', label: 'Fintech Domain', icon: '' },
+  ]
 
-At T. Rowe Price, I've architected and delivered full-stack applications, microservice platforms, and data pipelines that serve thousands of internal users and process millions of records daily. I specialize in bridging the gap between software engineering best practices and data science, building systems that are not only analytically powerful but also production-hardened, scalable, and maintainable.
+  bio = `Software Engineer and Data Scientist with 4+ years of experience at T. Rowe Price, building systems that process billions of dollars in daily cash flows and serve thousands of traders. I hold a Secret security clearance and an AWS Solutions Architect certification.
 
-My technical range spans front-end frameworks (Angular, React), backend services (Spring Boot, .NET, FastAPI), distributed computing (Dask, Spark), and cloud-native infrastructure (AWS, Docker, Kubernetes). I thrive on solving complex problems that sit at the intersection of engineering and data.`
+I hold a B.S. in Computer Science (Summa Cum Laude) from UMBC and an M.S. in Data Science from the University of Maryland, College Park.
+
+My work spans large-scale .NET microservice platforms, ML-powered financial forecasting, event-driven AWS architectures, and full-stack React and Angular applications. I thrive at the intersection of rigorous software engineering and applied data science.`
 
   skillCategories: SkillCategory[] = [
     {
       name: 'Languages',
       icon: 'code',
-      skills: ['Python', 'C#', 'JavaScript', 'TypeScript', 'Java', 'C++', 'C', 'R'],
+      skills: [
+        'C#',
+        'Python',
+        'JavaScript',
+        'TypeScript',
+        'Java',
+        'C++',
+        'R',
+        'SQL',
+        'Bash',
+        'HTML',
+        'CSS',
+      ],
     },
     {
       name: 'Frameworks & Libraries',
       icon: 'library_books',
       skills: [
-        '.Net',
-        'Spring',
+        '.NET 8',
+        'ASP.NET Core',
+        'Entity Framework',
+        'Spring Boot',
         'React',
+        'Next.js',
         'Angular',
+        'Redux',
+        'FastAPI',
         'Django',
         'Flask',
+        'Node.js',
+        'Express',
+        'gRPC',
         'PyTorch',
-        'HuggingFace',
-        'Scikit',
-        'NLTK',
-        'Dask',
         'TensorFlow',
-        'Keras',
+        'Scikit-Learn',
+        'HuggingFace',
+        'Pandas',
+        'NumPy',
+        'Matplotlib',
+        'Polly',
+        'FluentValidation',
+        'Autofac',
       ],
     },
     {
-      name: 'Tools & Systems',
-      icon: 'build',
-      skills: ['Kubernetes', 'Docker', 'GIT', 'AWS', 'MySQL', 'PostgreSQL', 'MongoDB'],
-    },
-    {
-      name: 'Soft Skills',
-      icon: 'people',
+      name: 'Cloud & DevOps',
+      icon: 'cloud',
       skills: [
-        'Leadership',
-        'Team Collaboration',
-        'Problem Solving',
-        'Effective Communication',
-        'Mentoring',
-        'Event Management',
-        'Writing',
-        'Public Speaking',
-        'Time Management',
+        'AWS',
+        'Azure',
+        'GCP',
+        'Lambda',
+        'S3',
+        'DynamoDB',
+        'Step Functions',
+        'Fargate',
+        'SNS',
+        'SQS',
+        'API Gateway',
+        'Athena',
+        'Docker',
+        'Kubernetes',
+        'Terraform',
+        'GitHub Actions',
+        'GitLab CI/CD',
+        'Git',
       ],
+      highlight: 'AWS Solutions Architect Certified',
+    },
+    {
+      name: 'Databases',
+      icon: 'storage',
+      skills: ['PostgreSQL', 'MySQL', 'MongoDB', 'SQLite', 'Redis', 'SQL Server'],
+    },
+    {
+      name: 'Testing & Monitoring',
+      icon: 'monitor_heart',
+      skills: ['xUnit', 'FsCheck', 'Jest', 'PyTest', 'Splunk', 'Prometheus', 'Grafana'],
+    },
+  ]
+
+  certifications: Certification[] = [
+    {
+      name: 'AWS Certified Solutions Architect',
+      issuer: 'Amazon Web Services',
+      icon: '☁️',
+      color: '#FF9900',
     },
   ]
 
   education: TimelineItem[] = [
     {
-      title: 'Master of Professional Studies, Data Science',
+      title: 'M.P.S. Data Science & Analytics',
       subtitle: 'University of Maryland, College Park',
-      date: 'August 2021 - August 2023',
+      date: 'Aug 2021 – Aug 2023',
       description: ['GPA: 4.0'],
       icon: 'school',
     },
     {
-      title: 'Bachelor of Science, Computer Science',
+      title: 'B.S. Computer Science — Summa Cum Laude',
       subtitle: 'University of Maryland, Baltimore County',
-      date: 'August 2018 - May 2021',
+      date: 'Aug 2018 – May 2021',
       description: ['GPA: 4.0'],
       icon: 'school',
     },
@@ -98,37 +166,25 @@ My technical range spans front-end frameworks (Angular, React), backend services
     {
       title: 'Software Engineer',
       subtitle: 'T. Rowe Price',
-      date: 'December 2022 - Present',
+      date: 'Dec 2022 – Present',
       description: [
-        'Architected and upgraded the order modeling system, which helped decommission multiple legacy applications, helping reduce trade modeling errors and incidents down by approximately 80%',
-        'Developed a machine learning-powered cash forecasting tool using the Prophet model to predict investment account cashflows, enabling portfolio managers to anticipate liquidity needs',
-        'Designed and implemented a scalable, event-driven API architecture using AWS API Gateway and Node.js Lambdas, integrating SNS and SQS for asynchronous processing',
-        'Created a trade entry smoke test using AWS Lambda and Python that reduced system failure detection time from an hour to less than 2 minutes',
-        'Designed and developed a React single-page application to enhance the trade entry system observability, extending beyond the capabilities of Splunk and OpenTelemetry',
-        'Assumed a leadership role as a Front-End developer and an SME for the order entry system back-end, overseeing all UI-related tasks within the team',
+        'Led a large-scale order modeling system refactor across 10+ repositories and 7 .NET microservices, transitioning from legacy order generation to a modern target-based architecture — shipped with zero trading disruptions',
+        'Drove platform-wide migration to a gRPC-based reference data service for securities, positions, FX rates, and historical orders, decommissioning 2 legacy data providers and reducing cross-service data latency by 30%',
+        'Consolidated multiple business entities and asset types into a unified order modeling system, reducing trade modeling errors by ~80%',
+        'Delivered a Prophet-based cash forecasting tool for hundreds of investment accounts handling billions of dollars in daily cash flows, replacing manual processes with no prior forecasting capability',
+        'Owned a React observability SPA for trade entry used by trading support and traders; wrote a Python Lambda smoke test that cut system failure detection from over an hour to under 2 minutes',
       ],
       icon: 'work',
     },
     {
       title: 'Associate Software Engineer',
-      subtitle: 'T. Rowe Price',
-      date: 'June 2021 - December 2022',
+      subtitle: 'T. Rowe Price (Rotation Program)',
+      date: 'Jun 2021 – Dec 2022',
       description: [
-        'Developed a support UI and tooling for monitoring and managing financial data ingestion into Charles River Trading System using C# and Blazor',
-        'Integrated seamlessly with Amazon Web Services, including Lambda, S3, DynamoDB, and various third-party services',
-        'Incorporated new data pipelines to help feed financial data into Charles River Trading System from new data sources',
+        'Built internal support tooling and a monitoring UI for financial data ingestion into the trading system using C# and Blazor, integrating with AWS Lambda, S3, and DynamoDB to surface stale data before market open',
+        'Designed and delivered new data pipelines expanding the number of financial data sources feeding into the trading system, improving data coverage across asset types',
       ],
       icon: 'work',
-    },
-    {
-      title: "Teacher's Assistant",
-      subtitle: 'University of Maryland',
-      date: 'July 2019 - June 2021',
-      description: [
-        'Conducted teaching sessions and provided support during lectures',
-        'Guided and assisted 150 to 200 students with Python assignments and activities',
-      ],
-      icon: 'school',
     },
   ]
 
@@ -141,5 +197,12 @@ My technical range spans front-end frameworks (Angular, React), backend services
     { name: 'Open Source', icon: '🌐' },
     { name: 'System Design', icon: '🏗️' },
     { name: 'Developer Tooling', icon: '🔧' },
+    { name: 'Financial Technology', icon: '📈' },
+  ]
+
+  contactLinks = [
+    { label: 'GitHub', icon: 'code', url: 'https://github.com/regmibishal1' },
+    { label: 'LinkedIn', icon: 'person', url: 'https://linkedin.com/in/bishalregmi' },
+    { label: 'Email', icon: 'email', url: 'mailto:regmibishal.ai@gmail.com' },
   ]
 }
