@@ -75,7 +75,15 @@
         [routerLink]="['/project']"
         [style.animation-delay]="i * 0.1 + 's'"
       >
-        <div class="project-icon">{{ project.icon }}</div>
+        <div class="project-icon">
+          <img
+            *ngIf="project.logo"
+            [src]="project.logo"
+            [alt]="project.title + ' logo'"
+            class="project-logo"
+          />
+          <ng-container *ngIf="!project.logo">{{ project.icon }}</ng-container>
+        </div>
         <h3 class="project-title">{{ project.title }}</h3>
         <p class="project-desc">{{ project.description }}</p>
         <div class="project-tags">

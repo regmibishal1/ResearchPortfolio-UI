@@ -15,6 +15,7 @@ interface FeaturedProject {
   description: string
   tags: string[]
   icon: string
+  logo?: string
 }
 
 @Component({
@@ -63,6 +64,7 @@ export class DashboardComponent {
         'Full-stack civic app for Maryland voters — district lookup, candidate browser, legislation tracker, and an AI chat assistant powered by a RAG pipeline over real government data.',
       tags: ['Next.js', 'FastAPI', 'PostgreSQL', 'pgvector', 'AI/RAG'],
       icon: '🗳️',
+      logo: 'assets/showupmd-logo.svg',
     },
     {
       title: 'Research Portfolio Platform',
