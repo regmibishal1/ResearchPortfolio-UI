@@ -25,8 +25,6 @@ interface FeaturedProject {
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
-  currentYear = new Date().getFullYear()
-
   skills: Skill[] = [
     { name: 'Python', icon: '🐍', category: 'Languages' },
     { name: 'C#', icon: '🔷', category: 'Languages' },
@@ -80,11 +78,5 @@ export class DashboardComponent {
       tags: ['Python', 'NLP', 'Transformers'],
       icon: '💬',
     },
-  ]
-
-  socialLinks = [
-    { name: 'GitHub', url: 'https://github.com/regmibishal1/', icon: 'code' },
-    { name: 'LinkedIn', url: 'https://www.linkedin.com/in/bishalregmi/', icon: 'work' },
-    { name: 'Email', url: 'mailto:contact@bishalregmi.com', icon: 'email' },
   ]
 }
