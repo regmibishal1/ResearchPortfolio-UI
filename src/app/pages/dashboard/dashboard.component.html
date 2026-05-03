@@ -72,7 +72,7 @@
       <a
         class="project-card glass"
         *ngFor="let project of featuredProjects; let i = index"
-        [routerLink]="['/project']"
+        [routerLink]="['/project', project.id]"
         [style.animation-delay]="i * 0.1 + 's'"
       >
         <div class="project-icon">
@@ -85,7 +85,7 @@
           <ng-container *ngIf="!project.logo">{{ project.icon }}</ng-container>
         </div>
         <h3 class="project-title">{{ project.title }}</h3>
-        <p class="project-desc">{{ project.description }}</p>
+        <p class="project-desc">{{ project.shortDescription }}</p>
         <div class="project-tags">
           <span class="tag" *ngFor="let tag of project.tags">{{ tag }}</span>
         </div>
