@@ -1,7 +1,12 @@
 // ===== Hero Section =====
+// Toolbar is position:fixed at 64px; page-content scroll container is
+// calc(100vh - 64px) tall, so hero must match to avoid clipping the
+// scroll indicator at the bottom.
+$toolbar-height: 64px;
+
 .hero-section {
   position: relative;
-  min-height: 100vh;
+  min-height: calc(100vh - #{$toolbar-height});
   display: flex;
   align-items: center;
   justify-content: center;
@@ -467,7 +472,9 @@
 // ===== Responsive =====
 @media (max-width: 768px) {
   .hero-section {
-    min-height: 90vh;
+    // Mobile browsers have smaller chrome — use dvh so the scroll indicator
+    // isn't clipped by browser UI (address bar, bottom bar).
+    min-height: calc(100dvh - #{$toolbar-height});
   }
 
   .hero-subtitle {
