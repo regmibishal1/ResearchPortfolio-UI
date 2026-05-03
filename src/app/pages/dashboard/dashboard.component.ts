@@ -3,19 +3,12 @@ import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
 import { StatsExplorerComponent } from '../../shared/stats-explorer/stats-explorer.component'
+import { PROJECTS, Project } from '../../data/projects'
 
 interface Skill {
   name: string
   icon: string
   category: string
-}
-
-interface FeaturedProject {
-  title: string
-  description: string
-  tags: string[]
-  icon: string
-  logo?: string
 }
 
 @Component({
@@ -57,35 +50,6 @@ export class DashboardComponent {
     { name: 'MongoDB', icon: '🍃', category: 'Databases' },
   ]
 
-  featuredProjects: FeaturedProject[] = [
-    {
-      title: 'ShowUpMD — Maryland Civic Engagement App',
-      description:
-        'Full-stack civic app for Maryland voters — district lookup, candidate browser, legislation tracker, and an AI chat assistant powered by a RAG pipeline over real government data.',
-      tags: ['Next.js', 'FastAPI', 'PostgreSQL', 'pgvector', 'AI/RAG'],
-      icon: '🗳️',
-      logo: 'assets/showupmd-logo.svg',
-    },
-    {
-      title: 'Research Portfolio Platform',
-      description:
-        'Architected a full-stack platform to showcase data analysis and research, featuring an Angular frontend, Spring Boot authentication, and FastAPI resource server.',
-      tags: ['Angular', 'Spring Boot', 'FastAPI', 'PostgreSQL'],
-      icon: '🌐',
-    },
-    {
-      title: 'MRI Image Classification',
-      description:
-        "Investigated ResNet CNN architectures for early Alzheimer's Disease classification using MRI data, leveraging saliency maps for model interpretation.",
-      tags: ['Python', 'PyTorch', 'ResNet'],
-      icon: '🧠',
-    },
-    {
-      title: 'Empathy & Emotion Prediction',
-      description:
-        'Developed a multimodal transformer model to classify empathy and emotional valence in conversational data for the WASSA 2023 NLP Shared Task.',
-      tags: ['Python', 'NLP', 'Transformers'],
-      icon: '💬',
-    },
-  ]
+  /** Show the first 4 projects as featured on the home page */
+  featuredProjects: Project[] = PROJECTS.slice(0, 4)
 }

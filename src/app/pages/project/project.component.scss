@@ -78,6 +78,7 @@
   flex-direction: column;
   transition: all var(--transition-smooth);
   animation: fadeInUp 0.5s ease-out both;
+  cursor: pointer;
 
   &:hover {
     transform: translateY(-6px);
@@ -85,6 +86,16 @@
     border-color: var(--border-accent);
     background: var(--bg-card-hover);
   }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent-gold);
+    outline-offset: 2px;
+  }
+}
+
+.card-details-hint {
+  color: var(--accent-gold) !important;
+  border-color: var(--border-accent) !important;
 }
 
 .card-header {
