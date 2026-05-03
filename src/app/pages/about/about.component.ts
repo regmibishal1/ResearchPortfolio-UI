@@ -40,12 +40,12 @@ interface Stat {
 export class AboutComponent {
   stats: Stat[] = [
     { value: '4+', label: 'Years Experience', icon: 'work_history' },
-    { value: '🔐', label: 'Secret Clearance', icon: '' },
     { value: '☁️', label: 'AWS SA Certified', icon: '' },
     { value: '💰', label: 'Fintech Domain', icon: '' },
+    { value: '🎓', label: "Dual Master's & B.S.", icon: '' },
   ]
 
-  bio = `Software Engineer and Data Scientist with 4+ years of experience at T. Rowe Price, building systems that process billions of dollars in daily cash flows and serve thousands of traders. I hold a Secret security clearance and an AWS Solutions Architect certification.
+  bio = `Software Engineer and Data Scientist with 4+ years of experience at T. Rowe Price, building systems that process billions of dollars in daily cash flows and serve thousands of traders. I hold an AWS Solutions Architect certification.
 
 I hold a B.S. in Computer Science (Summa Cum Laude) from UMBC and an M.S. in Data Science from the University of Maryland, College Park.
 

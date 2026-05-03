@@ -3,7 +3,7 @@
   <section class="about-header">
     <h1 class="page-title animate-in">About <span class="gold-text">Me</span></h1>
     <p class="page-subtitle animate-in animate-in-delay-1">
-      Software Engineer · Data Scientist · Secret Clearance · AWS Certified
+      Software Engineer · Data Scientist · AWS Certified · Fintech
     </p>
 
     <!-- Quick stats strip -->
@@ -70,16 +70,6 @@
         </div>
         <span class="cert-badge">Certified</span>
       </div>
-
-      <!-- Secret Clearance card -->
-      <div class="cert-card glass cert-clearance">
-        <span class="cert-icon">🔐</span>
-        <div class="cert-info">
-          <h3 class="cert-name">Secret Security Clearance</h3>
-          <p class="cert-issuer">U.S. Government</p>
-        </div>
-        <span class="cert-badge cert-badge-clearance">Active</span>
-      </div>
     </div>
   </section>
 
@@ -135,6 +125,9 @@
             </div>
             <span class="timeline-date">{{ item.date }}</span>
           </div>
+          <ul class="timeline-details">
+            <li *ngFor="let detail of item.description">{{ detail }}</li>
+          </ul>
         </div>
       </div>
     </div>
