@@ -26,6 +26,15 @@ export class ProjectComponent {
 
   projects: Project[] = [
     {
+      title: 'ShowUpMD — Maryland Civic Engagement App',
+      description:
+        'Full-stack civic web app that helps Maryland residents prepare for the 2026 primary election. Enter your address to instantly see your congressional and state legislative districts, current representatives, every candidate on your ballot, and relevant legislation — all in one place. Features "Civvy", an AI chat assistant powered by a RAG pipeline (BGE-M3 embeddings + pgvector) that answers plain-English questions about Maryland bills. Data is ingested from 5+ government sources including the Maryland General Assembly API, OpenStates, Census Geocoder, and the MD State Board of Elections.',
+      tags: ['Next.js', 'FastAPI', 'PostgreSQL', 'pgvector', 'AI/RAG', 'Cloudflare'],
+      category: 'Full Stack',
+      icon: '🗳️',
+      demo: 'https://showupmd.org',
+    },
+    {
       title: 'Research Portfolio Platform',
       description:
         'Architected a full-stack portfolio platform to showcase exploratory data analysis and machine learning research. Designed an Angular frontend integrated with a secure Java Spring Boot authentication API and a Python FastAPI resource server for hosting machine learning models and utilities.',

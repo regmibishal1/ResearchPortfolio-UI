@@ -58,6 +58,13 @@ export class DashboardComponent {
 
   featuredProjects: FeaturedProject[] = [
     {
+      title: 'ShowUpMD — Maryland Civic Engagement App',
+      description:
+        'Full-stack civic app for Maryland voters — district lookup, candidate browser, legislation tracker, and an AI chat assistant powered by a RAG pipeline over real government data.',
+      tags: ['Next.js', 'FastAPI', 'PostgreSQL', 'pgvector', 'AI/RAG'],
+      icon: '🗳️',
+    },
+    {
       title: 'Research Portfolio Platform',
       description:
         'Architected a full-stack platform to showcase data analysis and research, featuring an Angular frontend, Spring Boot authentication, and FastAPI resource server.',
