@@ -5,6 +5,7 @@
 		"ng": "ng",
 		"start": "ng serve",
 		"build": "ng build",
+		"build:cf": "sed -i \"s|%%API_URL%%|$API_URL|g\" src/environments/environment.prod.ts && sed -i \"s|%%MODEL_API_URL%%|$MODEL_API_URL|g\" src/environments/environment.prod.ts && sed -i \"s|%%APP_URL%%|$APP_URL|g\" src/environments/environment.prod.ts && sed -i \"s|%%FASTAPI_API_KEY%%|$FASTAPI_API_KEY|g\" src/environments/environment.prod.ts && yarn build",
 		"watch": "ng build --watch --configuration development",
 		"test": "ng test",
 		"test-cli": "ng test --watch=false --browsers=ChromeHeadless --code-coverage",
