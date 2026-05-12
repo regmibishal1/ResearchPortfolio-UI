@@ -2,6 +2,7 @@ import { Component } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { Router, RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
+import { Title, Meta } from '@angular/platform-browser'
 import { PROJECTS, Project } from '../../data/projects'
 
 @Component({
@@ -18,7 +19,18 @@ export class ProjectComponent {
 
   projects: Project[] = PROJECTS
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    title: Title,
+    meta: Meta
+  ) {
+    title.setTitle('Projects | Bishal Regmi')
+    meta.updateTag({
+      name: 'description',
+      content:
+        "Browse Bishal Regmi's software and research projects spanning full-stack development, machine learning, data science, and civic technology.",
+    })
+  }
 
   get filteredProjects(): Project[] {
     if (this.activeFilter === 'All') return this.projects

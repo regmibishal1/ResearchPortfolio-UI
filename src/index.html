@@ -33,8 +33,36 @@
       content="Software Engineer & Data Scientist. Explore my projects and experience."
     />
 
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://bishalregmi.com/" />
+
     <!-- Theme color for mobile browsers -->
     <meta name="theme-color" content="#0a0a0f" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Person",
+            "@id": "https://bishalregmi.com/#person",
+            "name": "Bishal Regmi",
+            "jobTitle": "Software Engineer & Data Scientist",
+            "url": "https://bishalregmi.com/",
+            "sameAs": ["https://github.com/regmibishal1", "https://linkedin.com/in/bishalregmi"]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://bishalregmi.com/#website",
+            "url": "https://bishalregmi.com/",
+            "name": "Bishal Regmi — Portfolio",
+            "description": "Software Engineer & Data Scientist. Explore my projects, skills, and experience in full-stack development, data science, and machine learning.",
+            "author": { "@id": "https://bishalregmi.com/#person" }
+          }
+        ]
+      }
+    </script>
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="./assets/logo_ai_gen.png" />
