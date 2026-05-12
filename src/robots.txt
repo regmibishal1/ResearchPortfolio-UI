@@ -1,3 +1,8 @@
+# Note: bishalregmi.com also has a robots.txt configured at the Cloudflare level.
+# This file is the authoritative version — Cloudflare Pages serves static files
+# directly from the build output, so this copy is what crawlers actually receive.
+# Keep the two in sync if the Cloudflare-level rule is ever updated.
+
 User-agent: *
 Disallow: /profile
 Disallow: /login
