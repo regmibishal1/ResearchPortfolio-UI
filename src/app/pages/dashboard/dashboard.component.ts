@@ -2,6 +2,7 @@ import { Component } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
+import { Title, Meta } from '@angular/platform-browser'
 import { StatsExplorerComponent } from '../../shared/stats-explorer/stats-explorer.component'
 import { PROJECTS, Project } from '../../data/projects'
 
@@ -19,6 +20,15 @@ interface Skill {
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
+  constructor(title: Title, meta: Meta) {
+    title.setTitle('Bishal Regmi — Software Engineer & Data Scientist')
+    meta.updateTag({
+      name: 'description',
+      content:
+        'Bishal Regmi — Software Engineer & Data Scientist with 4+ years at T. Rowe Price. Explore projects in full-stack development, data science, and machine learning.',
+    })
+  }
+
   skills: Skill[] = [
     { name: 'Python', icon: '🐍', category: 'Languages' },
     { name: 'C#', icon: '🔷', category: 'Languages' },
