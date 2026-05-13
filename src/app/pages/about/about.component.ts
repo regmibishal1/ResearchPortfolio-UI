@@ -1,6 +1,7 @@
 import { Component } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { MatIconModule } from '@angular/material/icon'
+import { Title, Meta } from '@angular/platform-browser'
 
 interface SkillCategory {
   name: string
@@ -38,6 +39,15 @@ interface Stat {
   styleUrl: './about.component.scss',
 })
 export class AboutComponent {
+  constructor(title: Title, meta: Meta) {
+    title.setTitle('About | Bishal Regmi')
+    meta.updateTag({
+      name: 'description',
+      content:
+        'Learn about Bishal Regmi — AWS-certified Software Engineer & Data Scientist at T. Rowe Price, holding dual degrees from UMD and UMBC.',
+    })
+  }
+
   stats: Stat[] = [
     { value: '4+', label: 'Years Experience', icon: 'work_history' },
     { value: '☁️', label: 'AWS SA Certified', icon: '' },

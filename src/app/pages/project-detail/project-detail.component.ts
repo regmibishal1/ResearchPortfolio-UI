@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { ActivatedRoute, Router, RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
+import { Title, Meta } from '@angular/platform-browser'
 import { PROJECTS, Project } from '../../data/projects'
 
 @Component({
@@ -22,7 +23,9 @@ export class ProjectDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private title: Title,
+    private meta: Meta
   ) {}
 
   ngOnInit(): void {
@@ -30,7 +33,10 @@ export class ProjectDetailComponent implements OnInit {
     this.project = PROJECTS.find((p) => p.id === id) ?? null
     if (!this.project) {
       this.router.navigate(['/project'])
+      return
     }
+    this.title.setTitle(`${this.project.title} | Bishal Regmi`)
+    this.meta.updateTag({ name: 'description', content: this.project.shortDescription })
   }
 
   get statusDisplay() {
