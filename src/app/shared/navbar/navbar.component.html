@@ -26,9 +26,6 @@
     <a mat-button [routerLink]="['/about']" routerLinkActive="nav-active">About</a>
   </nav>
 
-  <span class="login-menu" *ngIf="!isAuthenticated">
-    <button mat-stroked-button class="login-btn" [routerLink]="['/login']">Login</button>
-  </span>
   <span class="user-profile" *ngIf="isAuthenticated">
     <button mat-stroked-button class="login-btn" [routerLink]="['/profile']">Profile</button>
     <button mat-stroked-button class="login-btn" (click)="onLogout()">Logout</button>
