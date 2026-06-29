@@ -75,6 +75,18 @@
 
   <!-- ===== Body ===== -->
   <div class="detail-body">
+    <!-- Live embed (opt-in per project via project.liveEmbed) -->
+    <section
+      class="detail-section animate-in animate-in-delay-2"
+      *ngIf="project.liveEmbed === 'world-cup-summary'"
+    >
+      <h2 class="section-heading">
+        <mat-icon>insights</mat-icon>
+        Live Snapshot
+      </h2>
+      <app-world-cup-summary></app-world-cup-summary>
+    </section>
+
     <!-- About -->
     <section class="detail-section animate-in animate-in-delay-2">
       <h2 class="section-heading">

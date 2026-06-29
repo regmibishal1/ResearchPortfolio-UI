@@ -1,0 +1,286 @@
+<div class="wc-page">
+  <!-- ===== Back link ===== -->
+  <nav class="breadcrumb">
+    <a [routerLink]="['/project', 'world-cup-prediction']" class="back-link">
+      <mat-icon>arrow_back</mat-icon>
+      <span>Project overview</span>
+    </a>
+  </nav>
+
+  <!-- ===== Hero ===== -->
+  <header class="wc-hero">
+    <div class="hero-text">
+      <span class="hero-eyebrow">Live Predictions</span>
+      <h1>FIFA World Cup 2026</h1>
+      <p class="hero-sub">
+        Calibrated XGBoost + 2M-simulation Monte Carlo, refreshed daily. Played group-stage matches
+        are locked into every simulation.
+      </p>
+    </div>
+
+    <div class="hero-meta" *ngIf="latest as l">
+      <div class="meta-pill">
+        <span class="meta-label">As of</span>
+        <span class="meta-value">{{ l.run.as_of_date | date: 'longDate' }}</span>
+      </div>
+      <div class="meta-pill">
+        <span class="meta-label">Simulations</span>
+        <span class="meta-value">{{ l.run.n_simulations | number }}</span>
+      </div>
+      <div class="meta-pill">
+        <span class="meta-label">Matches locked</span>
+        <span class="meta-value">{{ l.run.n_played_matches_locked }}</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== Loading ===== -->
+  <div class="state-block" *ngIf="loading">
+    <mat-spinner diameter="36"></mat-spinner>
+    <span>Loading predictions...</span>
+  </div>
+
+  <!-- ===== Error ===== -->
+  <div class="state-block state-error" *ngIf="error && !loading">
+    <mat-icon>error_outline</mat-icon>
+    <span>{{ error }}</span>
+  </div>
+
+  <!-- ===== Content ===== -->
+  <ng-container *ngIf="!loading && !error">
+    <mat-tab-group class="wc-tabs" animationDuration="200ms" mat-stretch-tabs="false">
+      <!-- ─── Leaderboard ─── -->
+      <mat-tab label="Leaderboard">
+        <section class="panel">
+          <p class="panel-sub">
+            Probability of reaching each tournament stage. Sorted by championship odds.
+          </p>
+          <div class="leaderboard-wrap">
+            <table class="leaderboard">
+              <thead>
+                <tr>
+                  <th class="rank-col">#</th>
+                  <th class="team-col">Team</th>
+                  <th>Winner</th>
+                  <th>Final</th>
+                  <th>Semi</th>
+                  <th>QF</th>
+                  <th>R16</th>
+                  <th>R32</th>
+                  <th class="elo-col">Elo</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of latest?.leaderboard; let i = index; trackBy: trackByTeam">
+                  <td class="rank-col">{{ i + 1 }}</td>
+                  <td class="team-col">{{ row.team }}</td>
+                  <td class="pct-cell pct-winner">
+                    <span class="bar" [style.width.%]="row.winner_pct * 5"></span>
+                    <span class="pct-text">{{ row.winner_pct | number: '1.2-2' }}%</span>
+                  </td>
+                  <td>{{ row.final_pct | number: '1.1-1' }}%</td>
+                  <td>{{ row.sf_pct | number: '1.1-1' }}%</td>
+                  <td>{{ row.qf_pct | number: '1.1-1' }}%</td>
+                  <td>{{ row.r16_pct | number: '1.1-1' }}%</td>
+                  <td>{{ row.r32_pct | number: '1.1-1' }}%</td>
+                  <td class="elo-col">{{ row.elo | number: '1.0-0' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </mat-tab>
+
+      <!-- ─── Bracket ─── -->
+      <mat-tab label="Bracket">
+        <section class="panel">
+          <p class="panel-sub">
+            Most-probable path through the tournament. Lock-ins from played matches feed into each
+            downstream prediction.
+          </p>
+
+          <h3 class="bracket-section-title">Knockout bracket</h3>
+          <div class="bracket-scroll">
+            <div class="bracket" *ngIf="bracketHalves && bracket">
+              <!-- ── LEFT HALF ── -->
+              <div class="round round-r32">
+                <div class="round-label">Round of 32</div>
+                <div class="match" *ngFor="let m of bracketHalves.left.r32; trackBy: trackByPair">
+                  <div class="team" [class.team-winner]="advancers.r32.has(m[0])">
+                    <span class="team-name">{{ m[0] }}</span>
+                  </div>
+                  <div class="team" [class.team-winner]="advancers.r32.has(m[1])">
+                    <span class="team-name">{{ m[1] }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="round round-r16">
+                <div class="round-label">Round of 16</div>
+                <div class="match" *ngFor="let m of bracketHalves.left.r16; trackBy: trackByPair">
+                  <div class="team" [class.team-winner]="advancers.r16.has(m[0])">
+                    <span class="team-name">{{ m[0] }}</span>
+                  </div>
+                  <div class="team" [class.team-winner]="advancers.r16.has(m[1])">
+                    <span class="team-name">{{ m[1] }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="round round-qf">
+                <div class="round-label">Quarter-final</div>
+                <div class="match" *ngFor="let m of bracketHalves.left.qf; trackBy: trackByPair">
+                  <div class="team" [class.team-winner]="advancers.qf.has(m[0])">
+                    <span class="team-name">{{ m[0] }}</span>
+                  </div>
+                  <div class="team" [class.team-winner]="advancers.qf.has(m[1])">
+                    <span class="team-name">{{ m[1] }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="round round-sf">
+                <div class="round-label">Semi-final</div>
+                <div class="match" *ngFor="let m of bracketHalves.left.sf; trackBy: trackByPair">
+                  <div class="team" [class.team-winner]="advancers.sf.has(m[0])">
+                    <span class="team-name">{{ m[0] }}</span>
+                  </div>
+                  <div class="team" [class.team-winner]="advancers.sf.has(m[1])">
+                    <span class="team-name">{{ m[1] }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ── CENTER: FINAL + CHAMPION ── -->
+              <div class="round round-final">
+                <div class="round-label">Final</div>
+                <div class="match match-final">
+                  <div
+                    class="team"
+                    [class.team-winner]="bracket.final_pair[0] === bracket.champion"
+                  >
+                    <span class="team-name">{{ bracket.final_pair[0] }}</span>
+                  </div>
+                  <div
+                    class="team"
+                    [class.team-winner]="bracket.final_pair[1] === bracket.champion"
+                  >
+                    <span class="team-name">{{ bracket.final_pair[1] }}</span>
+                  </div>
+                </div>
+                <div class="champ-pill">
+                  <mat-icon class="trophy">emoji_events</mat-icon>
+                  <div>
+                    <span class="champ-label">Predicted Champion</span>
+                    <span class="champ-name">{{ bracket.champion }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ── RIGHT HALF (mirrored) ── -->
+              <div class="round round-sf">
+                <div class="round-label">Semi-final</div>
+                <div class="match" *ngFor="let m of bracketHalves.right.sf; trackBy: trackByPair">
+                  <div class="team" [class.team-winner]="advancers.sf.has(m[0])">
+                    <span class="team-name">{{ m[0] }}</span>
+                  </div>
+                  <div class="team" [class.team-winner]="advancers.sf.has(m[1])">
+                    <span class="team-name">{{ m[1] }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="round round-qf">
+                <div class="round-label">Quarter-final</div>
+                <div class="match" *ngFor="let m of bracketHalves.right.qf; trackBy: trackByPair">
+                  <div class="team" [class.team-winner]="advancers.qf.has(m[0])">
+                    <span class="team-name">{{ m[0] }}</span>
+                  </div>
+                  <div class="team" [class.team-winner]="advancers.qf.has(m[1])">
+                    <span class="team-name">{{ m[1] }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="round round-r16">
+                <div class="round-label">Round of 16</div>
+                <div class="match" *ngFor="let m of bracketHalves.right.r16; trackBy: trackByPair">
+                  <div class="team" [class.team-winner]="advancers.r16.has(m[0])">
+                    <span class="team-name">{{ m[0] }}</span>
+                  </div>
+                  <div class="team" [class.team-winner]="advancers.r16.has(m[1])">
+                    <span class="team-name">{{ m[1] }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="round round-r32">
+                <div class="round-label">Round of 32</div>
+                <div class="match" *ngFor="let m of bracketHalves.right.r32; trackBy: trackByPair">
+                  <div class="team" [class.team-winner]="advancers.r32.has(m[0])">
+                    <span class="team-name">{{ m[0] }}</span>
+                  </div>
+                  <div class="team" [class.team-winner]="advancers.r32.has(m[1])">
+                    <span class="team-name">{{ m[1] }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3 class="bracket-section-title">Group winners</h3>
+          <div class="groups-grid" *ngIf="bracket">
+            <div class="group-card" *ngFor="let g of groupKeys; trackBy: trackByGroup">
+              <span class="group-label">Group {{ g }}</span>
+              <ol class="group-list">
+                <li>{{ bracket!.group_winners[g][0] }}</li>
+                <li>{{ bracket!.group_winners[g][1] }}</li>
+              </ol>
+            </div>
+          </div>
+
+          <h3 class="bracket-section-title">Best 8 third-placed teams</h3>
+          <div class="thirds-row" *ngIf="bracket">
+            <span class="third-chip" *ngFor="let t of bracket.best_thirds">{{ t }}</span>
+          </div>
+        </section>
+      </mat-tab>
+
+      <!-- ─── History ─── -->
+      <mat-tab label="History">
+        <section class="panel">
+          <p class="panel-sub">
+            Championship probability over time for the top 10 teams as of the latest snapshot. Each
+            point is one daily prediction run.
+          </p>
+          <div class="chart-wrapper">
+            <canvas #historyCanvas></canvas>
+          </div>
+        </section>
+      </mat-tab>
+
+      <!-- ─── Played matches ─── -->
+      <mat-tab label="Played">
+        <section class="panel">
+          <p class="panel-sub">
+            Group-stage results that have been locked into every simulation in the latest run.
+          </p>
+          <div class="matches-day" *ngFor="let day of matchesByDate; trackBy: trackByDate">
+            <h4 class="day-label">{{ day.date | date: 'mediumDate' }}</h4>
+            <div class="matches-list">
+              <div class="match-card" *ngFor="let m of day.matches; trackBy: trackByMatch">
+                <span class="match-group" *ngIf="m.group_name"> Group {{ m.group_name }} </span>
+                <span class="match-teams">
+                  {{ m.home_team }}
+                  <strong>{{ m.home_score }} - {{ m.away_score }}</strong>
+                  {{ m.away_team }}
+                </span>
+              </div>
+            </div>
+          </div>
+          <p *ngIf="matchesByDate.length === 0" class="empty-msg">No matches locked in yet.</p>
+        </section>
+      </mat-tab>
+    </mat-tab-group>
+  </ng-container>
+</div>

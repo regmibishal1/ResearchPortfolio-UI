@@ -29,9 +29,41 @@ export interface Project {
   /** Bullet-point highlights shown on the detail page */
   highlights?: string[]
   status?: 'live' | 'in-progress' | 'research'
+  /**
+   * Opt-in identifier for a live-data widget rendered above the About
+   * section on the detail page. The detail-page component switches on
+   * this value to render the matching embed component.
+   */
+  liveEmbed?: 'world-cup-summary'
 }
 
 export const PROJECTS: Project[] = [
+  {
+    id: 'world-cup-prediction',
+    title: 'World Cup 2026 Live Prediction Engine',
+    shortDescription:
+      'Calibrated XGBoost + 2M-simulation Monte Carlo pipeline that predicts the 2026 FIFA World Cup. Auto-refreshes daily; played group-stage matches are locked into every simulation.',
+    description:
+      'End-to-end machine-learning system that forecasts the 2026 FIFA World Cup. Trained a calibrated XGBoost classifier on ~12,000 international matches since 2014 with positional FIFA-rating features, Elo ratings dating back to 1872, rolling form, and tournament-weighted sample weights. Probabilities are isotonically calibrated and fed into a Monte Carlo simulator that runs 2 million tournaments, bridging classification probabilities to score distributions via a Poisson xG solver. The pipeline updates daily during the tournament: every completed group-stage match is locked into every subsequent simulation, sharpening predictions as the bracket unfolds. Each daily snapshot is versioned in Postgres so the UI can show how predictions evolve over time.',
+    tags: ['Python', 'XGBoost', 'FastAPI', 'PostgreSQL', 'Angular', 'Chart.js'],
+    category: 'Machine Learning',
+    icon: '⚽',
+    repoLinks: [
+      { label: 'FastAPI Server', url: 'https://github.com/regmibishal1/ResearchPortfolio-FastAPI' },
+      { label: 'Angular UI', url: 'https://github.com/regmibishal1/ResearchPortfolio-UI' },
+    ],
+    demo: '/world-cup',
+    liveEmbed: 'world-cup-summary',
+    status: 'live',
+    highlights: [
+      'Calibrated XGBoost multi-class model on win/draw/loss with isotonic probability calibration',
+      'Nine orthogonal features: Elo difference, positional squad strength (GK/DEF/MID/ATT), rolling form, neutral-venue flag',
+      '2M Monte Carlo simulations per snapshot, parallelised across CPU cores with optional CuPy GPU acceleration',
+      'Poisson xG solver maps 3-class probabilities to realistic scorelines for FIFA group-stage tiebreakers',
+      'Daily auto-refresh: completed matches override Poisson sampling so predictions sharpen as the tournament unfolds',
+      'Per-snapshot versioning in Postgres with isolated read-only schema role for the public read endpoints',
+    ],
+  },
   {
     id: 'showupmd',
     title: 'ShowUpMD — Maryland Civic Engagement App',
