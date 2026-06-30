@@ -1,0 +1,45 @@
+<section class="wc-summary">
+  <header class="summary-header">
+    <div>
+      <span class="eyebrow">Live Snapshot</span>
+      <h3 class="summary-title">Top 5 by championship probability</h3>
+    </div>
+    <a [routerLink]="['/world-cup']" class="cta">
+      <span>Open full dashboard</span>
+      <mat-icon>arrow_forward</mat-icon>
+    </a>
+  </header>
+
+  <div class="state" *ngIf="loading">
+    <mat-spinner diameter="22"></mat-spinner>
+    <span>Loading latest run...</span>
+  </div>
+
+  <div class="state state-error" *ngIf="error && !loading">
+    <mat-icon>cloud_off</mat-icon>
+    <span>{{ error }}</span>
+  </div>
+
+  <ng-container *ngIf="!loading && !error && data as d">
+    <div class="meta-line">
+      <span
+        >As of <strong>{{ d.run.as_of_date | date: 'mediumDate' }}</strong></span
+      >
+      <span class="dot">·</span>
+      <span>{{ d.run.n_simulations | number }} simulations</span>
+      <span class="dot">·</span>
+      <span>{{ d.run.n_played_matches_locked }} matches locked</span>
+    </div>
+
+    <ol class="top-list">
+      <li *ngFor="let row of d.leaderboard; let i = index">
+        <span class="pos">{{ i + 1 }}</span>
+        <span class="team">{{ row.team }}</span>
+        <span class="bar-wrap">
+          <span class="bar" [style.width.%]="row.winner_pct * 5"></span>
+        </span>
+        <span class="pct">{{ row.winner_pct | number: '1.2-2' }}%</span>
+      </li>
+    </ol>
+  </ng-container>
+</section>

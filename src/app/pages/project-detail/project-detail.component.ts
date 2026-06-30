@@ -4,11 +4,12 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
 import { Title, Meta } from '@angular/platform-browser'
 import { PROJECTS, Project } from '../../data/projects'
+import { WorldCupSummaryComponent } from '../../shared/world-cup-summary/world-cup-summary.component'
 
 @Component({
   selector: 'app-project-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatIconModule],
+  imports: [CommonModule, RouterModule, MatIconModule, WorldCupSummaryComponent],
   templateUrl: './project-detail.component.html',
   styleUrl: './project-detail.component.scss',
 })
