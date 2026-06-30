@@ -1,0 +1,158 @@
+$bg-2: #181825;
+$bg-3: #1e1e2e;
+$text: #cdd6f4;
+$muted: #a6adc8;
+$accent: #89b4fa;
+$accent-3: #fab387;
+$accent-4: #f38ba8;
+
+.wc-summary {
+  background: $bg-3;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 20px 22px;
+  color: $text;
+}
+
+.summary-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: $accent;
+  font-weight: 600;
+}
+
+.summary-title {
+  margin: 4px 0 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(137, 180, 250, 0.1);
+  color: $accent;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: background 0.15s ease;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+  &:hover {
+    background: rgba(137, 180, 250, 0.18);
+  }
+}
+
+.state {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: $muted;
+  font-size: 0.88rem;
+  padding: 12px 0;
+}
+
+.state-error {
+  color: $accent-4;
+  mat-icon {
+    color: $accent-4;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.meta-line {
+  color: $muted;
+  font-size: 0.82rem;
+  margin-bottom: 14px;
+
+  strong {
+    color: $text;
+    font-weight: 600;
+  }
+  .dot {
+    margin: 0 6px;
+    opacity: 0.5;
+  }
+}
+
+.top-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  li {
+    display: grid;
+    grid-template-columns: 22px 130px 1fr 60px;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .pos {
+    color: $muted;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+  .team {
+    font-weight: 600;
+    font-size: 0.92rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .bar-wrap {
+    background: rgba(255, 255, 255, 0.03);
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+  .bar {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, $accent, $accent-3);
+    border-radius: 4px;
+    max-width: 100%;
+  }
+  .pct {
+    color: $accent;
+    font-weight: 600;
+    font-size: 0.88rem;
+    text-align: right;
+  }
+}
+
+@media (max-width: 560px) {
+  .top-list li {
+    grid-template-columns: 22px 100px 1fr 56px;
+    gap: 8px;
+  }
+}

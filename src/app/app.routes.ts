@@ -5,6 +5,7 @@ import { AuthComponent } from './pages/auth/auth.component'
 import { ProjectComponent } from './pages/project/project.component'
 import { ProjectDetailComponent } from './pages/project-detail/project-detail.component'
 import { ProfileComponent } from './pages/profile/profile.component'
+import { WorldCupComponent } from './pages/world-cup/world-cup.component'
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component'
 import { authGuard } from './guards/auth.guard'
 
@@ -16,6 +17,7 @@ export const routes: Routes = [
   { path: 'register', component: AuthComponent },
   { path: 'project', component: ProjectComponent },
   { path: 'project/:id', component: ProjectDetailComponent },
+  { path: 'world-cup', component: WorldCupComponent },
   { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
   { path: '**', component: PageNotFoundComponent },
 ]
