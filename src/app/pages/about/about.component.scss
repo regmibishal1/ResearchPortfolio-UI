@@ -58,6 +58,12 @@
   font-family: 'Outfit', sans-serif;
   color: var(--accent-gold);
   line-height: 1;
+
+  &.stat-icon {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+  }
 }
 
 .stat-label {
@@ -222,6 +228,12 @@
   border: 1px solid rgba(255, 153, 0, 0.3);
   padding: 4px 12px;
   border-radius: 100px;
+
+  .highlight-check {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+  }
 }
 
 .category-skills {
@@ -275,7 +287,9 @@
 }
 
 .cert-icon {
-  font-size: 2.2rem;
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
   flex-shrink: 0;
 }
 
@@ -459,7 +473,10 @@
   animation: fadeInUp 0.5s ease-out both;
 
   .interest-icon {
-    font-size: 1.3rem;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    opacity: 0.7;
   }
 
   .interest-name {
