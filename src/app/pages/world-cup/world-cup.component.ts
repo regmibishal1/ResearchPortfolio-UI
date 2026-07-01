@@ -21,6 +21,7 @@ import {
   BracketResponse,
   HistoryResponse,
   LatestResponse,
+  MatchDetail,
   PlayedMatchesResponse,
   WorldCupService,
 } from '../../services/world-cup.service'
@@ -85,11 +86,34 @@ export class WorldCupComponent implements OnInit, OnDestroy {
   /**
    * Bracket split into left and right halves so the template can render
    * a symmetric tournament layout (R32 ─ R16 ─ QF ─ SF │ FINAL │ SF ─ QF ─ R16 ─ R32).
+   * Each half also carries a parallel array of per-match scoreline details
+   * (predicted + actual + shootout resolution).
    */
   bracketHalves: {
-    left: { r32: string[][]; r16: string[][]; qf: string[][]; sf: string[][] }
-    right: { r32: string[][]; r16: string[][]; qf: string[][]; sf: string[][] }
+    left: {
+      r32: string[][]
+      r16: string[][]
+      qf: string[][]
+      sf: string[][]
+      r32Details: MatchDetail[]
+      r16Details: MatchDetail[]
+      qfDetails: MatchDetail[]
+      sfDetails: MatchDetail[]
+    }
+    right: {
+      r32: string[][]
+      r16: string[][]
+      qf: string[][]
+      sf: string[][]
+      r32Details: MatchDetail[]
+      r16Details: MatchDetail[]
+      qfDetails: MatchDetail[]
+      sfDetails: MatchDetail[]
+    }
   } | null = null
+
+  /** Detail for the Final match (or null if snapshot lacks match_details). */
+  finalDetail: MatchDetail | null = null
 
   /**
    * Teams that won each round = teams that appear in the next round.
@@ -136,6 +160,7 @@ export class WorldCupComponent implements OnInit, OnDestroy {
         this.matchesByDate = this.computeMatchesByDate(played)
         this.bracketHalves = this.computeBracketHalves(bracket)
         this.advancers = this.computeAdvancers(bracket)
+        this.finalDetail = bracket.match_details?.['Final']?.[0] ?? null
 
         this.loading = false
         // Draw chart on next macrotask so the canvas is in the DOM.
@@ -157,20 +182,35 @@ export class WorldCupComponent implements OnInit, OnDestroy {
 
   // ── Derived ──────────────────────────────────────────────────────────
 
-  /** Build the left/right halves for a symmetric bracket layout. */
+  /** Build the left/right halves for a symmetric bracket layout,
+   * paired with per-match scoreline details for score display.
+   */
   private computeBracketHalves(b: BracketResponse) {
+    const md = b.match_details || {}
+    const r32d = md['R32'] || []
+    const r16d = md['R16'] || []
+    const qfd = md['QF'] || []
+    const sfd = md['SF'] || []
     return {
       left: {
         r32: b.r32.slice(0, 8),
         r16: b.r16.slice(0, 4),
         qf: b.qf.slice(0, 2),
         sf: b.sf.slice(0, 1),
+        r32Details: r32d.slice(0, 8),
+        r16Details: r16d.slice(0, 4),
+        qfDetails: qfd.slice(0, 2),
+        sfDetails: sfd.slice(0, 1),
       },
       right: {
         r32: b.r32.slice(8),
         r16: b.r16.slice(4),
         qf: b.qf.slice(2),
         sf: b.sf.slice(1),
+        r32Details: r32d.slice(8),
+        r16Details: r16d.slice(4),
+        qfDetails: qfd.slice(2),
+        sfDetails: sfd.slice(1),
       },
     }
   }
@@ -202,6 +242,15 @@ export class WorldCupComponent implements OnInit, OnDestroy {
     return [...groups.entries()]
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([date, matches]) => ({ date, matches }))
+  }
+
+  /**
+   * Look up the per-match detail record for a given round and index.
+   * Returns null if the snapshot predates score prediction (older ingests
+   * before match_details was added) or if the round has no entries.
+   */
+  matchDetail(round: 'R32' | 'R16' | 'QF' | 'SF' | 'Final', i: number): MatchDetail | null {
+    return this.bracket?.match_details?.[round]?.[i] ?? null
   }
 
   // ── trackBy for template *ngFor stability ────────────────────────────
