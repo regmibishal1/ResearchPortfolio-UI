@@ -47,7 +47,7 @@ export const PROJECTS: Project[] = [
       'End-to-end machine-learning system that forecasts the 2026 FIFA World Cup. Trained a calibrated XGBoost classifier on ~12,000 international matches since 2014 with positional FIFA-rating features, Elo ratings dating back to 1872, rolling form, and tournament-weighted sample weights. Probabilities are isotonically calibrated and fed into a Monte Carlo simulator that runs 2 million tournaments, bridging classification probabilities to score distributions via a Poisson xG solver. The pipeline updates daily during the tournament: every completed group-stage match is locked into every subsequent simulation, sharpening predictions as the bracket unfolds. Each daily snapshot is versioned in Postgres so the UI can show how predictions evolve over time.',
     tags: ['Python', 'XGBoost', 'FastAPI', 'PostgreSQL', 'Angular', 'Chart.js'],
     category: 'Machine Learning',
-    icon: '⚽',
+    icon: 'sports_soccer',
     repoLinks: [
       { label: 'FastAPI Server', url: 'https://github.com/regmibishal1/ResearchPortfolio-FastAPI' },
       { label: 'Angular UI', url: 'https://github.com/regmibishal1/ResearchPortfolio-UI' },
@@ -73,7 +73,7 @@ export const PROJECTS: Project[] = [
       'Full-stack civic web app that helps Maryland residents prepare for the 2026 primary election. Enter your address to instantly see your congressional and state legislative districts, current representatives, every candidate on your ballot, and relevant legislation — all in one place. Features "Civvy", an AI chat assistant powered by a RAG pipeline (BGE-M3 embeddings + pgvector) that answers plain-English questions about Maryland bills. Data is ingested from 5+ government sources including the Maryland General Assembly API, OpenStates, Census Geocoder, and the MD State Board of Elections.',
     tags: ['Next.js', 'FastAPI', 'PostgreSQL', 'pgvector', 'AI/RAG', 'Cloudflare'],
     category: 'Full Stack',
-    icon: '🗳️',
+    icon: 'how_to_vote',
     logo: 'assets/showupmd-logo.svg',
     demo: 'https://showupmd.org',
     status: 'live',
@@ -94,7 +94,7 @@ export const PROJECTS: Project[] = [
       'Architected a full-stack portfolio platform to showcase exploratory data analysis and machine learning research. Designed an Angular frontend integrated with a secure Java Spring Boot authentication API and a Python FastAPI resource server for hosting machine learning models and utilities. Features a live statistics explorer powered by server-side NumPy sampling, structured request-scoped logging with real-IP detection, and a responsive dark-themed UI built with Angular Material.',
     tags: ['Angular', 'Java Spring Boot', 'Python FastAPI', 'PostgreSQL'],
     category: 'Full Stack',
-    icon: '🌐',
+    icon: 'language',
     repoLinks: [
       { label: 'FastAPI Server', url: 'https://github.com/regmibishal1/ResearchPortfolio-FastAPI' },
       { label: 'Angular UI', url: 'https://github.com/regmibishal1/ResearchPortfolio-UI' },
@@ -117,7 +117,7 @@ export const PROJECTS: Project[] = [
       "Investigated the efficacy of various ResNet architectures for early Alzheimer's Disease classification utilizing constrained MRI datasets. Demonstrated the robust stability and clinical potential of pre-trained convolutional neural networks, specifically ResNet-50, and leveraged saliency maps to interpret predictive performance and highlight diagnostically relevant brain regions.",
     tags: ['Python', 'PyTorch', 'CNN', 'ResNet'],
     category: 'Machine Learning',
-    icon: '🧠',
+    icon: 'psychology',
     status: 'research',
     highlights: [
       'Benchmarked ResNet-18, ResNet-34, and ResNet-50 on a constrained MRI dataset spanning multiple disease stages',
@@ -135,7 +135,7 @@ export const PROJECTS: Project[] = [
       'Developed a multimodal transformer model for the WASSA 2023 Shared Task, classifying empathy and emotional valence in conversational reactions to news articles. Enhanced natural language processing architectures by integrating non-textual contextual variables — including demographic features and conversational history — to significantly boost predictive accuracy beyond text-only baselines.',
     tags: ['Python', 'NLP', 'Transformers', 'NLTK'],
     category: 'Machine Learning',
-    icon: '💬',
+    icon: 'forum',
     status: 'research',
     highlights: [
       'Submitted to the WASSA 2023 Shared Task for empathy and emotion prediction in news-driven conversation',
@@ -153,7 +153,7 @@ export const PROJECTS: Project[] = [
       'Engineered a scalable data processing pipeline using Dask and Scikit-Learn to analyze sentiment shifts in Twitter data surrounding autism awareness events. Applied advanced natural language processing techniques to quantify public perception trends at scale, tracking how media events influence discourse over time.',
     tags: ['Python', 'Dask', 'NLTK', 'Scikit-Learn'],
     category: 'Data Science',
-    icon: '📊',
+    icon: 'bar_chart',
     status: 'research',
     highlights: [
       'Dask-based distributed pipeline processes millions of tweets without loading the full dataset into memory',

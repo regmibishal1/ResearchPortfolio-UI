@@ -40,7 +40,7 @@
               [alt]="project.title + ' logo'"
               class="card-logo"
             />
-            <ng-container *ngIf="!project.logo">{{ project.icon }}</ng-container>
+            <mat-icon *ngIf="!project.logo" class="card-mat-icon">{{ project.icon }}</mat-icon>
           </span>
           <span class="card-category">{{ project.category }}</span>
         </div>
