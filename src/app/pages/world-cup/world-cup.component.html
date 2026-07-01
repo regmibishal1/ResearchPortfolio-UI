@@ -105,48 +105,116 @@
               <!-- ── LEFT HALF ── -->
               <div class="round round-r32">
                 <div class="round-label">Round of 32</div>
-                <div class="match" *ngFor="let m of bracketHalves.left.r32; trackBy: trackByPair">
+                <div
+                  class="match"
+                  *ngFor="let m of bracketHalves.left.r32; let i = index; trackBy: trackByPair"
+                >
                   <div class="team" [class.team-winner]="advancers.r32.has(m[0])">
                     <span class="team-name">{{ m[0] }}</span>
+                    <span class="team-score" *ngIf="bracketHalves.left.r32Details[i]?.played">
+                      {{ bracketHalves.left.r32Details[i]!.actual_score![0] }}
+                    </span>
                   </div>
                   <div class="team" [class.team-winner]="advancers.r32.has(m[1])">
                     <span class="team-name">{{ m[1] }}</span>
+                    <span class="team-score" *ngIf="bracketHalves.left.r32Details[i]?.played">
+                      {{ bracketHalves.left.r32Details[i]!.actual_score![1] }}
+                    </span>
+                  </div>
+                  <div class="match-score-note" *ngIf="bracketHalves.left.r32Details[i] as d">
+                    <ng-container *ngIf="!d.played"
+                      >Pred {{ d.predicted_score[0] }}-{{ d.predicted_score[1] }}</ng-container
+                    >
+                    <ng-container *ngIf="d.went_to_penalties && d.winner"
+                      >pen: {{ d.winner }}</ng-container
+                    >
                   </div>
                 </div>
               </div>
 
               <div class="round round-r16">
                 <div class="round-label">Round of 16</div>
-                <div class="match" *ngFor="let m of bracketHalves.left.r16; trackBy: trackByPair">
+                <div
+                  class="match"
+                  *ngFor="let m of bracketHalves.left.r16; let i = index; trackBy: trackByPair"
+                >
                   <div class="team" [class.team-winner]="advancers.r16.has(m[0])">
                     <span class="team-name">{{ m[0] }}</span>
+                    <span class="team-score" *ngIf="bracketHalves.left.r16Details[i]?.played">
+                      {{ bracketHalves.left.r16Details[i]!.actual_score![0] }}
+                    </span>
                   </div>
                   <div class="team" [class.team-winner]="advancers.r16.has(m[1])">
                     <span class="team-name">{{ m[1] }}</span>
+                    <span class="team-score" *ngIf="bracketHalves.left.r16Details[i]?.played">
+                      {{ bracketHalves.left.r16Details[i]!.actual_score![1] }}
+                    </span>
+                  </div>
+                  <div class="match-score-note" *ngIf="bracketHalves.left.r16Details[i] as d">
+                    <ng-container *ngIf="!d.played"
+                      >Pred {{ d.predicted_score[0] }}-{{ d.predicted_score[1] }}</ng-container
+                    >
+                    <ng-container *ngIf="d.went_to_penalties && d.winner"
+                      >pen: {{ d.winner }}</ng-container
+                    >
                   </div>
                 </div>
               </div>
 
               <div class="round round-qf">
                 <div class="round-label">Quarter-final</div>
-                <div class="match" *ngFor="let m of bracketHalves.left.qf; trackBy: trackByPair">
+                <div
+                  class="match"
+                  *ngFor="let m of bracketHalves.left.qf; let i = index; trackBy: trackByPair"
+                >
                   <div class="team" [class.team-winner]="advancers.qf.has(m[0])">
                     <span class="team-name">{{ m[0] }}</span>
+                    <span class="team-score" *ngIf="bracketHalves.left.qfDetails[i]?.played">
+                      {{ bracketHalves.left.qfDetails[i]!.actual_score![0] }}
+                    </span>
                   </div>
                   <div class="team" [class.team-winner]="advancers.qf.has(m[1])">
                     <span class="team-name">{{ m[1] }}</span>
+                    <span class="team-score" *ngIf="bracketHalves.left.qfDetails[i]?.played">
+                      {{ bracketHalves.left.qfDetails[i]!.actual_score![1] }}
+                    </span>
+                  </div>
+                  <div class="match-score-note" *ngIf="bracketHalves.left.qfDetails[i] as d">
+                    <ng-container *ngIf="!d.played"
+                      >Pred {{ d.predicted_score[0] }}-{{ d.predicted_score[1] }}</ng-container
+                    >
+                    <ng-container *ngIf="d.went_to_penalties && d.winner"
+                      >pen: {{ d.winner }}</ng-container
+                    >
                   </div>
                 </div>
               </div>
 
               <div class="round round-sf">
                 <div class="round-label">Semi-final</div>
-                <div class="match" *ngFor="let m of bracketHalves.left.sf; trackBy: trackByPair">
+                <div
+                  class="match"
+                  *ngFor="let m of bracketHalves.left.sf; let i = index; trackBy: trackByPair"
+                >
                   <div class="team" [class.team-winner]="advancers.sf.has(m[0])">
                     <span class="team-name">{{ m[0] }}</span>
+                    <span class="team-score" *ngIf="bracketHalves.left.sfDetails[i]?.played">
+                      {{ bracketHalves.left.sfDetails[i]!.actual_score![0] }}
+                    </span>
                   </div>
                   <div class="team" [class.team-winner]="advancers.sf.has(m[1])">
                     <span class="team-name">{{ m[1] }}</span>
+                    <span class="team-score" *ngIf="bracketHalves.left.sfDetails[i]?.played">
+                      {{ bracketHalves.left.sfDetails[i]!.actual_score![1] }}
+                    </span>
+                  </div>
+                  <div class="match-score-note" *ngIf="bracketHalves.left.sfDetails[i] as d">
+                    <ng-container *ngIf="!d.played"
+                      >Pred {{ d.predicted_score[0] }}-{{ d.predicted_score[1] }}</ng-container
+                    >
+                    <ng-container *ngIf="d.went_to_penalties && d.winner"
+                      >pen: {{ d.winner }}</ng-container
+                    >
                   </div>
                 </div>
               </div>
@@ -160,12 +228,26 @@
                     [class.team-winner]="bracket.final_pair[0] === bracket.champion"
                   >
                     <span class="team-name">{{ bracket.final_pair[0] }}</span>
+                    <span class="team-score" *ngIf="finalDetail?.played">
+                      {{ finalDetail!.actual_score![0] }}
+                    </span>
                   </div>
                   <div
                     class="team"
                     [class.team-winner]="bracket.final_pair[1] === bracket.champion"
                   >
                     <span class="team-name">{{ bracket.final_pair[1] }}</span>
+                    <span class="team-score" *ngIf="finalDetail?.played">
+                      {{ finalDetail!.actual_score![1] }}
+                    </span>
+                  </div>
+                  <div class="match-score-note" *ngIf="finalDetail as d">
+                    <ng-container *ngIf="!d.played"
+                      >Pred {{ d.predicted_score[0] }}-{{ d.predicted_score[1] }}</ng-container
+                    >
+                    <ng-container *ngIf="d.went_to_penalties && d.winner"
+                      >pen: {{ d.winner }}</ng-container
+                    >
                   </div>
                 </div>
                 <div class="champ-pill">
@@ -180,48 +262,116 @@
               <!-- ── RIGHT HALF (mirrored) ── -->
               <div class="round round-sf">
                 <div class="round-label">Semi-final</div>
-                <div class="match" *ngFor="let m of bracketHalves.right.sf; trackBy: trackByPair">
+                <div
+                  class="match"
+                  *ngFor="let m of bracketHalves.right.sf; let i = index; trackBy: trackByPair"
+                >
                   <div class="team" [class.team-winner]="advancers.sf.has(m[0])">
                     <span class="team-name">{{ m[0] }}</span>
+                    <span class="team-score" *ngIf="bracketHalves.right.sfDetails[i]?.played">
+                      {{ bracketHalves.right.sfDetails[i]!.actual_score![0] }}
+                    </span>
                   </div>
                   <div class="team" [class.team-winner]="advancers.sf.has(m[1])">
                     <span class="team-name">{{ m[1] }}</span>
+                    <span class="team-score" *ngIf="bracketHalves.right.sfDetails[i]?.played">
+                      {{ bracketHalves.right.sfDetails[i]!.actual_score![1] }}
+                    </span>
+                  </div>
+                  <div class="match-score-note" *ngIf="bracketHalves.right.sfDetails[i] as d">
+                    <ng-container *ngIf="!d.played"
+                      >Pred {{ d.predicted_score[0] }}-{{ d.predicted_score[1] }}</ng-container
+                    >
+                    <ng-container *ngIf="d.went_to_penalties && d.winner"
+                      >pen: {{ d.winner }}</ng-container
+                    >
                   </div>
                 </div>
               </div>
 
               <div class="round round-qf">
                 <div class="round-label">Quarter-final</div>
-                <div class="match" *ngFor="let m of bracketHalves.right.qf; trackBy: trackByPair">
+                <div
+                  class="match"
+                  *ngFor="let m of bracketHalves.right.qf; let i = index; trackBy: trackByPair"
+                >
                   <div class="team" [class.team-winner]="advancers.qf.has(m[0])">
                     <span class="team-name">{{ m[0] }}</span>
+                    <span class="team-score" *ngIf="bracketHalves.right.qfDetails[i]?.played">
+                      {{ bracketHalves.right.qfDetails[i]!.actual_score![0] }}
+                    </span>
                   </div>
                   <div class="team" [class.team-winner]="advancers.qf.has(m[1])">
                     <span class="team-name">{{ m[1] }}</span>
+                    <span class="team-score" *ngIf="bracketHalves.right.qfDetails[i]?.played">
+                      {{ bracketHalves.right.qfDetails[i]!.actual_score![1] }}
+                    </span>
+                  </div>
+                  <div class="match-score-note" *ngIf="bracketHalves.right.qfDetails[i] as d">
+                    <ng-container *ngIf="!d.played"
+                      >Pred {{ d.predicted_score[0] }}-{{ d.predicted_score[1] }}</ng-container
+                    >
+                    <ng-container *ngIf="d.went_to_penalties && d.winner"
+                      >pen: {{ d.winner }}</ng-container
+                    >
                   </div>
                 </div>
               </div>
 
               <div class="round round-r16">
                 <div class="round-label">Round of 16</div>
-                <div class="match" *ngFor="let m of bracketHalves.right.r16; trackBy: trackByPair">
+                <div
+                  class="match"
+                  *ngFor="let m of bracketHalves.right.r16; let i = index; trackBy: trackByPair"
+                >
                   <div class="team" [class.team-winner]="advancers.r16.has(m[0])">
                     <span class="team-name">{{ m[0] }}</span>
+                    <span class="team-score" *ngIf="bracketHalves.right.r16Details[i]?.played">
+                      {{ bracketHalves.right.r16Details[i]!.actual_score![0] }}
+                    </span>
                   </div>
                   <div class="team" [class.team-winner]="advancers.r16.has(m[1])">
                     <span class="team-name">{{ m[1] }}</span>
+                    <span class="team-score" *ngIf="bracketHalves.right.r16Details[i]?.played">
+                      {{ bracketHalves.right.r16Details[i]!.actual_score![1] }}
+                    </span>
+                  </div>
+                  <div class="match-score-note" *ngIf="bracketHalves.right.r16Details[i] as d">
+                    <ng-container *ngIf="!d.played"
+                      >Pred {{ d.predicted_score[0] }}-{{ d.predicted_score[1] }}</ng-container
+                    >
+                    <ng-container *ngIf="d.went_to_penalties && d.winner"
+                      >pen: {{ d.winner }}</ng-container
+                    >
                   </div>
                 </div>
               </div>
 
               <div class="round round-r32">
                 <div class="round-label">Round of 32</div>
-                <div class="match" *ngFor="let m of bracketHalves.right.r32; trackBy: trackByPair">
+                <div
+                  class="match"
+                  *ngFor="let m of bracketHalves.right.r32; let i = index; trackBy: trackByPair"
+                >
                   <div class="team" [class.team-winner]="advancers.r32.has(m[0])">
                     <span class="team-name">{{ m[0] }}</span>
+                    <span class="team-score" *ngIf="bracketHalves.right.r32Details[i]?.played">
+                      {{ bracketHalves.right.r32Details[i]!.actual_score![0] }}
+                    </span>
                   </div>
                   <div class="team" [class.team-winner]="advancers.r32.has(m[1])">
                     <span class="team-name">{{ m[1] }}</span>
+                    <span class="team-score" *ngIf="bracketHalves.right.r32Details[i]?.played">
+                      {{ bracketHalves.right.r32Details[i]!.actual_score![1] }}
+                    </span>
+                  </div>
+                  <div class="match-score-note" *ngIf="bracketHalves.right.r32Details[i] as d">
+                    <ng-container *ngIf="!d.played"
+                      >Pred {{ d.predicted_score[0] }}-{{ d.predicted_score[1] }}</ng-container
+                    >
+                    <ng-container *ngIf="d.went_to_penalties && d.winner"
+                      >pen: {{ d.winner }}</ng-container
+                    >
                   </div>
                 </div>
               </div>

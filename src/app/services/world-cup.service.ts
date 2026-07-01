@@ -31,6 +31,15 @@ export interface LatestResponse {
   leaderboard: TeamRow[]
 }
 
+export interface MatchDetail {
+  teams: string[]
+  predicted_score: number[]
+  played: boolean
+  actual_score: number[] | null
+  went_to_penalties: boolean
+  winner: string | null
+}
+
 export interface BracketResponse {
   run_id: number
   as_of_date: string
@@ -43,6 +52,9 @@ export interface BracketResponse {
   sf: string[][]
   final_pair: string[]
   champion: string
+  // Per-round per-match scoreline records; null if snapshot predates
+  // the score-prediction feature.
+  match_details: Record<string, MatchDetail[]> | null
 }
 
 export interface HistoryPoint {
