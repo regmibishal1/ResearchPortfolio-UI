@@ -392,16 +392,19 @@ export class WorldCupComponent implements OnInit, OnDestroy {
     bracket: BracketResponse
   ): EnrichedMatch[] {
     const koLookup = this.buildKnockoutLookup(bracket)
+    const koStart = '2026-06-28'
     return played.matches.map((m) => {
-      const key = [m.home_team, m.away_team].sort().join('|')
-      const ko = koLookup.get(key)
-      if (ko) {
-        return {
-          ...m,
-          round_label: ko.round,
-          is_knockout: true,
-          went_to_penalties: ko.went_to_penalties,
-          penalty_winner: ko.winner,
+      if (m.match_date >= koStart) {
+        const key = [m.home_team, m.away_team].sort().join('|')
+        const ko = koLookup.get(key)
+        if (ko) {
+          return {
+            ...m,
+            round_label: ko.round,
+            is_knockout: true,
+            went_to_penalties: ko.went_to_penalties,
+            penalty_winner: ko.winner,
+          }
         }
       }
       return {
