@@ -150,7 +150,18 @@
                 }}
                 locked</span
               >
-              <span class="context-matches" *ngIf="lockedMatchesForDate.length > 0">
+              <button
+                class="toggle-matches-btn"
+                *ngIf="lockedMatchesForDate.length > 0"
+                (click)="showLockedMatches = !showLockedMatches"
+              >
+                {{ showLockedMatches ? 'Hide' : 'Show' }} matches
+                <mat-icon>{{ showLockedMatches ? 'expand_less' : 'expand_more' }}</mat-icon>
+              </button>
+              <span
+                class="context-matches"
+                *ngIf="showLockedMatches && lockedMatchesForDate.length > 0"
+              >
                 <ng-container *ngFor="let m of lockedMatchesForDate; let last = last">
                   {{ m.home_team }} {{ m.home_score }}–{{ m.away_score }} {{ m.away_team
                   }}<ng-container *ngIf="!last"> · </ng-container>

@@ -170,6 +170,7 @@ export class WorldCupComponent implements OnInit, OnDestroy {
   displayedLeaderboard: TeamRow[] = []
   deltaMap = new Map<string, number>()
   lockedMatchesForDate: EnrichedMatch[] = []
+  showLockedMatches = false
   private enrichedMatches: EnrichedMatch[] = []
 
   readonly stageOptions: Array<{ value: HistoryStage; label: string }> = [

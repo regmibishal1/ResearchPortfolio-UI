@@ -290,7 +290,34 @@ h1 {
   }
 }
 
+.toggle-matches-btn {
+  background: none;
+  border: 1px solid rgba($muted, 0.25);
+  border-radius: 4px;
+  color: $accent;
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 2px 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: 8px;
+  transition: border-color 0.15s;
+
+  &:hover {
+    border-color: $accent;
+  }
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
 .context-matches {
+  display: block;
+  margin-top: 8px;
   color: rgba($muted, 0.75);
   font-size: 0.78rem;
   line-height: 1.6;
