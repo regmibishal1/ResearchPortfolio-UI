@@ -106,9 +106,15 @@
 }
 
 .card-icon {
-  font-size: 2.5rem;
   display: flex;
   align-items: center;
+
+  .card-mat-icon {
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
+    color: var(--gold, #e0a458);
+  }
 }
 
 .card-logo {

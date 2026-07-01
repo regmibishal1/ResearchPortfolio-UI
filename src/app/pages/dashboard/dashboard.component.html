@@ -55,7 +55,7 @@
         *ngFor="let skill of skills; let i = index"
         [style.animation-delay]="i * 0.05 + 's'"
       >
-        <span class="skill-icon">{{ skill.icon }}</span>
+        <mat-icon class="skill-icon">{{ skill.icon }}</mat-icon>
         <span class="skill-name">{{ skill.name }}</span>
       </div>
     </div>
@@ -82,7 +82,7 @@
             [alt]="project.title + ' logo'"
             class="project-logo"
           />
-          <ng-container *ngIf="!project.logo">{{ project.icon }}</ng-container>
+          <mat-icon *ngIf="!project.logo" class="project-mat-icon">{{ project.icon }}</mat-icon>
         </div>
         <h3 class="project-title">{{ project.title }}</h3>
         <p class="project-desc">{{ project.shortDescription }}</p>

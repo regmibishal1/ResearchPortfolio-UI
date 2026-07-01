@@ -50,9 +50,9 @@ export class AboutComponent {
 
   stats: Stat[] = [
     { value: '4+', label: 'Years Experience', icon: 'work_history' },
-    { value: '☁️', label: 'AWS SA Certified', icon: '' },
-    { value: '💰', label: 'Fintech Domain', icon: '' },
-    { value: '🎓', label: "Dual Master's & B.S.", icon: '' },
+    { value: '', label: 'AWS SA Certified', icon: 'cloud_done' },
+    { value: '', label: 'Fintech Domain', icon: 'account_balance' },
+    { value: '', label: "Dual Master's & B.S.", icon: 'school' },
   ]
 
   bio = `Software Engineer and Data Scientist with 4+ years of experience at T. Rowe Price, building systems that process billions of dollars in daily cash flows and serve thousands of traders. I hold an AWS Solutions Architect certification.
@@ -150,7 +150,7 @@ My work spans large-scale .NET microservice platforms, ML-powered financial fore
     {
       name: 'AWS Certified Solutions Architect',
       issuer: 'Amazon Web Services',
-      icon: '☁️',
+      icon: 'cloud_done',
       color: '#FF9900',
     },
   ]
@@ -199,15 +199,15 @@ My work spans large-scale .NET microservice platforms, ML-powered financial fore
   ]
 
   interests = [
-    { name: 'Full-Stack Development', icon: '💻' },
-    { name: 'Data Science & Analytics', icon: '📊' },
-    { name: 'Machine Learning & AI', icon: '🤖' },
-    { name: 'Distributed Computing', icon: '⚡' },
-    { name: 'Cloud Architecture', icon: '☁️' },
-    { name: 'Open Source', icon: '🌐' },
-    { name: 'System Design', icon: '🏗️' },
-    { name: 'Developer Tooling', icon: '🔧' },
-    { name: 'Financial Technology', icon: '📈' },
+    { name: 'Full-Stack Development', icon: 'terminal' },
+    { name: 'Data Science & Analytics', icon: 'analytics' },
+    { name: 'Machine Learning & AI', icon: 'psychology' },
+    { name: 'Distributed Computing', icon: 'hub' },
+    { name: 'Cloud Architecture', icon: 'cloud' },
+    { name: 'Open Source', icon: 'public' },
+    { name: 'System Design', icon: 'architecture' },
+    { name: 'Developer Tooling', icon: 'build' },
+    { name: 'Financial Technology', icon: 'trending_up' },
   ]
 
   contactLinks = [
