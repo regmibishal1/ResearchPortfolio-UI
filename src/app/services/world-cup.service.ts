@@ -3,12 +3,10 @@ import { HttpClient, HttpParams } from '@angular/common/http'
 import { Observable } from 'rxjs'
 import { environment } from '../../environments/environment'
 
-// ── Response shapes mirror src/endpoints/worldcup.py in the FastAPI repo. ──
-
 export interface RunMeta {
   id: number
   tournament_key: string
-  as_of_date: string // ISO date
+  as_of_date: string
   label: string | null
   n_simulations: number
   n_played_matches_locked: number
@@ -52,8 +50,6 @@ export interface BracketResponse {
   sf: string[][]
   final_pair: string[]
   champion: string
-  // Per-round per-match scoreline records; null if snapshot predates
-  // the score-prediction feature.
   match_details: Record<string, MatchDetail[]> | null
 }
 
@@ -97,17 +93,20 @@ export class WorldCupService {
 
   constructor(private http: HttpClient) {}
 
-  getLatest(opts: { tournament?: string; limit?: number } = {}): Observable<LatestResponse> {
+  getLatest(
+    opts: { tournament?: string; limit?: number; as_of_date?: string } = {}
+  ): Observable<LatestResponse> {
     let params = new HttpParams()
     if (opts.tournament) params = params.set('tournament', opts.tournament)
     if (opts.limit !== undefined) params = params.set('limit', String(opts.limit))
+    if (opts.as_of_date) params = params.set('as_of_date', opts.as_of_date)
     return this.http.get<LatestResponse>(`${this.apiUrl}/latest`, { params })
   }
 
-  getBracket(tournament = '2026'): Observable<BracketResponse> {
-    return this.http.get<BracketResponse>(`${this.apiUrl}/bracket`, {
-      params: new HttpParams().set('tournament', tournament),
-    })
+  getBracket(opts: { tournament?: string; as_of_date?: string } = {}): Observable<BracketResponse> {
+    let params = new HttpParams().set('tournament', opts.tournament ?? '2026')
+    if (opts.as_of_date) params = params.set('as_of_date', opts.as_of_date)
+    return this.http.get<BracketResponse>(`${this.apiUrl}/bracket`, { params })
   }
 
   getHistory(

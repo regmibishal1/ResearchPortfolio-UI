@@ -1,4 +1,3 @@
-// Palette matches the existing dark theme (stats-explorer / project-detail).
 $bg-1: #11111b;
 $bg-2: #181825;
 $bg-3: #1e1e2e;
@@ -51,7 +50,7 @@ $accent-4: #f38ba8;
   background: linear-gradient(135deg, $bg-3 0%, $bg-2 100%);
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.04);
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 
 .hero-text {
@@ -131,6 +130,106 @@ h1 {
   }
 }
 
+// ── Snapshot bar ─────────────────────────────────────────────────────
+.snapshot-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 16px;
+  background: $bg-2;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.snapshot-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.snapshot-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: $muted;
+  flex-shrink: 0;
+}
+
+.snapshot-label {
+  font-size: 0.8rem;
+  color: $muted;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.date-select {
+  appearance: none;
+  background: $bg-3;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  color: $text;
+  font-size: 0.85rem;
+  padding: 5px 28px 5px 10px;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23a6adc8' d='M1.41 0 6 4.58 10.59 0 12 1.41l-6 6-6-6z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  transition: border-color 0.15s ease;
+
+  &:hover {
+    border-color: rgba(137, 180, 250, 0.35);
+  }
+  &:focus {
+    outline: none;
+    border-color: $accent;
+  }
+
+  option {
+    background: $bg-3;
+    color: $text;
+  }
+}
+
+.snapshot-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.historical-badge {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: $accent-3;
+  border: 1px solid rgba(250, 179, 135, 0.35);
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+
+.reset-btn {
+  background: none;
+  border: 1px solid rgba(137, 180, 250, 0.25);
+  border-radius: 6px;
+  color: $accent;
+  font-size: 0.82rem;
+  padding: 4px 12px;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+
+  &:hover {
+    background: rgba(137, 180, 250, 0.08);
+    border-color: rgba(137, 180, 250, 0.5);
+  }
+}
+
 // ── Tab group overrides ──────────────────────────────────────────────
 .wc-tabs {
   background: $bg-3;
@@ -160,11 +259,41 @@ h1 {
   padding: 24px;
 }
 
+.panel-header {
+  margin-bottom: 20px;
+}
+
 .panel-sub {
   color: $muted;
-  margin: 0 0 20px;
+  margin: 0 0 10px;
   font-size: 0.9rem;
   line-height: 1.5;
+}
+
+// ── Context strip (lock info) ────────────────────────────────────────
+.context-strip {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: $muted;
+  flex-wrap: wrap;
+
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    vertical-align: middle;
+    color: $accent-2;
+    position: relative;
+    top: 2px;
+  }
+}
+
+.context-matches {
+  color: rgba($muted, 0.75);
+  font-size: 0.78rem;
+  line-height: 1.6;
 }
 
 // ── Leaderboard ──────────────────────────────────────────────────────
@@ -207,6 +336,12 @@ h1 {
     text-align: right;
     width: 70px;
   }
+  .delta-col {
+    width: 56px;
+    text-align: right;
+    font-size: 0.8rem;
+    font-variant-numeric: tabular-nums;
+  }
   .pct-cell {
     position: relative;
     min-width: 140px;
@@ -229,6 +364,16 @@ h1 {
   }
 }
 
+.delta-up {
+  color: $accent-2;
+  font-weight: 600;
+}
+
+.delta-down {
+  color: $accent-4;
+  font-weight: 600;
+}
+
 // ── Bracket ──────────────────────────────────────────────────────────
 .bracket-section-title {
   margin: 28px 0 12px;
@@ -237,6 +382,15 @@ h1 {
   text-transform: uppercase;
   color: $muted;
   font-weight: 600;
+}
+
+.bracket-loading-overlay {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0;
+  color: $muted;
+  font-size: 0.88rem;
 }
 
 .groups-grid {
@@ -296,17 +450,9 @@ h1 {
   font-size: 0.82rem;
 }
 
-// ── Symmetric bracket ───────────────────────────────────────────────
-// The two halves of the tournament fan inward toward the Final, NCAA-style.
-// `justify-content: space-around` on each round column does the visual
-// alignment work: with all columns at the same height but with progressively
-// fewer matches, each later-round match naturally centers between its two
-// feeder matches in the previous round.
-
+// ── Symmetric bracket ────────────────────────────────────────────────
 .bracket-scroll {
   overflow-x: auto;
-  // Negative margins so the scroll area can bleed to the panel edges
-  // without losing readability on the bracket cards themselves.
   margin: 0 -8px;
   padding: 4px 8px 12px;
 }
@@ -316,8 +462,6 @@ h1 {
   align-items: stretch;
   gap: 14px;
   min-width: 1280px;
-  // The R32 column needs enough height that its 8 matches don't squish.
-  // Other columns inherit this height and space their matches accordingly.
   min-height: 580px;
 }
 
@@ -332,16 +476,13 @@ h1 {
 .round-r32 {
   min-width: 140px;
 }
-
 .round-r16 {
   min-width: 140px;
 }
-
 .round-qf,
 .round-sf {
   min-width: 145px;
 }
-
 .round-final {
   min-width: 200px;
   justify-content: center;
@@ -451,7 +592,6 @@ h1 {
   }
 }
 
-// Champion pill: focal point in the center column under the Final match.
 .champ-pill {
   display: flex;
   align-items: center;
@@ -494,6 +634,53 @@ h1 {
 }
 
 // ── History chart ────────────────────────────────────────────────────
+.history-controls {
+  margin-bottom: 16px;
+}
+
+.stage-select-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.stage-select-label {
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $muted;
+  font-weight: 600;
+}
+
+.stage-select {
+  appearance: none;
+  background: $bg-2;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  color: $text;
+  font-size: 0.85rem;
+  padding: 6px 28px 6px 10px;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23a6adc8' d='M1.41 0 6 4.58 10.59 0 12 1.41l-6 6-6-6z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  transition: border-color 0.15s ease;
+
+  &:hover {
+    border-color: rgba(137, 180, 250, 0.35);
+  }
+  &:focus {
+    outline: none;
+    border-color: $accent;
+  }
+
+  option {
+    background: $bg-2;
+    color: $text;
+  }
+}
+
 .chart-wrapper {
   position: relative;
   height: 380px;
@@ -503,17 +690,83 @@ h1 {
 }
 
 // ── Played matches ───────────────────────────────────────────────────
-.matches-day {
-  margin-bottom: 18px;
+.played-section {
+  margin-bottom: 32px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
-.day-label {
-  margin: 0 0 8px;
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 16px;
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: $muted;
   font-weight: 600;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: $accent;
+  }
+}
+
+.round-group {
+  margin-bottom: 20px;
+}
+
+.played-round-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.round-badge {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+
+.group-badge {
+  background: rgba(250, 179, 135, 0.12);
+  color: $accent-3;
+  border: 1px solid rgba(250, 179, 135, 0.25);
+}
+
+.ko-badge {
+  background: rgba(137, 180, 250, 0.12);
+  color: $accent;
+  border: 1px solid rgba(137, 180, 250, 0.25);
+}
+
+.round-match-count {
+  font-size: 0.78rem;
+  color: $muted;
+}
+
+.day-block {
+  margin-bottom: 12px;
+  padding-left: 16px;
+  border-left: 2px solid rgba(255, 255, 255, 0.04);
+}
+
+.day-label {
+  margin: 0 0 6px;
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $muted;
+  font-weight: 500;
 }
 
 .matches-list {
@@ -526,27 +779,68 @@ h1 {
   background: $bg-2;
   border: 1px solid rgba(255, 255, 255, 0.04);
   border-radius: 8px;
-  padding: 10px 12px;
+  padding: 10px 14px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
-.match-group {
-  font-size: 0.7rem;
+.match-scoreline {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  font-size: 0.88rem;
+}
+
+.ms-team {
+  flex: 1 1 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: $muted;
+  min-width: 0;
+
+  &.ms-winner {
+    color: $text;
+    font-weight: 600;
+  }
+}
+
+.ms-team-away {
+  text-align: right;
+}
+
+.ms-score {
+  flex: 0 0 auto;
+  padding: 0 10px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: $text;
+  white-space: nowrap;
+}
+
+.penalty-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.penalty-badge {
+  font-size: 0.66rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: $accent-3;
+  font-weight: 700;
+  border-radius: 4px;
+  padding: 2px 6px;
+  background: rgba(243, 139, 168, 0.12);
+  color: $accent-4;
+  border: 1px solid rgba(243, 139, 168, 0.25);
 }
 
-.match-teams {
-  font-size: 0.9rem;
-
-  strong {
-    margin: 0 6px;
-    color: $accent;
-    font-weight: 700;
-  }
+.penalty-winner {
+  font-size: 0.78rem;
+  color: $muted;
 }
 
 .empty-msg {
@@ -556,13 +850,6 @@ h1 {
 }
 
 // ── Bracket: tablet + mobile fallback ────────────────────────────────
-// Below ~900px the 9-column symmetric layout no longer reads cleanly.
-// Flatten to a single column in tournament order: R32 -> R16 -> QF ->
-// SF -> Final. The two halves merge into one section per round; the
-// right-half round label is hidden so the round name appears once.
-//
-// flex `order` is used to interleave left+right halves while keeping
-// the DOM unchanged (avoids duplicating the bracket markup).
 @media (max-width: 900px) {
   .bracket-scroll {
     overflow-x: visible;
@@ -584,39 +871,34 @@ h1 {
     gap: 6px;
   }
 
-  // Re-order to: R32-L, R32-R, R16-L, R16-R, QF-L, QF-R, SF-L, SF-R, Final
-  // DOM order is:    1L     2L     3L     4L     5F    6R    7R    8R    9R
-  // So we want: 1, 9, 2, 8, 3, 7, 4, 6, 5
   .round:nth-of-type(1) {
     order: 1;
-  } // R32 left
+  }
   .round:nth-of-type(9) {
     order: 2;
-  } // R32 right
+  }
   .round:nth-of-type(2) {
     order: 3;
-  } // R16 left
+  }
   .round:nth-of-type(8) {
     order: 4;
-  } // R16 right
+  }
   .round:nth-of-type(3) {
     order: 5;
-  } // QF left
+  }
   .round:nth-of-type(7) {
     order: 6;
-  } // QF right
+  }
   .round:nth-of-type(4) {
     order: 7;
-  } // SF left
+  }
   .round:nth-of-type(6) {
     order: 8;
-  } // SF right
+  }
   .round:nth-of-type(5) {
     order: 9;
-  } // Final + champion (climax)
+  }
 
-  // Hide the duplicate round label on the right half so each round name
-  // appears exactly once, sitting above all matches of that round.
   .round:nth-of-type(6) .round-label,
   .round:nth-of-type(7) .round-label,
   .round:nth-of-type(8) .round-label,
@@ -624,17 +906,13 @@ h1 {
     display: none;
   }
 
-  // Tighten the gap between left- and right-half cards of the same round.
-  // Bigger gap kicks in only at the boundary between *different* rounds.
-  .round:nth-of-type(1),  // R32 left
-  .round:nth-of-type(2),  // R16 left
-  .round:nth-of-type(3),  // QF left
+  .round:nth-of-type(1),
+  .round:nth-of-type(2),
+  .round:nth-of-type(3),
   .round:nth-of-type(4) {
-    // SF left
     margin-bottom: -16px;
   }
 
-  // Match cards span the full width with comfortable touch targets.
   .match {
     padding: 10px 12px;
   }
@@ -653,7 +931,6 @@ h1 {
     padding: 14px;
   }
 
-  // Champion pill centers + scales down slightly.
   .champ-pill {
     margin-top: 8px;
     padding: 14px 16px;
@@ -668,7 +945,7 @@ h1 {
   }
 }
 
-// ── Page-wide phone niceties ─────────────────────────────────────────
+// ── Phone ────────────────────────────────────────────────────────────
 @media (max-width: 600px) {
   .wc-page {
     padding: 16px 12px 48px;
@@ -679,6 +956,14 @@ h1 {
   .panel {
     padding: 16px;
   }
+
+  .snapshot-bar {
+    padding: 8px 12px;
+  }
+  .date-select {
+    font-size: 0.8rem;
+  }
+
   .leaderboard {
     font-size: 0.8rem;
     th,
@@ -687,15 +972,15 @@ h1 {
     }
   }
 
-  // Bracket section title needs breathing room above the larger mobile cards
   .bracket-section-title {
     margin-top: 32px;
   }
-
-  // On the smallest screens drop the round-label letter-spacing a touch
-  // so longer labels ("Quarter-final") don't wrap.
   .round-label {
     font-size: 0.62rem;
     letter-spacing: 0.08em;
+  }
+
+  .matches-list {
+    grid-template-columns: 1fr;
   }
 }

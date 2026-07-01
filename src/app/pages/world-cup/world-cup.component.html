@@ -13,8 +13,8 @@
       <span class="hero-eyebrow">Live Predictions</span>
       <h1>FIFA World Cup 2026</h1>
       <p class="hero-sub">
-        Calibrated XGBoost + 2M-simulation Monte Carlo, refreshed daily. Played group-stage matches
-        are locked into every simulation.
+        Calibrated XGBoost + 2M-simulation Monte Carlo, updated daily. Each played match is locked
+        into every simulation — probability estimates sharpen as the tournament progresses.
       </p>
     </div>
 
@@ -48,13 +48,42 @@
 
   <!-- ===== Content ===== -->
   <ng-container *ngIf="!loading && !error">
+    <!-- ── Snapshot bar ── -->
+    <div class="snapshot-bar" *ngIf="availableDates.length > 1">
+      <div class="snapshot-left">
+        <mat-icon class="snapshot-icon">history</mat-icon>
+        <span class="snapshot-label">Snapshot</span>
+        <select class="date-select" [(ngModel)]="selectedDate" (change)="onDateChange()">
+          <option *ngFor="let opt of dateOptions" [value]="opt.value">{{ opt.label }}</option>
+        </select>
+      </div>
+      <div class="snapshot-right" *ngIf="!isLatestDate">
+        <span class="historical-badge">Historical</span>
+        <button class="reset-btn" (click)="resetToLatest()">Back to latest</button>
+      </div>
+    </div>
+
     <mat-tab-group class="wc-tabs" animationDuration="200ms" mat-stretch-tabs="false">
       <!-- ─── Leaderboard ─── -->
       <mat-tab label="Leaderboard">
         <section class="panel">
-          <p class="panel-sub">
-            Probability of reaching each tournament stage. Sorted by championship odds.
-          </p>
+          <div class="panel-header">
+            <p class="panel-sub">
+              Probability of reaching each tournament stage, sorted by championship odds.
+              <ng-container *ngIf="!isLatestDate">
+                Showing the model's state as of
+                {{ selectedDate | date: 'mediumDate' }}.</ng-container
+              >
+            </p>
+            <div class="context-strip" *ngIf="lockedCountForDate > 0">
+              <mat-icon>lock</mat-icon>
+              <span
+                >{{ lockedCountForDate }} match{{ lockedCountForDate !== 1 ? 'es' : '' }} locked
+                into this prediction</span
+              >
+            </div>
+          </div>
+
           <div class="leaderboard-wrap">
             <table class="leaderboard">
               <thead>
@@ -62,6 +91,7 @@
                   <th class="rank-col">#</th>
                   <th class="team-col">Team</th>
                   <th>Winner</th>
+                  <th *ngIf="!isLatestDate" class="delta-col">Δ</th>
                   <th>Final</th>
                   <th>Semi</th>
                   <th>QF</th>
@@ -71,12 +101,22 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let row of latest?.leaderboard; let i = index; trackBy: trackByTeam">
+                <tr *ngFor="let row of displayedLeaderboard; let i = index; trackBy: trackByTeam">
                   <td class="rank-col">{{ i + 1 }}</td>
                   <td class="team-col">{{ row.team }}</td>
                   <td class="pct-cell pct-winner">
                     <span class="bar" [style.width.%]="row.winner_pct * 5"></span>
                     <span class="pct-text">{{ row.winner_pct | number: '1.2-2' }}%</span>
+                  </td>
+                  <td *ngIf="!isLatestDate" class="delta-col">
+                    <span
+                      *ngIf="deltaMap.has(row.team)"
+                      [class.delta-up]="(deltaMap.get(row.team) ?? 0) > 0"
+                      [class.delta-down]="(deltaMap.get(row.team) ?? 0) < 0"
+                    >
+                      {{ (deltaMap.get(row.team) ?? 0) > 0 ? '+' : ''
+                      }}{{ deltaMap.get(row.team) | number: '1.1-1' }}
+                    </span>
                   </td>
                   <td>{{ row.final_pct | number: '1.1-1' }}%</td>
                   <td>{{ row.sf_pct | number: '1.1-1' }}%</td>
@@ -94,10 +134,35 @@
       <!-- ─── Bracket ─── -->
       <mat-tab label="Bracket">
         <section class="panel">
-          <p class="panel-sub">
-            Most-probable path through the tournament. Lock-ins from played matches feed into each
-            downstream prediction.
-          </p>
+          <div class="panel-header">
+            <p class="panel-sub">
+              Most-probable path through the tournament. Played matches feed locked results into
+              every downstream prediction.
+              <ng-container *ngIf="!isLatestDate">
+                Showing the bracket as of {{ selectedDate | date: 'mediumDate' }}.</ng-container
+              >
+            </p>
+            <div class="context-strip" *ngIf="lockedCountForDate > 0">
+              <mat-icon>lock</mat-icon>
+              <span
+                >{{ lockedCountForDate }} match{{
+                  lockedCountForDate !== 1 ? 'es' : ''
+                }}
+                locked</span
+              >
+              <span class="context-matches" *ngIf="lockedMatchesForDate.length > 0">
+                <ng-container *ngFor="let m of lockedMatchesForDate; let last = last">
+                  {{ m.home_team }} {{ m.home_score }}–{{ m.away_score }} {{ m.away_team
+                  }}<ng-container *ngIf="!last"> · </ng-container>
+                </ng-container>
+              </span>
+            </div>
+          </div>
+
+          <div class="bracket-loading-overlay" *ngIf="bracketLoading">
+            <mat-spinner diameter="28"></mat-spinner>
+            <span>Loading snapshot...</span>
+          </div>
 
           <h3 class="bracket-section-title">Knockout bracket</h3>
           <div class="bracket-scroll">
@@ -111,15 +176,15 @@
                 >
                   <div class="team" [class.team-winner]="advancers.r32.has(m[0])">
                     <span class="team-name">{{ m[0] }}</span>
-                    <span class="team-score" *ngIf="bracketHalves.left.r32Details[i]?.played">
-                      {{ bracketHalves.left.r32Details[i]!.actual_score![0] }}
-                    </span>
+                    <span class="team-score" *ngIf="bracketHalves.left.r32Details[i]?.played">{{
+                      bracketHalves.left.r32Details[i]!.actual_score![0]
+                    }}</span>
                   </div>
                   <div class="team" [class.team-winner]="advancers.r32.has(m[1])">
                     <span class="team-name">{{ m[1] }}</span>
-                    <span class="team-score" *ngIf="bracketHalves.left.r32Details[i]?.played">
-                      {{ bracketHalves.left.r32Details[i]!.actual_score![1] }}
-                    </span>
+                    <span class="team-score" *ngIf="bracketHalves.left.r32Details[i]?.played">{{
+                      bracketHalves.left.r32Details[i]!.actual_score![1]
+                    }}</span>
                   </div>
                   <div class="match-score-note" *ngIf="bracketHalves.left.r32Details[i] as d">
                     <ng-container *ngIf="!d.played"
@@ -140,15 +205,15 @@
                 >
                   <div class="team" [class.team-winner]="advancers.r16.has(m[0])">
                     <span class="team-name">{{ m[0] }}</span>
-                    <span class="team-score" *ngIf="bracketHalves.left.r16Details[i]?.played">
-                      {{ bracketHalves.left.r16Details[i]!.actual_score![0] }}
-                    </span>
+                    <span class="team-score" *ngIf="bracketHalves.left.r16Details[i]?.played">{{
+                      bracketHalves.left.r16Details[i]!.actual_score![0]
+                    }}</span>
                   </div>
                   <div class="team" [class.team-winner]="advancers.r16.has(m[1])">
                     <span class="team-name">{{ m[1] }}</span>
-                    <span class="team-score" *ngIf="bracketHalves.left.r16Details[i]?.played">
-                      {{ bracketHalves.left.r16Details[i]!.actual_score![1] }}
-                    </span>
+                    <span class="team-score" *ngIf="bracketHalves.left.r16Details[i]?.played">{{
+                      bracketHalves.left.r16Details[i]!.actual_score![1]
+                    }}</span>
                   </div>
                   <div class="match-score-note" *ngIf="bracketHalves.left.r16Details[i] as d">
                     <ng-container *ngIf="!d.played"
@@ -169,15 +234,15 @@
                 >
                   <div class="team" [class.team-winner]="advancers.qf.has(m[0])">
                     <span class="team-name">{{ m[0] }}</span>
-                    <span class="team-score" *ngIf="bracketHalves.left.qfDetails[i]?.played">
-                      {{ bracketHalves.left.qfDetails[i]!.actual_score![0] }}
-                    </span>
+                    <span class="team-score" *ngIf="bracketHalves.left.qfDetails[i]?.played">{{
+                      bracketHalves.left.qfDetails[i]!.actual_score![0]
+                    }}</span>
                   </div>
                   <div class="team" [class.team-winner]="advancers.qf.has(m[1])">
                     <span class="team-name">{{ m[1] }}</span>
-                    <span class="team-score" *ngIf="bracketHalves.left.qfDetails[i]?.played">
-                      {{ bracketHalves.left.qfDetails[i]!.actual_score![1] }}
-                    </span>
+                    <span class="team-score" *ngIf="bracketHalves.left.qfDetails[i]?.played">{{
+                      bracketHalves.left.qfDetails[i]!.actual_score![1]
+                    }}</span>
                   </div>
                   <div class="match-score-note" *ngIf="bracketHalves.left.qfDetails[i] as d">
                     <ng-container *ngIf="!d.played"
@@ -198,15 +263,15 @@
                 >
                   <div class="team" [class.team-winner]="advancers.sf.has(m[0])">
                     <span class="team-name">{{ m[0] }}</span>
-                    <span class="team-score" *ngIf="bracketHalves.left.sfDetails[i]?.played">
-                      {{ bracketHalves.left.sfDetails[i]!.actual_score![0] }}
-                    </span>
+                    <span class="team-score" *ngIf="bracketHalves.left.sfDetails[i]?.played">{{
+                      bracketHalves.left.sfDetails[i]!.actual_score![0]
+                    }}</span>
                   </div>
                   <div class="team" [class.team-winner]="advancers.sf.has(m[1])">
                     <span class="team-name">{{ m[1] }}</span>
-                    <span class="team-score" *ngIf="bracketHalves.left.sfDetails[i]?.played">
-                      {{ bracketHalves.left.sfDetails[i]!.actual_score![1] }}
-                    </span>
+                    <span class="team-score" *ngIf="bracketHalves.left.sfDetails[i]?.played">{{
+                      bracketHalves.left.sfDetails[i]!.actual_score![1]
+                    }}</span>
                   </div>
                   <div class="match-score-note" *ngIf="bracketHalves.left.sfDetails[i] as d">
                     <ng-container *ngIf="!d.played"
@@ -228,18 +293,18 @@
                     [class.team-winner]="bracket.final_pair[0] === bracket.champion"
                   >
                     <span class="team-name">{{ bracket.final_pair[0] }}</span>
-                    <span class="team-score" *ngIf="finalDetail?.played">
-                      {{ finalDetail!.actual_score![0] }}
-                    </span>
+                    <span class="team-score" *ngIf="finalDetail?.played">{{
+                      finalDetail!.actual_score![0]
+                    }}</span>
                   </div>
                   <div
                     class="team"
                     [class.team-winner]="bracket.final_pair[1] === bracket.champion"
                   >
                     <span class="team-name">{{ bracket.final_pair[1] }}</span>
-                    <span class="team-score" *ngIf="finalDetail?.played">
-                      {{ finalDetail!.actual_score![1] }}
-                    </span>
+                    <span class="team-score" *ngIf="finalDetail?.played">{{
+                      finalDetail!.actual_score![1]
+                    }}</span>
                   </div>
                   <div class="match-score-note" *ngIf="finalDetail as d">
                     <ng-container *ngIf="!d.played"
@@ -253,7 +318,9 @@
                 <div class="champ-pill">
                   <mat-icon class="trophy">emoji_events</mat-icon>
                   <div>
-                    <span class="champ-label">Predicted Champion</span>
+                    <span class="champ-label">{{
+                      finalDetail?.played ? 'Champion' : 'Predicted Champion'
+                    }}</span>
                     <span class="champ-name">{{ bracket.champion }}</span>
                   </div>
                 </div>
@@ -268,15 +335,15 @@
                 >
                   <div class="team" [class.team-winner]="advancers.sf.has(m[0])">
                     <span class="team-name">{{ m[0] }}</span>
-                    <span class="team-score" *ngIf="bracketHalves.right.sfDetails[i]?.played">
-                      {{ bracketHalves.right.sfDetails[i]!.actual_score![0] }}
-                    </span>
+                    <span class="team-score" *ngIf="bracketHalves.right.sfDetails[i]?.played">{{
+                      bracketHalves.right.sfDetails[i]!.actual_score![0]
+                    }}</span>
                   </div>
                   <div class="team" [class.team-winner]="advancers.sf.has(m[1])">
                     <span class="team-name">{{ m[1] }}</span>
-                    <span class="team-score" *ngIf="bracketHalves.right.sfDetails[i]?.played">
-                      {{ bracketHalves.right.sfDetails[i]!.actual_score![1] }}
-                    </span>
+                    <span class="team-score" *ngIf="bracketHalves.right.sfDetails[i]?.played">{{
+                      bracketHalves.right.sfDetails[i]!.actual_score![1]
+                    }}</span>
                   </div>
                   <div class="match-score-note" *ngIf="bracketHalves.right.sfDetails[i] as d">
                     <ng-container *ngIf="!d.played"
@@ -297,15 +364,15 @@
                 >
                   <div class="team" [class.team-winner]="advancers.qf.has(m[0])">
                     <span class="team-name">{{ m[0] }}</span>
-                    <span class="team-score" *ngIf="bracketHalves.right.qfDetails[i]?.played">
-                      {{ bracketHalves.right.qfDetails[i]!.actual_score![0] }}
-                    </span>
+                    <span class="team-score" *ngIf="bracketHalves.right.qfDetails[i]?.played">{{
+                      bracketHalves.right.qfDetails[i]!.actual_score![0]
+                    }}</span>
                   </div>
                   <div class="team" [class.team-winner]="advancers.qf.has(m[1])">
                     <span class="team-name">{{ m[1] }}</span>
-                    <span class="team-score" *ngIf="bracketHalves.right.qfDetails[i]?.played">
-                      {{ bracketHalves.right.qfDetails[i]!.actual_score![1] }}
-                    </span>
+                    <span class="team-score" *ngIf="bracketHalves.right.qfDetails[i]?.played">{{
+                      bracketHalves.right.qfDetails[i]!.actual_score![1]
+                    }}</span>
                   </div>
                   <div class="match-score-note" *ngIf="bracketHalves.right.qfDetails[i] as d">
                     <ng-container *ngIf="!d.played"
@@ -326,15 +393,15 @@
                 >
                   <div class="team" [class.team-winner]="advancers.r16.has(m[0])">
                     <span class="team-name">{{ m[0] }}</span>
-                    <span class="team-score" *ngIf="bracketHalves.right.r16Details[i]?.played">
-                      {{ bracketHalves.right.r16Details[i]!.actual_score![0] }}
-                    </span>
+                    <span class="team-score" *ngIf="bracketHalves.right.r16Details[i]?.played">{{
+                      bracketHalves.right.r16Details[i]!.actual_score![0]
+                    }}</span>
                   </div>
                   <div class="team" [class.team-winner]="advancers.r16.has(m[1])">
                     <span class="team-name">{{ m[1] }}</span>
-                    <span class="team-score" *ngIf="bracketHalves.right.r16Details[i]?.played">
-                      {{ bracketHalves.right.r16Details[i]!.actual_score![1] }}
-                    </span>
+                    <span class="team-score" *ngIf="bracketHalves.right.r16Details[i]?.played">{{
+                      bracketHalves.right.r16Details[i]!.actual_score![1]
+                    }}</span>
                   </div>
                   <div class="match-score-note" *ngIf="bracketHalves.right.r16Details[i] as d">
                     <ng-container *ngIf="!d.played"
@@ -355,15 +422,15 @@
                 >
                   <div class="team" [class.team-winner]="advancers.r32.has(m[0])">
                     <span class="team-name">{{ m[0] }}</span>
-                    <span class="team-score" *ngIf="bracketHalves.right.r32Details[i]?.played">
-                      {{ bracketHalves.right.r32Details[i]!.actual_score![0] }}
-                    </span>
+                    <span class="team-score" *ngIf="bracketHalves.right.r32Details[i]?.played">{{
+                      bracketHalves.right.r32Details[i]!.actual_score![0]
+                    }}</span>
                   </div>
                   <div class="team" [class.team-winner]="advancers.r32.has(m[1])">
                     <span class="team-name">{{ m[1] }}</span>
-                    <span class="team-score" *ngIf="bracketHalves.right.r32Details[i]?.played">
-                      {{ bracketHalves.right.r32Details[i]!.actual_score![1] }}
-                    </span>
+                    <span class="team-score" *ngIf="bracketHalves.right.r32Details[i]?.played">{{
+                      bracketHalves.right.r32Details[i]!.actual_score![1]
+                    }}</span>
                   </div>
                   <div class="match-score-note" *ngIf="bracketHalves.right.r32Details[i] as d">
                     <ng-container *ngIf="!d.played"
@@ -399,10 +466,25 @@
       <!-- ─── History ─── -->
       <mat-tab label="History">
         <section class="panel">
-          <p class="panel-sub">
-            Championship probability over time for the top 10 teams as of the latest snapshot. Each
-            point is one daily prediction run.
-          </p>
+          <div class="history-controls">
+            <div class="stage-select-row">
+              <span class="stage-select-label">Stage</span>
+              <select
+                class="stage-select"
+                [(ngModel)]="selectedHistoryStage"
+                (change)="onHistoryStageChange()"
+              >
+                <option *ngFor="let opt of stageOptions" [value]="opt.value">
+                  {{ opt.label }}
+                </option>
+              </select>
+            </div>
+            <p class="panel-sub">
+              {{ STAGE_LABELS[selectedHistoryStage] }} probability over time for the top teams. Each
+              point is one daily prediction run; played matches accrue from left to right as they
+              are locked in.
+            </p>
+          </div>
           <div class="chart-wrapper">
             <canvas #historyCanvas></canvas>
           </div>
@@ -413,22 +495,91 @@
       <mat-tab label="Played">
         <section class="panel">
           <p class="panel-sub">
-            Group-stage results that have been locked into every simulation in the latest run.
+            Match results locked into the simulation. Group-stage results fix group standings;
+            knockout results determine which teams advance.
           </p>
-          <div class="matches-day" *ngFor="let day of matchesByDate; trackBy: trackByDate">
-            <h4 class="day-label">{{ day.date | date: 'mediumDate' }}</h4>
-            <div class="matches-list">
-              <div class="match-card" *ngFor="let m of day.matches; trackBy: trackByMatch">
-                <span class="match-group" *ngIf="m.group_name"> Group {{ m.group_name }} </span>
-                <span class="match-teams">
-                  {{ m.home_team }}
-                  <strong>{{ m.home_score }} - {{ m.away_score }}</strong>
-                  {{ m.away_team }}
-                </span>
+
+          <!-- Group Stage -->
+          <div class="played-section" *ngIf="groupStageRounds.length > 0">
+            <h3 class="section-header">
+              <mat-icon>sports_soccer</mat-icon>
+              Group Stage
+            </h3>
+            <div class="round-group" *ngFor="let rg of groupStageRounds; trackBy: trackByRound">
+              <div class="played-round-header">
+                <span class="round-badge group-badge">{{ rg.round }}</span>
+                <span class="round-match-count"
+                  >{{ rg.match_count }} match{{ rg.match_count !== 1 ? 'es' : '' }}</span
+                >
+              </div>
+              <div class="day-block" *ngFor="let dg of rg.dateGroups; trackBy: trackByDateGroup">
+                <div class="day-label">{{ dg.date | date: 'mediumDate' }}</div>
+                <div class="matches-list">
+                  <div class="match-card" *ngFor="let m of dg.matches; trackBy: trackByMatch">
+                    <div class="match-scoreline">
+                      <span class="ms-team">{{ m.home_team }}</span>
+                      <span class="ms-score">{{ m.home_score }} – {{ m.away_score }}</span>
+                      <span class="ms-team ms-team-away">{{ m.away_team }}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <p *ngIf="matchesByDate.length === 0" class="empty-msg">No matches locked in yet.</p>
+
+          <!-- Knockout Rounds -->
+          <div class="played-section" *ngIf="knockoutRounds.length > 0">
+            <h3 class="section-header">
+              <mat-icon>emoji_events</mat-icon>
+              Knockout Rounds
+            </h3>
+            <div class="round-group" *ngFor="let rg of knockoutRounds; trackBy: trackByRound">
+              <div class="played-round-header">
+                <span class="round-badge ko-badge">{{ rg.round }}</span>
+                <span class="round-match-count"
+                  >{{ rg.match_count }} match{{ rg.match_count !== 1 ? 'es' : '' }}</span
+                >
+              </div>
+              <div class="day-block" *ngFor="let dg of rg.dateGroups; trackBy: trackByDateGroup">
+                <div class="day-label">{{ dg.date | date: 'mediumDate' }}</div>
+                <div class="matches-list">
+                  <div class="match-card" *ngFor="let m of dg.matches; trackBy: trackByMatch">
+                    <div class="match-scoreline">
+                      <span
+                        class="ms-team"
+                        [class.ms-winner]="
+                          m.penalty_winner === m.home_team ||
+                          (!m.went_to_penalties && m.home_score > m.away_score)
+                        "
+                      >
+                        {{ m.home_team }}
+                      </span>
+                      <span class="ms-score">{{ m.home_score }} – {{ m.away_score }}</span>
+                      <span
+                        class="ms-team ms-team-away"
+                        [class.ms-winner]="
+                          m.penalty_winner === m.away_team ||
+                          (!m.went_to_penalties && m.away_score > m.home_score)
+                        "
+                      >
+                        {{ m.away_team }}
+                      </span>
+                    </div>
+                    <div class="penalty-row" *ngIf="m.went_to_penalties">
+                      <span class="penalty-badge">A.E.T.</span>
+                      <span class="penalty-winner" *ngIf="m.penalty_winner"
+                        >{{ m.penalty_winner }} win on penalties</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <p *ngIf="groupStageRounds.length === 0 && knockoutRounds.length === 0" class="empty-msg">
+            No matches locked in yet.
+          </p>
         </section>
       </mat-tab>
     </mat-tab-group>
