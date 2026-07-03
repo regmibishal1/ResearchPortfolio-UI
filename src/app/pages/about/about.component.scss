@@ -60,7 +60,7 @@
   line-height: 1;
 
   &.stat-icon {
-    // Restore the icon font — the Outfit override above would otherwise
+    // Restore the icon font; the Outfit override above would otherwise
     // render the ligature name as plain text.
     font-family: 'Material Icons';
     font-weight: normal;

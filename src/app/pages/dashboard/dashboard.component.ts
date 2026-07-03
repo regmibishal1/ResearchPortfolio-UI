@@ -17,10 +17,10 @@ import { experienceLabel } from '../../data/experience'
 })
 export class DashboardComponent {
   constructor(title: Title, meta: Meta) {
-    title.setTitle('Bishal Regmi — Software Engineer & Data Scientist')
+    title.setTitle('Bishal Regmi | Software Engineer & Data Scientist')
     meta.updateTag({
       name: 'description',
-      content: `Bishal Regmi — Software Engineer & Data Scientist with ${experienceLabel()} years at T. Rowe Price. Explore projects in full-stack development, data science, and machine learning.`,
+      content: `Bishal Regmi is a Software Engineer and Data Scientist with ${experienceLabel()} years at T. Rowe Price. Explore projects in full-stack development, data science, and machine learning.`,
     })
   }
 
