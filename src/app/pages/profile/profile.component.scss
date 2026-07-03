@@ -9,7 +9,7 @@
   margin: 0 auto;
 }
 
-// ── Loading ────────────────────────────────────────────────────
+// Loading
 .loading-state {
   display: flex;
   flex-direction: column;
@@ -24,7 +24,7 @@
   }
 }
 
-// ── Hero ───────────────────────────────────────────────────────
+// Hero
 .profile-hero {
   text-align: center;
   margin-bottom: 48px;
@@ -85,7 +85,7 @@
   border: 1px solid var(--border-accent);
 }
 
-// ── Cards layout ───────────────────────────────────────────────
+// Cards layout
 .cards-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -117,7 +117,7 @@
   }
 }
 
-// ── Account detail rows ────────────────────────────────────────
+// Account detail rows
 .detail-row {
   display: flex;
   flex-direction: column;
@@ -149,7 +149,7 @@
   border-top: 1px solid var(--border-subtle);
 }
 
-// ── Password form ──────────────────────────────────────────────
+// Password form
 .field-group {
   margin-bottom: 20px;
 
@@ -215,7 +215,7 @@
   }
 }
 
-// ── Buttons ────────────────────────────────────────────────────
+// Buttons
 .btn-primary,
 .btn-danger {
   display: inline-flex;
@@ -266,7 +266,7 @@
   }
 }
 
-// ── Responsive ─────────────────────────────────────────────────
+// Responsive
 @media (max-width: 720px) {
   .cards-grid {
     grid-template-columns: 1fr;

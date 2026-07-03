@@ -423,7 +423,7 @@ $toolbar-height: 64px;
 // ===== Responsive =====
 @media (max-width: 768px) {
   .hero-section {
-    // Mobile browsers have smaller chrome — use dvh so the scroll indicator
+    // Mobile browsers have smaller chrome, so use dvh so the scroll indicator
     // isn't clipped by browser UI (address bar, bottom bar).
     min-height: calc(100dvh - #{$toolbar-height});
   }

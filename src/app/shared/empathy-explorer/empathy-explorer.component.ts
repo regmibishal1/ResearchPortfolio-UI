@@ -39,7 +39,7 @@ interface RegressionTable {
 /**
  * Per-epoch eval metrics for the emotion classification model
  * (multimodal concat), taken from the training run's trainer state.
- * Loss at epoch 8 is null — that eval produced NaN on the unstable
+ * Loss at epoch 8 is null because that eval produced NaN on the unstable
  * local CUDA setup described in the report, so the gap is kept honest.
  */
 const CLASSIFICATION_CURVE = [

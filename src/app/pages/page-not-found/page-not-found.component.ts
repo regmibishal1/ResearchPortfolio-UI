@@ -13,7 +13,7 @@ import { Title, Meta } from '@angular/platform-browser'
 })
 export class PageNotFoundComponent {
   constructor(title: Title, meta: Meta) {
-    title.setTitle('404 — Page Not Found | Bishal Regmi')
+    title.setTitle('404: Page Not Found | Bishal Regmi')
     meta.updateTag({ name: 'robots', content: 'noindex' })
   }
 }
