@@ -29,6 +29,14 @@ export interface LatestResponse {
   leaderboard: TeamRow[]
 }
 
+export interface TopFactor {
+  feature: string
+  label: string
+  value: number
+  impact: number
+  favors: string | null
+}
+
 export interface MatchDetail {
   teams: string[]
   predicted_score: number[]
@@ -36,6 +44,7 @@ export interface MatchDetail {
   actual_score: number[] | null
   went_to_penalties: boolean
   winner: string | null
+  top_factors: TopFactor[] | null
 }
 
 export interface BracketResponse {
