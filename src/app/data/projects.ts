@@ -28,6 +28,12 @@ export interface Project {
   demo?: string
   /** Bullet-point highlights shown on the detail page */
   highlights?: string[]
+  /**
+   * Honest limitations and takeaways, shown on the detail page below the
+   * highlights. Sourced from each project's own report — flaws I know
+   * about, not marketing.
+   */
+  lessons?: string[]
   status?: 'live' | 'in-progress' | 'research' | 'proposal'
   /**
    * Opt-in identifier for a live-data widget rendered above the About
@@ -126,6 +132,13 @@ export const PROJECTS: Project[] = [
       'Class-averaged saliency maps reveal which brain regions each model attends to per dementia stage',
       'Deeper was not better: ResNet-101 and ResNet-152 underperformed, showing the limits of added capacity on constrained medical data',
     ],
+    lessons: [
+      'Severe class imbalance: the Moderate Demented class had only ~15 test samples versus 632 Non-Demented — weighted metrics compensate on paper, but the minority-class signal is too thin to trust the headline accuracy for that stage',
+      "Discrete labels for a continuous disease: Alzheimer's progresses gradually, so forcing four buckets loses information — a better design uses longitudinal scans from the same patients over time",
+      'Without clinical domain expertise, the saliency maps could only confirm the models look inside the brain — whether they attend to diagnostically meaningful regions (e.g. atrophy) is unvalidated',
+      'Classification reports were not generated for every model during training due to compute cost, so model selection leaned too heavily on test loss alone',
+      'The preferred dataset (ADNI) was inaccessible; the substitute ships no label provenance, so how the stage labels were assigned is unknown — the whole study is a feasibility proof on a limited dataset, not a clinical result',
+    ],
   },
   {
     id: 'empathy-emotion',
@@ -145,6 +158,13 @@ export const PROJECTS: Project[] = [
       'Predicts continuous empathy, emotional intensity, and emotional polarity scores plus discrete emotion labels',
       'Multimodal fusion beat the text-only baseline on Pearson correlation across all three regression targets, with a rigorous error-metric trade-off analysis',
     ],
+    lessons: [
+      'The multimodal gain was marginal and inconsistent: no single fusion method won across all three targets — text-only was actually best for emotional intensity, so "multimodal helps" is not a clean conclusion',
+      'Pearson correlation and the error metrics (MSE/RMSE/MAE) moved in opposite directions, so a higher correlation score did not mean a better model — a reminder to pick the evaluation metric deliberately, not opportunistically',
+      'Feature leakage risk in the metadata: columns like speaker_id and essay_id were one-to-one correlated, and the eval set contained unseen article_ids — the binary-encoding mismatch between train and eval was never fully resolved',
+      'Early runs were unstable on local hardware (one eval produced NaN loss); moving to Colab fixed reproducibility, underlining how much environment stability affects results',
+      'The attention and gating fusion strategies underperformed and were dropped after only 3–5 epochs — a fair comparison would give every method the same training budget before ruling it out',
+    ],
   },
   {
     id: 'autism-sentiment',
@@ -161,6 +181,10 @@ export const PROJECTS: Project[] = [
       'Proposed a Dask-based distributed pipeline to process millions of tweets out-of-core',
       'Study design compares sentiment before, during, and after awareness events across annual cycles',
       'Planned NLTK preprocessing (tokenization, lemmatization, stopword removal) feeding Scikit-Learn classifiers',
+    ],
+    lessons: [
+      'This stayed a proposal — the scope (multi-year tweet collection plus a labeling strategy for sentiment ground truth) was larger than the timeframe allowed, and I chose not to ship a half-built version',
+      'Twitter/X API access and pricing changes since the proposal would materially reshape the data-collection plan, so the original design would need revisiting before any real execution',
     ],
   },
 ]
