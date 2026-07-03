@@ -193,6 +193,7 @@
               </button>
             </div>
             <div class="factors-panel" *ngIf="d && d.top_factors && isFactorOpen(round, d.teams)">
+              <span class="factors-note" *ngIf="d.played">Model's pre-match read</span>
               <div class="factor" *ngFor="let f of d.top_factors">
                 <span class="factor-label">{{ f.label }}</span>
                 <span class="factor-value">{{ formatFactorValue(f.feature, f.value) }}</span>

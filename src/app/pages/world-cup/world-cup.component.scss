@@ -651,6 +651,15 @@ h1 {
   flex-direction: column;
   gap: 3px;
 
+  .factors-note {
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $accent-3;
+    padding-bottom: 2px;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+  }
+
   .factor {
     display: grid;
     grid-template-columns: 1fr auto;
