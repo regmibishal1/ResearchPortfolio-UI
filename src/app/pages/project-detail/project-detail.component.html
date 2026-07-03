@@ -135,6 +135,23 @@
       </ul>
     </section>
 
+    <!-- Lessons Learned -->
+    <section
+      class="detail-section animate-in animate-in-delay-3"
+      *ngIf="project.lessons && project.lessons.length > 0"
+    >
+      <h2 class="section-heading">
+        <mat-icon>lightbulb_outline</mat-icon>
+        Lessons Learned &amp; Limitations
+      </h2>
+      <ul class="lessons-list">
+        <li *ngFor="let lesson of project.lessons" class="lesson-item">
+          <mat-icon class="lesson-icon">arrow_right</mat-icon>
+          <span>{{ lesson }}</span>
+        </li>
+      </ul>
+    </section>
+
     <!-- Tech Stack -->
     <section class="detail-section animate-in animate-in-delay-4">
       <h2 class="section-heading">
