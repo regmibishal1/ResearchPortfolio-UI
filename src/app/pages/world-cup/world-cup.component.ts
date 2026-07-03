@@ -159,6 +159,8 @@ export class WorldCupComponent implements OnInit, OnDestroy {
     sf: new Set(),
   }
 
+  openFactors = new Set<string>()
+
   private historyIndex = new Map<string, Map<string, Partial<Record<HistoryStage, number>>>>()
   private dateLockMap = new Map<string, number>()
 
@@ -545,6 +547,29 @@ export class WorldCupComponent implements OnInit, OnDestroy {
   trackByMatch = (_: number, m: EnrichedMatch) => `${m.match_date}-${m.home_team}-${m.away_team}`
   trackByPair = (i: number, pair: string[]) => `${i}-${pair[0]}-${pair[1]}`
   trackByGroup = (_: number, g: string) => g
+
+  factorKey(round: string, teams: string[]): string {
+    return `${round}::${teams.join('|')}`
+  }
+
+  isFactorOpen(round: string, teams: string[]): boolean {
+    return this.openFactors.has(this.factorKey(round, teams))
+  }
+
+  toggleFactors(round: string, teams: string[]): void {
+    const key = this.factorKey(round, teams)
+    if (this.openFactors.has(key)) this.openFactors.delete(key)
+    else this.openFactors.add(key)
+  }
+
+  formatFactorValue(feature: string, value: number): string {
+    if (feature === 'is_neutral') return value >= 0.5 ? 'neutral site' : 'host advantage'
+    const sign = value > 0 ? '+' : ''
+    if (feature === 'form_diff') return `${sign}${(value * 100).toFixed(0)}%`
+    if (feature === 'goals_form_diff') return `${sign}${value.toFixed(2)}`
+    if (Math.abs(value) >= 10) return `${sign}${value.toFixed(0)}`
+    return `${sign}${value.toFixed(1)}`
+  }
 
   // ── Chart ────────────────────────────────────────────────────────────
 
