@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment'
 
 /**
  * Returned by GET /api/v1/user.
- * The server derives the identity from the Bearer token — callers cannot
+ * The server derives the identity from the Bearer token, so callers cannot
  * request another user's profile. Only these fields are exposed; the
  * password hash is never included.
  */

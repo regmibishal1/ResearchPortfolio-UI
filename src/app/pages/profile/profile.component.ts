@@ -44,7 +44,7 @@ export class ProfileComponent implements OnInit {
       .subscribe({
         next: (profile) => (this.profile = profile),
         error: () => {
-          // Token invalid or expired — clear session and send to login
+          // Token invalid or expired, so clear the session and send to login
           this.authService.logout().subscribe({ complete: () => this.router.navigate(['/login']) })
         },
       })

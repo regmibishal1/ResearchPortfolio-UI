@@ -1,5 +1,5 @@
 /**
- * Career start date — first day at T. Rowe Price (June 1, 2021).
+ * Career start date: first day at T. Rowe Price (June 1, 2021).
  * Used to compute the years-of-experience figure shown across the site
  * so it never goes stale.
  */

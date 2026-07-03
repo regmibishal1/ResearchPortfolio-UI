@@ -8,7 +8,7 @@ import { map, take } from 'rxjs/operators'
  * exists in AuthService. Redirects unauthenticated users to /login.
  *
  * Note: This is a client-side convenience guard only. Actual enforcement
- * happens at the API layer — every /user request requires a valid Bearer
+ * happens at the API layer; every /user request requires a valid Bearer
  * token and the server returns the requesting user's data only.
  */
 export const authGuard: CanActivateFn = () => {

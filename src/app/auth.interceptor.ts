@@ -7,16 +7,16 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService)
   let headers = req.headers
 
-  // ── JWT Bearer — attached for authenticated user requests (AuthAPI routes) ──
+  // JWT Bearer: attached for authenticated user requests (AuthAPI routes)
   const token = authService.getAuthTokenValue()
   if (token) {
     headers = headers.set('Authorization', 'Bearer ' + token)
   }
 
-  // ── API key — attached to every request going to either backend service ──
+  // API key: attached to every request going to either backend service.
   // Sent to both the AuthAPI (Spring Boot) and the FastAPI model server.
   // The key is embedded in the Angular build at Cloudflare Pages build time;
-  // it is not user-specific and not truly secret — it acts as a lightweight
+  // it is not user-specific and not truly secret, so it acts as a lightweight
   // gate against anonymous bot abuse. Real protection is CORS + CF rate limiting.
   const isBackendRequest =
     req.url.startsWith(environment.apiBaseUrl) || req.url.startsWith(environment.modelApiUrl)
