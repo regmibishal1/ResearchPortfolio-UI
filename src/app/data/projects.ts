@@ -34,7 +34,7 @@ export interface Project {
    * section on the detail page. The detail-page component switches on
    * this value to render the matching embed component.
    */
-  liveEmbed?: 'world-cup-summary'
+  liveEmbed?: 'world-cup-summary' | 'mri-explorer'
 }
 
 export const PROJECTS: Project[] = [
@@ -119,11 +119,12 @@ export const PROJECTS: Project[] = [
     category: 'Machine Learning',
     icon: 'psychology',
     status: 'research',
+    liveEmbed: 'mri-explorer',
     highlights: [
-      'Benchmarked ResNet-18, ResNet-34, and ResNet-50 on a constrained MRI dataset spanning multiple disease stages',
-      'Pre-trained ResNet-50 achieved the highest clinical stability and classification accuracy across all test splits',
-      'Saliency maps generated to highlight diagnostically relevant brain regions and interpret model predictions',
-      'Transfer learning from ImageNet weights significantly outperformed training from scratch on limited medical data',
+      'Benchmarked all five ResNet variants (18/34/50/101/152) on the public Hugging Face Alzheimer MRI dataset across four dementia stages',
+      'ResNet-50 delivered the best result — 99.06% test accuracy — and the most stable training of the five variants',
+      'Class-averaged saliency maps reveal which brain regions each model attends to per dementia stage',
+      'Deeper was not better: ResNet-101 and ResNet-152 underperformed, showing the limits of added capacity on constrained medical data',
     ],
   },
   {

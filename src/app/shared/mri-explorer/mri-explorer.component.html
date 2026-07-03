@@ -1,0 +1,101 @@
+<div class="mri-explorer glass">
+  <!-- Model selector -->
+  <div class="model-selector">
+    <button
+      *ngFor="let model of models"
+      class="model-chip"
+      [class.model-chip-active]="model.id === selectedModel.id"
+      (click)="selectModel(model)"
+    >
+      {{ model.label }}
+    </button>
+  </div>
+
+  <!-- Selected model summary -->
+  <div class="model-summary">
+    <div class="summary-stats">
+      <div class="summary-stat">
+        <span class="stat-value">{{ selectedModel.accuracy }}%</span>
+        <span class="stat-label">Test Accuracy</span>
+      </div>
+      <div class="summary-stat">
+        <span class="stat-value">{{ selectedModel.testLoss }}</span>
+        <span class="stat-label">Test Loss</span>
+      </div>
+      <div class="summary-stat">
+        <span class="stat-value">{{ selectedModel.layers }}</span>
+        <span class="stat-label">Layers</span>
+      </div>
+    </div>
+    <p class="model-note">{{ selectedModel.note }}</p>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tab-bar">
+    <button
+      *ngFor="let tab of tabs"
+      class="tab-btn"
+      [class.tab-btn-active]="tab.id === activeTab"
+      (click)="selectTab(tab.id)"
+    >
+      <mat-icon>{{ tab.icon }}</mat-icon>
+      <span>{{ tab.label }}</span>
+    </button>
+  </div>
+
+  <!-- Saliency maps -->
+  <div class="tab-panel" *ngIf="activeTab === 'saliency'">
+    <p class="panel-caption">
+      Class-averaged saliency maps showing which brain regions {{ selectedModel.label }} attends to
+      when predicting each dementia stage.
+    </p>
+    <div class="saliency-grid">
+      <figure class="saliency-figure" *ngFor="let cls of saliencyClasses">
+        <img
+          [src]="saliencyImage(cls.id)"
+          [alt]="selectedModel.label + ' saliency map for ' + cls.label"
+          loading="lazy"
+        />
+        <figcaption>{{ cls.label }}</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <!-- Confusion matrix -->
+  <div class="tab-panel" *ngIf="activeTab === 'confusion'">
+    <p class="panel-caption">
+      Test-set confusion matrix for {{ selectedModel.label }} across the four dementia classes.
+    </p>
+    <img
+      class="panel-image"
+      [src]="confusionImage"
+      [alt]="selectedModel.label + ' confusion matrix'"
+      loading="lazy"
+    />
+  </div>
+
+  <!-- Training curves -->
+  <div class="tab-panel" *ngIf="activeTab === 'training'">
+    <p class="panel-caption">
+      Train and test loss/accuracy for {{ selectedModel.label }} over 30 epochs.
+    </p>
+    <img
+      class="panel-image"
+      [src]="trainingImage"
+      [alt]="selectedModel.label + ' training curves'"
+      loading="lazy"
+    />
+  </div>
+
+  <!-- Attribution -->
+  <p class="attribution">
+    Figures from my UMD DATA 612 final project. Dataset:
+    <a
+      href="https://huggingface.co/datasets/Falah/Alzheimer_MRI"
+      target="_blank"
+      rel="noopener noreferrer"
+      >Alzheimer MRI Disease Classification</a
+    >
+    (Falah.G.Salieh, 2023), a public, anonymized dataset on Hugging Face.
+  </p>
+</div>

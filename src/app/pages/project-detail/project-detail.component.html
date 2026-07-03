@@ -87,6 +87,17 @@
       <app-world-cup-summary></app-world-cup-summary>
     </section>
 
+    <section
+      class="detail-section animate-in animate-in-delay-2"
+      *ngIf="project.liveEmbed === 'mri-explorer'"
+    >
+      <h2 class="section-heading">
+        <mat-icon>science</mat-icon>
+        Results Explorer
+      </h2>
+      <app-mri-explorer></app-mri-explorer>
+    </section>
+
     <!-- About -->
     <section class="detail-section animate-in animate-in-delay-2">
       <h2 class="section-heading">
