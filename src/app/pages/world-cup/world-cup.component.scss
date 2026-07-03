@@ -619,6 +619,75 @@ h1 {
   }
 }
 
+.factors-btn {
+  align-self: flex-start;
+  margin-top: 2px;
+  padding: 1px 6px;
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $accent;
+  background: transparent;
+  border: 1px solid rgba(137, 180, 250, 0.35);
+  border-radius: 10px;
+  cursor: pointer;
+  transition:
+    background 120ms ease,
+    border-color 120ms ease;
+
+  &:hover {
+    background: rgba(137, 180, 250, 0.08);
+    border-color: rgba(137, 180, 250, 0.6);
+  }
+}
+
+.factors-panel {
+  margin-top: 4px;
+  padding: 4px 6px;
+  background: rgba(137, 180, 250, 0.05);
+  border: 1px solid rgba(137, 180, 250, 0.15);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+
+  .factor {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    row-gap: 1px;
+    column-gap: 6px;
+    font-size: 0.66rem;
+    line-height: 1.2;
+  }
+
+  .factor-label {
+    color: #cdd6f4;
+    font-weight: 600;
+  }
+
+  .factor-value {
+    color: $muted;
+    font-variant-numeric: tabular-nums;
+    justify-self: end;
+  }
+
+  .factor-favors {
+    grid-column: 1 / -1;
+    font-size: 0.62rem;
+    color: $muted;
+    letter-spacing: 0.02em;
+
+    &.pos {
+      color: #a6e3a1;
+    }
+
+    &.neg {
+      color: #f38ba8;
+    }
+  }
+}
+
 .champ-pill {
   display: flex;
   align-items: center;

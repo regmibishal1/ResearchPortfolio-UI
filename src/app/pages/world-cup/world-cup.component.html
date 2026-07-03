@@ -175,6 +175,34 @@
             <span>Loading snapshot...</span>
           </div>
 
+          <ng-template #matchExtras let-d="d" let-round="round">
+            <div class="match-score-note" *ngIf="d">
+              <ng-container *ngIf="!d.played"
+                >Pred {{ d.predicted_score[0] }}-{{ d.predicted_score[1] }}</ng-container
+              >
+              <ng-container *ngIf="d.went_to_penalties && d.winner"
+                >pen: {{ d.winner }}</ng-container
+              >
+              <button
+                type="button"
+                class="factors-btn"
+                *ngIf="d.top_factors?.length"
+                (click)="toggleFactors(round, d.teams)"
+              >
+                {{ isFactorOpen(round, d.teams) ? 'Hide why' : 'Why?' }}
+              </button>
+            </div>
+            <div class="factors-panel" *ngIf="d && d.top_factors && isFactorOpen(round, d.teams)">
+              <div class="factor" *ngFor="let f of d.top_factors">
+                <span class="factor-label">{{ f.label }}</span>
+                <span class="factor-value">{{ formatFactorValue(f.feature, f.value) }}</span>
+                <span class="factor-favors" [class.pos]="f.impact > 0" [class.neg]="f.impact < 0">
+                  {{ f.favors ? 'favors ' + f.favors : 'even' }}
+                </span>
+              </div>
+            </div>
+          </ng-template>
+
           <h3 class="bracket-section-title">Knockout bracket</h3>
           <div class="bracket-scroll">
             <div class="bracket" *ngIf="bracketHalves && bracket">
@@ -197,14 +225,12 @@
                       bracketHalves.left.r32Details[i]!.actual_score![1]
                     }}</span>
                   </div>
-                  <div class="match-score-note" *ngIf="bracketHalves.left.r32Details[i] as d">
-                    <ng-container *ngIf="!d.played"
-                      >Pred {{ d.predicted_score[0] }}-{{ d.predicted_score[1] }}</ng-container
-                    >
-                    <ng-container *ngIf="d.went_to_penalties && d.winner"
-                      >pen: {{ d.winner }}</ng-container
-                    >
-                  </div>
+                  <ng-container
+                    *ngTemplateOutlet="
+                      matchExtras;
+                      context: { d: bracketHalves.left.r32Details[i], round: 'R32' }
+                    "
+                  ></ng-container>
                 </div>
               </div>
 
@@ -226,14 +252,12 @@
                       bracketHalves.left.r16Details[i]!.actual_score![1]
                     }}</span>
                   </div>
-                  <div class="match-score-note" *ngIf="bracketHalves.left.r16Details[i] as d">
-                    <ng-container *ngIf="!d.played"
-                      >Pred {{ d.predicted_score[0] }}-{{ d.predicted_score[1] }}</ng-container
-                    >
-                    <ng-container *ngIf="d.went_to_penalties && d.winner"
-                      >pen: {{ d.winner }}</ng-container
-                    >
-                  </div>
+                  <ng-container
+                    *ngTemplateOutlet="
+                      matchExtras;
+                      context: { d: bracketHalves.left.r16Details[i], round: 'R16' }
+                    "
+                  ></ng-container>
                 </div>
               </div>
 
@@ -255,14 +279,12 @@
                       bracketHalves.left.qfDetails[i]!.actual_score![1]
                     }}</span>
                   </div>
-                  <div class="match-score-note" *ngIf="bracketHalves.left.qfDetails[i] as d">
-                    <ng-container *ngIf="!d.played"
-                      >Pred {{ d.predicted_score[0] }}-{{ d.predicted_score[1] }}</ng-container
-                    >
-                    <ng-container *ngIf="d.went_to_penalties && d.winner"
-                      >pen: {{ d.winner }}</ng-container
-                    >
-                  </div>
+                  <ng-container
+                    *ngTemplateOutlet="
+                      matchExtras;
+                      context: { d: bracketHalves.left.qfDetails[i], round: 'QF' }
+                    "
+                  ></ng-container>
                 </div>
               </div>
 
@@ -284,14 +306,12 @@
                       bracketHalves.left.sfDetails[i]!.actual_score![1]
                     }}</span>
                   </div>
-                  <div class="match-score-note" *ngIf="bracketHalves.left.sfDetails[i] as d">
-                    <ng-container *ngIf="!d.played"
-                      >Pred {{ d.predicted_score[0] }}-{{ d.predicted_score[1] }}</ng-container
-                    >
-                    <ng-container *ngIf="d.went_to_penalties && d.winner"
-                      >pen: {{ d.winner }}</ng-container
-                    >
-                  </div>
+                  <ng-container
+                    *ngTemplateOutlet="
+                      matchExtras;
+                      context: { d: bracketHalves.left.sfDetails[i], round: 'SF' }
+                    "
+                  ></ng-container>
                 </div>
               </div>
 
@@ -317,14 +337,9 @@
                       finalDetail!.actual_score![1]
                     }}</span>
                   </div>
-                  <div class="match-score-note" *ngIf="finalDetail as d">
-                    <ng-container *ngIf="!d.played"
-                      >Pred {{ d.predicted_score[0] }}-{{ d.predicted_score[1] }}</ng-container
-                    >
-                    <ng-container *ngIf="d.went_to_penalties && d.winner"
-                      >pen: {{ d.winner }}</ng-container
-                    >
-                  </div>
+                  <ng-container
+                    *ngTemplateOutlet="matchExtras; context: { d: finalDetail, round: 'Final' }"
+                  ></ng-container>
                 </div>
                 <div class="champ-pill">
                   <mat-icon class="trophy">emoji_events</mat-icon>
@@ -356,14 +371,12 @@
                       bracketHalves.right.sfDetails[i]!.actual_score![1]
                     }}</span>
                   </div>
-                  <div class="match-score-note" *ngIf="bracketHalves.right.sfDetails[i] as d">
-                    <ng-container *ngIf="!d.played"
-                      >Pred {{ d.predicted_score[0] }}-{{ d.predicted_score[1] }}</ng-container
-                    >
-                    <ng-container *ngIf="d.went_to_penalties && d.winner"
-                      >pen: {{ d.winner }}</ng-container
-                    >
-                  </div>
+                  <ng-container
+                    *ngTemplateOutlet="
+                      matchExtras;
+                      context: { d: bracketHalves.right.sfDetails[i], round: 'SF' }
+                    "
+                  ></ng-container>
                 </div>
               </div>
 
@@ -385,14 +398,12 @@
                       bracketHalves.right.qfDetails[i]!.actual_score![1]
                     }}</span>
                   </div>
-                  <div class="match-score-note" *ngIf="bracketHalves.right.qfDetails[i] as d">
-                    <ng-container *ngIf="!d.played"
-                      >Pred {{ d.predicted_score[0] }}-{{ d.predicted_score[1] }}</ng-container
-                    >
-                    <ng-container *ngIf="d.went_to_penalties && d.winner"
-                      >pen: {{ d.winner }}</ng-container
-                    >
-                  </div>
+                  <ng-container
+                    *ngTemplateOutlet="
+                      matchExtras;
+                      context: { d: bracketHalves.right.qfDetails[i], round: 'QF' }
+                    "
+                  ></ng-container>
                 </div>
               </div>
 
@@ -414,14 +425,12 @@
                       bracketHalves.right.r16Details[i]!.actual_score![1]
                     }}</span>
                   </div>
-                  <div class="match-score-note" *ngIf="bracketHalves.right.r16Details[i] as d">
-                    <ng-container *ngIf="!d.played"
-                      >Pred {{ d.predicted_score[0] }}-{{ d.predicted_score[1] }}</ng-container
-                    >
-                    <ng-container *ngIf="d.went_to_penalties && d.winner"
-                      >pen: {{ d.winner }}</ng-container
-                    >
-                  </div>
+                  <ng-container
+                    *ngTemplateOutlet="
+                      matchExtras;
+                      context: { d: bracketHalves.right.r16Details[i], round: 'R16' }
+                    "
+                  ></ng-container>
                 </div>
               </div>
 
@@ -443,14 +452,12 @@
                       bracketHalves.right.r32Details[i]!.actual_score![1]
                     }}</span>
                   </div>
-                  <div class="match-score-note" *ngIf="bracketHalves.right.r32Details[i] as d">
-                    <ng-container *ngIf="!d.played"
-                      >Pred {{ d.predicted_score[0] }}-{{ d.predicted_score[1] }}</ng-container
-                    >
-                    <ng-container *ngIf="d.went_to_penalties && d.winner"
-                      >pen: {{ d.winner }}</ng-container
-                    >
-                  </div>
+                  <ng-container
+                    *ngTemplateOutlet="
+                      matchExtras;
+                      context: { d: bracketHalves.right.r32Details[i], round: 'R32' }
+                    "
+                  ></ng-container>
                 </div>
               </div>
             </div>
