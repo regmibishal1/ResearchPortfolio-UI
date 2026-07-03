@@ -1,0 +1,142 @@
+.empathy-explorer {
+  padding: 28px;
+  border-radius: var(--radius-lg);
+}
+
+.explorer-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 8px;
+
+  mat-icon {
+    color: var(--accent-gold);
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.curve-heading {
+  margin-top: 32px;
+}
+
+.explorer-caption {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: 0 0 20px;
+}
+
+// ===== Results tables =====
+.table-wrap {
+  margin-bottom: 24px;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+}
+
+.table-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent-gold);
+  margin: 0 0 8px;
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+
+  th {
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-secondary);
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border-accent);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 8px 12px;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border-subtle);
+    font-variant-numeric: tabular-nums;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  .baseline-row td {
+    color: var(--text-primary);
+  }
+
+  .pearson-cell {
+    color: var(--accent-gold);
+    font-weight: 600;
+  }
+}
+
+.baseline-tag {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 8px;
+  border-radius: 100px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  background: var(--accent-gold-dim);
+  color: var(--accent-gold);
+  vertical-align: middle;
+}
+
+// ===== Curve chart =====
+.curve-canvas-wrap {
+  position: relative;
+  height: 320px;
+}
+
+// ===== Attribution =====
+.attribution {
+  margin: 24px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+
+  a {
+    color: var(--accent-gold);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// ===== Responsive =====
+@media (max-width: 640px) {
+  .empathy-explorer {
+    padding: 20px;
+  }
+
+  .results-table {
+    font-size: 0.78rem;
+
+    th,
+    td {
+      padding: 6px 8px;
+    }
+  }
+
+  .curve-canvas-wrap {
+    height: 260px;
+  }
+}

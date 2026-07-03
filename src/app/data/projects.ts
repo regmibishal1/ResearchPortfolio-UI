@@ -28,13 +28,13 @@ export interface Project {
   demo?: string
   /** Bullet-point highlights shown on the detail page */
   highlights?: string[]
-  status?: 'live' | 'in-progress' | 'research'
+  status?: 'live' | 'in-progress' | 'research' | 'proposal'
   /**
    * Opt-in identifier for a live-data widget rendered above the About
    * section on the detail page. The detail-page component switches on
    * this value to render the matching embed component.
    */
-  liveEmbed?: 'world-cup-summary' | 'mri-explorer'
+  liveEmbed?: 'world-cup-summary' | 'mri-explorer' | 'empathy-explorer'
 }
 
 export const PROJECTS: Project[] = [
@@ -133,34 +133,34 @@ export const PROJECTS: Project[] = [
     shortDescription:
       'Developed a multimodal transformer model to classify empathy and emotional valence in conversational data for the WASSA 2023 NLP Shared Task.',
     description:
-      'Developed a multimodal transformer model for the WASSA 2023 Shared Task, classifying empathy and emotional valence in conversational reactions to news articles. Enhanced natural language processing architectures by integrating non-textual contextual variables — including demographic features and conversational history — to significantly boost predictive accuracy beyond text-only baselines.',
-    tags: ['Python', 'NLP', 'Transformers', 'NLTK'],
+      "Built multimodal transformer models for the WASSA 2023 Shared Task, predicting empathy, emotional intensity, and emotional polarity in conversational reactions to news articles. The architecture combines transformer text embeddings with non-textual features (demographics, conversation context) through several fusion strategies — concatenation, MLP-on-categorical, gating, and attention. The naive multimodal fusion consistently edged out the text-only baseline on Pearson correlation, the shared task's metric, while the error metrics revealed the trade-offs of simple feature combination — an honest negative result the report analyzes in depth.",
+    tags: ['Python', 'NLP', 'Transformers', 'HuggingFace'],
     category: 'Machine Learning',
     icon: 'forum',
     status: 'research',
+    liveEmbed: 'empathy-explorer',
     highlights: [
-      'Submitted to the WASSA 2023 Shared Task for empathy and emotion prediction in news-driven conversation',
-      'Multimodal architecture integrates textual transformer embeddings with non-textual features (demographics, conversation history)',
-      'Predicts both continuous empathy scores and discrete emotional valence labels in a single model',
-      'Achieved significant accuracy improvement over text-only transformer baselines on held-out evaluation data',
+      'Built for the WASSA 2023 Shared Task on empathy detection and emotion classification in news-driven conversation',
+      'Multimodal architecture fuses transformer text embeddings with demographic and conversational features via four combining strategies',
+      'Predicts continuous empathy, emotional intensity, and emotional polarity scores plus discrete emotion labels',
+      'Multimodal fusion beat the text-only baseline on Pearson correlation across all three regression targets, with a rigorous error-metric trade-off analysis',
     ],
   },
   {
     id: 'autism-sentiment',
     title: 'Autism Tweet Sentiment Analysis',
     shortDescription:
-      'Engineered a scalable Dask + Scikit-Learn pipeline to analyze public sentiment shifts in Twitter data surrounding autism awareness events.',
+      'Research proposal for a scalable Dask + Scikit-Learn pipeline to track public sentiment shifts in Twitter data around autism awareness events.',
     description:
-      'Engineered a scalable data processing pipeline using Dask and Scikit-Learn to analyze sentiment shifts in Twitter data surrounding autism awareness events. Applied advanced natural language processing techniques to quantify public perception trends at scale, tracking how media events influence discourse over time.',
+      'Research proposal for a scalable sentiment analysis study of Twitter discourse around autism awareness events. The proposed design pairs a Dask-based distributed pipeline with NLTK preprocessing and Scikit-Learn classifiers to quantify how high-profile media events shift public perception over time, without ever loading the full tweet corpus into memory. The study was scoped and designed but not carried out.',
     tags: ['Python', 'Dask', 'NLTK', 'Scikit-Learn'],
     category: 'Data Science',
     icon: 'bar_chart',
-    status: 'research',
+    status: 'proposal',
     highlights: [
-      'Dask-based distributed pipeline processes millions of tweets without loading the full dataset into memory',
-      'Tracked sentiment shifts before, during, and after autism awareness events across multiple annual cycles',
-      'Combined NLTK preprocessing (tokenization, lemmatization, stopword removal) with Scikit-Learn classifiers',
-      'Quantified statistically significant public perception trends correlated with high-profile media events',
+      'Proposed a Dask-based distributed pipeline to process millions of tweets out-of-core',
+      'Study design compares sentiment before, during, and after awareness events across annual cycles',
+      'Planned NLTK preprocessing (tokenization, lemmatization, stopword removal) feeding Scikit-Learn classifiers',
     ],
   },
 ]

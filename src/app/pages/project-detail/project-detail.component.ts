@@ -6,6 +6,7 @@ import { Title, Meta } from '@angular/platform-browser'
 import { PROJECTS, Project } from '../../data/projects'
 import { WorldCupSummaryComponent } from '../../shared/world-cup-summary/world-cup-summary.component'
 import { MriExplorerComponent } from '../../shared/mri-explorer/mri-explorer.component'
+import { EmpathyExplorerComponent } from '../../shared/empathy-explorer/empathy-explorer.component'
 
 @Component({
   selector: 'app-project-detail',
@@ -16,6 +17,7 @@ import { MriExplorerComponent } from '../../shared/mri-explorer/mri-explorer.com
     MatIconModule,
     WorldCupSummaryComponent,
     MriExplorerComponent,
+    EmpathyExplorerComponent,
   ],
   templateUrl: './project-detail.component.html',
   styleUrl: './project-detail.component.scss',
@@ -27,6 +29,7 @@ export class ProjectDetailComponent implements OnInit {
     live: { label: 'Live', cssClass: 'status-live' },
     'in-progress': { label: 'In Progress', cssClass: 'status-wip' },
     research: { label: 'Research', cssClass: 'status-research' },
+    proposal: { label: 'Research Proposal', cssClass: 'status-proposal' },
   }
 
   constructor(
