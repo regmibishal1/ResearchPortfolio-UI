@@ -80,13 +80,14 @@
             <mat-icon>open_in_new</mat-icon>
             <span>Demo</span>
           </a>
-          <span
+          <a
             class="card-link card-details-hint"
             *ngIf="!project.github && !project.repoLinks && !project.demo"
+            [routerLink]="['/project', project.id]"
           >
             <mat-icon>arrow_forward</mat-icon>
             <span>View Details</span>
-          </span>
+          </a>
         </div>
       </div>
     </div>
