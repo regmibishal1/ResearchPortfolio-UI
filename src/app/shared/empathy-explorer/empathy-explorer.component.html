@@ -1,0 +1,65 @@
+<div class="empathy-explorer glass">
+  <!-- Regression results -->
+  <h3 class="explorer-heading">
+    <mat-icon>table_chart</mat-icon>
+    Regression Results — Text-Only vs Multimodal
+  </h3>
+  <p class="explorer-caption">
+    Adding demographic and conversational features nudged the Pearson correlation (the shared task's
+    metric) above the text-only baseline on every target, but the error metrics rose with it — a
+    trade-off the report attributes to the naive feature-combination strategy.
+  </p>
+
+  <div class="table-wrap" *ngFor="let table of regressionTables">
+    <h4 class="table-title">{{ table.target }}</h4>
+    <table class="results-table">
+      <thead>
+        <tr>
+          <th>Method</th>
+          <th>MSE</th>
+          <th>RMSE</th>
+          <th>MAE</th>
+          <th>Pearson r</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of table.rows" [class.baseline-row]="row.baseline">
+          <td>
+            {{ row.method }}
+            <span class="baseline-tag" *ngIf="row.baseline">baseline</span>
+          </td>
+          <td>{{ row.mse }}</td>
+          <td>{{ row.rmse }}</td>
+          <td>{{ row.mae }}</td>
+          <td class="pearson-cell">{{ row.pearson }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Training curves -->
+  <h3 class="explorer-heading curve-heading">
+    <mat-icon>show_chart</mat-icon>
+    Emotion Classification — Training Run
+  </h3>
+  <p class="explorer-caption">
+    Per-epoch evaluation metrics for the multimodal emotion classifier. The loss gap at epoch 8 is
+    real — that eval step returned NaN on the unstable local GPU setup noted in the report.
+  </p>
+  <div class="curve-canvas-wrap">
+    <canvas #curveCanvas></canvas>
+  </div>
+
+  <!-- Attribution -->
+  <p class="attribution">
+    Results from my UMD DATA 641 final project for the
+    <a
+      href="https://codalab.lisn.upsaclay.fr/competitions/11167"
+      target="_blank"
+      rel="noopener noreferrer"
+      >WASSA 2023 Shared Task</a
+    >
+    on empathy detection and emotion classification. Only aggregate metrics are shown — the
+    underlying participant essays are not redistributed.
+  </p>
+</div>
