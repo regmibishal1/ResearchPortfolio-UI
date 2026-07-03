@@ -115,7 +115,7 @@ $toolbar-height: 64px;
 }
 
 // ===== Page Layout =====
-// No fixed height — the window is the single scroll container.
+// No fixed height; the window is the single scroll container.
 // mat-drawer-content also has overflow:auto by default; removing the
 // inner overflow-y:auto from .page-content eliminates the double scrollbar
 // and the orphaned gap below the footer.

@@ -14,7 +14,7 @@
       <h1>FIFA World Cup 2026</h1>
       <p class="hero-sub">
         Calibrated XGBoost + 2M-simulation Monte Carlo, updated daily. Each played match is locked
-        into every simulation — probability estimates sharpen as the tournament progresses.
+        into every simulation, so probability estimates sharpen as the tournament progresses.
       </p>
     </div>
 
@@ -48,7 +48,7 @@
 
   <!-- ===== Content ===== -->
   <ng-container *ngIf="!loading && !error">
-    <!-- ── Snapshot bar ── -->
+    <!-- Snapshot bar -->
     <div class="snapshot-bar" *ngIf="availableDates.length > 1">
       <div class="snapshot-left">
         <mat-icon class="snapshot-icon">history</mat-icon>
@@ -64,7 +64,7 @@
     </div>
 
     <mat-tab-group class="wc-tabs" animationDuration="200ms" mat-stretch-tabs="false">
-      <!-- ─── Leaderboard ─── -->
+      <!-- Leaderboard -->
       <mat-tab label="Leaderboard">
         <section class="panel">
           <div class="panel-header">
@@ -131,7 +131,7 @@
         </section>
       </mat-tab>
 
-      <!-- ─── Bracket ─── -->
+      <!-- Bracket -->
       <mat-tab label="Bracket">
         <section class="panel">
           <div class="panel-header">
@@ -163,7 +163,7 @@
                 *ngIf="showLockedMatches && lockedMatchesForDate.length > 0"
               >
                 <ng-container *ngFor="let m of lockedMatchesForDate; let last = last">
-                  {{ m.home_team }} {{ m.home_score }}–{{ m.away_score }} {{ m.away_team
+                  {{ m.home_team }} {{ m.home_score }}-{{ m.away_score }} {{ m.away_team
                   }}<ng-container *ngIf="!last"> · </ng-container>
                 </ng-container>
               </span>
@@ -207,7 +207,7 @@
           <h3 class="bracket-section-title">Knockout bracket</h3>
           <div class="bracket-scroll">
             <div class="bracket" *ngIf="bracketHalves && bracket">
-              <!-- ── LEFT HALF ── -->
+              <!-- LEFT HALF -->
               <div class="round round-r32">
                 <div class="round-label">Round of 32</div>
                 <div
@@ -316,7 +316,7 @@
                 </div>
               </div>
 
-              <!-- ── CENTER: FINAL + CHAMPION ── -->
+              <!-- CENTER: FINAL + CHAMPION -->
               <div class="round round-final">
                 <div class="round-label">Final</div>
                 <div class="match match-final">
@@ -353,7 +353,7 @@
                 </div>
               </div>
 
-              <!-- ── RIGHT HALF (mirrored) ── -->
+              <!-- RIGHT HALF (mirrored) -->
               <div class="round round-sf">
                 <div class="round-label">Semi-final</div>
                 <div
@@ -482,7 +482,7 @@
         </section>
       </mat-tab>
 
-      <!-- ─── History ─── -->
+      <!-- History -->
       <mat-tab label="History">
         <section class="panel">
           <div class="history-controls">
@@ -510,7 +510,7 @@
         </section>
       </mat-tab>
 
-      <!-- ─── Played matches ─── -->
+      <!-- Played matches -->
       <mat-tab label="Played">
         <section class="panel">
           <p class="panel-sub">
@@ -537,7 +537,7 @@
                   <div class="match-card" *ngFor="let m of dg.matches; trackBy: trackByMatch">
                     <div class="match-scoreline">
                       <span class="ms-team">{{ m.home_team }}</span>
-                      <span class="ms-score">{{ m.home_score }} – {{ m.away_score }}</span>
+                      <span class="ms-score">{{ m.home_score }} - {{ m.away_score }}</span>
                       <span class="ms-team ms-team-away">{{ m.away_team }}</span>
                     </div>
                   </div>
@@ -573,7 +573,7 @@
                       >
                         {{ m.home_team }}
                       </span>
-                      <span class="ms-score">{{ m.home_score }} – {{ m.away_score }}</span>
+                      <span class="ms-score">{{ m.home_score }} - {{ m.away_score }}</span>
                       <span
                         class="ms-team ms-team-away"
                         [class.ms-winner]="

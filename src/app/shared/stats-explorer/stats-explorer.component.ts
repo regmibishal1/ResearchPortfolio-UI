@@ -191,7 +191,7 @@ export class StatsExplorerComponent implements AfterViewInit, OnDestroy {
               callback: (_val, index) => {
                 const label = this.chart?.data.labels?.[index]
                 if (typeof label !== 'string') return ''
-                return label.split('–')[0]
+                return label.split(' to ')[0]
               },
             },
             grid: { display: false },
@@ -215,7 +215,7 @@ export class StatsExplorerComponent implements AfterViewInit, OnDestroy {
   private updateChart(res: SampleResponse): void {
     if (!this.chart) return
     this.chart.data.labels = res.histogram.map(
-      (b) => `${b.bin_start.toFixed(2)}–${b.bin_end.toFixed(2)}`
+      (b) => `${b.bin_start.toFixed(2)} to ${b.bin_end.toFixed(2)}`
     )
     this.chart.data.datasets[0].data = res.histogram.map((b) => b.frequency)
     this.chart.update()

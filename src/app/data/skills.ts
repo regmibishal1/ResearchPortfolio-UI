@@ -1,5 +1,5 @@
 /**
- * Central skills data — single source of truth used by the About page
+ * Central skills data: single source of truth used by the About page
  * (full categorized list) and the dashboard tech-stack strip (curated
  * subset resolved by name so the two can never drift apart).
  */
@@ -106,7 +106,7 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
 
 /**
  * Curated highlight set for the home-page tech-stack strip. Names must
- * match an entry in SKILL_CATEGORIES — unknown names are dropped by
+ * match an entry in SKILL_CATEGORIES; unknown names are dropped by
  * homeSkills() rather than rendered with a stale label.
  */
 const HOME_TECH_STACK: string[] = [

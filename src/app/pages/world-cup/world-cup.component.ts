@@ -267,7 +267,7 @@ export class WorldCupComponent implements OnInit, OnDestroy {
     this.chart?.destroy()
   }
 
-  // ── Snapshot date selection ──────────────────────────────────────────
+  // Snapshot date selection
 
   get isLatestDate(): boolean {
     return !this.availableDates.length || this.selectedDate === this.availableDates[0]
@@ -368,7 +368,7 @@ export class WorldCupComponent implements OnInit, OnDestroy {
     setTimeout(() => this.renderHistoryChart())
   }
 
-  // ── Played match enrichment ──────────────────────────────────────────
+  // Played match enrichment
 
   private buildKnockoutLookup(
     bracket: BracketResponse
@@ -462,7 +462,7 @@ export class WorldCupComponent implements OnInit, OnDestroy {
       .map(([date, matches]) => ({ date, matches }))
   }
 
-  // ── History index ────────────────────────────────────────────────────
+  // History index
 
   private buildHistoryIndex(histories: Partial<Record<HistoryStage, HistoryResponse>>): void {
     const dateSet = new Set<string>()
@@ -497,7 +497,7 @@ export class WorldCupComponent implements OnInit, OnDestroy {
     })
   }
 
-  // ── Bracket helpers ──────────────────────────────────────────────────
+  // Bracket helpers
 
   private computeBracketHalves(b: BracketResponse) {
     const md = b.match_details ?? {}
@@ -539,7 +539,7 @@ export class WorldCupComponent implements OnInit, OnDestroy {
     }
   }
 
-  // ── trackBy ──────────────────────────────────────────────────────────
+  // trackBy
 
   trackByTeam = (_: number, row: { team: string }) => row.team
   trackByRound = (_: number, rg: RoundGroup) => rg.round
@@ -571,7 +571,7 @@ export class WorldCupComponent implements OnInit, OnDestroy {
     return `${sign}${value.toFixed(1)}`
   }
 
-  // ── Chart ────────────────────────────────────────────────────────────
+  // Chart
 
   private renderHistoryChart(): void {
     const history = this.stageHistories[this.selectedHistoryStage]

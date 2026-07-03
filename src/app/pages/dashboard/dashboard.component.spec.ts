@@ -33,7 +33,7 @@ describe('DashboardComponent', () => {
 
   it('should create', fakeAsync(() => {
     fixture.detectChanges() // triggers ngAfterViewInit; sample() is deferred
-    tick() // flush setTimeout → sample() runs → loading=true → HTTP fires
+    tick() // flush setTimeout, then sample() runs, loading=true, HTTP fires
     httpMock
       .expectOne((req) => req.url.includes('/stats/sample'))
       .flush({

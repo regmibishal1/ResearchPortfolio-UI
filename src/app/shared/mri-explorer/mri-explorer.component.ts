@@ -36,7 +36,7 @@ export class MriExplorerComponent {
       layers: 18,
       accuracy: 98.83,
       testLoss: 0.0387,
-      note: 'Unstable early in training but converges cleanly — strong baseline for the smallest variant.',
+      note: 'Unstable early in training but converges cleanly. A strong baseline for the smallest variant.',
     },
     {
       id: 'rn34',
@@ -52,7 +52,7 @@ export class MriExplorerComponent {
       layers: 50,
       accuracy: 99.06,
       testLoss: 0.0514,
-      note: 'Best overall accuracy and the most stable learner — the bottleneck architecture pays off.',
+      note: 'Best overall accuracy and the most stable learner. The bottleneck architecture pays off.',
     },
     {
       id: 'rn101',
@@ -68,7 +68,7 @@ export class MriExplorerComponent {
       layers: 152,
       accuracy: 97.42,
       testLoss: 0.0748,
-      note: 'Weakest of the five — with this dataset size, the deepest variant overfits the hardest.',
+      note: 'Weakest of the five. With this dataset size, the deepest variant overfits the hardest.',
     },
   ]
 
@@ -85,7 +85,7 @@ export class MriExplorerComponent {
     { id: 'training', label: 'Training Curves', icon: 'show_chart' },
   ]
 
-  selectedModel: MriModel = this.models[2] // ResNet-50 — the headline result
+  selectedModel: MriModel = this.models[2] // ResNet-50, the headline result
   activeTab: TabId = 'saliency'
 
   private readonly assetBase = 'assets/research/mri'
