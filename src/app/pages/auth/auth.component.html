@@ -46,7 +46,13 @@
 
         <p class="auth-toggle-text">
           Don't have an account?
-          <a href="javascript:void(0)" (click)="isLoginDivVisible = false">Create one here</a>.
+          <a
+            role="button"
+            tabindex="0"
+            (click)="isLoginDivVisible = false"
+            (keydown.enter)="isLoginDivVisible = false"
+            >Create one here</a
+          >.
         </p>
       </div>
 
@@ -121,7 +127,13 @@
 
         <p class="auth-toggle-text">
           Already have an account?
-          <a href="javascript:void(0)" (click)="isLoginDivVisible = true">Sign in here</a>.
+          <a
+            role="button"
+            tabindex="0"
+            (click)="isLoginDivVisible = true"
+            (keydown.enter)="isLoginDivVisible = true"
+            >Sign in here</a
+          >.
         </p>
       </div>
     </div>
