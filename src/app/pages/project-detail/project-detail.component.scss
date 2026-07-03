@@ -127,6 +127,12 @@
     background: rgba(96, 165, 250, 0.1);
     border-color: rgba(96, 165, 250, 0.3);
   }
+
+  &.status-proposal {
+    color: #c4b5fd;
+    background: rgba(196, 181, 253, 0.1);
+    border-color: rgba(196, 181, 253, 0.3);
+  }
 }
 
 .status-dot {

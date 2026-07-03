@@ -98,6 +98,17 @@
       <app-mri-explorer></app-mri-explorer>
     </section>
 
+    <section
+      class="detail-section animate-in animate-in-delay-2"
+      *ngIf="project.liveEmbed === 'empathy-explorer'"
+    >
+      <h2 class="section-heading">
+        <mat-icon>science</mat-icon>
+        Results Explorer
+      </h2>
+      <app-empathy-explorer></app-empathy-explorer>
+    </section>
+
     <!-- About -->
     <section class="detail-section animate-in animate-in-delay-2">
       <h2 class="section-heading">
