@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common'
 import { MatIconModule } from '@angular/material/icon'
 import { Title, Meta } from '@angular/platform-browser'
 import { SKILL_CATEGORIES } from '../../data/skills'
+import { experienceLabel } from '../../data/experience'
 
 interface TimelineItem {
   title: string
@@ -43,13 +44,13 @@ export class AboutComponent {
   }
 
   stats: Stat[] = [
-    { value: '4+', label: 'Years Experience', icon: 'work_history' },
+    { value: experienceLabel(), label: 'Years Experience', icon: 'work_history' },
     { value: '', label: 'AWS SA Certified', icon: 'cloud_done' },
     { value: '', label: 'Fintech Domain', icon: 'account_balance' },
     { value: '', label: "Dual Master's & B.S.", icon: 'school' },
   ]
 
-  bio = `Software Engineer and Data Scientist with 4+ years of experience at T. Rowe Price, building systems that process billions of dollars in daily cash flows and serve thousands of traders. I hold an AWS Solutions Architect certification.
+  bio = `Software Engineer and Data Scientist with ${experienceLabel()} years of experience at T. Rowe Price, building systems that process billions of dollars in daily cash flows and serve thousands of traders. I hold an AWS Solutions Architect certification.
 
 I hold a B.S. in Computer Science (Summa Cum Laude) from UMBC and an M.S. in Data Science from the University of Maryland, College Park.
 

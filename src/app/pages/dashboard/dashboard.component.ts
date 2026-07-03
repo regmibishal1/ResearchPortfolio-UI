@@ -6,6 +6,7 @@ import { Title, Meta } from '@angular/platform-browser'
 import { StatsExplorerComponent } from '../../shared/stats-explorer/stats-explorer.component'
 import { PROJECTS, Project } from '../../data/projects'
 import { Skill, homeSkills } from '../../data/skills'
+import { experienceLabel } from '../../data/experience'
 
 @Component({
   selector: 'app-dashboard',
@@ -19,8 +20,7 @@ export class DashboardComponent {
     title.setTitle('Bishal Regmi — Software Engineer & Data Scientist')
     meta.updateTag({
       name: 'description',
-      content:
-        'Bishal Regmi — Software Engineer & Data Scientist with 4+ years at T. Rowe Price. Explore projects in full-stack development, data science, and machine learning.',
+      content: `Bishal Regmi — Software Engineer & Data Scientist with ${experienceLabel()} years at T. Rowe Price. Explore projects in full-stack development, data science, and machine learning.`,
     })
   }
 
