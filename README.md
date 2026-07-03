@@ -1,6 +1,6 @@
 # ResearchPortfolio-UI
 
-Angular 17 frontend for my personal research portfolio — Angular Material, dark theme, Cloudflare Pages hosting.
+Angular 17 frontend for my personal research portfolio. Angular Material, dark theme, Cloudflare Pages hosting.
 
 ## Stack
 
@@ -42,10 +42,10 @@ sed -i "s|%%API_URL%%|$API_URL|g" src/environments/environment.prod.ts \
 
 **Environment variables (set in Cloudflare Pages dashboard):**
 
-| Variable          | Purpose                                                                    |
-| ----------------- | -------------------------------------------------------------------------- |
-| `API_URL`         | Auth API base URL                                                          |
-| `MODEL_API_URL`   | FastAPI model server base URL                                              |
-| `APP_URL`         | Public URL of this app                                                     |
-| `FASTAPI_API_KEY` | Backend API key — copy from server `.env` after running `bootstrap_env.sh` |
-| `NODE_VERSION`    | `22`                                                                       |
+| Variable          | Purpose                                                                   |
+| ----------------- | ------------------------------------------------------------------------- |
+| `API_URL`         | Auth API base URL                                                         |
+| `MODEL_API_URL`   | FastAPI model server base URL                                             |
+| `APP_URL`         | Public URL of this app                                                    |
+| `FASTAPI_API_KEY` | Backend API key; copy from server `.env` after running `bootstrap_env.sh` |
+| `NODE_VERSION`    | `22`                                                                      |
