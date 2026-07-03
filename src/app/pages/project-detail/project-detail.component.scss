@@ -281,6 +281,34 @@
   margin-top: 1px;
 }
 
+// Lessons learned
+.lessons-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.lesson-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.lesson-icon {
+  color: var(--text-muted);
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  margin-top: -1px;
+}
+
 // Tech stack
 .tech-tags {
   display: flex;
