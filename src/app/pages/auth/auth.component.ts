@@ -25,7 +25,11 @@ export class AuthComponent {
     private router: Router,
     private authService: AuthService,
     private _snackBar: MatSnackBar
-  ) {}
+  ) {
+    // /login and /register share this component; pick the initial form
+    // from the route so deep links to /register land on the right view.
+    this.isLoginDivVisible = !this.router.url.includes('register')
+  }
 
   onRegister() {
     this.isLoading = true
