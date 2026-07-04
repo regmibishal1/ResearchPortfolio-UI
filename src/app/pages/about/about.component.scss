@@ -438,7 +438,7 @@
     color: var(--text-secondary);
 
     &::before {
-      content: '→';
+      content: '\2192';
       position: absolute;
       left: -20px;
       color: var(--accent-gold);
