@@ -27,3 +27,10 @@ jobs:
 
       - name: Run tests
         run: yarn test --browsers=ChromeHeadlessNoSandbox --watch=false
+
+      - name: Check source punctuation is ASCII
+        run: |
+          if git grep -nP '[\x{2013}\x{2014}\x{2190}-\x{21FF}\x{2500}-\x{257F}]' -- 'src/app' 'src/index.html' 'src/environments' 'README.md' ':!*.spec.ts'; then
+            echo "Non-ASCII punctuation found in source; use plain ASCII equivalents."
+            exit 1
+          fi
