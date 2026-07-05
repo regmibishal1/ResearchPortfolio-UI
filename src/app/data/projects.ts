@@ -49,6 +49,36 @@ export interface Project {
 
 export const PROJECTS: Project[] = [
   {
+    id: 'edgar-signals',
+    title: 'EDGAR Fundamentals Signals',
+    shortDescription:
+      'Point-in-time earnings-surprise signals reconstructed from SEC EDGAR filings across 11 sectors, with walk-forward validation and an honest, weak-but-real result.',
+    description:
+      "A fundamentals-analytics study that asks whether the earnings surprise disclosed in a 10-Q or 10-K predicts how a stock drifts over the following quarter, the classic post-earnings-announcement drift, rebuilt from free public data. It pulls the SEC EDGAR companyfacts XBRL API for 154 large caps across all 11 sectors, keys every value to its filing date so no feature uses information the market did not yet have, and builds Standardized Unexpected Earnings with a seasonal random walk (no paid analyst estimates). Returns are measured excess of each stock's own sector ETF, evaluation is walk-forward with transaction costs, and a calibrated XGBoost model is benchmarked against honest baselines. Each snapshot is versioned in Postgres and served through the same ingest-and-read pattern as the World Cup engine.",
+    tags: ['Python', 'FastAPI', 'PostgreSQL', 'Angular', 'XGBoost', 'Chart.js'],
+    category: 'Machine Learning',
+    icon: 'query_stats',
+    repoLinks: [
+      { label: 'FastAPI Server', url: 'https://github.com/regmibishal1/ResearchPortfolio-FastAPI' },
+      { label: 'Angular UI', url: 'https://github.com/regmibishal1/ResearchPortfolio-UI' },
+    ],
+    demo: '/stocks',
+    status: 'in-progress',
+    highlights: [
+      'Point-in-time feature panel from the EDGAR companyfacts API: every value keyed to its filing date, verified median filing lag 35 days with zero look-ahead',
+      'Standardized Unexpected Earnings via a seasonal random walk, reconstructed without any paid analyst estimates, across 154 large caps in all 11 sectors',
+      "Returns measured excess of each stock's own SPDR sector ETF, so sector moves are stripped out and no skill scores exactly zero",
+      'Walk-forward, expanding-window validation with transaction costs; calibrated XGBoost benchmarked against base-rate, SUE-only, and calibrated-persistence baselines',
+      'Per-snapshot versioning in Postgres behind a SELECT-only read role, mirroring the World Cup ingest-and-read architecture',
+    ],
+    lessons: [
+      'The earnings-surprise drift is real but weak (information coefficient about 0.04, t-stat 2.7) and regime-dependent: it works in 2014-2015, 2017, and 2023, and breaks in 2016 and 2022. It is not a standalone strategy',
+      'Single-name quarterly return direction is close to a coin flip (AUC about 0.50), and the fundamentals do not change that, which is consistent with market efficiency',
+      'Volatility is forecastable, but a calibrated recent-volatility baseline matches the model, so the filing fundamentals add nothing on top. Reporting that honestly, rather than claiming an edge, was the whole point',
+      'The universe is current-surviving tickers, so results carry mild survivorship bias, and overlapping 63-day return windows make the cumulative curve illustrative rather than tradable',
+    ],
+  },
+  {
     id: 'world-cup-prediction',
     title: 'World Cup 2026 Live Prediction Engine',
     shortDescription:
