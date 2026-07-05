@@ -516,7 +516,7 @@
       </mat-tab>
 
       <!-- Model performance -->
-      <mat-tab label="Performance">
+      <mat-tab label="Performance" *ngIf="analyticsUnlocked">
         <section class="panel">
           <div class="panel-header">
             <p class="panel-sub">
@@ -646,7 +646,7 @@
       </mat-tab>
 
       <!-- What-if explorer -->
-      <mat-tab label="What-if">
+      <mat-tab label="What-if" *ngIf="analyticsUnlocked">
         <section class="panel">
           <div class="panel-header">
             <p class="panel-sub">
