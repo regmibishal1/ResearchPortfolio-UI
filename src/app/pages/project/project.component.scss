@@ -146,6 +146,23 @@
   object-fit: contain;
 }
 
+.card-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-period {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+  padding: 3px 10px;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+
 .card-category {
   font-size: 0.75rem;
   font-weight: 600;

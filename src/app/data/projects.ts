@@ -18,6 +18,8 @@ export interface Project {
   description: string
   tags: string[]
   category: string
+  /** When the work happened, e.g. "Fall 2022" or "2023-present". Shown on cards and the detail page. */
+  period?: string
   icon: string
   logo?: string
   /** Single GitHub repo link (shown on cards + detail page) */
@@ -26,6 +28,8 @@ export interface Project {
   repoLinks?: RepoLink[]
   /** Live demo / site URL */
   demo?: string
+  /** Path to a report or paper PDF under assets/papers, linked from the detail page */
+  paper?: string
   /** Screenshot shown as the card thumbnail and on the detail page */
   image?: string
   /** Architecture diagram rendered in its own section on the detail page */
@@ -57,6 +61,7 @@ export const PROJECTS: Project[] = [
       "A fundamentals-analytics study that asks whether the earnings surprise disclosed in a 10-Q or 10-K predicts how a stock drifts over the following quarter, the classic post-earnings-announcement drift, rebuilt from free public data. It pulls the SEC EDGAR companyfacts XBRL API for 154 large caps across all 11 sectors, keys every value to its filing date so no feature uses information the market did not yet have, and builds Standardized Unexpected Earnings with a seasonal random walk (no paid analyst estimates). Returns are measured excess of each stock's own sector ETF, evaluation is walk-forward with transaction costs, and a calibrated XGBoost model is benchmarked against honest baselines. Each snapshot is versioned in Postgres and served through the same ingest-and-read pattern as the World Cup engine.",
     tags: ['Python', 'FastAPI', 'PostgreSQL', 'Angular', 'XGBoost', 'Chart.js'],
     category: 'Machine Learning',
+    period: '2026',
     icon: 'query_stats',
     repoLinks: [
       { label: 'FastAPI Server', url: 'https://github.com/regmibishal1/ResearchPortfolio-FastAPI' },
@@ -87,6 +92,7 @@ export const PROJECTS: Project[] = [
       'End-to-end machine-learning system that forecasts the 2026 FIFA World Cup. Trained a calibrated XGBoost classifier on ~12,000 international matches since 2014 with positional FIFA-rating features, Elo ratings dating back to 1872, rolling form, and tournament-weighted sample weights. Probabilities are isotonically calibrated and fed into a Monte Carlo simulator that runs 2 million tournaments, bridging classification probabilities to score distributions via a Poisson xG solver. The pipeline updates daily during the tournament: every completed group-stage match is locked into every subsequent simulation, sharpening predictions as the bracket unfolds. Each daily snapshot is versioned in Postgres so the UI can show how predictions evolve over time.',
     tags: ['Python', 'XGBoost', 'FastAPI', 'PostgreSQL', 'Angular', 'Chart.js'],
     category: 'Machine Learning',
+    period: '2026',
     icon: 'sports_soccer',
     image: 'assets/projects/world-cup-prediction.webp',
     repoLinks: [
@@ -114,6 +120,7 @@ export const PROJECTS: Project[] = [
       'Full-stack civic web app that helps Maryland residents prepare for the 2026 primary election. Enter your address to instantly see your congressional and state legislative districts, current representatives, every candidate on your ballot, and relevant legislation, all in one place. Features "Civvy", an AI chat assistant powered by a RAG pipeline (BGE-M3 embeddings + pgvector) that answers plain-English questions about Maryland bills. Data is ingested from 5+ government sources including the Maryland General Assembly API, OpenStates, Census Geocoder, and the MD State Board of Elections.',
     tags: ['Next.js', 'FastAPI', 'PostgreSQL', 'pgvector', 'AI/RAG', 'Cloudflare'],
     category: 'Full Stack',
+    period: '2026',
     icon: 'how_to_vote',
     image: 'assets/projects/showupmd.webp',
     logo: 'assets/showupmd-logo.svg',
@@ -136,6 +143,7 @@ export const PROJECTS: Project[] = [
       'Architected a full-stack portfolio platform to showcase exploratory data analysis and machine learning research. Designed an Angular frontend integrated with a secure Java Spring Boot authentication API and a Python FastAPI resource server for hosting machine learning models and utilities. Features a live statistics explorer powered by server-side NumPy sampling, structured request-scoped logging with real-IP detection, and a responsive dark-themed UI built with Angular Material.',
     tags: ['Angular', 'Java Spring Boot', 'Python FastAPI', 'PostgreSQL'],
     category: 'Full Stack',
+    period: '2023-present',
     icon: 'language',
     image: 'assets/projects/research-portfolio.webp',
     architecture: 'assets/diagrams/portfolio-architecture.svg',
@@ -161,6 +169,7 @@ export const PROJECTS: Project[] = [
       'When you export a Google Photos library with Takeout, the photos arrive stripped of their metadata: capture dates and GPS coordinates are dumped into separate JSON sidecar files with famously inconsistent naming. Takeout Organizer matches each photo to its sidecar, writes the metadata back into the file itself with ExifTool, and rebuilds a clean date-organized library. A perceptual-hash de-duplication pass catches the same photo across re-compressions, which solves the overlap between a Takeout export and downloaded shared albums, and keeps the best copy of each. Every operation is copy-based and collision-safe: source files are never modified or deleted, which a dedicated source-integrity test enforces. Runs headless as a CLI or with a desktop GUI, resumes interrupted sessions, and has been exercised on a multi-terabyte library.',
     tags: ['Python', 'ExifTool', 'Pillow', 'CLI', 'GitHub Actions'],
     category: 'Tools',
+    period: '2026',
     icon: 'photo_library',
     status: 'in-progress',
     highlights: [
@@ -183,13 +192,15 @@ export const PROJECTS: Project[] = [
     id: 'mri-classification',
     title: 'Classification of MRI Images',
     shortDescription:
-      "Investigated ResNet CNN architectures for early Alzheimer's Disease classification using MRI data, leveraging saliency maps for model interpretation.",
+      "Investigated ResNet CNN architectures for early Alzheimer's Disease classification using MRI data, with saliency maps for model interpretation.",
     description:
-      "Investigated the efficacy of various ResNet architectures for early Alzheimer's Disease classification utilizing constrained MRI datasets. Demonstrated the robust stability and clinical potential of pre-trained convolutional neural networks, specifically ResNet-50, and leveraged saliency maps to interpret predictive performance and highlight diagnostically relevant brain regions.",
+      "Investigated the efficacy of various ResNet architectures for early Alzheimer's Disease classification utilizing constrained MRI datasets. Demonstrated the stability and clinical potential of pre-trained convolutional neural networks, specifically ResNet-50, and used saliency maps to interpret predictive performance and highlight the brain regions each model attends to. Completed as the final project for a graduate deep learning course (UMD DATA 612), with the full write-up available below.",
     tags: ['Python', 'PyTorch', 'CNN', 'ResNet'],
     category: 'Machine Learning',
+    period: 'Summer 2023',
     icon: 'psychology',
     image: 'assets/projects/mri-classification.webp',
+    paper: 'assets/papers/alzheimer-mri-resnet.pdf',
     status: 'research',
     liveEmbed: 'mri-explorer',
     highlights: [
@@ -212,11 +223,13 @@ export const PROJECTS: Project[] = [
     shortDescription:
       'Developed a multimodal transformer model to classify empathy and emotional valence in conversational data for the WASSA 2023 NLP Shared Task.',
     description:
-      "Built multimodal transformer models for the WASSA 2023 Shared Task, predicting empathy, emotional intensity, and emotional polarity in conversational reactions to news articles. The architecture combines transformer text embeddings with non-textual features (demographics, conversation context) through several fusion strategies: concatenation, MLP-on-categorical, gating, and attention. The naive multimodal fusion consistently edged out the text-only baseline on Pearson correlation, the shared task's metric, while the error metrics revealed the trade-offs of simple feature combination, an honest negative result the report analyzes in depth.",
+      "Built multimodal transformer models for the WASSA 2023 Shared Task, predicting empathy, emotional intensity, and emotional polarity in conversational reactions to news articles. The architecture combines transformer text embeddings with non-textual features (demographics, conversation context) through several fusion strategies: concatenation, MLP-on-categorical, gating, and attention. The naive multimodal fusion consistently edged out the text-only baseline on Pearson correlation, the shared task's metric, while the error metrics revealed the trade-offs of simple feature combination, an honest negative result the report analyzes in depth. Completed as the final project for a graduate NLP course (UMD DATA 641); the full report is available below.",
     tags: ['Python', 'NLP', 'Transformers', 'HuggingFace'],
     category: 'Machine Learning',
+    period: 'Spring 2023',
     icon: 'forum',
     image: 'assets/projects/empathy-emotion.webp',
+    paper: 'assets/papers/empathy-emotion-wassa.pdf',
     status: 'research',
     liveEmbed: 'empathy-explorer',
     highlights: [
@@ -237,21 +250,104 @@ export const PROJECTS: Project[] = [
     id: 'autism-sentiment',
     title: 'Autism Tweet Sentiment Analysis',
     shortDescription:
-      'Research proposal for a scalable Dask + Scikit-Learn pipeline to track public sentiment shifts in Twitter data around autism awareness events.',
+      'Graduate capstone study design: measuring how autism awareness events shift public sentiment on Twitter, specified end to end from data and methods through ethics, communication, and resourcing.',
     description:
-      'Research proposal for a scalable sentiment analysis study of Twitter discourse around autism awareness events. The proposed design pairs a Dask-based distributed pipeline with NLTK preprocessing and Scikit-Learn classifiers to quantify how high-profile media events shift public perception over time, without ever loading the full tweet corpus into memory. The study was scoped and designed but not carried out.',
-    tags: ['Python', 'Dask', 'NLTK', 'Scikit-Learn'],
+      'My graduate capstone (UMD DATA 698, Research Methods and Study Designs) produced a complete formal study design for a question the autism community actually has: which awareness events improve public sentiment toward autism, and which do not? The design pairs autism-related tweets collected around past awareness events with event timelines and CDC ADDM prevalence data, and specifies the full pipeline: preprocessing, sentiment scoring, a human-labeled validation set to check the sentiment model before trusting it, and the comparative analysis across events. It goes beyond the modeling to the parts research proposals usually skip: an ethics, legal, and privacy assessment of social media data, a communication plan for autism organizations and researchers, and a costed resource plan (two data scientists, two data labelers, a graphic designer, and a manager). An earlier course proposal for a Dask + NLTK processing pipeline grew into this design. The study was designed end to end but deliberately not executed.',
+    tags: ['Python', 'Dask', 'NLTK', 'Scikit-Learn', 'Research Design'],
     category: 'Data Science',
+    period: 'Summer 2022',
     icon: 'bar_chart',
+    paper: 'assets/papers/autism-sentiment-study-design.pdf',
     status: 'proposal',
     highlights: [
-      'Proposed a Dask-based distributed pipeline to process millions of tweets out-of-core',
-      'Study design compares sentiment before, during, and after awareness events across annual cycles',
-      'Planned NLTK preprocessing (tokenization, lemmatization, stopword removal) feeding Scikit-Learn classifiers',
+      'Complete 15-page study design carried through the capstone process: business case, synopsis, staged specification drafts, peer review, and final submission',
+      'Pairs tweet sentiment around awareness events with event timelines and CDC ADDM prevalence data to measure which event formats move public sentiment',
+      'Methodology includes a human-labeled validation step so the sentiment model is checked against people before its outputs are trusted',
+      'Dedicated ethics, legal, and privacy analysis for social media data, written before any collection would begin',
+      'Resource plan sizes the study honestly as a team effort: data scientists, data labelers, a designer, and a manager, with software and cloud costs',
     ],
     lessons: [
-      'This stayed a proposal because the scope (multi-year tweet collection plus a labeling strategy for sentiment ground truth) was larger than the timeframe allowed, and I chose not to ship a half-built version',
-      'Twitter/X API access and pricing changes since the proposal would materially reshape the data-collection plan, so the original design would need revisiting before any real execution',
+      'This stayed a design because executing it (multi-year tweet collection plus a human-labeling budget for ground truth) was larger than the timeframe allowed, and I chose not to ship a half-built version',
+      'Writing the design before any code forced me through the parts I would have skipped as a beginner: validating the sentiment model against human labels, privacy handling, and how results reach the people who would use them',
+      'Specifying personnel and costs made it obvious this was a team project, not a solo one; peer review caught gaps I could not see myself',
+      'Twitter/X API access and pricing changes since 2022 would materially reshape the data-collection plan, so the design would need revisiting before any real execution',
+    ],
+  },
+  {
+    id: 'spacex-launch-analysis',
+    title: 'SpaceX Launch and Landing Prediction',
+    shortDescription:
+      'Classified SpaceX launch and booster-landing outcomes with grid-searched decision trees, kNN, SVM, and random forests, and reported plainly where rare-event class imbalance beat the models.',
+    description:
+      'Final project for a graduate machine learning course (UMD DATA 603) asking what factors drive the success of SpaceX launches and booster recoveries. Using the launch data SpaceX publishes through its API (204 launches, with rocket, payload, core, and landing details), the project trains and grid-search-tunes four classifiers: decision tree, k-nearest neighbors, support vector machine, and random forest. Landing prediction worked: the random forest reached an f1 of 0.95 on successes and 0.86 on failures, and its feature importances made physical sense (whether a landing was attempted, payload mass, flight number of the core, landing legs, core reuse). Launch-failure prediction did not work, and the report says so: only four launches in the dataset carried a payload that failed, and no amount of tuning fixes four positive examples.',
+    tags: ['Python', 'scikit-learn', 'Pandas', 'GridSearchCV'],
+    category: 'Machine Learning',
+    period: 'Fall 2022',
+    icon: 'rocket_launch',
+    paper: 'assets/papers/spacex-launch-landing.pdf',
+    status: 'research',
+    highlights: [
+      'Four classifier families (decision tree, kNN, SVM, random forest) tuned with grid-search cross-validation on a common pipeline',
+      'Landing models performed well: random forest f1 of 0.95 for success and 0.86 for failure, with recall of 1.0 and 0.75 respectively',
+      'Feature importances sanity-checked against physics: landing attempted, payload mass, core flight number, legs, and reuse topped the list',
+      'The launch-failure result is reported as a failure: with four positive examples, every model was effectively useless at detecting them',
+    ],
+    lessons: [
+      'Class imbalance with genuinely rare events was the lesson of the project: accuracy looked fine while the models missed the thing that mattered, and 204 rows cannot be tuned out of that hole',
+      'The max tree depth was capped to guard against overfitting the tiny dataset, which likely also left some landing performance on the table; small data forces that trade',
+      'SpaceX is the only company publishing launch data at this detail, so there was no external dataset to validate against; single-source conclusions stay tentative',
+      'This was an early end-to-end ML project, and the durable value was the workflow (clean, tune, compare, interrogate feature importances) rather than the headline scores',
+    ],
+  },
+  {
+    id: 'cifar10-representations',
+    title: 'Data Representations for Image Classification',
+    shortDescription:
+      'MATLAB comparison of raw pixels, PCA, kernel PCA, and t-SNE as inputs to a kNN classifier on grayscale CIFAR10: PCA wins on consistency, and none of it rescues the wrong classifier.',
+    description:
+      'Final project for a graduate data representation course (UMD DATA 604), built entirely in MATLAB: a controlled comparison of what representation you hand a classifier. Grayscale CIFAR10 images are fed to a k-nearest-neighbors classifier four ways: raw pixels, principal component analysis, kernel PCA, and t-SNE embeddings, with the k and training-size choices tuned first on the raw baseline. PCA finished with the best global accuracy (31.7%), kernel PCA just behind (31.6%), t-SNE at 25.8%, and raw pixels last. The per-class picture was messier: t-SNE won five of the ten classes outright while losing the average, because PCA never had the lowest lows. A companion midterm applied the same PCA-plus-kNN machinery to Fashion MNIST.',
+    tags: ['MATLAB', 'PCA', 'Kernel PCA', 't-SNE', 'kNN'],
+    category: 'Data Science',
+    period: 'Spring 2023',
+    icon: 'scatter_plot',
+    paper: 'assets/papers/cifar10-representations-knn.pdf',
+    status: 'research',
+    highlights: [
+      'Same classifier, four representations: raw pixels, PCA, kernel PCA, and t-SNE, compared on both per-class and global accuracy',
+      'PCA took the best average accuracy by being consistent rather than by winning classes; t-SNE won the most individual classes while losing the average',
+      'Intrinsic-dimensionality estimation and reconstruction checks confirm the reduced bases actually preserve the data before any classification',
+      'Written up as a full report with the complete MATLAB appendix, so every figure is reproducible from the code in the paper',
+    ],
+    lessons: [
+      'Roughly 32% accuracy on CIFAR10 is the real headline: kNN on pixel-derived features is the wrong tool for natural images, and no representation choice closes the gap to a convolutional network',
+      't-SNE is a visualization method; using its embedding as classifier input misuses it, and the results show exactly the inconsistency you would expect',
+      'Kernel PCA needed kernel and parameter tuning that was left on the table, a reminder that a method is only as good as the effort spent fitting it',
+      'Converting to grayscale threw away discriminative signal before the comparison even began, a preprocessing decision made for tractability that shaped every downstream number',
+    ],
+  },
+  {
+    id: 'climate-snowfall',
+    title: 'Climate Change and Snowfall Trends',
+    shortDescription:
+      'First data science project: a three-person team study of temperature and snowfall trends from NOAA station data, from raw API exploration to a decision-tree snow model.',
+    description:
+      'My first data science project, built with two classmates in an introductory graduate course (UMD DATA 602). The team worked directly against the NOAA Climate Data API, first mapping its stations, datasets, and data-category endpoints to find stations with long, usable records, then pulling decades of daily temperature and precipitation data for the Baltimore-Washington region. The analysis looks for climate-change signals in average, maximum, and minimum temperature trends and in snowfall specifically, and finishes with a decision-tree model of snowfall that only became workable after reframing the target from snowfall amount to a binary snow or no-snow day. Most of the project, honestly, was learning to get real data into a usable state.',
+    tags: ['Python', 'Pandas', 'NOAA API', 'Jupyter'],
+    category: 'Data Science',
+    period: 'Fall 2021',
+    icon: 'ac_unit',
+    status: 'research',
+    highlights: [
+      'Systematic exploration of the NOAA Climate Data API (stations, datasets, and data-category endpoints) to find stations with long, complete records',
+      'Decades of daily temperature and precipitation history analyzed for trend, using the BWI airport station as the anchor series',
+      'Snowfall modeling reframed from predicting amounts to classifying snow versus no-snow days, which turned an unworkable regression into a usable decision tree',
+      'Missing-data strategy chosen per series: dropping rows was fine for temperature questions but corrupted the snowfall record, which needed imputation instead',
+    ],
+    lessons: [
+      'The first real lesson of working with real data: most of the project was acquisition and cleaning, and the modeling at the end was the smallest part',
+      'Dropping missing rows is not one decision; it was fine for temperature trends and quietly wrong for snowfall, and noticing the difference took us a while',
+      'Predicting snowfall amounts was beyond the data and the team at the time; simplifying the question to snow or no-snow was the difference between nothing and something',
+      'Three people passing one notebook around taught version discipline the hard way: the project folder had a Git repo that never received a single commit',
     ],
   },
 ]
