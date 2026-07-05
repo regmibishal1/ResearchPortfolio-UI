@@ -168,6 +168,8 @@ export class WorldCupComponent implements OnInit, OnDestroy {
 
   reportCard: ReportCard | null = null
   scenarios: Scenarios | null = null
+  private latestReportCard: ReportCard | null = null
+  private latestScenarios: Scenarios | null = null
   // Per-scenario selected side, keyed by scenario index. Defaults to the
   // first team of each pairing.
   scenarioPick = new Map<number, string>()
@@ -256,8 +258,10 @@ export class WorldCupComponent implements OnInit, OnDestroy {
         this.latestBracket = bracket
         this.bracket = bracket
         this.playedMatches = played
-        this.reportCard = report?.report_card ?? null
-        this.scenarios = whatIf?.scenarios ?? null
+        this.latestReportCard = report?.report_card ?? null
+        this.latestScenarios = whatIf?.scenarios ?? null
+        this.reportCard = this.latestReportCard
+        this.scenarios = this.latestScenarios
         this.buildScenarioViews()
 
         const histories: Partial<Record<HistoryStage, HistoryResponse>> = {}
@@ -318,6 +322,16 @@ export class WorldCupComponent implements OnInit, OnDestroy {
     return this.dateLockMap.get(this.selectedDate) ?? 0
   }
 
+  // Performance grading and what-if conditionals only make sense once the
+  // knockout field is set, i.e. all 72 group matches are locked in the
+  // selected snapshot.
+  get analyticsUnlocked(): boolean {
+    const locked = this.isLatestDate
+      ? this.latest?.run.n_played_matches_locked ?? this.lockedCountForDate
+      : this.lockedCountForDate
+    return locked >= 72
+  }
+
   onDateChange(): void {
     this.rebuildDisplayedLeaderboard()
     this.rebuildLockedMatchesForDate()
@@ -329,8 +343,10 @@ export class WorldCupComponent implements OnInit, OnDestroy {
         this.finalDetail = this.latestBracket.match_details?.['Final']?.[0] ?? null
         this.groupKeys = Object.keys(this.latestBracket.group_winners).sort()
       }
+      this.applyAnalytics(this.latestReportCard, this.latestScenarios)
     } else {
       this.fetchHistoricalBracket()
+      this.fetchHistoricalAnalytics()
     }
   }
 
@@ -356,6 +372,31 @@ export class WorldCupComponent implements OnInit, OnDestroy {
         this.bracketLoading = false
       },
     })
+  }
+
+  private fetchHistoricalAnalytics(): void {
+    const date = this.selectedDate
+    forkJoin({
+      report: this.wc
+        .getReportCard({ as_of_date: date })
+        .pipe(catchError(() => of(null as ReportCardResponse | null))),
+      whatIf: this.wc
+        .getScenarios({ as_of_date: date })
+        .pipe(catchError(() => of(null as ScenariosResponse | null))),
+    }).subscribe(({ report, whatIf }) => {
+      // A slow response for a date the user has already navigated away
+      // from must not clobber the current view.
+      if (this.selectedDate !== date) return
+      this.applyAnalytics(report?.report_card ?? null, whatIf?.scenarios ?? null)
+    })
+  }
+
+  private applyAnalytics(reportCard: ReportCard | null, scenarios: Scenarios | null): void {
+    this.reportCard = reportCard
+    this.scenarios = scenarios
+    this.scenarioPick.clear()
+    this.buildScenarioViews()
+    setTimeout(() => this.renderCalibrationChart())
   }
 
   private rebuildDisplayedLeaderboard(): void {
@@ -715,7 +756,11 @@ export class WorldCupComponent implements OnInit, OnDestroy {
 
   private renderCalibrationChart(): void {
     const bins = this.reportCard?.calibration
-    if (!bins?.length || !this.calibCanvas) return
+    if (!bins?.length || !this.calibCanvas) {
+      this.calibChart?.destroy()
+      this.calibChart = null
+      return
+    }
 
     const ctx = this.calibCanvas.nativeElement.getContext('2d')
     if (!ctx) return
