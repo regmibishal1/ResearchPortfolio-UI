@@ -554,9 +554,10 @@ export class WorldCupComponent implements OnInit, OnDestroy {
       for (const series of resp.series) {
         for (const pt of series.points) {
           dateSet.add(pt.as_of_date)
-          if (!this.dateLockMap.has(pt.as_of_date)) {
-            this.dateLockMap.set(pt.as_of_date, pt.n_played_matches_locked)
-          }
+          // Points arrive ordered oldest run first, so the last write per
+          // date reflects the most recent run, matching the stage values
+          // below which also keep the last point.
+          this.dateLockMap.set(pt.as_of_date, pt.n_played_matches_locked)
           let dateMap = this.historyIndex.get(pt.as_of_date)
           if (!dateMap) {
             dateMap = new Map()
