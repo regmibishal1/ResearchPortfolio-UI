@@ -1088,4 +1088,203 @@ h1 {
   .matches-list {
     grid-template-columns: 1fr;
   }
+
+  .metric-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .scenario-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Model performance tab
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.metric-card {
+  background: $bg-2;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metric-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $muted;
+}
+
+.metric-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: $text;
+  font-variant-numeric: tabular-nums;
+}
+
+.metric-baseline {
+  font-size: 0.72rem;
+  color: $muted;
+}
+
+.metric-footnote {
+  margin: 0 0 8px;
+  font-size: 0.75rem;
+  color: rgba($muted, 0.8);
+}
+
+.chart-wrapper-short {
+  height: 300px;
+}
+
+.stage-table-wrap {
+  overflow-x: auto;
+  margin-bottom: 8px;
+}
+
+.stage-table,
+.receipts-table {
+  font-size: 0.84rem;
+}
+
+.probs-cell {
+  font-variant-numeric: tabular-nums;
+  color: $muted;
+  white-space: nowrap;
+}
+
+.receipt-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+
+  &.hit {
+    color: $accent-2;
+  }
+  &.miss {
+    color: $accent-4;
+  }
+}
+
+// What-if tab
+.scenario-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 14px;
+}
+
+.scenario-card {
+  background: $bg-2;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+.scenario-header {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.scenario-round {
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $accent-3;
+  border: 1px solid rgba(250, 179, 135, 0.35);
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+
+.scenario-title {
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.scenario-toggle {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.scenario-side {
+  flex: 1;
+  background: $bg-3;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  color: $muted;
+  font-size: 0.8rem;
+  padding: 7px 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease,
+    background 0.15s ease;
+
+  &:hover {
+    border-color: rgba(137, 180, 250, 0.4);
+  }
+
+  &.active {
+    background: rgba(137, 180, 250, 0.1);
+    border-color: $accent;
+    color: $text;
+  }
+
+  .side-pct {
+    font-variant-numeric: tabular-nums;
+    color: $muted;
+    font-size: 0.74rem;
+  }
+}
+
+.scenario-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+
+  td {
+    padding: 5px 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  }
+
+  .rank-col {
+    width: 28px;
+    color: $muted;
+  }
+
+  .team-col {
+    font-weight: 600;
+  }
+
+  .pct-col {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .delta-col {
+    text-align: right;
+    width: 60px;
+    font-variant-numeric: tabular-nums;
+    font-size: 0.76rem;
+
+    .delta-up {
+      color: $accent-2;
+    }
+    .delta-down {
+      color: $accent-4;
+    }
+  }
 }
