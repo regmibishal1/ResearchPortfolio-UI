@@ -14,12 +14,19 @@ $toolbar-height: 64px;
   background: var(--bg-primary);
 }
 
-// ===== Live Demo Banner (inside the hero) =====
+// ===== Live Demo Banners (inside the hero) =====
+.live-banners {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 44px;
+}
+
 .live-banner {
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  margin-top: 48px;
   padding: 8px 18px 8px 8px;
   background: rgba(26, 26, 46, 0.75);
   border: 1px solid var(--border-subtle);
@@ -101,8 +108,11 @@ $toolbar-height: 64px;
 }
 
 @media (max-width: 640px) {
+  .live-banners {
+    margin-top: 32px;
+  }
+
   .live-banner {
-    margin-top: 36px;
     max-width: 100%;
   }
 
@@ -194,7 +204,9 @@ $toolbar-height: 64px;
   position: relative;
   z-index: 1;
   text-align: center;
-  padding: 0 24px;
+  // Bottom padding reserves the strip the scroll indicator occupies so the
+  // centered content can never slide underneath it on short viewports.
+  padding: 24px 24px 110px;
   max-width: 800px;
 }
 
@@ -319,6 +331,12 @@ $toolbar-height: 64px;
   flex-direction: column;
   align-items: center;
   gap: 8px;
+
+  // Short viewports do not have a spare strip below the hero content;
+  // the fold is obvious there anyway.
+  @media (max-height: 760px) {
+    display: none;
+  }
   z-index: 1;
 
   span {
