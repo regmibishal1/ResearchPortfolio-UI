@@ -109,6 +109,16 @@
       <app-empathy-explorer></app-empathy-explorer>
     </section>
 
+    <!-- Screenshot (projects without a live embed) -->
+    <section
+      class="detail-section animate-in animate-in-delay-2"
+      *ngIf="project.image && !project.liveEmbed"
+    >
+      <div class="detail-screenshot">
+        <img [src]="project.image" [alt]="project.title + ' screenshot'" />
+      </div>
+    </section>
+
     <!-- About -->
     <section class="detail-section animate-in animate-in-delay-2">
       <h2 class="section-heading">
@@ -116,6 +126,17 @@
         About the Project
       </h2>
       <p class="detail-description">{{ project.description }}</p>
+    </section>
+
+    <!-- Architecture -->
+    <section class="detail-section animate-in animate-in-delay-3" *ngIf="project.architecture">
+      <h2 class="section-heading">
+        <mat-icon>account_tree</mat-icon>
+        Architecture
+      </h2>
+      <div class="architecture-diagram">
+        <img [src]="project.architecture" [alt]="project.title + ' architecture diagram'" />
+      </div>
     </section>
 
     <!-- Highlights -->

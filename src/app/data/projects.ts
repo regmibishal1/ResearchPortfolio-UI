@@ -26,6 +26,10 @@ export interface Project {
   repoLinks?: RepoLink[]
   /** Live demo / site URL */
   demo?: string
+  /** Screenshot shown as the card thumbnail and on the detail page */
+  image?: string
+  /** Architecture diagram rendered in its own section on the detail page */
+  architecture?: string
   /** Bullet-point highlights shown on the detail page */
   highlights?: string[]
   /**
@@ -54,6 +58,7 @@ export const PROJECTS: Project[] = [
     tags: ['Python', 'XGBoost', 'FastAPI', 'PostgreSQL', 'Angular', 'Chart.js'],
     category: 'Machine Learning',
     icon: 'sports_soccer',
+    image: 'assets/projects/world-cup-prediction.webp',
     repoLinks: [
       { label: 'FastAPI Server', url: 'https://github.com/regmibishal1/ResearchPortfolio-FastAPI' },
       { label: 'Angular UI', url: 'https://github.com/regmibishal1/ResearchPortfolio-UI' },
@@ -80,6 +85,7 @@ export const PROJECTS: Project[] = [
     tags: ['Next.js', 'FastAPI', 'PostgreSQL', 'pgvector', 'AI/RAG', 'Cloudflare'],
     category: 'Full Stack',
     icon: 'how_to_vote',
+    image: 'assets/projects/showupmd.webp',
     logo: 'assets/showupmd-logo.svg',
     demo: 'https://showupmd.org',
     status: 'live',
@@ -101,6 +107,8 @@ export const PROJECTS: Project[] = [
     tags: ['Angular', 'Java Spring Boot', 'Python FastAPI', 'PostgreSQL'],
     category: 'Full Stack',
     icon: 'language',
+    image: 'assets/projects/research-portfolio.webp',
+    architecture: 'assets/diagrams/portfolio-architecture.svg',
     repoLinks: [
       { label: 'FastAPI Server', url: 'https://github.com/regmibishal1/ResearchPortfolio-FastAPI' },
       { label: 'Angular UI', url: 'https://github.com/regmibishal1/ResearchPortfolio-UI' },
@@ -124,6 +132,7 @@ export const PROJECTS: Project[] = [
     tags: ['Python', 'PyTorch', 'CNN', 'ResNet'],
     category: 'Machine Learning',
     icon: 'psychology',
+    image: 'assets/projects/mri-classification.webp',
     status: 'research',
     liveEmbed: 'mri-explorer',
     highlights: [
@@ -150,6 +159,7 @@ export const PROJECTS: Project[] = [
     tags: ['Python', 'NLP', 'Transformers', 'HuggingFace'],
     category: 'Machine Learning',
     icon: 'forum',
+    image: 'assets/projects/empathy-emotion.webp',
     status: 'research',
     liveEmbed: 'empathy-explorer',
     highlights: [
