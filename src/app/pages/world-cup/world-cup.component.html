@@ -63,7 +63,12 @@
       </div>
     </div>
 
-    <mat-tab-group class="wc-tabs" animationDuration="200ms" mat-stretch-tabs="false">
+    <mat-tab-group
+      class="wc-tabs"
+      animationDuration="200ms"
+      mat-stretch-tabs="false"
+      (selectedTabChange)="onTabChange($event)"
+    >
       <!-- Leaderboard -->
       <mat-tab label="Leaderboard">
         <section class="panel">
@@ -656,26 +661,26 @@
             <span>No upcoming matches to explore in this snapshot.</span>
           </div>
 
-          <div class="scenario-grid" *ngIf="scenarios && scenarios.matches.length > 0">
-            <div class="scenario-card" *ngFor="let m of scenarios.matches; let i = index">
+          <div class="scenario-grid" *ngIf="scenarioViews.length > 0">
+            <div class="scenario-card" *ngFor="let v of scenarioViews; let i = index">
               <div class="scenario-header">
-                <span class="scenario-round">{{ m.round }}</span>
-                <span class="scenario-title">{{ m.teams[0] }} vs {{ m.teams[1] }}</span>
+                <span class="scenario-round">{{ v.round }}</span>
+                <span class="scenario-title">{{ v.teams[0] }} vs {{ v.teams[1] }}</span>
               </div>
               <div class="scenario-toggle">
                 <button
-                  *ngFor="let t of m.teams"
+                  *ngFor="let t of v.teams; let ti = index"
                   class="scenario-side"
-                  [class.active]="pickedSide(i, m) === t"
+                  [class.active]="v.pick === t"
                   (click)="pickSide(i, t)"
                 >
                   {{ t }} wins
-                  <span class="side-pct">{{ pWinFor(m, t) | number: '1.0-0' }}%</span>
+                  <span class="side-pct">{{ v.pWin[ti] | number: '1.0-0' }}%</span>
                 </button>
               </div>
               <table class="scenario-table">
                 <tbody>
-                  <tr *ngFor="let row of scenarioRows(m, pickedSide(i, m)); let r = index">
+                  <tr *ngFor="let row of v.rows; let r = index">
                     <td class="rank-col">{{ r + 1 }}</td>
                     <td class="team-col">{{ row.team }}</td>
                     <td class="pct-col">{{ row.winner_pct | number: '1.1-1' }}%</td>
