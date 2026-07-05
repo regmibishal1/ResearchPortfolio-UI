@@ -227,6 +227,22 @@
   border: 1px solid var(--border-subtle);
 }
 
+.detail-screenshot {
+  margin: -32px;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+
+  img {
+    width: 100%;
+    display: block;
+  }
+}
+
+.architecture-diagram img {
+  width: 100%;
+  display: block;
+}
+
 .section-heading {
   display: flex;
   align-items: center;

@@ -43,6 +43,24 @@
   </div>
 </section>
 
+<!-- ===== Live Demo Banner ===== -->
+<a class="live-banner" [routerLink]="['/world-cup']">
+  <span class="live-pill">
+    <span class="live-dot"></span>
+    LIVE
+  </span>
+  <span class="live-text">
+    <strong>World Cup 2026 predictions</strong>
+    <span class="live-detail"
+      >2M Monte Carlo simulations, updated daily as the bracket unfolds</span
+    >
+  </span>
+  <span class="live-cta">
+    View predictions
+    <mat-icon>arrow_forward</mat-icon>
+  </span>
+</a>
+
 <!-- ===== Skills Section ===== -->
 <section class="skills-section">
   <div class="section-container">
@@ -75,6 +93,9 @@
         [routerLink]="['/project', project.id]"
         [style.animation-delay]="i * 0.1 + 's'"
       >
+        <div class="card-thumb" *ngIf="project.image">
+          <img [src]="project.image" [alt]="project.title + ' preview'" loading="lazy" />
+        </div>
         <div class="project-icon">
           <img
             *ngIf="project.logo"
