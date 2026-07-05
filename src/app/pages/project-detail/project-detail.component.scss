@@ -165,6 +165,26 @@
   }
 }
 
+.coursework-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #93c5fd;
+  background: rgba(147, 197, 253, 0.08);
+  border: 1px solid rgba(147, 197, 253, 0.25);
+  padding: 4px 12px;
+  border-radius: 100px;
+
+  .coursework-icon {
+    font-size: 13px;
+    width: 13px;
+    height: 13px;
+  }
+}
+
 @keyframes pulse-green {
   0%,
   100% {

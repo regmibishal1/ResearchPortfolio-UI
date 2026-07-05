@@ -20,6 +20,12 @@ export interface Project {
   category: string
   /** When the work happened, e.g. "Fall 2022" or "2023-present". Shown on cards and the detail page. */
   period?: string
+  /**
+   * Set when the project was graduate coursework, e.g. "Graduate coursework, UMD (DATA 603)".
+   * Rendered as a school badge on the detail page and a school icon on cards, so
+   * classwork is never mistaken for professional or production work.
+   */
+  coursework?: string
   icon: string
   logo?: string
   /** Single GitHub repo link (shown on cards + detail page) */
@@ -198,6 +204,7 @@ export const PROJECTS: Project[] = [
     tags: ['Python', 'PyTorch', 'CNN', 'ResNet'],
     category: 'Machine Learning',
     period: 'Summer 2023',
+    coursework: 'Graduate coursework, UMD (DATA 612)',
     icon: 'psychology',
     image: 'assets/projects/mri-classification.webp',
     paper: 'assets/papers/alzheimer-mri-resnet.pdf',
@@ -227,6 +234,7 @@ export const PROJECTS: Project[] = [
     tags: ['Python', 'NLP', 'Transformers', 'HuggingFace'],
     category: 'Machine Learning',
     period: 'Spring 2023',
+    coursework: 'Graduate coursework, UMD (DATA 641)',
     icon: 'forum',
     image: 'assets/projects/empathy-emotion.webp',
     paper: 'assets/papers/empathy-emotion-wassa.pdf',
@@ -256,6 +264,7 @@ export const PROJECTS: Project[] = [
     tags: ['Python', 'Dask', 'NLTK', 'Scikit-Learn', 'Research Design'],
     category: 'Data Science',
     period: 'Summer 2022',
+    coursework: 'Graduate capstone, UMD (DATA 698)',
     icon: 'bar_chart',
     paper: 'assets/papers/autism-sentiment-study-design.pdf',
     status: 'proposal',
@@ -283,7 +292,9 @@ export const PROJECTS: Project[] = [
     tags: ['Python', 'scikit-learn', 'Pandas', 'GridSearchCV'],
     category: 'Machine Learning',
     period: 'Fall 2022',
+    coursework: 'Graduate coursework, UMD (DATA 603)',
     icon: 'rocket_launch',
+    image: 'assets/projects/spacex-launch-landing.webp',
     paper: 'assets/papers/spacex-launch-landing.pdf',
     status: 'research',
     highlights: [
@@ -309,7 +320,9 @@ export const PROJECTS: Project[] = [
     tags: ['MATLAB', 'PCA', 'Kernel PCA', 't-SNE', 'kNN'],
     category: 'Data Science',
     period: 'Spring 2023',
+    coursework: 'Graduate coursework, UMD (DATA 604)',
     icon: 'scatter_plot',
+    image: 'assets/projects/cifar10-representations.webp',
     paper: 'assets/papers/cifar10-representations-knn.pdf',
     status: 'research',
     highlights: [
@@ -335,6 +348,7 @@ export const PROJECTS: Project[] = [
     tags: ['Python', 'Pandas', 'NOAA API', 'Jupyter'],
     category: 'Data Science',
     period: 'Fall 2021',
+    coursework: 'Graduate coursework, UMD (DATA 602)',
     icon: 'ac_unit',
     status: 'research',
     highlights: [
@@ -348,6 +362,141 @@ export const PROJECTS: Project[] = [
       'Dropping missing rows is not one decision; it was fine for temperature trends and quietly wrong for snowfall, and noticing the difference took us a while',
       'Predicting snowfall amounts was beyond the data and the team at the time; simplifying the question to snow or no-snow was the difference between nothing and something',
       'Three people passing one notebook around taught version discipline the hard way: the project folder had a Git repo that never received a single commit',
+    ],
+  },
+  {
+    id: 'ml-fundamentals-notebooks',
+    title: 'Machine Learning Fundamentals, by Hand',
+    shortDescription:
+      'The notebook series behind the SpaceX project: Bayesian classifiers, logistic regression, PCA with eigenfaces, decision trees, and regression, each worked through from the math down.',
+    description:
+      'The working notebooks from a graduate machine learning course (UMD DATA 603), kept because they are where the fundamentals actually sank in. The series walks through Bayesian classifiers from their decision-theory notation, binary and multiclass logistic regression with confusion matrices, precision, recall, and ROC analysis, decision-tree exercises, and regression on housing data. The largest notebook applies PCA to the Labeled Faces in the Wild dataset, building eigenfaces, projecting the faces into the reduced basis, and classifying with kNN, which is the assignment that made dimensionality reduction concrete rather than abstract. These notebooks are coursework, not products, and that is the point: they are the reps that the later projects stand on.',
+    tags: ['Python', 'scikit-learn', 'NumPy', 'Jupyter'],
+    category: 'Machine Learning',
+    period: 'Fall 2022',
+    coursework: 'Graduate coursework, UMD (DATA 603)',
+    icon: 'functions',
+    image: 'assets/projects/ml-fundamentals-notebooks.webp',
+    status: 'research',
+    highlights: [
+      'Bayesian classifiers implemented from the notation up, then compared against library versions',
+      'Logistic regression notebook covers the full evaluation loop: confusion matrix heatmaps, precision, recall, and ROC curves',
+      'PCA on Labeled Faces in the Wild: eigenfaces, projection, reconstruction, and kNN classification in the reduced space',
+      'Decision-tree and regression exercises rounding out the classical toolkit before the SpaceX final project applied it',
+    ],
+    lessons: [
+      'Implementing a method before importing it changes what you remember; the Bayes notebooks are why decision boundaries stopped being magic',
+      'Evaluating with a confusion matrix first, and accuracy last, became a habit here and paid off immediately on the class-imbalanced SpaceX data',
+      'Eigenfaces made obvious what variance explained actually means: the first components encode lighting and pose long before identity',
+      'Notebooks written to learn are messy by nature; the discipline of cleaning one up for submission was itself part of the learning',
+    ],
+  },
+  {
+    id: 'monte-carlo-notebooks',
+    title: 'Monte Carlo and Bayesian Sampling',
+    shortDescription:
+      'Sampling methods from first principles: inverse-transform and rejection sampling, then MCMC posterior estimation, built and visualized in notebooks before ever touching a library.',
+    description:
+      'Notebooks from a graduate computational statistics course (UMD DATA 606) covering how random sampling actually works. The core notebook builds up from probability mass and density functions to inverse-transform sampling, then rejection sampling with an explicit envelope function, deriving and plotting each step. The homework applies Markov chain Monte Carlo to posterior estimation, running multiple chains and comparing their traces and densities to check convergence by eye. This is the probabilistic footing under the later calibrated-model work: isotonic calibration and Brier scores in the World Cup and EDGAR projects trace straight back to these exercises.',
+    tags: ['Python', 'NumPy', 'Matplotlib', 'Bayesian Statistics'],
+    category: 'Data Science',
+    period: 'Spring 2022',
+    coursework: 'Graduate coursework, UMD (DATA 606)',
+    icon: 'casino',
+    image: 'assets/projects/monte-carlo-notebooks.webp',
+    status: 'research',
+    highlights: [
+      'Inverse-transform sampling derived from the quantile function and verified against known distributions',
+      'Rejection sampling with an explicit envelope, plotted so the acceptance region is visible rather than implied',
+      'MCMC homework estimates posteriors with multiple chains, comparing trace plots and densities for convergence',
+      'Every method implemented with NumPy and plotted by hand before any statistical library was allowed to hide the mechanics',
+    ],
+    lessons: [
+      'Watching rejection sampling waste most of its draws when the envelope is loose taught more about efficiency than any formula',
+      'Convergence diagnostics started as eyeballing trace plots; knowing what good and bad chains look like still guides how I read samplers today',
+      'The gap between a distribution on paper and samples from it in code is where most of my early probability misunderstandings lived',
+      'These were homework-scale problems with known answers, which is exactly what made the methods checkable while learning them',
+    ],
+  },
+  {
+    id: 'distributed-data-notebooks',
+    title: 'First Steps in Distributed Data: Dask and Spark',
+    shortDescription:
+      'A first contact with distributed tooling: Dask clients, partitioned dataframes over Tesla market and fundamentals data, Spark comparisons, and unit tests written inside the notebook.',
+    description:
+      'A working notebook from a graduate big data systems course (UMD DATA 605) that was less about the model and entirely about the plumbing. It stands up a local Dask cluster with explicit worker, thread, and memory limits, wraps the connection handling in helper functions, and then, unusually for a notebook, unit-tests those helpers with unittest right between the cells. Tesla price history and fundamentals load through dask.dataframe with lazy evaluation and type conversion, mirroring the same flow discussed for Spark, and a small decision tree at the end closes the train-test loop. The model itself trained on five rows of fundamentals data, which was never the point.',
+    tags: ['Python', 'Dask', 'Spark', 'unittest'],
+    category: 'Data Science',
+    period: 'Spring 2022',
+    coursework: 'Graduate coursework, UMD (DATA 605)',
+    icon: 'hub',
+    image: 'assets/projects/distributed-data-notebooks.webp',
+    status: 'research',
+    highlights: [
+      'Local Dask cluster configured with explicit workers, threads per worker, and memory limits rather than defaults',
+      'Connection-handling helpers wrapped and unit-tested with unittest inside the notebook itself',
+      'Tesla price history and fundamentals loaded through dask.dataframe with lazy evaluation, profiling, and dtype control',
+      'A small end-to-end train-test split and decision tree confirm the pipeline runs, deliberately modest in scope',
+    ],
+    lessons: [
+      'Distributed tooling on data that fits in memory adds overhead and nothing else; feeling that firsthand is what made the lesson stick',
+      'The decision tree at the end trained on five rows of fundamentals, a reminder that infrastructure exercises and modeling exercises are different assignments',
+      'Writing tests inside a notebook felt strange and turned out to be the most durable habit this course left me with',
+      'Lazy evaluation surprises you exactly once per mistake; learning when Dask actually computes was half the value of the exercise',
+    ],
+  },
+  {
+    id: 'deep-learning-notebooks',
+    title: 'PyTorch Notebooks: CNNs and What They Learn',
+    shortDescription:
+      'The homework behind the Alzheimer project: training CNNs on MNIST, using a frozen ResNet50 as a feature extractor on CIFAR10, and watching t-SNE turn raw pixels into separable clusters.',
+    description:
+      'The PyTorch homework notebooks from a graduate deep learning course (UMD DATA 612), the direct on-ramp to the Alzheimer MRI final project. The MNIST notebooks build the training loop from scratch (data loaders, network definition, optimization, evaluation) and then reload the trained network to visualize its learned embeddings with t-SNE, where the ten digits separate into clean, nearly disjoint clusters. The feature-extraction homework freezes a pretrained ResNet50, upsamples CIFAR10 images to fit it, harvests penultimate-layer features for train and test sets, and shows via t-SNE how much structure a network trained on ImageNet already imposes on images it has never seen.',
+    tags: ['Python', 'PyTorch', 'ResNet', 't-SNE'],
+    category: 'Machine Learning',
+    period: 'Summer 2023',
+    coursework: 'Graduate coursework, UMD (DATA 612)',
+    icon: 'device_hub',
+    image: 'assets/projects/deep-learning-notebooks.webp',
+    status: 'research',
+    highlights: [
+      'MNIST training loop written out in full: loaders, model, loss, optimizer, and evaluation, with hyperparameters surfaced at the top',
+      'Trained-model embeddings visualized with t-SNE, showing the ten digits as cleanly separated clusters',
+      'Pretrained ResNet50 used as a frozen feature extractor on upsampled CIFAR10, with penultimate-layer features harvested for both splits',
+      'Direct preparation for the Alzheimer MRI final project, where the same transfer-learning pattern carried the result',
+    ],
+    lessons: [
+      'The t-SNE before-and-after is the single most convincing picture of what a network learns: raw pixels are soup, learned features are islands',
+      'Transfer learning worked embarrassingly well compared to training from scratch, which reframed how I scope small-data image problems',
+      'Upsampling 32-pixel CIFAR images to feed a network built for 224 made the resolution mismatch, and its cost, impossible to ignore',
+      'Homework-sized runs taught GPU budgeting: knowing roughly what an epoch costs before launching it is a skill, not trivia',
+    ],
+  },
+  {
+    id: 'first-semester-notebooks',
+    title: 'First Notebooks: Learning Pandas the Hard Way',
+    shortDescription:
+      'The very first notebooks of the degree: a class-survey analysis and a Celtics box-score win-loss tree, kept as an honest record of where the learning curve started.',
+    description:
+      'The earliest notebooks of the graduate program (UMD DATA 602, first semester), kept unpolished on purpose. The first analyzes a survey of the cohort\'s interests: reading the CSV, handling missing values, joining tables, and growing a decision tree over interest columns that, in hindsight, mostly memorized 35 classmates. The second pulls Boston Celtics box scores and hits real-world data cleaning immediately, non-breaking space characters hiding in both the values and the column names, before fitting a win-loss decision tree on a season of games and reading it against basketball intuition. Neither is a project so much as a record of first contact with pandas, scikit-learn, and messy data.',
+    tags: ['Python', 'Pandas', 'scikit-learn', 'Jupyter'],
+    category: 'Data Science',
+    period: 'Fall 2021',
+    coursework: 'Graduate coursework, UMD (DATA 602)',
+    icon: 'school',
+    image: 'assets/projects/first-semester-notebooks.webp',
+    status: 'research',
+    highlights: [
+      'First real pandas work: CSV loading, missing-value handling, joins, and grouped aggregation on the class survey',
+      'Celtics box-score cleaning surfaced non-breaking space characters in values and column names, a classic messy-data initiation',
+      'Win-loss decision tree over a season of games, sanity-checked against basketball sense (points, rebounds, turnovers)',
+      'Kept as-is rather than retrofitted, so the growth between these and the later projects is visible',
+    ],
+    lessons: [
+      'The survey decision tree fit 35 rows perfectly and predicted nothing; it was my first overfit before I knew the word for it',
+      'The invisible non-breaking space bug took longer than the modeling and taught the durable lesson that data inspection comes before everything',
+      'Small single-season sports data makes every conclusion fragile, and the temptation to narrate noise is strong; resisting it started here',
+      'Keeping early work visible is deliberate: the distance between these notebooks and the later point-in-time EDGAR work is the actual portfolio',
     ],
   },
 ]
