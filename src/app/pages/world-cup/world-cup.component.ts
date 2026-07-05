@@ -3,7 +3,7 @@ import { CommonModule, DatePipe, DecimalPipe } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { FormsModule } from '@angular/forms'
 import { MatIconModule } from '@angular/material/icon'
-import { MatTabsModule } from '@angular/material/tabs'
+import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { Title, Meta } from '@angular/platform-browser'
 import {
@@ -29,7 +29,6 @@ import {
   PlayedMatchesResponse,
   ReportCard,
   ReportCardResponse,
-  ScenarioMatch,
   Scenarios,
   ScenariosResponse,
   TeamRow,
@@ -172,6 +171,13 @@ export class WorldCupComponent implements OnInit, OnDestroy {
   // Per-scenario selected side, keyed by scenario index. Defaults to the
   // first team of each pairing.
   scenarioPick = new Map<number, string>()
+  scenarioViews: Array<{
+    round: string
+    teams: string[]
+    pWin: number[]
+    pick: string
+    rows: Array<{ team: string; winner_pct: number; delta: number }>
+  }> = []
   showReceipts = false
 
   private historyIndex = new Map<string, Map<string, Partial<Record<HistoryStage, number>>>>()
@@ -252,6 +258,7 @@ export class WorldCupComponent implements OnInit, OnDestroy {
         this.playedMatches = played
         this.reportCard = report?.report_card ?? null
         this.scenarios = whatIf?.scenarios ?? null
+        this.buildScenarioViews()
 
         const histories: Partial<Record<HistoryStage, HistoryResponse>> = {}
         if (hWinner) histories.winner = hWinner
@@ -606,29 +613,40 @@ export class WorldCupComponent implements OnInit, OnDestroy {
   }
 
   // What-if scenarios
-
-  pickedSide(i: number, m: ScenarioMatch): string {
-    return this.scenarioPick.get(i) ?? m.teams[0]
-  }
+  //
+  // Views are precomputed: template-bound methods returning fresh arrays
+  // put ngFor into an endless rebuild-recheck cycle that pins the page.
 
   pickSide(i: number, team: string): void {
     this.scenarioPick.set(i, team)
+    this.buildScenarioViews()
   }
 
-  pWinFor(m: ScenarioMatch, team: string): number {
-    return m.p_win[m.teams.indexOf(team)] ?? 0
+  onTabChange(event: MatTabChangeEvent): void {
+    // Charts initialize at zero size while their tab body is hidden, so
+    // re-render after the tab switch animation settles.
+    setTimeout(() => {
+      if (event.tab.textLabel === 'History') this.renderHistoryChart()
+      else if (event.tab.textLabel === 'Performance') this.renderCalibrationChart()
+    }, 250)
   }
 
-  scenarioRows(
-    m: ScenarioMatch,
-    side: string
-  ): Array<{ team: string; winner_pct: number; delta: number }> {
+  private buildScenarioViews(): void {
     const base = new Map((this.latest?.leaderboard ?? []).map((r) => [r.team, r.winner_pct]))
-    return (m.if_wins[side] ?? []).map((e) => ({
-      team: e.team,
-      winner_pct: e.winner_pct,
-      delta: e.winner_pct - (base.get(e.team) ?? 0),
-    }))
+    this.scenarioViews = (this.scenarios?.matches ?? []).map((m, i) => {
+      const pick = this.scenarioPick.get(i) ?? m.teams[0]
+      return {
+        round: m.round,
+        teams: m.teams,
+        pWin: m.p_win,
+        pick,
+        rows: (m.if_wins[pick] ?? []).map((e) => ({
+          team: e.team,
+          winner_pct: e.winner_pct,
+          delta: e.winner_pct - (base.get(e.team) ?? 0),
+        })),
+      }
+    })
   }
 
   // Chart
