@@ -1,23 +1,55 @@
 import { Routes } from '@angular/router'
-import { AboutComponent } from './pages/about/about.component'
-import { DashboardComponent } from './pages/dashboard/dashboard.component'
-import { AuthComponent } from './pages/auth/auth.component'
-import { ProjectComponent } from './pages/project/project.component'
-import { ProjectDetailComponent } from './pages/project-detail/project-detail.component'
-import { ProfileComponent } from './pages/profile/profile.component'
-import { WorldCupComponent } from './pages/world-cup/world-cup.component'
-import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component'
 import { authGuard } from './guards/auth.guard'
 
+// Every route is lazy-loaded so the initial bundle stays small; heavy
+// pages like the World Cup dashboard (Chart.js) only download when visited.
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: 'home', component: DashboardComponent },
-  { path: 'about', component: AboutComponent },
-  { path: 'login', component: AuthComponent },
-  { path: 'register', component: AuthComponent },
-  { path: 'project', component: ProjectComponent },
-  { path: 'project/:id', component: ProjectDetailComponent },
-  { path: 'world-cup', component: WorldCupComponent },
-  { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
-  { path: '**', component: PageNotFoundComponent },
+  {
+    path: 'home',
+    loadComponent: () =>
+      import('./pages/dashboard/dashboard.component').then((m) => m.DashboardComponent),
+  },
+  {
+    path: 'about',
+    loadComponent: () => import('./pages/about/about.component').then((m) => m.AboutComponent),
+  },
+  {
+    path: 'login',
+    loadComponent: () => import('./pages/auth/auth.component').then((m) => m.AuthComponent),
+  },
+  {
+    path: 'register',
+    loadComponent: () => import('./pages/auth/auth.component').then((m) => m.AuthComponent),
+  },
+  {
+    path: 'project',
+    loadComponent: () =>
+      import('./pages/project/project.component').then((m) => m.ProjectComponent),
+  },
+  {
+    path: 'project/:id',
+    loadComponent: () =>
+      import('./pages/project-detail/project-detail.component').then(
+        (m) => m.ProjectDetailComponent
+      ),
+  },
+  {
+    path: 'world-cup',
+    loadComponent: () =>
+      import('./pages/world-cup/world-cup.component').then((m) => m.WorldCupComponent),
+  },
+  {
+    path: 'profile',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/profile/profile.component').then((m) => m.ProfileComponent),
+  },
+  {
+    path: '**',
+    loadComponent: () =>
+      import('./pages/page-not-found/page-not-found.component').then(
+        (m) => m.PageNotFoundComponent
+      ),
+  },
 ]
