@@ -61,7 +61,17 @@ interface MetricCard {
   styleUrl: './stocks.component.scss',
 })
 export class StocksComponent implements OnInit, OnDestroy {
-  @ViewChild('trackCanvas') trackCanvas?: ElementRef<HTMLCanvasElement>
+  // The canvas only enters the DOM once the loading gate flips, which happens
+  // in the same change-detection pass that delivers the data. Rendering from
+  // a ViewChild setter draws the chart exactly when the element exists,
+  // instead of racing change detection from the subscribe callback.
+  private trackCanvas?: ElementRef<HTMLCanvasElement>
+
+  @ViewChild('trackCanvas')
+  set trackCanvasRef(ref: ElementRef<HTMLCanvasElement> | undefined) {
+    this.trackCanvas = ref
+    if (ref) this.renderTrackChart()
+  }
 
   loading = true
   error: string | null = null
@@ -119,7 +129,6 @@ export class StocksComponent implements OnInit, OnDestroy {
         this.trackRecord = track
         this.metricCards = this.buildMetricCards(latest)
         this.loading = false
-        queueMicrotask(() => this.renderTrackChart())
       },
       error: () => {
         this.error = 'Could not load the latest snapshot. The data feed may not be seeded yet.'
