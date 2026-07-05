@@ -32,6 +32,9 @@
         tabindex="0"
         (keydown.enter)="goToProject(project.id)"
       >
+        <div class="card-thumb" *ngIf="project.image">
+          <img [src]="project.image" [alt]="project.title + ' preview'" loading="lazy" />
+        </div>
         <div class="card-header">
           <span class="card-icon">
             <img
@@ -96,15 +99,6 @@
     <div class="empty-state" *ngIf="filteredProjects.length === 0">
       <mat-icon>search_off</mat-icon>
       <p>No projects found in this category.</p>
-    </div>
-  </section>
-
-  <!-- ===== Coming Soon Note ===== -->
-  <section class="coming-soon">
-    <div class="coming-soon-card glass">
-      <mat-icon>rocket_launch</mat-icon>
-      <h3>More Projects Coming Soon</h3>
-      <p>I'm constantly working on new projects. Check back for updates!</p>
     </div>
   </section>
 </div>
