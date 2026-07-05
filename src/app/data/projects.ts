@@ -153,6 +153,33 @@ export const PROJECTS: Project[] = [
     ],
   },
   {
+    id: 'takeout-organizer',
+    title: 'Takeout Organizer',
+    shortDescription:
+      'Python tool that repairs Google Photos Takeout exports: restores real EXIF metadata from JSON sidecars, de-duplicates by perceptual hash, and organizes everything without ever touching the originals.',
+    description:
+      'When you export a Google Photos library with Takeout, the photos arrive stripped of their metadata: capture dates and GPS coordinates are dumped into separate JSON sidecar files with famously inconsistent naming. Takeout Organizer matches each photo to its sidecar, writes the metadata back into the file itself with ExifTool, and rebuilds a clean date-organized library. A perceptual-hash de-duplication pass catches the same photo across re-compressions, which solves the overlap between a Takeout export and downloaded shared albums, and keeps the best copy of each. Every operation is copy-based and collision-safe: source files are never modified or deleted, which a dedicated source-integrity test enforces. Runs headless as a CLI or with a desktop GUI, resumes interrupted sessions, and has been exercised on a multi-terabyte library.',
+    tags: ['Python', 'ExifTool', 'Pillow', 'CLI', 'GitHub Actions'],
+    category: 'Tools',
+    icon: 'photo_library',
+    status: 'in-progress',
+    highlights: [
+      'Writes real EXIF tags (DateTimeOriginal, GPS) via ExifTool rather than only setting filesystem timestamps, the shortcut most Takeout tools take',
+      'Handles the awkward Takeout filename patterns: edited variants, duplicate counters, truncated sidecar names, live-photo pairs, and Unicode or case mismatches',
+      'Perceptual de-duplication (difference hash) catches the same photo across re-compressions and keeps the best copy: sidecar-backed first, then highest resolution',
+      'Shared-album aware: photos without sidecars are kept and dated from embedded EXIF, then de-duplicated against the Takeout export',
+      'Source files are never modified or deleted; every run is copy-based and a source-integrity test verifies it',
+      'CI on Linux, Windows, and macOS across Python versions, including an end-to-end test that writes and reads back metadata through a real ExifTool binary',
+    ],
+    lessons: [
+      'Perceptual-hash thresholds are a judgment call: tight enough to avoid false merges, loose enough to catch re-compressions. Borderline pairs are flagged in a report for human review instead of being auto-deleted',
+      'The Takeout sidecar format is undocumented and inconsistent, so filename matching grew case by case from real exports rather than from any spec',
+      'The first version wrote timestamps in UTC, which put photos hours off in local photo apps; it now respects the local system timezone',
+      'A difference hash misses semantic duplicates (same scene, different crop or heavy edit), so those remain a manual decision by design',
+      'The repo is staying private until it has processed my own complete library end to end; a tool that rewrites photo metadata should be proven on its author first',
+    ],
+  },
+  {
     id: 'mri-classification',
     title: 'Classification of MRI Images',
     shortDescription:
