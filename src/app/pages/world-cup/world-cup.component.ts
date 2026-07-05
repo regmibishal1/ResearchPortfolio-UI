@@ -605,7 +605,7 @@ export class WorldCupComponent implements OnInit, OnDestroy {
     return `${sign}${value.toFixed(1)}`
   }
 
-  // ── What-if scenarios ────────────────────────────────────────────────
+  // What-if scenarios
 
   pickedSide(i: number, m: ScenarioMatch): string {
     return this.scenarioPick.get(i) ?? m.teams[0]
