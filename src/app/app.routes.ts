@@ -40,6 +40,10 @@ export const routes: Routes = [
       import('./pages/world-cup/world-cup.component').then((m) => m.WorldCupComponent),
   },
   {
+    path: 'stocks',
+    loadComponent: () => import('./pages/stocks/stocks.component').then((m) => m.StocksComponent),
+  },
+  {
     path: 'profile',
     canActivate: [authGuard],
     loadComponent: () =>

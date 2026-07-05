@@ -1,0 +1,204 @@
+<div class="stocks-page">
+  <!-- ===== Back link ===== -->
+  <nav class="breadcrumb">
+    <a [routerLink]="['/project', 'edgar-signals']" class="back-link">
+      <mat-icon>arrow_back</mat-icon>
+      <span>Project overview</span>
+    </a>
+  </nav>
+
+  <!-- ===== Hero ===== -->
+  <header class="stocks-hero">
+    <div class="hero-text">
+      <span class="hero-eyebrow">Fundamentals Signals</span>
+      <h1>EDGAR Earnings-Surprise Signals</h1>
+      <p class="hero-sub">
+        Point-in-time earnings surprises reconstructed from SEC EDGAR filings across 11 sectors.
+        Every feature is keyed to the filing date, so nothing uses information the market did not
+        yet have. The honest result is on display, not a polished sales pitch.
+      </p>
+    </div>
+
+    <div class="hero-meta" *ngIf="latest as l">
+      <div class="meta-pill">
+        <span class="meta-label">As of</span>
+        <span class="meta-value">{{ l.run.as_of_date | date: 'longDate' }}</span>
+      </div>
+      <div class="meta-pill">
+        <span class="meta-label">Universe</span>
+        <span class="meta-value">{{ l.run.universe_size }} names</span>
+      </div>
+      <div class="meta-pill">
+        <span class="meta-label">Filing events</span>
+        <span class="meta-value">{{ l.run.n_events | number }}</span>
+      </div>
+      <div class="meta-pill">
+        <span class="meta-label">Window</span>
+        <span class="meta-value">
+          {{ l.run.start_date | date: 'yyyy' }} to {{ l.run.end_date | date: 'yyyy' }}
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== Loading ===== -->
+  <div class="state-block" *ngIf="loading">
+    <mat-spinner diameter="36"></mat-spinner>
+    <span>Loading the latest snapshot...</span>
+  </div>
+
+  <!-- ===== Error ===== -->
+  <div class="state-block state-error" *ngIf="error && !loading">
+    <mat-icon>error_outline</mat-icon>
+    <span>{{ error }}</span>
+  </div>
+
+  <!-- ===== Content ===== -->
+  <ng-container *ngIf="!loading && !error && latest">
+    <!-- Headline metrics -->
+    <section class="metric-grid">
+      <div class="metric-card" *ngFor="let card of metricCards">
+        <span class="metric-label">{{ card.label }}</span>
+        <span class="metric-value">{{ card.value }}</span>
+        <span class="metric-hint">{{ card.hint }}</span>
+      </div>
+    </section>
+
+    <!-- Sector heatmap -->
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Sector heatmap</h2>
+        <p>Mean standardized earnings surprise (SUE) by sector. Select a sector to filter the table.</p>
+      </div>
+      <div class="heatmap">
+        <button
+          type="button"
+          class="heat-cell"
+          *ngFor="let s of sectors"
+          [class.active]="selectedSector === s.sector"
+          [style.background]="heatColor(s.mean_sue)"
+          (click)="selectSector(s.sector)"
+        >
+          <span class="heat-etf">{{ s.sector }}</span>
+          <span class="heat-name">{{ s.sector_name }}</span>
+          <span class="heat-value">{{ s.mean_sue !== null ? (s.mean_sue | number: '1.2-2') : '-' }}</span>
+          <span class="heat-count">{{ s.n_names }} names</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Companies -->
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Companies</h2>
+        <p *ngIf="selectedSector">
+          Showing {{ selectedSector }} only.
+          <button type="button" class="link-btn" (click)="selectSector(selectedSector)">
+            Clear filter
+          </button>
+        </p>
+        <p *ngIf="!selectedSector">Ranked by latest earnings surprise. Select a row for detail.</p>
+      </div>
+
+      <div class="table-wrap" *ngIf="visibleCompanies.length; else noCompanies">
+        <table class="signal-table">
+          <thead>
+            <tr>
+              <th>Ticker</th>
+              <th>Sector</th>
+              <th class="num">SUE</th>
+              <th class="num">Predicted vol</th>
+              <th class="num">Fwd excess 63d</th>
+              <th class="num">Quintile</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let c of visibleCompanies"
+              class="signal-row"
+              [class.active]="selectedTicker === c.ticker"
+              (click)="selectCompany(c.ticker)"
+            >
+              <td class="ticker">{{ c.ticker }}</td>
+              <td>{{ c.sector }}</td>
+              <td class="num">{{ c.sue !== null ? (c.sue | number: '1.2-2') : '-' }}</td>
+              <td class="num">
+                {{ c.predicted_vol !== null ? (c.predicted_vol | number: '1.2-2') : '-' }}
+              </td>
+              <td
+                class="num"
+                [class.pos]="(c.exret_63 ?? 0) > 0"
+                [class.neg]="(c.exret_63 ?? 0) < 0"
+              >
+                {{ c.exret_63 !== null ? ((c.exret_63 * 100) | number: '1.1-1') + '%' : '-' }}
+              </td>
+              <td class="num">{{ c.sue_quintile !== null ? c.sue_quintile : '-' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <ng-template #noCompanies>
+        <p class="muted">No company signals in this snapshot yet.</p>
+      </ng-template>
+
+      <!-- Company detail -->
+      <div class="detail" *ngIf="selectedTicker">
+        <div class="state-block" *ngIf="companyLoading">
+          <mat-spinner diameter="24"></mat-spinner>
+          <span>Loading {{ selectedTicker }}...</span>
+        </div>
+
+        <ng-container *ngIf="companyDetail as d">
+          <h3>{{ d.latest.ticker }} <span class="detail-sector">{{ d.latest.sector }}</span></h3>
+          <div class="detail-stats">
+            <div><span>Latest SUE</span><strong>{{ d.latest.sue !== null ? (d.latest.sue | number: '1.2-2') : '-' }}</strong></div>
+            <div><span>Revenue SUE</span><strong>{{ d.latest.rev_sue !== null ? (d.latest.rev_sue | number: '1.2-2') : '-' }}</strong></div>
+            <div><span>Predicted vol</span><strong>{{ d.latest.predicted_vol !== null ? (d.latest.predicted_vol | number: '1.2-2') : '-' }}</strong></div>
+            <div><span>Filing lag</span><strong>{{ d.latest.lag_days !== null ? d.latest.lag_days + 'd' : '-' }}</strong></div>
+          </div>
+
+          <div class="detail-history" *ngIf="d.history.length > 1">
+            <h4>Signal history</h4>
+            <table class="signal-table compact">
+              <thead>
+                <tr>
+                  <th>Snapshot</th>
+                  <th class="num">SUE</th>
+                  <th class="num">Predicted vol</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let p of d.history">
+                  <td>{{ p.as_of_date | date: 'mediumDate' }}</td>
+                  <td class="num">{{ p.sue !== null ? (p.sue | number: '1.2-2') : '-' }}</td>
+                  <td class="num">{{ p.predicted_vol !== null ? (p.predicted_vol | number: '1.2-2') : '-' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </ng-container>
+      </div>
+    </section>
+
+    <!-- Track record -->
+    <section class="panel" *ngIf="trackRecord && trackRecord.points.length">
+      <div class="panel-head">
+        <h2>Walk-forward track record</h2>
+        <p>
+          Realized long-short return and information coefficient by period. Positive on average,
+          clearly regime-dependent, which is the honest picture for post-earnings drift.
+        </p>
+      </div>
+      <div class="chart-wrap">
+        <canvas #trackCanvas></canvas>
+      </div>
+    </section>
+
+    <!-- Disclaimer -->
+    <p class="disclaimer">
+      Educational analysis of public SEC data. Not investment advice, and not a trading
+      recommendation. Single-name quarterly returns are close to unpredictable; the value here is
+      point-in-time discipline and honest evaluation, not an implied edge.
+    </p>
+  </ng-container>
+</div>
