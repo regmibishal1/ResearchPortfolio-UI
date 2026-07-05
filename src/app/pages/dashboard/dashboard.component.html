@@ -33,6 +33,18 @@
         About Me
       </a>
     </div>
+
+    <a class="live-banner animate-in animate-in-delay-5" [routerLink]="['/world-cup']">
+      <span class="live-pill">
+        <span class="live-dot"></span>
+        LIVE
+      </span>
+      <span class="live-text">
+        World Cup 2026 predictions
+        <span class="live-detail">2M simulations, updated daily</span>
+      </span>
+      <mat-icon class="live-arrow">arrow_forward</mat-icon>
+    </a>
   </div>
 
   <div class="scroll-indicator animate-in animate-in-delay-5">
@@ -42,24 +54,6 @@
     <span>Scroll to explore</span>
   </div>
 </section>
-
-<!-- ===== Live Demo Banner ===== -->
-<a class="live-banner" [routerLink]="['/world-cup']">
-  <span class="live-pill">
-    <span class="live-dot"></span>
-    LIVE
-  </span>
-  <span class="live-text">
-    <strong>World Cup 2026 predictions</strong>
-    <span class="live-detail"
-      >2M Monte Carlo simulations, updated daily as the bracket unfolds</span
-    >
-  </span>
-  <span class="live-cta">
-    View predictions
-    <mat-icon>arrow_forward</mat-icon>
-  </span>
-</a>
 
 <!-- ===== Skills Section ===== -->
 <section class="skills-section">
