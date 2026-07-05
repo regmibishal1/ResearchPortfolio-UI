@@ -45,7 +45,10 @@
             />
             <mat-icon *ngIf="!project.logo" class="card-mat-icon">{{ project.icon }}</mat-icon>
           </span>
-          <span class="card-category">{{ project.category }}</span>
+          <span class="card-badges">
+            <span class="card-period" *ngIf="project.period">{{ project.period }}</span>
+            <span class="card-category">{{ project.category }}</span>
+          </span>
         </div>
         <h3 class="card-title">{{ project.title }}</h3>
         <p class="card-description">{{ project.shortDescription }}</p>

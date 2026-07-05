@@ -26,6 +26,10 @@
             <span class="status-dot"></span>
             {{ statusDisplay.label }}
           </span>
+          <span class="period-badge" *ngIf="project.period">
+            <mat-icon class="period-icon">calendar_today</mat-icon>
+            {{ project.period }}
+          </span>
         </div>
         <h1 class="hero-title">{{ project.title }}</h1>
       </div>
@@ -57,6 +61,18 @@
       >
         <mat-icon>code</mat-icon>
         <span>Source Code</span>
+      </a>
+
+      <!-- Report / paper PDF -->
+      <a
+        *ngIf="project.paper"
+        [href]="project.paper"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="action-btn action-btn-secondary"
+      >
+        <mat-icon>description</mat-icon>
+        <span>Read the Report</span>
       </a>
 
       <!-- Demo link -->
