@@ -57,7 +57,11 @@ export interface Project {
   liveEmbed?: 'world-cup-summary' | 'mri-explorer' | 'empathy-explorer'
 }
 
-export const PROJECTS: Project[] = [
+// Definition order only matters WITHIN a period: the exported list below is
+// sorted newest-first by period, and the sort is stable, so entries sharing a
+// period keep the order they are written in here (main project first, then
+// its companion notebooks).
+const PROJECT_DEFINITIONS: Project[] = [
   {
     id: 'edgar-signals',
     title: 'EDGAR Fundamentals Signals',
@@ -500,3 +504,28 @@ export const PROJECTS: Project[] = [
     ],
   },
 ]
+
+/** Representative month for each season, for ordering periods within a year. */
+const SEASON_MONTH: Record<string, number> = { Spring: 2, Summer: 6, Fall: 9 }
+
+/**
+ * Sortable rank for a period string ("Fall 2022", "2026", "2023-present").
+ * Plain years rank mid-year; "-present" ranks late in its start year so an
+ * ongoing project sits above that year's finished work.
+ */
+function periodRank(period?: string): number {
+  if (!period) return 0
+  const year = Number(period.match(/\d{4}/)?.[0] ?? 0)
+  const season = Object.keys(SEASON_MONTH).find((s) => period.startsWith(s))
+  const month = season ? SEASON_MONTH[season] : period.includes('present') ? 12 : 6
+  return year * 100 + month
+}
+
+/**
+ * Projects in reverse-chronological order (newest first). The list page and
+ * the dashboard's featured slice both read this, so time order holds
+ * everywhere without any component doing its own sorting.
+ */
+export const PROJECTS: Project[] = [...PROJECT_DEFINITIONS].sort(
+  (a, b) => periodRank(b.period) - periodRank(a.period)
+)
