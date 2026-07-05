@@ -153,6 +153,9 @@
 }
 
 .card-period {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -161,6 +164,12 @@
   padding: 3px 10px;
   border-radius: 100px;
   white-space: nowrap;
+
+  .card-school-icon {
+    font-size: 13px;
+    width: 13px;
+    height: 13px;
+  }
 }
 
 .card-category {
