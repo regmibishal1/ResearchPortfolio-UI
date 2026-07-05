@@ -27,6 +27,11 @@ import {
   MatchDetail,
   PlayedMatch,
   PlayedMatchesResponse,
+  ReportCard,
+  ReportCardResponse,
+  ScenarioMatch,
+  Scenarios,
+  ScenariosResponse,
   TeamRow,
   WorldCupService,
 } from '../../services/world-cup.service'
@@ -111,6 +116,7 @@ interface RoundGroup {
 })
 export class WorldCupComponent implements OnInit, OnDestroy {
   @ViewChild('historyCanvas') historyCanvas?: ElementRef<HTMLCanvasElement>
+  @ViewChild('calibCanvas') calibCanvas?: ElementRef<HTMLCanvasElement>
 
   loading = true
   error: string | null = null
@@ -161,6 +167,13 @@ export class WorldCupComponent implements OnInit, OnDestroy {
 
   openFactors = new Set<string>()
 
+  reportCard: ReportCard | null = null
+  scenarios: Scenarios | null = null
+  // Per-scenario selected side, keyed by scenario index. Defaults to the
+  // first team of each pairing.
+  scenarioPick = new Map<number, string>()
+  showReceipts = false
+
   private historyIndex = new Map<string, Map<string, Partial<Record<HistoryStage, number>>>>()
   private dateLockMap = new Map<string, number>()
 
@@ -187,6 +200,7 @@ export class WorldCupComponent implements OnInit, OnDestroy {
   readonly STAGE_LABELS = STAGE_LABELS
 
   private chart: Chart | null = null
+  private calibChart: Chart | null = null
 
   constructor(
     private wc: WorldCupService,
@@ -210,6 +224,8 @@ export class WorldCupComponent implements OnInit, OnDestroy {
       latest: this.wc.getLatest({ limit: 48 }),
       bracket: this.wc.getBracket(),
       played: this.wc.getPlayedMatches(),
+      report: this.wc.getReportCard().pipe(catchError(() => of(null as ReportCardResponse | null))),
+      whatIf: this.wc.getScenarios().pipe(catchError(() => of(null as ScenariosResponse | null))),
       hWinner: h('winner'),
       hFinal: h('final'),
       hSF: h('sf'),
@@ -217,11 +233,25 @@ export class WorldCupComponent implements OnInit, OnDestroy {
       hR16: h('r16'),
       hR32: h('r32'),
     }).subscribe({
-      next: ({ latest, bracket, played, hWinner, hFinal, hSF, hQF, hR16, hR32 }) => {
+      next: ({
+        latest,
+        bracket,
+        played,
+        report,
+        whatIf,
+        hWinner,
+        hFinal,
+        hSF,
+        hQF,
+        hR16,
+        hR32,
+      }) => {
         this.latest = latest
         this.latestBracket = bracket
         this.bracket = bracket
         this.playedMatches = played
+        this.reportCard = report?.report_card ?? null
+        this.scenarios = whatIf?.scenarios ?? null
 
         const histories: Partial<Record<HistoryStage, HistoryResponse>> = {}
         if (hWinner) histories.winner = hWinner
@@ -251,7 +281,10 @@ export class WorldCupComponent implements OnInit, OnDestroy {
         this.rebuildLockedMatchesForDate()
 
         this.loading = false
-        setTimeout(() => this.renderHistoryChart())
+        setTimeout(() => {
+          this.renderHistoryChart()
+          this.renderCalibrationChart()
+        })
       },
       error: (err) => {
         this.loading = false
@@ -265,6 +298,7 @@ export class WorldCupComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.chart?.destroy()
+    this.calibChart?.destroy()
   }
 
   // Snapshot date selection
@@ -571,6 +605,32 @@ export class WorldCupComponent implements OnInit, OnDestroy {
     return `${sign}${value.toFixed(1)}`
   }
 
+  // ── What-if scenarios ────────────────────────────────────────────────
+
+  pickedSide(i: number, m: ScenarioMatch): string {
+    return this.scenarioPick.get(i) ?? m.teams[0]
+  }
+
+  pickSide(i: number, team: string): void {
+    this.scenarioPick.set(i, team)
+  }
+
+  pWinFor(m: ScenarioMatch, team: string): number {
+    return m.p_win[m.teams.indexOf(team)] ?? 0
+  }
+
+  scenarioRows(
+    m: ScenarioMatch,
+    side: string
+  ): Array<{ team: string; winner_pct: number; delta: number }> {
+    const base = new Map((this.latest?.leaderboard ?? []).map((r) => [r.team, r.winner_pct]))
+    return (m.if_wins[side] ?? []).map((e) => ({
+      team: e.team,
+      winner_pct: e.winner_pct,
+      delta: e.winner_pct - (base.get(e.team) ?? 0),
+    }))
+  }
+
   // Chart
 
   private renderHistoryChart(): void {
@@ -629,6 +689,77 @@ export class WorldCupComponent implements OnInit, OnDestroy {
               text: `${STAGE_LABELS[this.selectedHistoryStage]} %`,
               color: '#a6adc8',
             },
+          },
+        },
+      },
+    })
+  }
+
+  private renderCalibrationChart(): void {
+    const bins = this.reportCard?.calibration
+    if (!bins?.length || !this.calibCanvas) return
+
+    const ctx = this.calibCanvas.nativeElement.getContext('2d')
+    if (!ctx) return
+
+    const labels = bins.map((b) => `${Math.round(b.lo * 100)}-${Math.round(b.hi * 100)}%`)
+
+    this.calibChart?.destroy()
+    this.calibChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          {
+            label: 'Favorite win rate (observed)',
+            data: bins.map((b) => b.observed * 100),
+            borderColor: '#a6e3a1',
+            backgroundColor: '#a6e3a1',
+            borderWidth: 2,
+            pointRadius: 4,
+            tension: 0.15,
+          },
+          {
+            label: 'Predicted (perfect calibration)',
+            data: bins.map((b) => b.predicted * 100),
+            borderColor: 'rgba(166, 173, 200, 0.6)',
+            backgroundColor: 'rgba(166, 173, 200, 0.6)',
+            borderWidth: 2,
+            borderDash: [6, 4],
+            pointRadius: 3,
+            tension: 0.15,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { color: '#cdd6f4', boxWidth: 12, font: { size: 11 } },
+          },
+          tooltip: {
+            callbacks: {
+              label: (c) => {
+                const bin = bins[c.dataIndex]
+                return ` ${c.dataset.label}: ${(c.raw as number).toFixed(1)}% (${bin.n} matches)`
+              },
+            },
+          },
+        },
+        scales: {
+          x: {
+            ticks: { color: '#a6adc8' },
+            grid: { color: 'rgba(255,255,255,0.05)' },
+            title: { display: true, text: 'Model confidence in favorite', color: '#a6adc8' },
+          },
+          y: {
+            min: 0,
+            max: 100,
+            ticks: { color: '#a6adc8', callback: (v) => `${v}%` },
+            grid: { color: 'rgba(255,255,255,0.05)' },
+            title: { display: true, text: 'How often the favorite won', color: '#a6adc8' },
           },
         },
       },
