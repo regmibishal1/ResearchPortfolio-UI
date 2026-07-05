@@ -94,6 +94,73 @@ export interface PlayedMatchesResponse {
   matches: PlayedMatch[]
 }
 
+export interface MetricSummary {
+  n: number
+  accuracy: number | null
+  brier: number | null
+  log_loss: number | null
+}
+
+export interface CalibrationBin {
+  lo: number
+  hi: number
+  n: number
+  predicted: number
+  observed: number
+}
+
+export interface GradedMatch {
+  date: string
+  home: string
+  away: string
+  score: number[]
+  stage: string
+  probs: number[]
+  predicted: string
+  actual: string
+  correct: boolean
+}
+
+export interface ReportCard {
+  as_of_date: string
+  n_matches: number
+  model: MetricSummary
+  baseline: MetricSummary
+  by_stage: Record<string, MetricSummary>
+  calibration: CalibrationBin[]
+  matches: GradedMatch[]
+}
+
+export interface ReportCardResponse {
+  run_id: number
+  as_of_date: string
+  report_card: ReportCard | null
+}
+
+export interface ScenarioEntry {
+  team: string
+  winner_pct: number
+}
+
+export interface ScenarioMatch {
+  round: string
+  teams: string[]
+  p_win: number[]
+  n_sims: number
+  if_wins: Record<string, ScenarioEntry[]>
+}
+
+export interface Scenarios {
+  as_of_date: string
+  matches: ScenarioMatch[]
+}
+
+export interface ScenariosResponse {
+  run_id: number
+  as_of_date: string
+  scenarios: Scenarios | null
+}
+
 export type HistoryStage = 'winner' | 'final' | 'sf' | 'qf' | 'r16' | 'r32'
 
 @Injectable({ providedIn: 'root' })
@@ -132,5 +199,21 @@ export class WorldCupService {
     return this.http.get<PlayedMatchesResponse>(`${this.apiUrl}/played-matches`, {
       params: new HttpParams().set('tournament', tournament),
     })
+  }
+
+  getReportCard(
+    opts: { tournament?: string; as_of_date?: string } = {}
+  ): Observable<ReportCardResponse> {
+    let params = new HttpParams().set('tournament', opts.tournament ?? '2026')
+    if (opts.as_of_date) params = params.set('as_of_date', opts.as_of_date)
+    return this.http.get<ReportCardResponse>(`${this.apiUrl}/report-card`, { params })
+  }
+
+  getScenarios(
+    opts: { tournament?: string; as_of_date?: string } = {}
+  ): Observable<ScenariosResponse> {
+    let params = new HttpParams().set('tournament', opts.tournament ?? '2026')
+    if (opts.as_of_date) params = params.set('as_of_date', opts.as_of_date)
+    return this.http.get<ScenariosResponse>(`${this.apiUrl}/scenarios`, { params })
   }
 }
