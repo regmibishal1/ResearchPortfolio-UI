@@ -198,15 +198,6 @@ a:hover {
   }
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: -200% center;
-  }
-  100% {
-    background-position: 200% center;
-  }
-}
-
 @keyframes gradient-shift {
   0% {
     background-position: 0% 50%;
