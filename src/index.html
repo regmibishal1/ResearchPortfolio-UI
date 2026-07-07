@@ -72,6 +72,11 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="./assets/logo.png" />
 
+    <!-- Warm the connection to the data API so the first request on a data
+         page skips DNS, TLS, and tunnel setup. -->
+    <link rel="preconnect" href="https://api.bishalregmi.com" crossorigin />
+    <link rel="dns-prefetch" href="https://api.bishalregmi.com" />
+
     <!-- Google Fonts: Inter + Outfit + Material Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
