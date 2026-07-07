@@ -244,11 +244,9 @@ $toolbar-height: 64px;
 
   .gold-text {
     background: linear-gradient(135deg, #f0c040, #ffd966, #e6a810);
-    background-size: 200% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    animation: shimmer 4s linear infinite;
   }
 }
 
