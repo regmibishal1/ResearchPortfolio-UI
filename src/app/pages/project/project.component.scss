@@ -149,7 +149,10 @@
 .card-badges {
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: flex-end;
+  /* Wrap whole pills when the row is tight; never break text inside one */
+  flex-wrap: wrap;
+  gap: 4px 8px;
 }
 
 .card-period {
@@ -181,6 +184,7 @@
   background: var(--accent-gold-dim);
   padding: 4px 12px;
   border-radius: 100px;
+  white-space: nowrap;
 }
 
 .card-title {
