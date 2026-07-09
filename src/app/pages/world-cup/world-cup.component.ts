@@ -728,7 +728,7 @@ export class WorldCupComponent implements OnInit, OnDestroy {
         plugins: {
           legend: {
             position: 'bottom',
-            labels: { color: '#cdd6f4', boxWidth: 12, font: { size: 11 } },
+            labels: { color: '#f0f0f5', boxWidth: 12, font: { size: 11 } },
           },
           tooltip: {
             callbacks: {
@@ -738,16 +738,16 @@ export class WorldCupComponent implements OnInit, OnDestroy {
         },
         scales: {
           x: {
-            ticks: { color: '#a6adc8', maxRotation: 0 },
+            ticks: { color: '#a0a0b8', maxRotation: 0 },
             grid: { color: 'rgba(255,255,255,0.05)' },
           },
           y: {
-            ticks: { color: '#a6adc8', callback: (v) => `${v}%` },
+            ticks: { color: '#a0a0b8', callback: (v) => `${v}%` },
             grid: { color: 'rgba(255,255,255,0.05)' },
             title: {
               display: true,
               text: `${STAGE_LABELS[this.selectedHistoryStage]} %`,
-              color: '#a6adc8',
+              color: '#a0a0b8',
             },
           },
         },
@@ -801,7 +801,7 @@ export class WorldCupComponent implements OnInit, OnDestroy {
         plugins: {
           legend: {
             position: 'bottom',
-            labels: { color: '#cdd6f4', boxWidth: 12, font: { size: 11 } },
+            labels: { color: '#f0f0f5', boxWidth: 12, font: { size: 11 } },
           },
           tooltip: {
             callbacks: {
@@ -814,16 +814,16 @@ export class WorldCupComponent implements OnInit, OnDestroy {
         },
         scales: {
           x: {
-            ticks: { color: '#a6adc8' },
+            ticks: { color: '#a0a0b8' },
             grid: { color: 'rgba(255,255,255,0.05)' },
-            title: { display: true, text: 'Model confidence in favorite', color: '#a6adc8' },
+            title: { display: true, text: 'Model confidence in favorite', color: '#a0a0b8' },
           },
           y: {
             min: 0,
             max: 100,
-            ticks: { color: '#a6adc8', callback: (v) => `${v}%` },
+            ticks: { color: '#a0a0b8', callback: (v) => `${v}%` },
             grid: { color: 'rgba(255,255,255,0.05)' },
-            title: { display: true, text: 'How often the favorite won', color: '#a6adc8' },
+            title: { display: true, text: 'How often the favorite won', color: '#a0a0b8' },
           },
         },
       },
