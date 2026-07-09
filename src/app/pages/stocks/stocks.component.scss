@@ -213,6 +213,10 @@
 
 .table-wrap {
   overflow-x: auto;
+  /* Cap the company list so the track-record chart below stays reachable;
+     the full universe scrolls inside the panel with a sticky header. */
+  max-height: 560px;
+  overflow-y: auto;
 }
 
 .signal-table {
@@ -233,6 +237,10 @@
     text-transform: uppercase;
     font-size: 0.75rem;
     letter-spacing: 0.05em;
+    position: sticky;
+    top: 0;
+    background: var(--bg-card);
+    z-index: 1;
   }
 
   .num {

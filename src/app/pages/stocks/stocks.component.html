@@ -10,8 +10,8 @@
   <!-- ===== Hero ===== -->
   <header class="stocks-hero">
     <div class="hero-text">
-      <span class="hero-eyebrow">Fundamentals Signals</span>
-      <h1>EDGAR Earnings-Surprise Signals</h1>
+      <span class="hero-eyebrow">Earnings-Surprise Research</span>
+      <h1>EDGAR Fundamentals Signals</h1>
       <p class="hero-sub">
         Point-in-time earnings surprises reconstructed from SEC EDGAR filings across 11 sectors.
         Every feature is keyed to the filing date, so nothing uses information the market did not
@@ -68,7 +68,9 @@
     <section class="panel">
       <div class="panel-head">
         <h2>Sector heatmap</h2>
-        <p>Mean standardized earnings surprise (SUE) by sector. Select a sector to filter the table.</p>
+        <p>
+          Mean standardized earnings surprise (SUE) by sector. Select a sector to filter the table.
+        </p>
       </div>
       <div class="heatmap">
         <button
@@ -81,7 +83,9 @@
         >
           <span class="heat-etf">{{ s.sector }}</span>
           <span class="heat-name">{{ s.sector_name }}</span>
-          <span class="heat-value">{{ s.mean_sue !== null ? (s.mean_sue | number: '1.2-2') : '-' }}</span>
+          <span class="heat-value">{{
+            s.mean_sue !== null ? (s.mean_sue | number: '1.2-2') : '-'
+          }}</span>
           <span class="heat-count">{{ s.n_names }} names</span>
         </button>
       </div>
@@ -130,7 +134,7 @@
                 [class.pos]="(c.exret_63 ?? 0) > 0"
                 [class.neg]="(c.exret_63 ?? 0) < 0"
               >
-                {{ c.exret_63 !== null ? ((c.exret_63 * 100) | number: '1.1-1') + '%' : '-' }}
+                {{ c.exret_63 !== null ? (c.exret_63 * 100 | number: '1.1-1') + '%' : '-' }}
               </td>
               <td class="num">{{ c.sue_quintile !== null ? c.sue_quintile : '-' }}</td>
             </tr>
@@ -149,12 +153,30 @@
         </div>
 
         <ng-container *ngIf="companyDetail as d">
-          <h3>{{ d.latest.ticker }} <span class="detail-sector">{{ d.latest.sector }}</span></h3>
+          <h3>
+            {{ d.latest.ticker }} <span class="detail-sector">{{ d.latest.sector }}</span>
+          </h3>
           <div class="detail-stats">
-            <div><span>Latest SUE</span><strong>{{ d.latest.sue !== null ? (d.latest.sue | number: '1.2-2') : '-' }}</strong></div>
-            <div><span>Revenue SUE</span><strong>{{ d.latest.rev_sue !== null ? (d.latest.rev_sue | number: '1.2-2') : '-' }}</strong></div>
-            <div><span>Predicted vol</span><strong>{{ d.latest.predicted_vol !== null ? (d.latest.predicted_vol | number: '1.2-2') : '-' }}</strong></div>
-            <div><span>Filing lag</span><strong>{{ d.latest.lag_days !== null ? d.latest.lag_days + 'd' : '-' }}</strong></div>
+            <div>
+              <span>Latest SUE</span
+              ><strong>{{ d.latest.sue !== null ? (d.latest.sue | number: '1.2-2') : '-' }}</strong>
+            </div>
+            <div>
+              <span>Revenue SUE</span
+              ><strong>{{
+                d.latest.rev_sue !== null ? (d.latest.rev_sue | number: '1.2-2') : '-'
+              }}</strong>
+            </div>
+            <div>
+              <span>Predicted vol</span
+              ><strong>{{
+                d.latest.predicted_vol !== null ? (d.latest.predicted_vol | number: '1.2-2') : '-'
+              }}</strong>
+            </div>
+            <div>
+              <span>Filing lag</span
+              ><strong>{{ d.latest.lag_days !== null ? d.latest.lag_days + 'd' : '-' }}</strong>
+            </div>
           </div>
 
           <div class="detail-history" *ngIf="d.history.length > 1">
@@ -171,7 +193,9 @@
                 <tr *ngFor="let p of d.history">
                   <td>{{ p.as_of_date | date: 'mediumDate' }}</td>
                   <td class="num">{{ p.sue !== null ? (p.sue | number: '1.2-2') : '-' }}</td>
-                  <td class="num">{{ p.predicted_vol !== null ? (p.predicted_vol | number: '1.2-2') : '-' }}</td>
+                  <td class="num">
+                    {{ p.predicted_vol !== null ? (p.predicted_vol | number: '1.2-2') : '-' }}
+                  </td>
                 </tr>
               </tbody>
             </table>
