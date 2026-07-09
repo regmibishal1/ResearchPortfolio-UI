@@ -149,9 +149,9 @@ const PROJECT_DEFINITIONS: Project[] = [
     id: 'research-portfolio',
     title: 'Research Portfolio Platform',
     shortDescription:
-      'Architected a full-stack platform to showcase data analysis and research, featuring an Angular frontend, Spring Boot authentication, and FastAPI resource server.',
+      'The platform serving this site: an Angular frontend, a Spring Boot auth API, and a FastAPI model server, all running in Docker on home hardware behind Cloudflare.',
     description:
-      'Architected a full-stack portfolio platform to showcase exploratory data analysis and machine learning research. Designed an Angular frontend integrated with a secure Java Spring Boot authentication API and a Python FastAPI resource server for hosting machine learning models and utilities. Features a live statistics explorer powered by server-side NumPy sampling, structured request-scoped logging with real-IP detection, and a responsive dark-themed UI built with Angular Material.',
+      'The platform serving the site you are on. An Angular frontend on Cloudflare Pages talks to a Java Spring Boot authentication API and a Python FastAPI model server, both running in Docker on home hardware behind a Cloudflare Tunnel, so nothing needs a cloud bill. Includes a live statistics explorer powered by server-side NumPy sampling, structured request-scoped logging with real-IP detection, and a dark-themed UI built with Angular Material.',
     tags: ['Angular', 'Java Spring Boot', 'Python FastAPI', 'PostgreSQL'],
     category: 'Full Stack',
     period: '2023-present',
