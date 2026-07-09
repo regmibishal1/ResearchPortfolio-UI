@@ -73,6 +73,7 @@ const PROJECT_DEFINITIONS: Project[] = [
     category: 'Machine Learning',
     period: '2026',
     icon: 'query_stats',
+    image: 'assets/projects/edgar-signals.webp',
     repoLinks: [
       { label: 'FastAPI Server', url: 'https://github.com/regmibishal1/ResearchPortfolio-FastAPI' },
       { label: 'Angular UI', url: 'https://github.com/regmibishal1/ResearchPortfolio-UI' },
@@ -181,6 +182,7 @@ const PROJECT_DEFINITIONS: Project[] = [
     category: 'Tools',
     period: '2026',
     icon: 'photo_library',
+    image: 'assets/projects/takeout-organizer.webp',
     status: 'in-progress',
     highlights: [
       'Writes real EXIF tags (DateTimeOriginal, GPS) via ExifTool rather than only setting filesystem timestamps, the shortcut most Takeout tools take',
@@ -482,7 +484,7 @@ const PROJECT_DEFINITIONS: Project[] = [
     shortDescription:
       'The very first notebooks of the degree: a class-survey analysis and a Celtics box-score win-loss tree, kept as an honest record of where the learning curve started.',
     description:
-      'The earliest notebooks of the graduate program (UMD DATA 602, first semester), kept unpolished on purpose. The first analyzes a survey of the cohort\'s interests: reading the CSV, handling missing values, joining tables, and growing a decision tree over interest columns that, in hindsight, mostly memorized 35 classmates. The second pulls Boston Celtics box scores and hits real-world data cleaning immediately, non-breaking space characters hiding in both the values and the column names, before fitting a win-loss decision tree on a season of games and reading it against basketball intuition. Neither is a project so much as a record of first contact with pandas, scikit-learn, and messy data.',
+      "The earliest notebooks of the graduate program (UMD DATA 602, first semester), kept unpolished on purpose. The first analyzes a survey of the cohort's interests: reading the CSV, handling missing values, joining tables, and growing a decision tree over interest columns that, in hindsight, mostly memorized 35 classmates. The second pulls Boston Celtics box scores and hits real-world data cleaning immediately, non-breaking space characters hiding in both the values and the column names, before fitting a win-loss decision tree on a season of games and reading it against basketball intuition. Neither is a project so much as a record of first contact with pandas, scikit-learn, and messy data.",
     tags: ['Python', 'Pandas', 'scikit-learn', 'Jupyter'],
     category: 'Data Science',
     period: 'Fall 2021',
