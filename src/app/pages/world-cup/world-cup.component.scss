@@ -8,9 +8,9 @@ $bg-4: #222240;
 $text: #f0f0f5;
 $muted: #a0a0b8;
 $accent: #89b4fa;
-$accent-2: #a6e3a1;
+$accent-2: #4ade80;
 $accent-3: #fab387;
-$accent-4: #f38ba8;
+$accent-4: #f87171;
 
 .wc-page {
   max-width: 1240px;
@@ -549,7 +549,7 @@ h1 {
 }
 
 .match-final {
-  background: linear-gradient(135deg, rgba(137, 180, 250, 0.08), rgba(166, 227, 161, 0.05));
+  background: linear-gradient(135deg, rgba(137, 180, 250, 0.08), rgba(74, 222, 128, 0.05));
   border-color: rgba(137, 180, 250, 0.25);
   padding: 10px 12px;
 }
@@ -674,7 +674,7 @@ h1 {
   }
 
   .factor-label {
-    color: #cdd6f4;
+    color: #f0f0f5;
     font-weight: 600;
   }
 
@@ -691,11 +691,11 @@ h1 {
     letter-spacing: 0.02em;
 
     &.pos {
-      color: #a6e3a1;
+      color: #4ade80;
     }
 
     &.neg {
-      color: #f38ba8;
+      color: #f87171;
     }
   }
 }
@@ -941,9 +941,9 @@ h1 {
   font-weight: 700;
   border-radius: 4px;
   padding: 2px 6px;
-  background: rgba(243, 139, 168, 0.12);
+  background: rgba(248, 113, 113, 0.12);
   color: $accent-4;
-  border: 1px solid rgba(243, 139, 168, 0.25);
+  border: 1px solid rgba(248, 113, 113, 0.25);
 }
 
 .penalty-winner {

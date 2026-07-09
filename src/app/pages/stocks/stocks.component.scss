@@ -96,7 +96,7 @@
   color: var(--text-secondary);
 
   &.state-error {
-    color: #e6a3a3;
+    color: var(--color-negative);
   }
 }
 
@@ -254,11 +254,11 @@
   }
 
   .pos {
-    color: #6bbf8a;
+    color: var(--color-positive);
   }
 
   .neg {
-    color: #d98a80;
+    color: var(--color-negative);
   }
 
   &.compact {

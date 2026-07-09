@@ -118,13 +118,8 @@ export class StocksComponent implements OnInit, OnDestroy {
     }).subscribe({
       next: ({ latest, companies, track }) => {
         this.latest = latest
-        this.sectors = [...latest.sectors].sort(
-          (a, b) => (b.mean_sue ?? 0) - (a.mean_sue ?? 0)
-        )
-        this.sectorMaxAbs = Math.max(
-          0.0001,
-          ...this.sectors.map((s) => Math.abs(s.mean_sue ?? 0))
-        )
+        this.sectors = [...latest.sectors].sort((a, b) => (b.mean_sue ?? 0) - (a.mean_sue ?? 0))
+        this.sectorMaxAbs = Math.max(0.0001, ...this.sectors.map((s) => Math.abs(s.mean_sue ?? 0)))
         this.companies = companies?.companies ?? []
         this.trackRecord = track
         this.metricCards = this.buildMetricCards(latest)
@@ -254,19 +249,19 @@ export class StocksComponent implements OnInit, OnDestroy {
         plugins: {
           legend: {
             position: 'bottom',
-            labels: { color: '#cdd6f4', boxWidth: 12, font: { size: 11 } },
+            labels: { color: '#f0f0f5', boxWidth: 12, font: { size: 11 } },
           },
         },
         scales: {
           x: {
-            ticks: { color: '#a6adc8', maxRotation: 90, minRotation: 90 },
+            ticks: { color: '#a0a0b8', maxRotation: 90, minRotation: 90 },
             grid: { color: 'rgba(255,255,255,0.05)' },
           },
           y: {
             position: 'left',
-            ticks: { color: '#a6adc8', callback: (v) => `${v}%` },
+            ticks: { color: '#a0a0b8', callback: (v) => `${v}%` },
             grid: { color: 'rgba(255,255,255,0.05)' },
-            title: { display: true, text: 'Long-short (%/qtr)', color: '#a6adc8' },
+            title: { display: true, text: 'Long-short (%/qtr)', color: '#a0a0b8' },
           },
           y1: {
             position: 'right',
