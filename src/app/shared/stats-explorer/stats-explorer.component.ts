@@ -182,10 +182,10 @@ export class StatsExplorerComponent implements AfterViewInit, OnDestroy {
             title: {
               display: true,
               text: 'Value',
-              color: '#aaa',
+              color: '#a0a0b8',
             },
             ticks: {
-              color: '#aaa',
+              color: '#a0a0b8',
               maxTicksLimit: 8,
               maxRotation: 0,
               callback: (_val, index) => {
@@ -201,9 +201,9 @@ export class StatsExplorerComponent implements AfterViewInit, OnDestroy {
             title: {
               display: true,
               text: 'Frequency',
-              color: '#aaa',
+              color: '#a0a0b8',
             },
-            ticks: { color: '#aaa' },
+            ticks: { color: '#a0a0b8' },
             grid: { color: 'rgba(255,255,255,0.05)' },
           },
         },

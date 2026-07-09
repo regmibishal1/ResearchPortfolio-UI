@@ -123,7 +123,7 @@ export class EmpathyExplorerComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     const styles = getComputedStyle(document.documentElement)
     const gold = styles.getPropertyValue('--accent-gold').trim() || '#f0c040'
-    const textColor = styles.getPropertyValue('--text-secondary').trim() || '#aaa'
+    const textColor = styles.getPropertyValue('--text-secondary').trim() || '#a0a0b8'
     const gridColor = 'rgba(255, 255, 255, 0.06)'
 
     this.chart = new Chart(this.curveCanvas.nativeElement, {
@@ -142,16 +142,16 @@ export class EmpathyExplorerComponent implements AfterViewInit, OnDestroy {
           {
             label: 'Macro F1',
             data: CLASSIFICATION_CURVE.map((r) => r.macroF1),
-            borderColor: '#7aa2f7',
-            backgroundColor: '#7aa2f7',
+            borderColor: '#89b4fa',
+            backgroundColor: '#89b4fa',
             tension: 0.3,
             yAxisID: 'y',
           },
           {
             label: 'Eval loss',
             data: CLASSIFICATION_CURVE.map((r) => r.loss),
-            borderColor: '#f7768e',
-            backgroundColor: '#f7768e',
+            borderColor: '#f87171',
+            backgroundColor: '#f87171',
             borderDash: [6, 4],
             tension: 0.3,
             yAxisID: 'y1',

@@ -70,7 +70,7 @@
   font-size: 36px;
   width: 36px;
   height: 36px;
-  color: var(--gold, #e0a458);
+  color: var(--accent-gold);
 }
 
 .hero-meta {
@@ -111,25 +111,25 @@
   border: 1px solid;
 
   &.status-live {
-    color: #4ade80;
+    color: var(--color-positive);
     background: rgba(74, 222, 128, 0.1);
     border-color: rgba(74, 222, 128, 0.3);
   }
 
   &.status-wip {
-    color: #fb923c;
-    background: rgba(251, 146, 60, 0.1);
-    border-color: rgba(251, 146, 60, 0.3);
+    color: var(--color-warning);
+    background: rgba(250, 179, 135, 0.1);
+    border-color: rgba(250, 179, 135, 0.3);
   }
 
   &.status-research {
-    color: #60a5fa;
-    background: rgba(96, 165, 250, 0.1);
-    border-color: rgba(96, 165, 250, 0.3);
+    color: var(--color-info);
+    background: rgba(137, 180, 250, 0.1);
+    border-color: rgba(137, 180, 250, 0.3);
   }
 
   &.status-proposal {
-    color: #c4b5fd;
+    color: var(--color-purple);
     background: rgba(196, 181, 253, 0.1);
     border-color: rgba(196, 181, 253, 0.3);
   }
@@ -172,9 +172,9 @@
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.04em;
-  color: #93c5fd;
-  background: rgba(147, 197, 253, 0.08);
-  border: 1px solid rgba(147, 197, 253, 0.25);
+  color: var(--color-info);
+  background: rgba(137, 180, 250, 0.08);
+  border: 1px solid rgba(137, 180, 250, 0.25);
   padding: 4px 12px;
   border-radius: 100px;
 

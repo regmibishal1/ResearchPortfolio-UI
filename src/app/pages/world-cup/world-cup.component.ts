@@ -48,10 +48,10 @@ Chart.register(
 
 const PALETTE = [
   '#89b4fa',
-  '#a6e3a1',
+  '#4ade80',
   '#f9e2af',
   '#fab387',
-  '#f38ba8',
+  '#f87171',
   '#cba6f7',
   '#94e2d5',
   '#f5c2e7',
@@ -777,8 +777,8 @@ export class WorldCupComponent implements OnInit, OnDestroy {
           {
             label: 'Favorite win rate (observed)',
             data: bins.map((b) => b.observed * 100),
-            borderColor: '#a6e3a1',
-            backgroundColor: '#a6e3a1',
+            borderColor: '#4ade80',
+            backgroundColor: '#4ade80',
             borderWidth: 2,
             pointRadius: 4,
             tension: 0.15,
