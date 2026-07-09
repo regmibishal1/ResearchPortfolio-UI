@@ -3,7 +3,7 @@ $bg-2: #12121a;
 $bg-3: #1a1a2e;
 $text: #f0f0f5;
 $muted: #a0a0b8;
-$accent: #89b4fa;
+$accent: #f0c040;
 $accent-3: #fab387;
 $accent-4: #f87171;
 
@@ -43,7 +43,7 @@ $accent-4: #f87171;
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  background: rgba(137, 180, 250, 0.1);
+  background: rgba(240, 192, 64, 0.1);
   color: $accent;
   text-decoration: none;
   padding: 8px 12px;
@@ -58,7 +58,7 @@ $accent-4: #f87171;
     height: 16px;
   }
   &:hover {
-    background: rgba(137, 180, 250, 0.18);
+    background: rgba(240, 192, 64, 0.18);
   }
 }
 

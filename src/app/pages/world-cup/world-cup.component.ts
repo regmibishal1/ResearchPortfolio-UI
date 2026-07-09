@@ -47,7 +47,7 @@ Chart.register(
 )
 
 const PALETTE = [
-  '#89b4fa',
+  '#f0c040',
   '#4ade80',
   '#f9e2af',
   '#fab387',
