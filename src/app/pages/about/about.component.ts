@@ -54,7 +54,7 @@ export class AboutComponent {
 
 I hold a B.S. in Computer Science (Summa Cum Laude) from UMBC and an M.S. in Data Science from the University of Maryland, College Park.
 
-My work spans large-scale .NET microservice platforms, ML-powered financial forecasting, event-driven AWS architectures, and full-stack React and Angular applications. I thrive at the intersection of rigorous software engineering and applied data science.`
+My work spans large-scale .NET microservice platforms, ML-powered financial forecasting, event-driven AWS architectures, and full-stack React and Angular applications. The projects on this site are the same skills applied to problems I picked myself.`
 
   skillCategories = SKILL_CATEGORIES
 

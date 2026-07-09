@@ -215,8 +215,9 @@ $toolbar-height: 64px;
   font-size: 1.05rem;
   line-height: 1.7;
   color: var(--text-secondary);
-  max-width: 600px;
+  max-width: 640px;
   margin: 0 auto 36px;
+  text-wrap: balance;
 }
 
 .hero-actions {
