@@ -1,9 +1,12 @@
-$bg-1: #11111b;
-$bg-2: #181825;
-$bg-3: #1e1e2e;
-$bg-4: #313244;
-$text: #cdd6f4;
-$muted: #a6adc8;
+// Surfaces and text follow the site design tokens so this page reads as
+// part of the portfolio, not a separate app. The data accents below stay
+// distinct: they carry meaning in the charts and tables.
+$bg-1: #0a0a0f;
+$bg-2: #12121a;
+$bg-3: #1a1a2e;
+$bg-4: #222240;
+$text: #f0f0f5;
+$muted: #a0a0b8;
 $accent: #89b4fa;
 $accent-2: #a6e3a1;
 $accent-3: #fab387;
