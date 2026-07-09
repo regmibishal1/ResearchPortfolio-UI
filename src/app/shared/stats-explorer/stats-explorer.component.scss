@@ -1,6 +1,6 @@
 .explorer-card {
-  background: #1e1e2e;
-  color: #cdd6f4;
+  background: #1a1a2e;
+  color: #f0f0f5;
   border-radius: 12px;
   padding: 8px;
 
@@ -9,7 +9,7 @@
     font-weight: 600;
   }
   mat-card-subtitle {
-    color: #a6adc8;
+    color: #a0a0b8;
     margin-top: 4px;
   }
 }
@@ -44,7 +44,7 @@
 .param-label {
   min-width: 160px;
   font-size: 0.85rem;
-  color: #a6adc8;
+  color: #a0a0b8;
   strong {
     color: #89b4fa;
   }
@@ -58,7 +58,7 @@
   position: relative;
   height: 240px;
   margin: 16px 0 8px;
-  background: #181825;
+  background: #12121a;
   border-radius: 8px;
   padding: 8px;
 }
@@ -71,8 +71,8 @@
 
   mat-chip {
     font-size: 0.78rem;
-    background: #313244;
-    color: #cdd6f4;
+    background: #222240;
+    color: #f0f0f5;
   }
 }
 
