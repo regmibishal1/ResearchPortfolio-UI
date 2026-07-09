@@ -158,8 +158,8 @@ export class StatsExplorerComponent implements AfterViewInit, OnDestroy {
         datasets: [
           {
             data: [],
-            backgroundColor: 'rgba(100,181,246,0.75)',
-            borderColor: 'rgba(100,181,246,1)',
+            backgroundColor: 'rgba(240,192,64,0.75)',
+            borderColor: 'rgba(240,192,64,1)',
             borderWidth: 1,
             borderRadius: 3,
           },

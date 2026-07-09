@@ -7,7 +7,7 @@ $bg-3: #1a1a2e;
 $bg-4: #222240;
 $text: #f0f0f5;
 $muted: #a0a0b8;
-$accent: #89b4fa;
+$accent: #f0c040;
 $accent-2: #4ade80;
 $accent-3: #fab387;
 $accent-4: #f87171;
@@ -185,7 +185,7 @@ h1 {
   transition: border-color 0.15s ease;
 
   &:hover {
-    border-color: rgba(137, 180, 250, 0.35);
+    border-color: rgba(240, 192, 64, 0.35);
   }
   &:focus {
     outline: none;
@@ -217,7 +217,7 @@ h1 {
 
 .reset-btn {
   background: none;
-  border: 1px solid rgba(137, 180, 250, 0.25);
+  border: 1px solid rgba(240, 192, 64, 0.25);
   border-radius: 6px;
   color: $accent;
   font-size: 0.82rem;
@@ -228,8 +228,8 @@ h1 {
     border-color 0.15s ease;
 
   &:hover {
-    background: rgba(137, 180, 250, 0.08);
-    border-color: rgba(137, 180, 250, 0.5);
+    background: rgba(240, 192, 64, 0.08);
+    border-color: rgba(240, 192, 64, 0.5);
   }
 }
 
@@ -351,7 +351,7 @@ h1 {
     border-bottom: 1px solid rgba(255, 255, 255, 0.03);
   }
   tbody tr:hover {
-    background: rgba(137, 180, 250, 0.04);
+    background: rgba(240, 192, 64, 0.04);
   }
   .rank-col {
     width: 36px;
@@ -382,7 +382,7 @@ h1 {
       left: 0;
       top: 0;
       bottom: 0;
-      background: linear-gradient(90deg, rgba(137, 180, 250, 0.22), rgba(137, 180, 250, 0.05));
+      background: linear-gradient(90deg, rgba(240, 192, 64, 0.22), rgba(240, 192, 64, 0.05));
       border-radius: 4px;
       max-width: 100%;
     }
@@ -543,14 +543,14 @@ h1 {
     transform 0.15s ease;
 
   &:hover {
-    border-color: rgba(137, 180, 250, 0.25);
+    border-color: rgba(240, 192, 64, 0.25);
     transform: translateY(-1px);
   }
 }
 
 .match-final {
-  background: linear-gradient(135deg, rgba(137, 180, 250, 0.08), rgba(74, 222, 128, 0.05));
-  border-color: rgba(137, 180, 250, 0.25);
+  background: linear-gradient(135deg, rgba(240, 192, 64, 0.08), rgba(74, 222, 128, 0.05));
+  border-color: rgba(240, 192, 64, 0.25);
   padding: 10px 12px;
 }
 
@@ -631,7 +631,7 @@ h1 {
   text-transform: uppercase;
   color: $accent;
   background: transparent;
-  border: 1px solid rgba(137, 180, 250, 0.35);
+  border: 1px solid rgba(240, 192, 64, 0.35);
   border-radius: 10px;
   cursor: pointer;
   transition:
@@ -639,16 +639,16 @@ h1 {
     border-color 120ms ease;
 
   &:hover {
-    background: rgba(137, 180, 250, 0.08);
-    border-color: rgba(137, 180, 250, 0.6);
+    background: rgba(240, 192, 64, 0.08);
+    border-color: rgba(240, 192, 64, 0.6);
   }
 }
 
 .factors-panel {
   margin-top: 4px;
   padding: 4px 6px;
-  background: rgba(137, 180, 250, 0.05);
-  border: 1px solid rgba(137, 180, 250, 0.15);
+  background: rgba(240, 192, 64, 0.05);
+  border: 1px solid rgba(240, 192, 64, 0.15);
   border-radius: 6px;
   display: flex;
   flex-direction: column;
@@ -708,7 +708,7 @@ h1 {
   color: $bg-1;
   padding: 12px 14px;
   border-radius: 10px;
-  box-shadow: 0 8px 24px rgba(137, 180, 250, 0.15);
+  box-shadow: 0 8px 24px rgba(240, 192, 64, 0.15);
 
   .trophy {
     font-size: 28px;
@@ -776,7 +776,7 @@ h1 {
   transition: border-color 0.15s ease;
 
   &:hover {
-    border-color: rgba(137, 180, 250, 0.35);
+    border-color: rgba(240, 192, 64, 0.35);
   }
   &:focus {
     outline: none;
@@ -852,9 +852,9 @@ h1 {
 }
 
 .ko-badge {
-  background: rgba(137, 180, 250, 0.12);
+  background: rgba(240, 192, 64, 0.12);
   color: $accent;
-  border: 1px solid rgba(137, 180, 250, 0.25);
+  border: 1px solid rgba(240, 192, 64, 0.25);
 }
 
 .round-match-count {
@@ -1237,11 +1237,11 @@ h1 {
     background 0.15s ease;
 
   &:hover {
-    border-color: rgba(137, 180, 250, 0.4);
+    border-color: rgba(240, 192, 64, 0.4);
   }
 
   &.active {
-    background: rgba(137, 180, 250, 0.1);
+    background: rgba(240, 192, 64, 0.1);
     border-color: $accent;
     color: $text;
   }
