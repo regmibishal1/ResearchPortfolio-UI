@@ -13,6 +13,15 @@
   --accent-gold-dim: rgba(240, 192, 64, 0.15);
   --accent-gradient: linear-gradient(135deg, #f0c040, #e6a810);
 
+  /* Semantic accents: one canonical value each, shared across every page
+     and chart so the same meaning always reads as the same colour. The
+     Chart.js configs in TypeScript reference these same hex values. */
+  --color-positive: #4ade80;
+  --color-negative: #f87171;
+  --color-info: #89b4fa;
+  --color-warning: #fab387;
+  --color-purple: #c4b5fd;
+
   /* Text */
   --text-primary: #f0f0f5;
   --text-secondary: #a0a0b8;
