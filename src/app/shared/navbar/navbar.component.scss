@@ -19,11 +19,21 @@ $toolbar-height: 64px;
 }
 
 // ===== Logo =====
-.logo-button {
-  display: flex;
+.brand-link {
+  display: inline-flex;
   align-items: center;
-  padding: 0 4px !important;
-  min-width: auto !important;
+  gap: 8px;
+  padding: 4px;
+  text-decoration: none;
+  border-radius: 10px;
+
+  &:hover .logo-img {
+    transform: scale(1.06);
+  }
+
+  &:hover .title-text {
+    color: var(--accent-gold);
+  }
 }
 
 .logo-img {
@@ -31,10 +41,6 @@ $toolbar-height: 64px;
   width: 40px;
   border-radius: 8px;
   transition: transform var(--transition-fast);
-
-  &:hover {
-    transform: scale(1.08);
-  }
 }
 
 .nav-menu-btn {
@@ -52,8 +58,8 @@ $toolbar-height: 64px;
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--text-primary);
-  margin-left: 8px;
   letter-spacing: -0.01em;
+  transition: color var(--transition-fast);
 }
 
 .spacer {
