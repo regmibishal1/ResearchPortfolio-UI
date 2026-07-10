@@ -46,6 +46,18 @@ interface MetricCard {
   hint: string
 }
 
+/** Columns the company table can be sorted by. */
+export type StockSortKey =
+  | 'ticker'
+  | 'sector'
+  | 'sue'
+  | 'predicted_vol'
+  | 'exret_63'
+  | 'sue_quintile'
+
+/** Text columns read better ascending; metric columns lead with the top value. */
+const STOCK_TEXT_COLUMNS: ReadonlySet<StockSortKey> = new Set(['ticker', 'sector'])
+
 @Component({
   selector: 'app-stocks',
   standalone: true,
@@ -82,6 +94,9 @@ export class StocksComponent implements OnInit, OnDestroy {
 
   companies: CompanyRow[] = []
   selectedSector: string | null = null
+
+  sortKey: StockSortKey = 'sue'
+  sortAsc = false
 
   selectedTicker: string | null = null
   companyDetail: CompanyDetailResponse | null = null
@@ -140,7 +155,39 @@ export class StocksComponent implements OnInit, OnDestroy {
     const list = this.selectedSector
       ? this.companies.filter((c) => c.sector === this.selectedSector)
       : this.companies
-    return [...list].sort((a, b) => (b.sue ?? -Infinity) - (a.sue ?? -Infinity))
+    return [...list].sort((a, b) => this.compareRows(a, b))
+  }
+
+  /** Click a column header to sort by it; click the active column to reverse. */
+  sortBy(key: StockSortKey): void {
+    if (this.sortKey === key) {
+      this.sortAsc = !this.sortAsc
+    } else {
+      this.sortKey = key
+      this.sortAsc = STOCK_TEXT_COLUMNS.has(key)
+    }
+  }
+
+  sortIcon(key: StockSortKey): string {
+    if (this.sortKey !== key) return 'unfold_more'
+    return this.sortAsc ? 'arrow_upward' : 'arrow_downward'
+  }
+
+  ariaSort(key: StockSortKey): 'ascending' | 'descending' | 'none' {
+    if (this.sortKey !== key) return 'none'
+    return this.sortAsc ? 'ascending' : 'descending'
+  }
+
+  private compareRows(a: CompanyRow, b: CompanyRow): number {
+    const dir = this.sortAsc ? 1 : -1
+    const av = a[this.sortKey]
+    const bv = b[this.sortKey]
+    // Missing values always sink to the bottom, regardless of direction.
+    if (av === null && bv === null) return 0
+    if (av === null) return 1
+    if (bv === null) return -1
+    if (typeof av === 'number' && typeof bv === 'number') return (av - bv) * dir
+    return String(av).localeCompare(String(bv)) * dir
   }
 
   selectSector(sector: string): void {

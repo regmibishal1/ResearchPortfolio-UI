@@ -97,6 +97,22 @@ interface RoundGroup {
   dateGroups: DateGroup[]
 }
 
+/** Leaderboard columns that can be sorted. 'delta' reads from the delta map,
+ *  which only exists on historical snapshots. */
+type WcSortKey =
+  | 'team'
+  | 'winner_pct'
+  | 'delta'
+  | 'final_pct'
+  | 'sf_pct'
+  | 'qf_pct'
+  | 'r16_pct'
+  | 'r32_pct'
+  | 'elo'
+
+/** Only the team name reads better ascending; probabilities lead with the top. */
+const WC_TEXT_COLUMNS: ReadonlySet<WcSortKey> = new Set<WcSortKey>(['team'])
+
 @Component({
   selector: 'app-world-cup',
   standalone: true,
@@ -191,7 +207,12 @@ export class WorldCupComponent implements OnInit, OnDestroy {
   selectedHistoryStage: HistoryStage = 'winner'
 
   displayedLeaderboard: TeamRow[] = []
+  private baseLeaderboard: TeamRow[] = []
   deltaMap = new Map<string, number>()
+
+  sortKey: WcSortKey = 'winner_pct'
+  sortAsc = false
+
   lockedMatchesForDate: EnrichedMatch[] = []
   showLockedMatches = false
   private enrichedMatches: EnrichedMatch[] = []
@@ -403,29 +424,29 @@ export class WorldCupComponent implements OnInit, OnDestroy {
     if (!this.latest) return
 
     if (this.isLatestDate || !this.historyIndex.has(this.selectedDate)) {
-      this.displayedLeaderboard = [...this.latest.leaderboard]
+      this.baseLeaderboard = [...this.latest.leaderboard]
       this.deltaMap.clear()
+      // The delta column is gone on the latest snapshot; fall back if it was active.
+      if (this.sortKey === 'delta') this.sortKey = 'winner_pct'
+      this.applyLeaderboardSort()
       return
     }
 
     const dateData = this.historyIndex.get(this.selectedDate)!
-    const rows: TeamRow[] = this.latest.leaderboard
-      .map((base) => {
-        const sv = dateData.get(base.team) ?? {}
-        return {
-          team: base.team,
-          winner_pct: sv.winner ?? 0,
-          final_pct: sv.final ?? 0,
-          sf_pct: sv.sf ?? 0,
-          qf_pct: sv.qf ?? 0,
-          r16_pct: sv.r16 ?? 0,
-          r32_pct: sv.r32 ?? 0,
-          elo: base.elo,
-        }
-      })
-      .sort((a, b) => b.winner_pct - a.winner_pct)
-
-    this.displayedLeaderboard = rows
+    const rows: TeamRow[] = this.latest.leaderboard.map((base) => {
+      const sv = dateData.get(base.team) ?? {}
+      return {
+        team: base.team,
+        winner_pct: sv.winner ?? 0,
+        final_pct: sv.final ?? 0,
+        sf_pct: sv.sf ?? 0,
+        qf_pct: sv.qf ?? 0,
+        r16_pct: sv.r16 ?? 0,
+        r32_pct: sv.r32 ?? 0,
+        elo: base.elo,
+      }
+    })
+    this.baseLeaderboard = rows
 
     this.deltaMap.clear()
     const curIdx = this.availableDates.indexOf(this.selectedDate)
@@ -438,6 +459,47 @@ export class WorldCupComponent implements OnInit, OnDestroy {
         if (Math.abs(delta) > 0.005) this.deltaMap.set(row.team, delta)
       }
     }
+
+    this.applyLeaderboardSort()
+  }
+
+  /** Click a column header to sort by it; click the active column to reverse. */
+  sortBy(key: WcSortKey): void {
+    if (this.sortKey === key) {
+      this.sortAsc = !this.sortAsc
+    } else {
+      this.sortKey = key
+      this.sortAsc = WC_TEXT_COLUMNS.has(key)
+    }
+    this.applyLeaderboardSort()
+  }
+
+  sortIcon(key: WcSortKey): string {
+    if (this.sortKey !== key) return 'unfold_more'
+    return this.sortAsc ? 'arrow_upward' : 'arrow_downward'
+  }
+
+  ariaSort(key: WcSortKey): 'ascending' | 'descending' | 'none' {
+    if (this.sortKey !== key) return 'none'
+    return this.sortAsc ? 'ascending' : 'descending'
+  }
+
+  private applyLeaderboardSort(): void {
+    this.displayedLeaderboard = [...this.baseLeaderboard].sort((a, b) => this.compareTeams(a, b))
+  }
+
+  private teamValue(row: TeamRow, key: WcSortKey): number | string {
+    if (key === 'delta') return this.deltaMap.get(row.team) ?? 0
+    if (key === 'team') return row.team
+    return row[key]
+  }
+
+  private compareTeams(a: TeamRow, b: TeamRow): number {
+    const dir = this.sortAsc ? 1 : -1
+    const av = this.teamValue(a, this.sortKey)
+    const bv = this.teamValue(b, this.sortKey)
+    if (typeof av === 'number' && typeof bv === 'number') return (av - bv) * dir
+    return String(av).localeCompare(String(bv)) * dir
   }
 
   private rebuildLockedMatchesForDate(): void {
