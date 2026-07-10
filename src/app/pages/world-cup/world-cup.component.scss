@@ -346,6 +346,39 @@ h1 {
     letter-spacing: 0.05em;
     text-transform: uppercase;
   }
+  thead th.sortable {
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: $text;
+    }
+
+    &[aria-sort='ascending'],
+    &[aria-sort='descending'] {
+      color: var(--accent-gold);
+    }
+  }
+  .th-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+  }
+  .sort-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+  }
+  // Inactive columns keep the indicator hidden until hover, so the row stays calm.
+  thead th.sortable[aria-sort='none'] .sort-icon {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  thead th.sortable[aria-sort='none']:hover .sort-icon {
+    opacity: 0.4;
+  }
   tbody td {
     padding: 10px 12px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.03);

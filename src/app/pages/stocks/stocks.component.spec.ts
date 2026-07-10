@@ -78,9 +78,8 @@ describe('StocksComponent', () => {
     tick() // responses arrive on their macrotasks
     fixture.detectChanges() // loading gate flips; canvas enters the DOM
 
-    const canvas: HTMLCanvasElement | null = fixture.nativeElement.querySelector(
-      '.chart-wrap canvas'
-    )
+    const canvas: HTMLCanvasElement | null =
+      fixture.nativeElement.querySelector('.chart-wrap canvas')
     expect(canvas).withContext('track-record canvas should render').toBeTruthy()
     expect(Chart.getChart(canvas as HTMLCanvasElement))
       .withContext('a Chart instance should be attached to the canvas')
@@ -103,4 +102,39 @@ describe('StocksComponent', () => {
 
     fixture.destroy()
   }))
+
+  it('sorts the company table by the chosen column and toggles direction', () => {
+    const fixture = TestBed.createComponent(StocksComponent)
+    const cmp = fixture.componentInstance
+    cmp.companies = [
+      { ticker: 'BBB', sector: 'XLK', sue: 0.5, predicted_vol: null } as never,
+      { ticker: 'AAA', sector: 'XLF', sue: 1.5, predicted_vol: 0.3 } as never,
+      { ticker: 'CCC', sector: 'XLE', sue: null, predicted_vol: 0.2 } as never,
+    ]
+
+    // Default: SUE descending, with the null SUE sinking to the bottom.
+    expect(cmp.visibleCompanies.map((c) => c.ticker)).toEqual(['AAA', 'BBB', 'CCC'])
+
+    // Sort by ticker: text columns default to ascending.
+    cmp.sortBy('ticker')
+    expect(cmp.sortAsc).toBeTrue()
+    expect(cmp.visibleCompanies.map((c) => c.ticker)).toEqual(['AAA', 'BBB', 'CCC'])
+
+    // Clicking the active column reverses it.
+    cmp.sortBy('ticker')
+    expect(cmp.sortAsc).toBeFalse()
+    expect(cmp.visibleCompanies.map((c) => c.ticker)).toEqual(['CCC', 'BBB', 'AAA'])
+
+    // Numeric columns lead with the top value (descending); the null sinks.
+    cmp.sortBy('predicted_vol')
+    expect(cmp.sortAsc).toBeFalse()
+    expect(cmp.visibleCompanies.map((c) => c.ticker)).toEqual(['AAA', 'CCC', 'BBB'])
+    expect(cmp.sortIcon('predicted_vol')).toBe('arrow_downward')
+    expect(cmp.sortIcon('sue')).toBe('unfold_more')
+
+    // Reversing to ascending keeps the null at the bottom, not the top.
+    cmp.sortBy('predicted_vol')
+    expect(cmp.visibleCompanies.map((c) => c.ticker)).toEqual(['CCC', 'AAA', 'BBB'])
+    expect(cmp.sortIcon('predicted_vol')).toBe('arrow_upward')
+  })
 })

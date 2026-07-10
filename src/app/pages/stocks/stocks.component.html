@@ -108,12 +108,51 @@
         <table class="signal-table">
           <thead>
             <tr>
-              <th>Ticker</th>
-              <th>Sector</th>
-              <th class="num">SUE</th>
-              <th class="num">Predicted vol</th>
-              <th class="num">Fwd excess 63d</th>
-              <th class="num">Quintile</th>
+              <th class="sortable" [attr.aria-sort]="ariaSort('ticker')" (click)="sortBy('ticker')">
+                <span class="th-label"
+                  >Ticker <mat-icon class="sort-icon">{{ sortIcon('ticker') }}</mat-icon></span
+                >
+              </th>
+              <th class="sortable" [attr.aria-sort]="ariaSort('sector')" (click)="sortBy('sector')">
+                <span class="th-label"
+                  >Sector <mat-icon class="sort-icon">{{ sortIcon('sector') }}</mat-icon></span
+                >
+              </th>
+              <th class="num sortable" [attr.aria-sort]="ariaSort('sue')" (click)="sortBy('sue')">
+                <span class="th-label"
+                  >SUE <mat-icon class="sort-icon">{{ sortIcon('sue') }}</mat-icon></span
+                >
+              </th>
+              <th
+                class="num sortable"
+                [attr.aria-sort]="ariaSort('predicted_vol')"
+                (click)="sortBy('predicted_vol')"
+              >
+                <span class="th-label"
+                  >Predicted vol
+                  <mat-icon class="sort-icon">{{ sortIcon('predicted_vol') }}</mat-icon></span
+                >
+              </th>
+              <th
+                class="num sortable"
+                [attr.aria-sort]="ariaSort('exret_63')"
+                (click)="sortBy('exret_63')"
+              >
+                <span class="th-label"
+                  >Fwd excess 63d
+                  <mat-icon class="sort-icon">{{ sortIcon('exret_63') }}</mat-icon></span
+                >
+              </th>
+              <th
+                class="num sortable"
+                [attr.aria-sort]="ariaSort('sue_quintile')"
+                (click)="sortBy('sue_quintile')"
+              >
+                <span class="th-label"
+                  >Quintile
+                  <mat-icon class="sort-icon">{{ sortIcon('sue_quintile') }}</mat-icon></span
+                >
+              </th>
             </tr>
           </thead>
           <tbody>

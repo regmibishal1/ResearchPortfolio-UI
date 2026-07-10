@@ -94,15 +94,90 @@
               <thead>
                 <tr>
                   <th class="rank-col">#</th>
-                  <th class="team-col">Team</th>
-                  <th>Winner</th>
-                  <th *ngIf="!isLatestDate" class="delta-col">Δ</th>
-                  <th>Final</th>
-                  <th>Semi</th>
-                  <th>QF</th>
-                  <th>R16</th>
-                  <th>R32</th>
-                  <th class="elo-col">Elo</th>
+                  <th
+                    class="team-col sortable"
+                    [attr.aria-sort]="ariaSort('team')"
+                    (click)="sortBy('team')"
+                  >
+                    <span class="th-label"
+                      >Team <mat-icon class="sort-icon">{{ sortIcon('team') }}</mat-icon></span
+                    >
+                  </th>
+                  <th
+                    class="sortable"
+                    [attr.aria-sort]="ariaSort('winner_pct')"
+                    (click)="sortBy('winner_pct')"
+                  >
+                    <span class="th-label"
+                      >Winner
+                      <mat-icon class="sort-icon">{{ sortIcon('winner_pct') }}</mat-icon></span
+                    >
+                  </th>
+                  <th
+                    *ngIf="!isLatestDate"
+                    class="delta-col sortable"
+                    [attr.aria-sort]="ariaSort('delta')"
+                    (click)="sortBy('delta')"
+                  >
+                    <span class="th-label"
+                      >&#916; <mat-icon class="sort-icon">{{ sortIcon('delta') }}</mat-icon></span
+                    >
+                  </th>
+                  <th
+                    class="sortable"
+                    [attr.aria-sort]="ariaSort('final_pct')"
+                    (click)="sortBy('final_pct')"
+                  >
+                    <span class="th-label"
+                      >Final
+                      <mat-icon class="sort-icon">{{ sortIcon('final_pct') }}</mat-icon></span
+                    >
+                  </th>
+                  <th
+                    class="sortable"
+                    [attr.aria-sort]="ariaSort('sf_pct')"
+                    (click)="sortBy('sf_pct')"
+                  >
+                    <span class="th-label"
+                      >Semi <mat-icon class="sort-icon">{{ sortIcon('sf_pct') }}</mat-icon></span
+                    >
+                  </th>
+                  <th
+                    class="sortable"
+                    [attr.aria-sort]="ariaSort('qf_pct')"
+                    (click)="sortBy('qf_pct')"
+                  >
+                    <span class="th-label"
+                      >QF <mat-icon class="sort-icon">{{ sortIcon('qf_pct') }}</mat-icon></span
+                    >
+                  </th>
+                  <th
+                    class="sortable"
+                    [attr.aria-sort]="ariaSort('r16_pct')"
+                    (click)="sortBy('r16_pct')"
+                  >
+                    <span class="th-label"
+                      >R16 <mat-icon class="sort-icon">{{ sortIcon('r16_pct') }}</mat-icon></span
+                    >
+                  </th>
+                  <th
+                    class="sortable"
+                    [attr.aria-sort]="ariaSort('r32_pct')"
+                    (click)="sortBy('r32_pct')"
+                  >
+                    <span class="th-label"
+                      >R32 <mat-icon class="sort-icon">{{ sortIcon('r32_pct') }}</mat-icon></span
+                    >
+                  </th>
+                  <th
+                    class="elo-col sortable"
+                    [attr.aria-sort]="ariaSort('elo')"
+                    (click)="sortBy('elo')"
+                  >
+                    <span class="th-label"
+                      >Elo <mat-icon class="sort-icon">{{ sortIcon('elo') }}</mat-icon></span
+                    >
+                  </th>
                 </tr>
               </thead>
               <tbody>
