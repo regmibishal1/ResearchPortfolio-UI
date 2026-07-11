@@ -356,6 +356,7 @@ const PROJECT_DEFINITIONS: Project[] = [
     period: 'Fall 2021',
     coursework: 'Graduate coursework, UMD (DATA 602)',
     icon: 'ac_unit',
+    image: 'assets/projects/climate-snowfall.webp',
     status: 'research',
     highlights: [
       'Systematic exploration of the NOAA Climate Data API (stations, datasets, and data-category endpoints) to find stations with long, complete records',
