@@ -35,6 +35,15 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'blog',
+    loadComponent: () => import('./pages/blog/blog.component').then((m) => m.BlogComponent),
+  },
+  {
+    path: 'blog/:slug',
+    loadComponent: () =>
+      import('./pages/blog-post/blog-post.component').then((m) => m.BlogPostComponent),
+  },
+  {
     path: 'world-cup',
     loadComponent: () =>
       import('./pages/world-cup/world-cup.component').then((m) => m.WorldCupComponent),

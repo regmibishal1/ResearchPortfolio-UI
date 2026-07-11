@@ -348,9 +348,9 @@ const PROJECT_DEFINITIONS: Project[] = [
     id: 'climate-snowfall',
     title: 'Climate Change and Snowfall Trends',
     shortDescription:
-      'First data science project: a three-person team study of temperature and snowfall trends from NOAA station data, from raw API exploration to a decision-tree snow model.',
+      'My first real data science project: a three-person team study of temperature and snowfall trends from NOAA station data, from raw API exploration to a decision-tree snow model.',
     description:
-      'My first data science project, built with two classmates in an introductory graduate course (UMD DATA 602). The team worked directly against the NOAA Climate Data API, first mapping its stations, datasets, and data-category endpoints to find stations with long, usable records, then pulling decades of daily temperature and precipitation data for the Baltimore-Washington region. The analysis looks for climate-change signals in average, maximum, and minimum temperature trends and in snowfall specifically, and finishes with a decision-tree model of snowfall that only became workable after reframing the target from snowfall amount to a binary snow or no-snow day. Most of the project, honestly, was learning to get real data into a usable state.',
+      'My first real data science project, built with two classmates in an introductory graduate course (UMD DATA 602). The team worked directly against the NOAA Climate Data API, first mapping its stations, datasets, and data-category endpoints to find stations with long, usable records, then pulling decades of daily temperature and precipitation data for the Baltimore-Washington region. The analysis looks for climate-change signals in average, maximum, and minimum temperature trends and in snowfall specifically, and finishes with a decision-tree model of snowfall that only became workable after reframing the target from snowfall amount to a binary snow or no-snow day. Most of the project, honestly, was learning to get real data into a usable state.',
     tags: ['Python', 'Pandas', 'NOAA API', 'Jupyter'],
     category: 'Data Science',
     period: 'Fall 2021',

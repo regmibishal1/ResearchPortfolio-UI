@@ -23,6 +23,7 @@
       >Home</a
     >
     <a mat-button [routerLink]="['/project']" routerLinkActive="nav-active">Projects</a>
+    <a mat-button [routerLink]="['/blog']" routerLinkActive="nav-active">Blog</a>
     <a mat-button [routerLink]="['/about']" routerLinkActive="nav-active">About</a>
   </nav>
 
@@ -60,6 +61,16 @@
         >
           <mat-icon>code</mat-icon>
           <span>Projects</span>
+        </button>
+        <button
+          mat-button
+          class="sidenav-button"
+          [routerLink]="['/blog']"
+          routerLinkActive="sidenav-active"
+          (click)="drawer.toggle()"
+        >
+          <mat-icon>article</mat-icon>
+          <span>Blog</span>
         </button>
         <button
           mat-button
