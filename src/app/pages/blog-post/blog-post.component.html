@@ -19,7 +19,7 @@
       <h2 *ngSwitchCase="'h2'" class="body-h2">{{ block.text }}</h2>
       <p *ngSwitchCase="'p'" class="body-p">{{ block.text }}</p>
       <figure *ngSwitchCase="'figure'" class="body-figure">
-        <img [src]="block.src" [alt]="block.alt" loading="lazy" />
+        <app-zoomable-image [src]="block.src!" [alt]="block.alt || ''" [caption]="block.caption" />
         <figcaption>{{ block.caption }}</figcaption>
       </figure>
     </ng-container>

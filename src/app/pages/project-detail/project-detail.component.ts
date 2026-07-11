@@ -7,6 +7,7 @@ import { PROJECTS, Project } from '../../data/projects'
 import { WorldCupSummaryComponent } from '../../shared/world-cup-summary/world-cup-summary.component'
 import { MriExplorerComponent } from '../../shared/mri-explorer/mri-explorer.component'
 import { EmpathyExplorerComponent } from '../../shared/empathy-explorer/empathy-explorer.component'
+import { ZoomableImageComponent } from '../../shared/zoomable-image/zoomable-image.component'
 
 @Component({
   selector: 'app-project-detail',
@@ -18,6 +19,7 @@ import { EmpathyExplorerComponent } from '../../shared/empathy-explorer/empathy-
     WorldCupSummaryComponent,
     MriExplorerComponent,
     EmpathyExplorerComponent,
+    ZoomableImageComponent,
   ],
   templateUrl: './project-detail.component.html',
   styleUrl: './project-detail.component.scss',
