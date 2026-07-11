@@ -135,7 +135,7 @@
       *ngIf="project.image && !project.liveEmbed"
     >
       <div class="detail-screenshot">
-        <img [src]="project.image" [alt]="project.title + ' screenshot'" />
+        <app-zoomable-image [src]="project.image!" [alt]="project.title + ' screenshot'" />
       </div>
     </section>
 
@@ -155,7 +155,10 @@
         Architecture
       </h2>
       <div class="architecture-diagram">
-        <img [src]="project.architecture" [alt]="project.title + ' architecture diagram'" />
+        <app-zoomable-image
+          [src]="project.architecture!"
+          [alt]="project.title + ' architecture diagram'"
+        />
       </div>
     </section>
 
