@@ -38,27 +38,31 @@ const POST_DEFINITIONS: BlogPost[] = [
         kind: 'p',
         text: 'Reading the notebook again, almost five years later, I could see every seam. What follows is not everything that was wrong with it. It is the handful of things that actually mattered, what I got wrong on each one, and how I did it differently this time.',
       },
-      { kind: 'h2', text: 'Mistake one: we trusted a number that meant nothing' },
+      { kind: 'h2', text: 'Mistake one: we never checked our number against a baseline' },
       {
         kind: 'p',
-        text: 'The centerpiece of the old project was a decision tree that predicted whether it would snow, and it reported very high accuracy. We were pretty pleased with that. The problem is that the number was meaningless in two separate ways.',
+        text: 'The centerpiece of the old project was a decision tree that predicted whether it would snow, and it reported very high accuracy. We were pretty pleased with that. The plan itself was reasonable: train on the whole history we had, then see how it did on new days, the kind of weather that was not in the set. Where it fell down was proving that the number meant anything.',
       },
       {
         kind: 'p',
-        text: 'First, we trained the model on all of our data and never held any of it back, so when we measured its accuracy we were quizzing it on the exact days it had already memorized. That is not a test, it is a mirror. Second, and worse, it snows on only about two and a half percent of days at BWI. A lazy model that says "no snow" every single day, forever, is right about ninety seven percent of the time. Any accuracy we reported had to clear that bar to mean anything, and ours barely did.',
+        text: 'It snows on only about two and a half percent of days at BWI. A lazy model that says "no snow" every single day, forever, is right about ninety seven percent of the time. Any accuracy we reported had to clear that bar to mean something, and ours barely did. We never stood our model next to that do-nothing baseline, so a figure that sounded impressive was, for this particular problem, sitting just above the floor. The out-of-sample testing was shakier than it should have been on top of that, so even setting the baseline aside, we could not really say the thing worked.',
       },
       {
         kind: 'p',
-        text: 'The fix is a habit, not a technique: before trusting any result, compare it to the dumbest thing that could possibly work. If your clever model cannot beat "assume it never snows," you do not have a result, you have a rounding error. Everywhere in the redo, a number only counts once I know what "nothing" would have scored.',
+        text: 'The fix is a habit, not a technique: before trusting any result, compare it to the dumbest thing that could possibly work. If your clever model cannot clearly beat "assume it never snows," you do not have a result yet. Everywhere in the redo, a number only counts once I know what "nothing" would have scored.',
       },
-      { kind: 'h2', text: 'Mistake two: the model was quietly cheating' },
+      { kind: 'h2', text: 'Mistake two: we chased the amount when the data only knew the day' },
       {
         kind: 'p',
-        text: 'The other issue was subtler and took me a while to notice even now. One of the inputs we fed the model was the depth of snow already on the ground. Of course a model can "predict" snowfall when you hand it the snow that is already lying there. That is not prediction, it is leakage: an input that quietly gives away the answer. It makes a model look brilliant and teaches it nothing.',
+        text: 'We set out to predict how much snow would fall and ended up predicting only whether it would snow at all. At the time that felt like a retreat. It was actually the right move, we just never really understood why. The station data could see a snowy day coming, but it could not tell four inches from twelve, and no amount of modeling was going to pull that resolution out of it. Whether it would snow was in reach. How much was not.',
       },
       {
         kind: 'p',
-        text: 'I did not try to paper over this with a new model in this pass, because that is exactly the trap, reaching for a model before you have earned it. The honest, properly tested snow model is its own next write-up. What changed here is the rule I will build it under: separate what you would genuinely know in advance from the thing you are trying to predict, and be suspicious of any feature that works too well. A result that looks too good usually is.',
+        text: "It is worth being precise about the inputs, too, because this kind of model is easy to wave off as cheating. Using the snow already on the ground to help predict the next day is fair game: yesterday's snowpack carries real information about tomorrow. That is a feature, not a leak. The mistake was never the inputs. It was not being clear-eyed, at the time, about which question the data could actually answer.",
+      },
+      {
+        kind: 'p',
+        text: 'The honest, properly tested version of this model is its own next write-up, and I will build it knowing the difference between predicting the day and predicting the depth.',
       },
       { kind: 'h2', text: 'Mistake three: we answered a question we never actually asked' },
       {
@@ -122,7 +126,7 @@ const POST_DEFINITIONS: BlogPost[] = [
       { kind: 'h2', text: 'The thing underneath all four' },
       {
         kind: 'p',
-        text: 'Line those mistakes up and they are the same mistake four times: trusting an output without checking the data and the claim sitting under it. A high accuracy we never stress-tested. A feature we never questioned. A "no trend" we never measured. A cooling station we never plotted. The fix was never a cleverer algorithm. It was slowing down to get all the data, test the claim against the dumbest baseline, and look at the raw picture before believing any summary. The original project\'s real lesson, buried in its own conclusion, was that most of the work is getting the data honest. It took me five years and a redo to actually take my own advice.',
+        text: 'Line those mistakes up and they rhyme: an accuracy we never checked against the base rate, a question we asked that the data could not answer, a "no trend" we announced without ever testing it, and a cooling station we never plotted. Each one is the same move, trusting a claim before checking whether the data underneath actually backed it. The fix was never a cleverer algorithm. It was slowing down to get all the data, size the claim against the dumbest baseline, and look at the raw picture before believing any summary. The original project\'s real lesson, buried in its own conclusion, was that most of the work is getting the data honest. It took me five years and a redo to actually take my own advice.',
       },
       {
         kind: 'p',
