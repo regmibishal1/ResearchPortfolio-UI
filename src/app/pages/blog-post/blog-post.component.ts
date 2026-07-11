@@ -4,11 +4,12 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
 import { Title, Meta } from '@angular/platform-browser'
 import { getPost, BlogPost } from '../../data/blog'
+import { ZoomableImageComponent } from '../../shared/zoomable-image/zoomable-image.component'
 
 @Component({
   selector: 'app-blog-post',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatIconModule],
+  imports: [CommonModule, RouterModule, MatIconModule, ZoomableImageComponent],
   templateUrl: './blog-post.component.html',
   styleUrl: './blog-post.component.scss',
 })

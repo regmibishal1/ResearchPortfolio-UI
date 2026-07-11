@@ -83,12 +83,11 @@
 .body-figure {
   margin: 2rem 0;
 
-  img {
+  app-zoomable-image {
     display: block;
-    width: 100%;
-    height: auto;
-    border-radius: var(--radius-md);
     border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    overflow: hidden;
     background: #ffffff;
   }
 

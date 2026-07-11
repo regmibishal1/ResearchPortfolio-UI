@@ -1,0 +1,30 @@
+<img
+  class="zoomable-thumb"
+  [src]="src"
+  [alt]="alt"
+  loading="lazy"
+  role="button"
+  tabindex="0"
+  [attr.aria-label]="'Enlarge image' + (alt ? ': ' + alt : '')"
+  (click)="open()"
+  (keydown.enter)="open()"
+/>
+
+<div class="lightbox" *ngIf="isOpen" (click)="onBackdrop($event)">
+  <button type="button" class="lightbox-close" aria-label="Close" (click)="close()">
+    <mat-icon>close</mat-icon>
+  </button>
+
+  <div
+    #stage
+    class="lightbox-stage"
+    [class.zoomed]="zoomed"
+    (click)="toggleZoom()"
+    (mousedown)="onDown($event)"
+  >
+    <img class="lightbox-img" [class.zoomed]="zoomed" [src]="src" [alt]="alt" draggable="false" />
+  </div>
+
+  <p class="lightbox-caption" *ngIf="caption">{{ caption }}</p>
+  <p class="lightbox-hint" *ngIf="!zoomed">Click the image to zoom, drag to pan, Esc to close</p>
+</div>
