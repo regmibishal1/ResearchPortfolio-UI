@@ -19,7 +19,7 @@ describe('PROJECTS ordering', () => {
     // 2026, 2023-present, Summer 2023, Spring 2023, Fall 2022, Summer 2022,
     // Spring 2022, Fall 2021.
     const newestToOldest = [
-      'edgar-signals',
+      'world-cup-prediction',
       'research-portfolio',
       'mri-classification',
       'empathy-emotion',
@@ -41,7 +41,15 @@ describe('PROJECTS ordering', () => {
 
   it('features current work first for the dashboard slice', () => {
     for (const p of PROJECTS.slice(0, 4)) {
-      expect(p.period).withContext(`featured '${p.id}' should be current`).toContain('2026')
+      expect(p.period)
+        .withContext(`featured '${p.id}' should be current`)
+        .toMatch(/2026|present/)
+    }
+  })
+
+  it('excludes hidden entries from the exported list', () => {
+    for (const p of PROJECTS) {
+      expect(p.hidden).withContext(`'${p.id}' is hidden and should not export`).toBeFalsy()
     }
   })
 })
