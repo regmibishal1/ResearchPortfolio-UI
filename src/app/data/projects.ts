@@ -55,6 +55,13 @@ export interface Project {
    * this value to render the matching embed component.
    */
   liveEmbed?: 'world-cup-summary' | 'mri-explorer' | 'empathy-explorer'
+  /**
+   * Excludes the entry from the exported list, and with it every surface
+   * that reads it: the project cards, the dashboard featured slice, and
+   * the /project/:id detail page. For work that exists but is not ready
+   * to be presented yet; remove the flag to publish it again.
+   */
+  hidden?: boolean
 }
 
 // Definition order only matters WITHIN a period: the exported list below is
@@ -80,6 +87,7 @@ const PROJECT_DEFINITIONS: Project[] = [
     ],
     demo: '/stocks',
     status: 'in-progress',
+    hidden: true,
     highlights: [
       'Point-in-time feature panel from the EDGAR companyfacts API: every value keyed to its filing date, verified median filing lag 35 days with zero look-ahead',
       'Standardized Unexpected Earnings via a seasonal random walk, reconstructed without any paid analyst estimates, across 154 large caps in all 11 sectors',
@@ -525,10 +533,11 @@ function periodRank(period?: string): number {
 }
 
 /**
- * Projects in reverse-chronological order (newest first). The list page and
- * the dashboard's featured slice both read this, so time order holds
- * everywhere without any component doing its own sorting.
+ * Projects in reverse-chronological order (newest first), with hidden
+ * entries excluded. The list page and the dashboard's featured slice both
+ * read this, so time order and visibility hold everywhere without any
+ * component doing its own sorting or filtering.
  */
-export const PROJECTS: Project[] = [...PROJECT_DEFINITIONS].sort(
+export const PROJECTS: Project[] = PROJECT_DEFINITIONS.filter((p) => !p.hidden).sort(
   (a, b) => periodRank(b.period) - periodRank(a.period)
 )
