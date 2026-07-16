@@ -1324,3 +1324,61 @@ h1 {
     }
   }
 }
+
+// Third-place card in the bracket center column
+.bronze-label {
+  margin-top: 20px;
+}
+
+.match-bronze {
+  border-color: rgba(250, 179, 135, 0.25);
+}
+
+// Wrap-up tab
+.podium-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.podium-card {
+  background: $bg-2;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+
+  mat-icon {
+    color: $accent-3;
+  }
+}
+
+.podium-gold {
+  background: linear-gradient(135deg, rgba(250, 179, 135, 0.12), rgba(249, 226, 175, 0.06));
+  border-color: rgba(250, 179, 135, 0.4);
+}
+
+.podium-rank {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $muted;
+}
+
+.podium-team {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: $text;
+}
+
+.receipts-table .delta-up {
+  color: $accent-2;
+}
+
+.receipts-table .delta-down {
+  color: $accent-4;
+}
