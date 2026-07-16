@@ -260,6 +260,15 @@
               <ng-container *ngIf="!d.played"
                 >Pred {{ d.predicted_score[0] }}-{{ d.predicted_score[1] }}</ng-container
               >
+              <ng-container
+                *ngIf="
+                  !d.played &&
+                  round !== 'Group' &&
+                  d.predicted_winner &&
+                  d.predicted_score[0] === d.predicted_score[1]
+                "
+                >pens: {{ d.predicted_winner }}</ng-container
+              >
               <ng-container *ngIf="d.went_to_penalties && d.winner"
                 >pen: {{ d.winner }}</ng-container
               >
