@@ -435,11 +435,21 @@
                 <ng-container *ngIf="bronzeDetail as bd">
                   <div class="round-label bronze-label">Third place</div>
                   <div class="match match-bronze">
-                    <div class="team" [class.team-winner]="bd.played && bd.winner === bd.teams[0]">
+                    <div
+                      class="team"
+                      [class.team-winner]="
+                        (bd.played ? bd.winner : bd.predicted_winner) === bd.teams[0]
+                      "
+                    >
                       <span class="team-name">{{ bd.teams[0] }}</span>
                       <span class="team-score" *ngIf="bd.played">{{ bd.actual_score![0] }}</span>
                     </div>
-                    <div class="team" [class.team-winner]="bd.played && bd.winner === bd.teams[1]">
+                    <div
+                      class="team"
+                      [class.team-winner]="
+                        (bd.played ? bd.winner : bd.predicted_winner) === bd.teams[1]
+                      "
+                    >
                       <span class="team-name">{{ bd.teams[1] }}</span>
                       <span class="team-score" *ngIf="bd.played">{{ bd.actual_score![1] }}</span>
                     </div>
