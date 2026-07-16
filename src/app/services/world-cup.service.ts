@@ -40,6 +40,7 @@ export interface TopFactor {
 export interface MatchDetail {
   teams: string[]
   predicted_score: number[]
+  predicted_winner?: string | null
   played: boolean
   actual_score: number[] | null
   went_to_penalties: boolean
