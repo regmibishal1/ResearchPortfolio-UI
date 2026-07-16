@@ -257,21 +257,19 @@
 
           <ng-template #matchExtras let-d="d" let-round="round">
             <div class="match-score-note" *ngIf="d">
-              <ng-container *ngIf="!d.played"
-                >Pred {{ d.predicted_score[0] }}-{{ d.predicted_score[1] }}</ng-container
+              <span *ngIf="!d.played"
+                >Pred {{ d.predicted_score[0] }}-{{ d.predicted_score[1] }}</span
               >
-              <ng-container
+              <span
                 *ngIf="
                   !d.played &&
                   round !== 'Group' &&
                   d.predicted_winner &&
                   d.predicted_score[0] === d.predicted_score[1]
                 "
-                >pens: {{ d.predicted_winner }}</ng-container
+                >pens: {{ d.predicted_winner }}</span
               >
-              <ng-container *ngIf="d.went_to_penalties && d.winner"
-                >pen: {{ d.winner }}</ng-container
-              >
+              <span *ngIf="d.went_to_penalties && d.winner">pen: {{ d.winner }}</span>
               <button
                 type="button"
                 class="factors-btn"
