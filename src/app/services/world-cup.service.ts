@@ -161,6 +161,55 @@ export interface ScenariosResponse {
   scenarios: Scenarios | null
 }
 
+export interface RetroUpset {
+  date: string
+  home: string
+  away: string
+  score: number[]
+  stage: string
+  outcome: string
+  model_gave_pct: number
+}
+
+export interface RetroSwing {
+  team: string
+  date: string
+  from_pct: number
+  to_pct: number
+  delta: number
+}
+
+export interface Retrospective {
+  as_of_date: string
+  complete: boolean
+  podium?: { champion: string; runner_up: string; third_place: string | null }
+  verdict?: {
+    pre_tournament_favorite: string | null
+    pre_tournament_favorite_pct: number | null
+    champion_pre_tournament_pct: number
+    champion_first_favorite_on: string | null
+    champion_days_as_favorite: number
+    snapshot_days: number
+    champion_final_eve_pct: number
+    called_champion_pre_tournament: boolean
+  }
+  metrics?: {
+    n_matches: number
+    model: MetricSummary
+    baseline: MetricSummary
+    by_stage: Record<string, MetricSummary>
+  }
+  biggest_upsets?: RetroUpset[]
+  biggest_swings?: RetroSwing[]
+  confident_calls?: { n: number; correct: number; hit_rate: number | null }
+}
+
+export interface RetrospectiveResponse {
+  run_id: number
+  as_of_date: string
+  retrospective: Retrospective | null
+}
+
 export type HistoryStage = 'winner' | 'final' | 'sf' | 'qf' | 'r16' | 'r32'
 
 @Injectable({ providedIn: 'root' })
@@ -215,5 +264,13 @@ export class WorldCupService {
     let params = new HttpParams().set('tournament', opts.tournament ?? '2026')
     if (opts.as_of_date) params = params.set('as_of_date', opts.as_of_date)
     return this.http.get<ScenariosResponse>(`${this.apiUrl}/scenarios`, { params })
+  }
+
+  getRetrospective(
+    opts: { tournament?: string; as_of_date?: string } = {}
+  ): Observable<RetrospectiveResponse> {
+    let params = new HttpParams().set('tournament', opts.tournament ?? '2026')
+    if (opts.as_of_date) params = params.set('as_of_date', opts.as_of_date)
+    return this.http.get<RetrospectiveResponse>(`${this.apiUrl}/retrospective`, { params })
   }
 }

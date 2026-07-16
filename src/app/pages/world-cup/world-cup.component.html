@@ -431,6 +431,23 @@
                     <span class="champ-name">{{ bracket.champion }}</span>
                   </div>
                 </div>
+
+                <ng-container *ngIf="bronzeDetail as bd">
+                  <div class="round-label bronze-label">Third place</div>
+                  <div class="match match-bronze">
+                    <div class="team" [class.team-winner]="bd.played && bd.winner === bd.teams[0]">
+                      <span class="team-name">{{ bd.teams[0] }}</span>
+                      <span class="team-score" *ngIf="bd.played">{{ bd.actual_score![0] }}</span>
+                    </div>
+                    <div class="team" [class.team-winner]="bd.played && bd.winner === bd.teams[1]">
+                      <span class="team-name">{{ bd.teams[1] }}</span>
+                      <span class="team-score" *ngIf="bd.played">{{ bd.actual_score![1] }}</span>
+                    </div>
+                    <ng-container
+                      *ngTemplateOutlet="matchExtras; context: { d: bd, round: 'Bronze' }"
+                    ></ng-container>
+                  </div>
+                </ng-container>
               </div>
 
               <!-- RIGHT HALF (mirrored) -->
@@ -772,6 +789,156 @@
               </table>
             </div>
           </div>
+        </section>
+      </mat-tab>
+
+      <!-- Tournament wrap-up -->
+      <mat-tab label="Wrap-up" *ngIf="retro?.complete">
+        <section class="panel" *ngIf="retro as r">
+          <div class="panel-header">
+            <p class="panel-sub">
+              The tournament is done. Here is how the model's calls held up from the first
+              simulation to the final whistle.
+            </p>
+          </div>
+
+          <div class="podium-row" *ngIf="r.podium as p">
+            <div class="podium-card podium-gold">
+              <mat-icon>emoji_events</mat-icon>
+              <span class="podium-rank">Champion</span>
+              <span class="podium-team">{{ p.champion }}</span>
+            </div>
+            <div class="podium-card">
+              <span class="podium-rank">Runner-up</span>
+              <span class="podium-team">{{ p.runner_up }}</span>
+            </div>
+            <div class="podium-card" *ngIf="p.third_place">
+              <span class="podium-rank">Third place</span>
+              <span class="podium-team">{{ p.third_place }}</span>
+            </div>
+          </div>
+
+          <ng-container *ngIf="r.verdict as v">
+            <h3 class="bracket-section-title">The model's verdict</h3>
+            <div class="metric-grid">
+              <div class="metric-card">
+                <span class="metric-label">Pre-tournament favorite</span>
+                <span class="metric-value">{{ v.pre_tournament_favorite }}</span>
+                <span class="metric-baseline">{{
+                  v.called_champion_pre_tournament
+                    ? 'Called the champion on day one'
+                    : 'Not the eventual champion'
+                }}</span>
+              </div>
+              <div class="metric-card">
+                <span class="metric-label">Champion odds, day one</span>
+                <span class="metric-value"
+                  >{{ v.champion_pre_tournament_pct | number: '1.1-1' }}%</span
+                >
+                <span class="metric-baseline">of a 48-team field</span>
+              </div>
+              <div class="metric-card">
+                <span class="metric-label">Days as favorite</span>
+                <span class="metric-value"
+                  >{{ v.champion_days_as_favorite }} / {{ v.snapshot_days }}</span
+                >
+                <span class="metric-baseline" *ngIf="v.champion_first_favorite_on"
+                  >first led on {{ v.champion_first_favorite_on | date: 'MMM d' }}</span
+                >
+              </div>
+              <div class="metric-card">
+                <span class="metric-label">Odds before the final</span>
+                <span class="metric-value">{{ v.champion_final_eve_pct | number: '1.1-1' }}%</span>
+                <span class="metric-baseline">championship probability</span>
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="r.metrics as m">
+            <h3 class="bracket-section-title">Final grades</h3>
+            <div class="metric-grid">
+              <div class="metric-card">
+                <span class="metric-label">Matches graded</span>
+                <span class="metric-value">{{ m.n_matches }}</span>
+              </div>
+              <div class="metric-card">
+                <span class="metric-label">Accuracy</span>
+                <span class="metric-value"
+                  >{{ (m.model.accuracy ?? 0) * 100 | number: '1.1-1' }}%</span
+                >
+                <span class="metric-baseline"
+                  >Elo baseline {{ (m.baseline.accuracy ?? 0) * 100 | number: '1.1-1' }}%</span
+                >
+              </div>
+              <div class="metric-card">
+                <span class="metric-label">Brier score</span>
+                <span class="metric-value">{{ m.model.brier | number: '1.3-3' }}</span>
+                <span class="metric-baseline"
+                  >Elo baseline {{ m.baseline.brier | number: '1.3-3' }}</span
+                >
+              </div>
+              <div class="metric-card" *ngIf="r.confident_calls as cc">
+                <span class="metric-label">High-confidence calls</span>
+                <span class="metric-value">{{ cc.correct }} / {{ cc.n }}</span>
+                <span class="metric-baseline">correct at 70%+ confidence</span>
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="r.biggest_upsets?.length">
+            <h3 class="bracket-section-title">Biggest upsets</h3>
+            <p class="panel-sub">Results the model gave the least chance of happening.</p>
+            <div class="stage-table-wrap">
+              <table class="leaderboard receipts-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Match</th>
+                    <th>Score</th>
+                    <th>Stage</th>
+                    <th>Model gave it</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let u of r.biggest_upsets">
+                    <td>{{ u.date | date: 'MMM d' }}</td>
+                    <td class="team-col">{{ u.home }} vs {{ u.away }}</td>
+                    <td>{{ u.score[0] }}-{{ u.score[1] }}</td>
+                    <td>{{ u.stage === 'group' ? 'Group' : 'Knockout' }}</td>
+                    <td class="probs-cell">{{ u.model_gave_pct | number: '1.1-1' }}%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="r.biggest_swings?.length">
+            <h3 class="bracket-section-title">Biggest daily swings</h3>
+            <p class="panel-sub">Largest one-day moves in championship odds.</p>
+            <div class="stage-table-wrap">
+              <table class="leaderboard receipts-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Team</th>
+                    <th>Move</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let s of r.biggest_swings">
+                    <td>{{ s.date | date: 'MMM d' }}</td>
+                    <td class="team-col">{{ s.team }}</td>
+                    <td class="probs-cell">
+                      {{ s.from_pct | number: '1.1-1' }}% to {{ s.to_pct | number: '1.1-1' }}%
+                      <span [class.delta-up]="s.delta > 0" [class.delta-down]="s.delta < 0">
+                        ({{ s.delta > 0 ? '+' : '' }}{{ s.delta | number: '1.1-1' }})
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </ng-container>
         </section>
       </mat-tab>
 

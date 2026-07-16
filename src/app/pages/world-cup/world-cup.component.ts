@@ -29,6 +29,8 @@ import {
   PlayedMatchesResponse,
   ReportCard,
   ReportCardResponse,
+  Retrospective,
+  RetrospectiveResponse,
   Scenarios,
   ScenariosResponse,
   TeamRow,
@@ -172,6 +174,7 @@ export class WorldCupComponent implements OnInit, OnDestroy {
   } | null = null
 
   finalDetail: MatchDetail | null = null
+  bronzeDetail: MatchDetail | null = null
 
   advancers: { r32: Set<string>; r16: Set<string>; qf: Set<string>; sf: Set<string> } = {
     r32: new Set(),
@@ -184,8 +187,10 @@ export class WorldCupComponent implements OnInit, OnDestroy {
 
   reportCard: ReportCard | null = null
   scenarios: Scenarios | null = null
+  retro: Retrospective | null = null
   private latestReportCard: ReportCard | null = null
   private latestScenarios: Scenarios | null = null
+  private latestRetro: Retrospective | null = null
   // Per-scenario selected side, keyed by scenario index. Defaults to the
   // first team of each pairing.
   scenarioPick = new Map<number, string>()
@@ -255,6 +260,9 @@ export class WorldCupComponent implements OnInit, OnDestroy {
       played: this.wc.getPlayedMatches(),
       report: this.wc.getReportCard().pipe(catchError(() => of(null as ReportCardResponse | null))),
       whatIf: this.wc.getScenarios().pipe(catchError(() => of(null as ScenariosResponse | null))),
+      wrapUp: this.wc
+        .getRetrospective()
+        .pipe(catchError(() => of(null as RetrospectiveResponse | null))),
       hWinner: h('winner'),
       hFinal: h('final'),
       hSF: h('sf'),
@@ -268,6 +276,7 @@ export class WorldCupComponent implements OnInit, OnDestroy {
         played,
         report,
         whatIf,
+        wrapUp,
         hWinner,
         hFinal,
         hSF,
@@ -281,8 +290,10 @@ export class WorldCupComponent implements OnInit, OnDestroy {
         this.playedMatches = played
         this.latestReportCard = report?.report_card ?? null
         this.latestScenarios = whatIf?.scenarios ?? null
+        this.latestRetro = wrapUp?.retrospective ?? null
         this.reportCard = this.latestReportCard
         this.scenarios = this.latestScenarios
+        this.retro = this.latestRetro
         this.buildScenarioViews()
 
         const histories: Partial<Record<HistoryStage, HistoryResponse>> = {}
@@ -305,6 +316,7 @@ export class WorldCupComponent implements OnInit, OnDestroy {
         this.bracketHalves = this.computeBracketHalves(bracket)
         this.advancers = this.computeAdvancers(bracket)
         this.finalDetail = bracket.match_details?.['Final']?.[0] ?? null
+        this.bronzeDetail = bracket.match_details?.['Bronze']?.[0] ?? null
 
         if (this.availableDates.length > 0) {
           this.selectedDate = this.availableDates[0]
@@ -362,9 +374,10 @@ export class WorldCupComponent implements OnInit, OnDestroy {
         this.bracketHalves = this.computeBracketHalves(this.latestBracket)
         this.advancers = this.computeAdvancers(this.latestBracket)
         this.finalDetail = this.latestBracket.match_details?.['Final']?.[0] ?? null
+        this.bronzeDetail = this.latestBracket.match_details?.['Bronze']?.[0] ?? null
         this.groupKeys = Object.keys(this.latestBracket.group_winners).sort()
       }
-      this.applyAnalytics(this.latestReportCard, this.latestScenarios)
+      this.applyAnalytics(this.latestReportCard, this.latestScenarios, this.latestRetro)
     } else {
       this.fetchHistoricalBracket()
       this.fetchHistoricalAnalytics()
@@ -386,6 +399,7 @@ export class WorldCupComponent implements OnInit, OnDestroy {
         this.bracketHalves = this.computeBracketHalves(b)
         this.advancers = this.computeAdvancers(b)
         this.finalDetail = b.match_details?.['Final']?.[0] ?? null
+        this.bronzeDetail = b.match_details?.['Bronze']?.[0] ?? null
         this.groupKeys = Object.keys(b.group_winners).sort()
         this.bracketLoading = false
       },
@@ -404,17 +418,29 @@ export class WorldCupComponent implements OnInit, OnDestroy {
       whatIf: this.wc
         .getScenarios({ as_of_date: date })
         .pipe(catchError(() => of(null as ScenariosResponse | null))),
-    }).subscribe(({ report, whatIf }) => {
+      wrapUp: this.wc
+        .getRetrospective({ as_of_date: date })
+        .pipe(catchError(() => of(null as RetrospectiveResponse | null))),
+    }).subscribe(({ report, whatIf, wrapUp }) => {
       // A slow response for a date the user has already navigated away
       // from must not clobber the current view.
       if (this.selectedDate !== date) return
-      this.applyAnalytics(report?.report_card ?? null, whatIf?.scenarios ?? null)
+      this.applyAnalytics(
+        report?.report_card ?? null,
+        whatIf?.scenarios ?? null,
+        wrapUp?.retrospective ?? null
+      )
     })
   }
 
-  private applyAnalytics(reportCard: ReportCard | null, scenarios: Scenarios | null): void {
+  private applyAnalytics(
+    reportCard: ReportCard | null,
+    scenarios: Scenarios | null,
+    retro: Retrospective | null
+  ): void {
     this.reportCard = reportCard
     this.scenarios = scenarios
+    this.retro = retro
     this.scenarioPick.clear()
     this.buildScenarioViews()
     setTimeout(() => this.renderCalibrationChart())
