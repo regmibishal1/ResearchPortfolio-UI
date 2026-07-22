@@ -365,6 +365,12 @@ export class WorldCupComponent implements OnInit, OnDestroy {
     return locked >= 72
   }
 
+  // The tournament is over: the latest run's retrospective is complete.
+  // Drives the final-state hero copy regardless of the selected snapshot.
+  get finished(): boolean {
+    return !!this.latestRetro?.complete
+  }
+
   onDateChange(): void {
     this.rebuildDisplayedLeaderboard()
     this.rebuildLockedMatchesForDate()
