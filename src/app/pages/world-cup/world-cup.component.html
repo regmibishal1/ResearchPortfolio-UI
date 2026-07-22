@@ -10,11 +10,16 @@
   <!-- ===== Hero ===== -->
   <header class="wc-hero">
     <div class="hero-text">
-      <span class="hero-eyebrow">Live Predictions</span>
+      <span class="hero-eyebrow">{{ finished ? 'Final Results' : 'Live Predictions' }}</span>
       <h1>FIFA World Cup 2026</h1>
-      <p class="hero-sub">
+      <p class="hero-sub" *ngIf="!finished">
         Calibrated XGBoost + 2M-simulation Monte Carlo, updated daily. Each played match is locked
         into every simulation, so probability estimates sharpen as the tournament progresses.
+      </p>
+      <p class="hero-sub" *ngIf="finished">
+        Calibrated XGBoost + 2M-simulation Monte Carlo, rerun daily across the whole tournament.
+        Every result is locked in, every prediction is preserved, and the wrap-up grades the model's
+        full body of work.
       </p>
     </div>
 
@@ -216,8 +221,14 @@
         <section class="panel">
           <div class="panel-header">
             <p class="panel-sub">
-              Most-probable path through the tournament. Played matches feed locked results into
-              every downstream prediction.
+              <ng-container *ngIf="retro?.complete"
+                >The completed bracket: every result from the group stage to the final is locked
+                in.</ng-container
+              >
+              <ng-container *ngIf="!retro?.complete"
+                >Most-probable path through the tournament. Played matches feed locked results into
+                every downstream prediction.</ng-container
+              >
               <ng-container *ngIf="!isLatestDate">
                 Showing the bracket as of {{ selectedDate | date: 'mediumDate' }}.</ng-container
               >
@@ -754,8 +765,8 @@
         </section>
       </mat-tab>
 
-      <!-- What-if explorer -->
-      <mat-tab label="What-if" *ngIf="analyticsUnlocked">
+      <!-- What-if explorer: retires once a snapshot has nothing upcoming -->
+      <mat-tab label="What-if" *ngIf="analyticsUnlocked && scenarioViews.length > 0">
         <section class="panel">
           <div class="panel-header">
             <p class="panel-sub">
