@@ -23,6 +23,82 @@ export interface BlogPost {
 
 const POST_DEFINITIONS: BlogPost[] = [
   {
+    slug: 'will-it-snow-tomorrow',
+    title: 'Will it snow tomorrow? Rebuilding my first model honestly',
+    date: '2026-07-25',
+    summary:
+      'The properly built version of my first model: a next-day snow predictor that has to beat real baselines on a fair test. Whether it snows turns out to be genuinely predictable. How much falls, barely at all, and the difference is the whole lesson.',
+    tags: ['Data Science', 'Machine Learning', 'Climate', 'Python'],
+    body: [
+      {
+        kind: 'p',
+        text: 'Last time I wrote about going back to my first data science project and finding four mistakes: no baseline, chasing an answer the data could not give, answering a question we never asked, and never looking at the raw data. That post ended with a promise, mostly to myself, that I would rebuild the snow model the way it should have been built. This is that rebuild, and for the first time in this series, the honest version of the story has a win in it.',
+      },
+      { kind: 'h2', text: 'The rules of the game' },
+      {
+        kind: 'p',
+        text: "The question is the same one my grad school team asked in 2021: will it snow at BWI tomorrow? What changed is everything around the question. First, the model only gets to use what was knowable by the end of today: today's temperatures, precipitation, the snow already on the ground, the last few days of weather, and the calendar. Nothing from tomorrow leaks in. Second, the test is walk-forward. Train on every year before 1962, predict 1962. Add 1962 to the training pile, predict 1963. Repeat through 2026. The model never sees the future, the same way a real forecaster never does.",
+      },
+      {
+        kind: 'p',
+        text: 'Third, and this is the part the original project skipped entirely, the model has to beat two honest opponents before it gets to call itself useful. Climatology: the seasonal odds, what fraction of, say, January 30ths have snow the next day, computable with no model at all. And persistence: the dumbest useful forecast, did it snow today, then maybe tomorrow too.',
+      },
+      {
+        kind: 'p',
+        text: 'Snow falls on about 3 in every 100 days at BWI, so a model that always says "no snow" is right 97 percent of the time. Any accuracy number has to be read against that floor, which is why accuracy is the wrong scorecard entirely. The fair scorecard for rare events asks: when the model raises its hand, how often is it right, and how much of the actual snow does it catch?',
+      },
+      { kind: 'h2', text: 'The result' },
+      {
+        kind: 'p',
+        text: 'Across 24,290 walk-forward test days from 1962 to 2026, the model genuinely beats both opponents. On the rare-event scorecard (average precision, where the "always no" strategy scores about 0.03), climatology scores 0.10, persistence 0.09, and the model 0.19. Roughly double the best baseline. It is also well calibrated: when it says 30 percent chance of snow, it snows about 30 percent of the time.',
+      },
+      {
+        kind: 'figure',
+        src: 'assets/blog/snow-model.webp',
+        alt: 'Precision-recall and calibration curves for the next-day snow model against climatology and persistence baselines',
+        caption:
+          'The model (orange) against climatology and persistence: twice the average precision of the best baseline, and honest probabilities',
+      },
+      {
+        kind: 'p',
+        text: "Five years ago we reported a number that looked perfect and meant nothing. This number is far from perfect, and it means something: knowing today's weather genuinely doubles your ability to anticipate tomorrow's snow, compared to just knowing the season.",
+      },
+      {
+        kind: 'p',
+        text: "What does the model actually lean on? Today's mean temperature, the time of year, whether it snowed today, the recent run of daytime highs, and the snow already sitting on the ground. That last one is worth restating from the previous post: it is completely fair. Yesterday's snowpack carries real information about tomorrow, and a forecast built on yesterday is simply a forecast. What would not be fair is feeding a model information from the same day it claims to predict, and this rebuild contains none of that.",
+      },
+      { kind: 'h2', text: 'The harder question: how much?' },
+      {
+        kind: 'p',
+        text: 'The original project did not just ask whether it would snow. It wanted amounts, and the data set it used, one row per day of weather history, was never going to support that. But "never going to support that" was my claim, and claims are cheap. So I tested it.',
+      },
+      {
+        kind: 'p',
+        text: 'Same discipline: walk-forward, leakage-free, and three baselines. On the 637 test days where it actually snowed the next day, the typical amount is small, about 2 cm median, 5 cm mean, with rare monsters past 40 cm. Predicting the amount, the model\'s typical error is 4.1 cm, against 4.6 for the seasonal average and 4.8 for "same as today."',
+      },
+      {
+        kind: 'figure',
+        src: 'assets/blog/snow-amount.webp',
+        alt: 'Predicted versus actual next-day snow amounts for the model and for climatology; both stay in a narrow band while actual amounts run past 40 cm',
+        caption:
+          'Predicted vs actual amounts: every predictor stays pinned under about 7 cm no matter what actually fell',
+      },
+      {
+        kind: 'p',
+        text: "So the model wins again? Only if you squint. Look at the chart: every predictor's guesses sit pinned in a narrow band under 7 cm, no matter what actually fell. The model earns its small edge by being slightly better on the many ordinary days. On the days that matter, the blizzards, it is as blind as the baselines, and by the error measure that punishes big misses hardest, it is actually worse than the seasonal average. Station history simply does not contain tomorrow's storm total. That information lives in atmospheric physics, which is why real forecasters run weather models, not decision trees over station records.",
+      },
+      { kind: 'h2', text: 'What an honest scorecard looks like' },
+      {
+        kind: 'p',
+        text: 'Put the two results side by side and you get the real answer to the 2021 question, the one we should have published then. Will it snow tomorrow? Meaningfully predictable from station history, twice as good as climatology, honestly measured. How much? Barely predictable at all, half a centimeter better than a lookup table on typical days, blind on the days you care about.',
+      },
+      {
+        kind: 'p',
+        text: 'The first version of this project reported 100 percent accuracy and taught me nothing. This version reports 0.19 average precision and a 4.1 cm error, and taught me exactly where the predictability lives and where it runs out. That trade, impressive numbers for meaningful ones, is the whole lesson of redoing this project, and I would make it every time. Everything here, the features, the walk-forward harness, and both charts, is rerunnable end to end from the raw NOAA record, and the next write-up in this series will pick another old project off the shelf.',
+      },
+    ],
+  },
+  {
     slug: 'going-back-to-my-first-data-science-project',
     title: 'Going back to my first data science project',
     date: '2026-07-11',
