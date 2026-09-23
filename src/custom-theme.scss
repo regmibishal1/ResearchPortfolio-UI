@@ -26,6 +26,13 @@ $ResearchPortfolio-UI-theme: mat.define-dark-theme(
   --mdc-snackbar-supporting-text-color: #f0f0f5;
 }
 
+// The drawer container wraps every routed page and otherwise paints the
+// dark theme's #303030 grey, so pages without their own background drifted
+// off the near-black site background.
+.mat-drawer-container {
+  --mat-sidenav-content-background-color: #0a0a0f;
+}
+
 .mat-drawer {
   background-color: #12121a !important;
   border-right-color: rgba(255, 255, 255, 0.06) !important;
