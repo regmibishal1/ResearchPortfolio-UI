@@ -2,7 +2,7 @@ import { Component } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { Router, RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
-import { Title, Meta } from '@angular/platform-browser'
+import { SeoService } from '../../services/seo.service'
 import { PROJECTS, Project } from '../../data/projects'
 
 @Component({
@@ -21,13 +21,12 @@ export class ProjectComponent {
 
   constructor(
     private router: Router,
-    title: Title,
-    meta: Meta
+    seo: SeoService
   ) {
-    title.setTitle('Projects | Bishal Regmi')
-    meta.updateTag({
-      name: 'description',
-      content:
+    seo.setPage({
+      title: 'Projects | Bishal Regmi',
+      path: '/project',
+      description:
         "Browse Bishal Regmi's software and research projects spanning full-stack development, machine learning, data science, and civic technology.",
     })
   }

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { ActivatedRoute, Router, RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
-import { Title, Meta } from '@angular/platform-browser'
+import { SeoService, SITE_URL } from '../../services/seo.service'
 import { getPost, BlogPost } from '../../data/blog'
 import { ZoomableImageComponent } from '../../shared/zoomable-image/zoomable-image.component'
 
@@ -19,8 +19,7 @@ export class BlogPostComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private title: Title,
-    private meta: Meta
+    private seo: SeoService
   ) {}
 
   ngOnInit(): void {
@@ -30,8 +29,24 @@ export class BlogPostComponent implements OnInit {
       this.router.navigate(['/blog'])
       return
     }
-    this.title.setTitle(`${this.post.title} | Bishal Regmi`)
-    this.meta.updateTag({ name: 'description', content: this.post.summary })
+    const path = `/blog/${this.post.slug}`
+    this.seo.setPage({
+      title: `${this.post.title} | Bishal Regmi`,
+      description: this.post.summary,
+      path,
+      type: 'article',
+      jsonLd: {
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        headline: this.post.title,
+        description: this.post.summary,
+        datePublished: this.post.date,
+        url: SITE_URL + path,
+        mainEntityOfPage: SITE_URL + path,
+        keywords: this.post.tags.join(', '),
+        author: { '@id': `${SITE_URL}/#person` },
+      },
+    })
   }
 
   formatDate(iso: string): string {

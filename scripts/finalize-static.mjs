@@ -1,0 +1,43 @@
+// Post-build step that shapes the prerendered output for Cloudflare Pages.
+//
+// 1. Moves each prerendered route from <route>/index.html to <route>.html.
+//    Pages serves /about straight from about.html, while about/index.html
+//    would make it redirect /about to /about/, away from the canonical URL.
+// 2. Writes 404.html, a client-only copy of the app shell. Pages serves it
+//    with a 404 status for any path that was not prerendered; the app still
+//    boots and routes normally there (login, profile, unknown URLs).
+import { readFileSync, renameSync, rmdirSync, readdirSync, writeFileSync } from 'node:fs'
+import { dirname, join, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+const dist = join(root, 'dist/research-portfolio-ui')
+const browser = join(dist, 'browser')
+
+const { routes } = JSON.parse(readFileSync(join(dist, 'prerendered-routes.json'), 'utf8'))
+
+// Deepest routes first so a parent folder is empty by the time it is checked.
+const nested = routes.filter((r) => r !== '/').sort((a, b) => b.length - a.length)
+for (const route of nested) {
+  const folder = join(browser, route)
+  renameSync(join(folder, 'index.html'), `${folder}.html`)
+  if (readdirSync(folder).length === 0) rmdirSync(folder)
+}
+
+const home = readFileSync(join(browser, 'index.html'), 'utf8')
+const shell = home
+  .replace(/<app-root[^>]*>[\s\S]*<\/app-root>/, '<app-root></app-root>')
+  .replace(/<script id="ng-state"[\s\S]*?<\/script>/, '')
+  .replace(/<script id="page-jsonld"[\s\S]*?<\/script>/, '')
+  .replace(/<link rel="canonical"[^>]*>/, '')
+  .replace(
+    /<title>[^<]*<\/title>/,
+    '<title>Bishal Regmi</title><meta name="robots" content="noindex">'
+  )
+
+if (shell.includes('ngh=') || !shell.includes('<app-root></app-root>')) {
+  throw new Error('404.html still carries prerendered markup')
+}
+writeFileSync(join(browser, '404.html'), shell)
+
+console.log(`finalize-static: ${nested.length} routes flattened, 404.html written`)

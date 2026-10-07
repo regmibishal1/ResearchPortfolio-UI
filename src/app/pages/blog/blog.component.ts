@@ -2,7 +2,7 @@ import { Component } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
-import { Title, Meta } from '@angular/platform-browser'
+import { SeoService } from '../../services/seo.service'
 import { POSTS, BlogPost } from '../../data/blog'
 
 @Component({
@@ -15,11 +15,11 @@ import { POSTS, BlogPost } from '../../data/blog'
 export class BlogComponent {
   posts: BlogPost[] = POSTS
 
-  constructor(title: Title, meta: Meta) {
-    title.setTitle('Blog | Bishal Regmi')
-    meta.updateTag({
-      name: 'description',
-      content:
+  constructor(seo: SeoService) {
+    seo.setPage({
+      title: 'Blog | Bishal Regmi',
+      path: '/blog',
+      description:
         'Writing by Bishal Regmi: reopening old data projects, redoing them honestly, and what the data actually says.',
     })
   }

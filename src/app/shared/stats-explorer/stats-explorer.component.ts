@@ -1,5 +1,14 @@
-import { Component, ElementRef, OnDestroy, ViewChild, AfterViewInit } from '@angular/core'
-import { CommonModule } from '@angular/common'
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  ViewChild,
+  AfterViewInit,
+  NgZone,
+  PLATFORM_ID,
+  inject,
+} from '@angular/core'
+import { CommonModule, isPlatformBrowser } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 import { MatCardModule } from '@angular/material/card'
 import { MatSelectModule } from '@angular/material/select'
@@ -89,6 +98,8 @@ export class StatsExplorerComponent implements AfterViewInit, OnDestroy {
   result: SampleResponse | null = null
 
   private chart: Chart | null = null
+  private platformId = inject(PLATFORM_ID)
+  private zone = inject(NgZone)
 
   constructor(private statsService: StatsService) {}
 
@@ -102,7 +113,12 @@ export class StatsExplorerComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.initChart()
+    // The chart and the live sample are browser-only; prerendered HTML shows
+    // the controls and an empty chart area.
+    if (!isPlatformBrowser(this.platformId)) return
+    // Chart.js drives its own animation frames; keeping them outside the
+    // Angular zone lets the app settle instead of re-checking every frame.
+    this.zone.runOutsideAngular(() => this.initChart())
     // Defer initial sample to the next macrotask to avoid
     // ExpressionChangedAfterCheckedError caused by setting `loading = true`
     // synchronously inside ngAfterViewInit.
