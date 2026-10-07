@@ -1,6 +1,7 @@
-// Builds src/sitemap.xml from the project and blog data so the sitemap
-// cannot drift from what the site actually publishes. Runs before every
-// build; hidden projects are excluded because PROJECTS already filters them.
+// Builds src/sitemap.xml and prerender-routes.txt from the project and blog
+// data so neither can drift from what the site actually publishes. Runs
+// before every build; hidden projects are excluded because PROJECTS already
+// filters them. Every sitemap URL is prerendered to static HTML.
 import { readFileSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -20,7 +21,9 @@ async function loadData(relPath) {
 const { PROJECTS } = await loadData('src/app/data/projects.ts')
 const { POSTS } = await loadData('src/app/data/blog.ts')
 
-const latestPost = POSTS.map((p) => p.date).sort().at(-1)
+const latestPost = POSTS.map((p) => p.date)
+  .sort()
+  .at(-1)
 
 const urls = [
   { path: '/' },
@@ -47,4 +50,5 @@ const xml =
   '\n</urlset>\n'
 
 writeFileSync(resolve(root, 'src/sitemap.xml'), xml)
-console.log(`sitemap.xml: ${urls.length} urls`)
+writeFileSync(resolve(root, 'prerender-routes.txt'), urls.map((u) => u.path).join('\n') + '\n')
+console.log(`sitemap.xml and prerender-routes.txt: ${urls.length} routes`)

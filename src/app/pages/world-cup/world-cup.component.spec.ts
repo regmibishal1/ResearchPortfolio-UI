@@ -1,15 +1,13 @@
-import { Meta, Title } from '@angular/platform-browser'
-
 import { WorldCupComponent } from './world-cup.component'
+import { SeoService } from '../../services/seo.service'
 import { TeamRow, WorldCupService } from '../../services/world-cup.service'
 
-// The constructor only sets title and meta, so the component can be built
+// The constructor only sets page metadata, so the component can be built
 // directly to exercise the pure leaderboard-sorting logic without standing up
 // the full data-loading view.
 function makeComponent(): WorldCupComponent {
-  const title = { setTitle: () => {} } as unknown as Title
-  const meta = { updateTag: () => {} } as unknown as Meta
-  return new WorldCupComponent({} as unknown as WorldCupService, title, meta)
+  const seo = { setPage: () => {} } as unknown as SeoService
+  return new WorldCupComponent({} as unknown as WorldCupService, seo)
 }
 
 function team(name: string, winner: number, elo: number): TeamRow {

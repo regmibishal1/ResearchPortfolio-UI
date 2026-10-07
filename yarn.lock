@@ -529,6 +529,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@angular/platform-server@npm:17.3.6":
+  version: 17.3.6
+  resolution: "@angular/platform-server@npm:17.3.6"
+  dependencies:
+    tslib: "npm:^2.3.0"
+    xhr2: "npm:^0.2.0"
+  peerDependencies:
+    "@angular/animations": 17.3.6
+    "@angular/common": 17.3.6
+    "@angular/compiler": 17.3.6
+    "@angular/core": 17.3.6
+    "@angular/platform-browser": 17.3.6
+  checksum: 10c0/b764edcded2f42344e29498af0abda69639ffe0785f15c52759b04b955a2299a158460ff1a0b91f97611f8ca4c91a15cf96bbf143acfd0c62593125819908342
+  languageName: node
+  linkType: hard
+
 "@angular/router@npm:^17.0.0":
   version: 17.3.6
   resolution: "@angular/router@npm:17.3.6"
@@ -10120,6 +10136,7 @@ __metadata:
     "@angular/material": "npm:^17.0.0"
     "@angular/platform-browser": "npm:^17.0.0"
     "@angular/platform-browser-dynamic": "npm:^17.0.0"
+    "@angular/platform-server": "npm:17.3.6"
     "@angular/router": "npm:^17.0.0"
     "@types/jasmine": "npm:~5.1.0"
     "@typescript-eslint/eslint-plugin": "npm:6.10.0"
@@ -11953,6 +11970,13 @@ __metadata:
     utf-8-validate:
       optional: true
   checksum: 10c0/b672b312f357afba8568b9dbb9e08b9e8a20845659b35fa6b340dc848efe371379f5e22bb1dc89c4b2940d5e2dc52dd1de85dde41776875fce115a448f94754f
+  languageName: node
+  linkType: hard
+
+"xhr2@npm:^0.2.0":
+  version: 0.2.1
+  resolution: "xhr2@npm:0.2.1"
+  checksum: 10c0/eebe95bd0ae9087da9b4dda636abee1f30cf9b424fbe8ebd0c7dcfd9be5db3e4aa634cf1837fa3e82b486aace9396a2dbf6be2dc8084862c8239dccec4e16dca
   languageName: node
   linkType: hard
 

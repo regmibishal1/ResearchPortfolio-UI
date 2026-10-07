@@ -1,7 +1,7 @@
 import { Component } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { MatIconModule } from '@angular/material/icon'
-import { Title, Meta } from '@angular/platform-browser'
+import { SeoService } from '../../services/seo.service'
 import { SKILL_CATEGORIES } from '../../data/skills'
 import { experienceLabel } from '../../data/experience'
 
@@ -34,11 +34,11 @@ interface Stat {
   styleUrl: './about.component.scss',
 })
 export class AboutComponent {
-  constructor(title: Title, meta: Meta) {
-    title.setTitle('About | Bishal Regmi')
-    meta.updateTag({
-      name: 'description',
-      content:
+  constructor(seo: SeoService) {
+    seo.setPage({
+      title: 'About | Bishal Regmi',
+      path: '/about',
+      description:
         'Learn about Bishal Regmi, an AWS-certified Software Engineer and Data Scientist at T. Rowe Price, holding dual degrees from UMD and UMBC.',
     })
   }

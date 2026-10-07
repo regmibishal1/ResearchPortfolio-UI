@@ -1,5 +1,14 @@
-import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy } from '@angular/core'
-import { CommonModule } from '@angular/common'
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  AfterViewInit,
+  OnDestroy,
+  NgZone,
+  PLATFORM_ID,
+  inject,
+} from '@angular/core'
+import { CommonModule, isPlatformBrowser } from '@angular/common'
 import { MatIconModule } from '@angular/material/icon'
 import {
   Chart,
@@ -63,6 +72,8 @@ const CLASSIFICATION_CURVE = [
   styleUrl: './empathy-explorer.component.scss',
 })
 export class EmpathyExplorerComponent implements AfterViewInit, OnDestroy {
+  private platformId = inject(PLATFORM_ID)
+  private zone = inject(NgZone)
   @ViewChild('curveCanvas') curveCanvas!: ElementRef<HTMLCanvasElement>
 
   private chart?: Chart
@@ -121,6 +132,14 @@ export class EmpathyExplorerComponent implements AfterViewInit, OnDestroy {
   ]
 
   ngAfterViewInit() {
+    // Chart.js needs a real canvas, so the chart is drawn in the browser only,
+    // and outside the Angular zone so its animation frames do not keep the
+    // app from settling.
+    if (!isPlatformBrowser(this.platformId)) return
+    this.zone.runOutsideAngular(() => this.drawCurve())
+  }
+
+  private drawCurve() {
     const styles = getComputedStyle(document.documentElement)
     const gold = styles.getPropertyValue('--accent-gold').trim() || '#f0c040'
     const textColor = styles.getPropertyValue('--text-secondary').trim() || '#a0a0b8'

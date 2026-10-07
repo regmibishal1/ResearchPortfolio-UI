@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms'
 import { MatIconModule } from '@angular/material/icon'
 import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
-import { Title, Meta } from '@angular/platform-browser'
+import { SeoService } from '../../services/seo.service'
 import {
   Chart,
   LineController,
@@ -238,13 +238,12 @@ export class WorldCupComponent implements OnInit, OnDestroy {
 
   constructor(
     private wc: WorldCupService,
-    title: Title,
-    meta: Meta
+    seo: SeoService
   ) {
-    title.setTitle('World Cup 2026 Live Predictions | Bishal Regmi')
-    meta.updateTag({
-      name: 'description',
-      content:
+    seo.setPage({
+      title: 'World Cup 2026 Live Predictions | Bishal Regmi',
+      path: '/world-cup',
+      description:
         'Live calibrated XGBoost + Monte Carlo predictions for the FIFA World Cup 2026. ' +
         'Updated daily with locked-in match results.',
     })

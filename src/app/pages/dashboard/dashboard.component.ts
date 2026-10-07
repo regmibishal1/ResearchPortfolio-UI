@@ -2,7 +2,7 @@ import { Component } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
-import { Title, Meta } from '@angular/platform-browser'
+import { SeoService } from '../../services/seo.service'
 import { StatsExplorerComponent } from '../../shared/stats-explorer/stats-explorer.component'
 import { PROJECTS, Project } from '../../data/projects'
 import { Skill, homeSkills } from '../../data/skills'
@@ -16,11 +16,11 @@ import { experienceLabel } from '../../data/experience'
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
-  constructor(title: Title, meta: Meta) {
-    title.setTitle('Bishal Regmi | Software Engineer & Data Scientist')
-    meta.updateTag({
-      name: 'description',
-      content: `Bishal Regmi is a Software Engineer and Data Scientist with ${experienceLabel()} years at T. Rowe Price. Projects include a live World Cup forecasting engine, applied ML research, and full-stack production apps.`,
+  constructor(seo: SeoService) {
+    seo.setPage({
+      title: 'Bishal Regmi | Software Engineer & Data Scientist',
+      path: '/',
+      description: `Bishal Regmi is a Software Engineer and Data Scientist with ${experienceLabel()} years at T. Rowe Price. Projects include a live World Cup forecasting engine, applied ML research, and full-stack production apps.`,
     })
   }
 

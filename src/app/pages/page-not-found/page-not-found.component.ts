@@ -2,7 +2,7 @@ import { Component } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
-import { Title, Meta } from '@angular/platform-browser'
+import { SeoService } from '../../services/seo.service'
 
 @Component({
   selector: 'app-page-not-found',
@@ -12,8 +12,7 @@ import { Title, Meta } from '@angular/platform-browser'
   styleUrl: './page-not-found.component.scss',
 })
 export class PageNotFoundComponent {
-  constructor(title: Title, meta: Meta) {
-    title.setTitle('404: Page Not Found | Bishal Regmi')
-    meta.updateTag({ name: 'robots', content: 'noindex' })
+  constructor(seo: SeoService) {
+    seo.setNoIndex('404: Page Not Found | Bishal Regmi')
   }
 }

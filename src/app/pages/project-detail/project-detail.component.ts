@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { ActivatedRoute, Router, RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
-import { Title, Meta } from '@angular/platform-browser'
+import { SeoService } from '../../services/seo.service'
 import { PROJECTS, Project } from '../../data/projects'
 import { WorldCupSummaryComponent } from '../../shared/world-cup-summary/world-cup-summary.component'
 import { MriExplorerComponent } from '../../shared/mri-explorer/mri-explorer.component'
@@ -37,8 +37,7 @@ export class ProjectDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private title: Title,
-    private meta: Meta
+    private seo: SeoService
   ) {}
 
   ngOnInit(): void {
@@ -48,8 +47,11 @@ export class ProjectDetailComponent implements OnInit {
       this.router.navigate(['/project'])
       return
     }
-    this.title.setTitle(`${this.project.title} | Bishal Regmi`)
-    this.meta.updateTag({ name: 'description', content: this.project.shortDescription })
+    this.seo.setPage({
+      title: `${this.project.title} | Bishal Regmi`,
+      description: this.project.shortDescription,
+      path: `/project/${this.project.id}`,
+    })
   }
 
   get statusDisplay() {

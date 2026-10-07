@@ -6,9 +6,11 @@ import {
   PreloadAllModules,
 } from '@angular/router'
 import { provideHttpClient, withInterceptors } from '@angular/common/http'
+import { provideClientHydration } from '@angular/platform-browser'
 import { provideAnimations } from '@angular/platform-browser/animations'
 import { routes } from './app.routes'
 import { authInterceptor } from './auth.interceptor'
+import { prerenderInterceptor } from './prerender.interceptor'
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -21,6 +23,7 @@ export const appConfig: ApplicationConfig = {
       withPreloading(PreloadAllModules)
     ),
     provideAnimations(),
-    provideHttpClient(withInterceptors([authInterceptor])),
+    provideHttpClient(withInterceptors([prerenderInterceptor, authInterceptor])),
+    provideClientHydration(),
   ],
 }

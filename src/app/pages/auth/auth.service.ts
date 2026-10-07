@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core'
+import { Injectable, PLATFORM_ID, inject } from '@angular/core'
+import { isPlatformBrowser } from '@angular/common'
 import { BehaviorSubject, Observable } from 'rxjs'
 import { HttpClient, HttpErrorResponse } from '@angular/common/http'
 import { catchError, tap } from 'rxjs/operators'
@@ -19,6 +20,8 @@ export class AuthService {
   }
 
   private checkInitialAuth() {
+    // Tokens live in browser storage; prerendering always renders signed out.
+    if (!isPlatformBrowser(inject(PLATFORM_ID))) return
     const storedToken = localStorage.getItem('access_token')
     const storedRefresh = localStorage.getItem('refresh_token')
     if (storedToken) {
