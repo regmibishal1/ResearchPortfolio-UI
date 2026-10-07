@@ -20,7 +20,7 @@ export class DashboardComponent {
     title.setTitle('Bishal Regmi | Software Engineer & Data Scientist')
     meta.updateTag({
       name: 'description',
-      content: `Bishal Regmi is a Software Engineer and Data Scientist with ${experienceLabel()} years at T. Rowe Price. Projects include live World Cup forecasting, SEC filing signals, and full-stack production apps.`,
+      content: `Bishal Regmi is a Software Engineer and Data Scientist with ${experienceLabel()} years at T. Rowe Price. Projects include a live World Cup forecasting engine, applied ML research, and full-stack production apps.`,
     })
   }
 

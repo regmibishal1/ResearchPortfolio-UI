@@ -4,12 +4,13 @@ import { authGuard } from './guards/auth.guard'
 // Every route is lazy-loaded so the initial bundle stays small; heavy
 // pages like the World Cup dashboard (Chart.js) only download when visited.
 export const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
   {
-    path: 'home',
+    path: '',
+    pathMatch: 'full',
     loadComponent: () =>
       import('./pages/dashboard/dashboard.component').then((m) => m.DashboardComponent),
   },
+  { path: 'home', redirectTo: '', pathMatch: 'full' },
   {
     path: 'about',
     loadComponent: () => import('./pages/about/about.component').then((m) => m.AboutComponent),
