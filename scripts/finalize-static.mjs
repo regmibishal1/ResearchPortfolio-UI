@@ -3,10 +3,18 @@
 // 1. Moves each prerendered route from <route>/index.html to <route>.html.
 //    Pages serves /about straight from about.html, while about/index.html
 //    would make it redirect /about to /about/, away from the canonical URL.
-// 2. Writes 404.html, a client-only copy of the app shell. Pages serves it
+// 2. Points any page whose link preview card is missing at the default card.
+// 3. Writes 404.html, a client-only copy of the app shell. Pages serves it
 //    with a 404 status for any path that was not prerendered; the app still
 //    boots and routes normally there (login, profile, unknown URLs).
-import { readFileSync, renameSync, rmdirSync, readdirSync, writeFileSync } from 'node:fs'
+import {
+  existsSync,
+  readFileSync,
+  renameSync,
+  rmdirSync,
+  readdirSync,
+  writeFileSync,
+} from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -22,6 +30,26 @@ for (const route of nested) {
   const folder = join(browser, route)
   renameSync(join(folder, 'index.html'), `${folder}.html`)
   if (readdirSync(folder).length === 0) rmdirSync(folder)
+}
+
+// A page whose preview card has not been rendered yet (a new project or
+// post) falls back to the site-wide card instead of a broken image link.
+const SITE = 'https://bishalregmi.com'
+const DEFAULT_PREVIEW = `${SITE}/assets/og/home.jpg`
+const previewTag = /(<meta (?:property="og:image"|name="twitter:image") content=")([^"]+)(")/g
+for (const route of routes) {
+  const file = route === '/' ? join(browser, 'index.html') : join(browser, `${route}.html`)
+  const page = readFileSync(file, 'utf8')
+  let missing = ''
+  const fixed = page.replace(previewTag, (tag, open, url, close) => {
+    if (!url.startsWith(SITE) || existsSync(join(browser, url.slice(SITE.length)))) return tag
+    missing = url.slice(SITE.length)
+    return open + DEFAULT_PREVIEW + close
+  })
+  if (missing) {
+    console.warn(`finalize-static: ${route} has no ${missing}, using the default card`)
+    writeFileSync(file, fixed)
+  }
 }
 
 const home = readFileSync(join(browser, 'index.html'), 'utf8')

@@ -104,11 +104,11 @@ const PROJECT_DEFINITIONS: Project[] = [
   },
   {
     id: 'world-cup-prediction',
-    title: 'World Cup 2026 Live Prediction Engine',
+    title: 'World Cup 2026 Prediction Engine',
     shortDescription:
-      'Calibrated XGBoost + 2M-simulation Monte Carlo pipeline that predicts the 2026 FIFA World Cup. Auto-refreshes daily; played group-stage matches are locked into every simulation.',
+      'Calibrated XGBoost + 2M-simulation Monte Carlo pipeline that forecast the 2026 FIFA World Cup, rerun daily through the tournament with every played match locked into each simulation.',
     description:
-      'End-to-end machine-learning system that forecasts the 2026 FIFA World Cup. Trained a calibrated XGBoost classifier on ~12,000 international matches since 2014 with positional FIFA-rating features, Elo ratings dating back to 1872, rolling form, and tournament-weighted sample weights. Probabilities are isotonically calibrated and fed into a Monte Carlo simulator that runs 2 million tournaments, bridging classification probabilities to score distributions via a Poisson xG solver. The pipeline updates daily during the tournament: every completed group-stage match is locked into every subsequent simulation, sharpening predictions as the bracket unfolds. Each daily snapshot is versioned in Postgres so the UI can show how predictions evolve over time.',
+      'End-to-end machine-learning system that forecasts the 2026 FIFA World Cup. Trained a calibrated XGBoost classifier on ~12,000 international matches since 2014 with positional FIFA-rating features, Elo ratings dating back to 1872, rolling form, and tournament-weighted sample weights. Probabilities are isotonically calibrated and fed into a Monte Carlo simulator that runs 2 million tournaments, bridging classification probabilities to score distributions via a Poisson xG solver. The pipeline ran daily throughout the tournament: every completed match was locked into every subsequent simulation, sharpening predictions as the bracket unfolded. Each daily snapshot is versioned in Postgres, so the UI shows how the predictions evolved, and a post-tournament wrap-up grades the model against what actually happened.',
     tags: ['Python', 'XGBoost', 'FastAPI', 'PostgreSQL', 'Angular', 'Chart.js'],
     category: 'Machine Learning',
     period: '2026',
@@ -126,7 +126,7 @@ const PROJECT_DEFINITIONS: Project[] = [
       'Nine orthogonal features: Elo difference, positional squad strength (GK/DEF/MID/ATT), rolling form, neutral-venue flag',
       '2M Monte Carlo simulations per snapshot, parallelised across CPU cores with optional CuPy GPU acceleration',
       'Poisson xG solver maps 3-class probabilities to realistic scorelines for FIFA group-stage tiebreakers',
-      'Daily auto-refresh: completed matches override Poisson sampling so predictions sharpen as the tournament unfolds',
+      'Daily reruns through the tournament: completed matches override Poisson sampling, so predictions sharpened as the bracket unfolded',
       'Per-snapshot versioning in Postgres with isolated read-only schema role for the public read endpoints',
     ],
   },

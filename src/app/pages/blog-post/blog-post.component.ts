@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { ActivatedRoute, Router, RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
-import { SeoService, SITE_URL } from '../../services/seo.service'
+import { SeoService, PERSON_ID, SITE_URL } from '../../services/seo.service'
 import { getPost, BlogPost } from '../../data/blog'
 import { ZoomableImageComponent } from '../../shared/zoomable-image/zoomable-image.component'
 
@@ -30,22 +30,30 @@ export class BlogPostComponent implements OnInit {
       return
     }
     const path = `/blog/${this.post.slug}`
+    const figure = this.post.body.find((block) => block.kind === 'figure' && block.src)
     this.seo.setPage({
       title: `${this.post.title} | Bishal Regmi`,
       description: this.post.summary,
       path,
       type: 'article',
-      jsonLd: {
-        '@context': 'https://schema.org',
-        '@type': 'BlogPosting',
-        headline: this.post.title,
-        description: this.post.summary,
-        datePublished: this.post.date,
-        url: SITE_URL + path,
-        mainEntityOfPage: SITE_URL + path,
-        keywords: this.post.tags.join(', '),
-        author: { '@id': `${SITE_URL}/#person` },
-      },
+      image: `/assets/og/blog-${this.post.slug}.jpg`,
+      breadcrumbs: [
+        { name: 'Blog', path: '/blog' },
+        { name: this.post.title, path },
+      ],
+      schema: [
+        {
+          '@type': 'BlogPosting',
+          headline: this.post.title,
+          description: this.post.summary,
+          datePublished: this.post.date,
+          url: SITE_URL + path,
+          mainEntityOfPage: SITE_URL + path,
+          keywords: this.post.tags.join(', '),
+          author: { '@id': PERSON_ID },
+          ...(figure && { image: `${SITE_URL}/${figure.src}` }),
+        },
+      ],
     })
   }
 

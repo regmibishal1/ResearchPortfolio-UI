@@ -26,8 +26,10 @@ export class ProjectComponent {
     seo.setPage({
       title: 'Projects | Bishal Regmi',
       path: '/project',
+      image: '/assets/og/projects.jpg',
       description:
         "Browse Bishal Regmi's software and research projects spanning full-stack development, machine learning, data science, and civic technology.",
+      breadcrumbs: [{ name: 'Projects', path: '/project' }],
     })
   }
 

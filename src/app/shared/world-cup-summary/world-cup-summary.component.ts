@@ -6,7 +6,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { LatestResponse, WorldCupService } from '../../services/world-cup.service'
 
 /**
- * Compact "live snapshot" card embedded on the World Cup project detail page.
+ * Compact "final snapshot" card embedded on the World Cup project detail page.
  * Shows the latest run timestamp and the top 5 teams. Links to the full
  * /world-cup page for the leaderboard, bracket, history chart, and matches.
  */
@@ -40,7 +40,7 @@ export class WorldCupSummaryComponent implements OnInit {
       error: (err) => {
         this.loading = false
         this.error =
-          err?.error?.detail ?? err?.message ?? 'Live predictions are temporarily unavailable.'
+          err?.error?.detail ?? err?.message ?? 'Predictions are temporarily unavailable.'
       },
     })
   }
