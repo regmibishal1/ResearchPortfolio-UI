@@ -246,6 +246,11 @@ export class WorldCupComponent implements OnInit, OnDestroy {
       description:
         'Calibrated XGBoost + Monte Carlo forecasts for the 2026 FIFA World Cup, rerun daily ' +
         "through the tournament: final results, the model's report card, and every daily snapshot.",
+      breadcrumbs: [
+        { name: 'Projects', path: '/project' },
+        { name: 'World Cup 2026 Prediction Engine', path: '/project/world-cup-prediction' },
+        { name: 'Final results', path: '/world-cup' },
+      ],
     })
   }
 

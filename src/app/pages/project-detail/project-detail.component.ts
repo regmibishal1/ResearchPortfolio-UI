@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { ActivatedRoute, Router, RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
-import { SeoService } from '../../services/seo.service'
+import { SeoService, PERSON_ID, SITE_URL } from '../../services/seo.service'
 import { PROJECTS, Project } from '../../data/projects'
 import { WorldCupSummaryComponent } from '../../shared/world-cup-summary/world-cup-summary.component'
 import { MriExplorerComponent } from '../../shared/mri-explorer/mri-explorer.component'
@@ -47,15 +47,37 @@ export class ProjectDetailComponent implements OnInit {
       this.router.navigate(['/project'])
       return
     }
+    const path = `/project/${this.project.id}`
     this.seo.setPage({
       title: `${this.project.title} | Bishal Regmi`,
       description: this.project.shortDescription,
-      path: `/project/${this.project.id}`,
+      path,
+      breadcrumbs: [
+        { name: 'Projects', path: '/project' },
+        { name: this.project.title, path },
+      ],
+      schema: [projectSchema(this.project, path)],
     })
   }
 
   get statusDisplay() {
     if (!this.project?.status) return null
     return this.statusConfig[this.project.status] ?? null
+  }
+}
+
+// Projects with source code are described as SoftwareSourceCode so search
+// engines can link the repository; reports and notebooks stay CreativeWork.
+function projectSchema(project: Project, path: string): Record<string, unknown> {
+  const repo = project.github ?? project.repoLinks?.[0]?.url
+  return {
+    '@type': repo ? 'SoftwareSourceCode' : 'CreativeWork',
+    name: project.title,
+    description: project.shortDescription,
+    url: SITE_URL + path,
+    keywords: project.tags.join(', '),
+    author: { '@id': PERSON_ID },
+    ...(project.image && { image: `${SITE_URL}/${project.image}` }),
+    ...(repo && { codeRepository: repo }),
   }
 }

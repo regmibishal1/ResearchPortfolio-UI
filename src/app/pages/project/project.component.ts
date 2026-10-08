@@ -28,6 +28,7 @@ export class ProjectComponent {
       path: '/project',
       description:
         "Browse Bishal Regmi's software and research projects spanning full-stack development, machine learning, data science, and civic technology.",
+      breadcrumbs: [{ name: 'Projects', path: '/project' }],
     })
   }
 

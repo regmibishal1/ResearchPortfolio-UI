@@ -1,7 +1,7 @@
 import { Component } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { MatIconModule } from '@angular/material/icon'
-import { SeoService } from '../../services/seo.service'
+import { SeoService, PERSON_ID, SITE_URL } from '../../services/seo.service'
 import { SKILL_CATEGORIES } from '../../data/skills'
 import { experienceLabel } from '../../data/experience'
 
@@ -40,6 +40,15 @@ export class AboutComponent {
       path: '/about',
       description:
         'Learn about Bishal Regmi, an AWS-certified Software Engineer and Data Scientist at T. Rowe Price, holding dual degrees from UMD and UMBC.',
+      breadcrumbs: [{ name: 'About', path: '/about' }],
+      schema: [
+        {
+          '@type': 'ProfilePage',
+          url: `${SITE_URL}/about`,
+          name: 'About Bishal Regmi',
+          mainEntity: { '@id': PERSON_ID },
+        },
+      ],
     })
   }
 

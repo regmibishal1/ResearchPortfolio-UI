@@ -3,6 +3,12 @@ import { DOCUMENT } from '@angular/common'
 import { Meta, Title } from '@angular/platform-browser'
 
 export const SITE_URL = 'https://bishalregmi.com'
+export const PERSON_ID = `${SITE_URL}/#person`
+
+export interface Breadcrumb {
+  name: string
+  path: string
+}
 
 export interface PageMeta {
   title: string
@@ -10,8 +16,10 @@ export interface PageMeta {
   /** Site-relative path of the page, used for the canonical link and og:url. */
   path: string
   type?: 'website' | 'article'
-  /** Optional schema.org structured data for the page. */
-  jsonLd?: Record<string, unknown>
+  /** schema.org entities describing the page, emitted together as one JSON-LD graph. */
+  schema?: Record<string, unknown>[]
+  /** Trail from the home page down to this page; Home is added automatically. */
+  breadcrumbs?: Breadcrumb[]
 }
 
 /**
@@ -38,7 +46,12 @@ export class SeoService {
     this.meta.updateTag({ name: 'twitter:description', content: page.description })
     this.meta.removeTag('name="robots"')
     this.setCanonical(url)
-    this.setJsonLd(page.jsonLd)
+
+    const graph = [...(page.schema ?? [])]
+    if (page.breadcrumbs?.length) {
+      graph.push(breadcrumbList(page.breadcrumbs))
+    }
+    this.setJsonLd(graph.length ? { '@context': 'https://schema.org', '@graph': graph } : undefined)
   }
 
   /** For pages that should stay out of search results, such as the 404 page. */
@@ -77,5 +90,18 @@ export class SeoService {
     }
     // Escape '<' so text in the data can never close the script element.
     script.textContent = JSON.stringify(data).replace(/</g, '\\u003c')
+  }
+}
+
+function breadcrumbList(trail: Breadcrumb[]): Record<string, unknown> {
+  const items = [{ name: 'Home', path: '/' }, ...trail]
+  return {
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((crumb, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: crumb.name,
+      item: SITE_URL + crumb.path,
+    })),
   }
 }

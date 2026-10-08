@@ -21,6 +21,7 @@ export class BlogComponent {
       path: '/blog',
       description:
         'Writing by Bishal Regmi: reopening old data projects, redoing them honestly, and what the data actually says.',
+      breadcrumbs: [{ name: 'Blog', path: '/blog' }],
     })
   }
 
