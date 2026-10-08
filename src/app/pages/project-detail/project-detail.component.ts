@@ -52,6 +52,7 @@ export class ProjectDetailComponent implements OnInit {
       title: `${this.project.title} | Bishal Regmi`,
       description: this.project.shortDescription,
       path,
+      image: `/assets/og/project-${this.project.id}.jpg`,
       breadcrumbs: [
         { name: 'Projects', path: '/project' },
         { name: this.project.title, path },

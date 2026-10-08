@@ -20,6 +20,7 @@ export class DashboardComponent {
     seo.setPage({
       title: 'Bishal Regmi | Software Engineer & Data Scientist',
       path: '/',
+      image: '/assets/og/home.jpg',
       description: `Bishal Regmi is a Software Engineer and Data Scientist with ${experienceLabel()} years at T. Rowe Price. Projects include a World Cup forecasting engine, applied ML research, and full-stack production apps.`,
     })
   }

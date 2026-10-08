@@ -4,6 +4,8 @@ import { Meta, Title } from '@angular/platform-browser'
 
 export const SITE_URL = 'https://bishalregmi.com'
 export const PERSON_ID = `${SITE_URL}/#person`
+/** Site-wide link preview card, used by pages without one of their own. */
+export const DEFAULT_PREVIEW = '/assets/og/home.jpg'
 
 export interface Breadcrumb {
   name: string
@@ -16,6 +18,11 @@ export interface PageMeta {
   /** Site-relative path of the page, used for the canonical link and og:url. */
   path: string
   type?: 'website' | 'article'
+  /**
+   * 1200x630 link preview card for the page, as a site-relative path. Cards
+   * live in assets/og; the build swaps in the default for any that are missing.
+   */
+  image?: string
   /** schema.org entities describing the page, emitted together as one JSON-LD graph. */
   schema?: Record<string, unknown>[]
   /** Trail from the home page down to this page; Home is added automatically. */
@@ -44,6 +51,10 @@ export class SeoService {
     this.meta.updateTag({ property: 'og:type', content: page.type ?? 'website' })
     this.meta.updateTag({ name: 'twitter:title', content: page.title })
     this.meta.updateTag({ name: 'twitter:description', content: page.description })
+    const image = SITE_URL + (page.image ?? DEFAULT_PREVIEW)
+    this.meta.updateTag({ property: 'og:image', content: image })
+    this.meta.updateTag({ property: 'og:image:alt', content: page.title })
+    this.meta.updateTag({ name: 'twitter:image', content: image })
     this.meta.removeTag('name="robots"')
     this.setCanonical(url)
 

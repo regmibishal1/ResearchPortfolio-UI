@@ -30,6 +30,20 @@ describe('SeoService', () => {
     )
   })
 
+  it('uses the page preview card, or the site-wide card when a page has none', () => {
+    const image = () =>
+      doc.head.querySelector('meta[property="og:image"]')?.getAttribute('content') ?? null
+
+    seo.setPage({ title: 'A', description: 'a', path: '/a', image: '/assets/og/a.jpg' })
+    expect(image()).toBe('https://bishalregmi.com/assets/og/a.jpg')
+    expect(doc.head.querySelector('meta[name="twitter:image"]')?.getAttribute('content')).toBe(
+      'https://bishalregmi.com/assets/og/a.jpg'
+    )
+
+    seo.setPage({ title: 'B', description: 'b', path: '/b' })
+    expect(image()).toBe('https://bishalregmi.com/assets/og/home.jpg')
+  })
+
   it('emits page schema and a breadcrumb trail starting at Home as one graph', () => {
     seo.setPage({
       title: 'Post',

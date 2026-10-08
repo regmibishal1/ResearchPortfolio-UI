@@ -19,6 +19,7 @@ export class BlogComponent {
     seo.setPage({
       title: 'Blog | Bishal Regmi',
       path: '/blog',
+      image: '/assets/og/blog.jpg',
       description:
         'Writing by Bishal Regmi: reopening old data projects, redoing them honestly, and what the data actually says.',
       breadcrumbs: [{ name: 'Blog', path: '/blog' }],

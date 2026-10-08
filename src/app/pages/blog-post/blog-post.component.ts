@@ -36,6 +36,7 @@ export class BlogPostComponent implements OnInit {
       description: this.post.summary,
       path,
       type: 'article',
+      image: `/assets/og/blog-${this.post.slug}.jpg`,
       breadcrumbs: [
         { name: 'Blog', path: '/blog' },
         { name: this.post.title, path },

@@ -38,6 +38,7 @@ export class AboutComponent {
     seo.setPage({
       title: 'About | Bishal Regmi',
       path: '/about',
+      image: '/assets/og/about.jpg',
       description:
         'Learn about Bishal Regmi, an AWS-certified Software Engineer and Data Scientist at T. Rowe Price, holding dual degrees from UMD and UMBC.',
       breadcrumbs: [{ name: 'About', path: '/about' }],

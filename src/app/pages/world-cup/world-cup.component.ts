@@ -243,6 +243,7 @@ export class WorldCupComponent implements OnInit, OnDestroy {
     seo.setPage({
       title: 'World Cup 2026 Predictions and Final Results | Bishal Regmi',
       path: '/world-cup',
+      image: '/assets/og/world-cup.jpg',
       description:
         'Calibrated XGBoost + Monte Carlo forecasts for the 2026 FIFA World Cup, rerun daily ' +
         "through the tournament: final results, the model's report card, and every daily snapshot.",
