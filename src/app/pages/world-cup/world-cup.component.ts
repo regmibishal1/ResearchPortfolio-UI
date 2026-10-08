@@ -241,11 +241,11 @@ export class WorldCupComponent implements OnInit, OnDestroy {
     seo: SeoService
   ) {
     seo.setPage({
-      title: 'World Cup 2026 Live Predictions | Bishal Regmi',
+      title: 'World Cup 2026 Predictions and Final Results | Bishal Regmi',
       path: '/world-cup',
       description:
-        'Live calibrated XGBoost + Monte Carlo predictions for the FIFA World Cup 2026. ' +
-        'Updated daily with locked-in match results.',
+        'Calibrated XGBoost + Monte Carlo forecasts for the 2026 FIFA World Cup, rerun daily ' +
+        "through the tournament: final results, the model's report card, and every daily snapshot.",
     })
   }
 
@@ -362,12 +362,6 @@ export class WorldCupComponent implements OnInit, OnDestroy {
       ? this.latest?.run.n_played_matches_locked ?? this.lockedCountForDate
       : this.lockedCountForDate
     return locked >= 72
-  }
-
-  // The tournament is over: the latest run's retrospective is complete.
-  // Drives the final-state hero copy regardless of the selected snapshot.
-  get finished(): boolean {
-    return !!this.latestRetro?.complete
   }
 
   onDateChange(): void {

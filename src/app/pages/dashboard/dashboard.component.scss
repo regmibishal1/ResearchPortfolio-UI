@@ -59,6 +59,13 @@ $toolbar-height: 64px;
   background: rgba(74, 222, 128, 0.12);
   border: 1px solid rgba(74, 222, 128, 0.3);
   flex-shrink: 0;
+
+  // A finished project: gold instead of the live green, and no pulse.
+  &.pill-final {
+    color: var(--accent-gold);
+    background: var(--accent-gold-dim);
+    border-color: var(--border-accent);
+  }
 }
 
 .live-dot {
