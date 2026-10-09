@@ -1,36 +1,54 @@
+<a class="skip-link" href="#main" (click)="skipToMain($event)">Skip to main content</a>
+
 <mat-toolbar class="toolbar-container glass">
   <button
+    #menuButton
     mat-icon-button
+    type="button"
     class="nav-menu-btn"
-    aria-label="Toggle navigation menu"
-    (click)="drawer.toggle()"
+    aria-controls="mobile-nav"
+    [attr.aria-expanded]="menuOpen"
+    [attr.aria-label]="menuOpen ? 'Close menu' : 'Open menu'"
+    (click)="toggleMenu()"
   >
-    <mat-icon>menu</mat-icon>
+    <mat-icon aria-hidden="true">{{ menuOpen ? 'close' : 'menu' }}</mat-icon>
   </button>
   <a class="brand-link" [routerLink]="['']" aria-label="Bishal Regmi, home">
-    <img
-      class="logo-img"
-      src="./assets/logo-96.webp"
-      width="40"
-      height="40"
-      alt="Bishal Regmi Portfolio Logo"
-    />
+    <img class="logo-img" src="./assets/logo-96.webp" width="40" height="40" alt="" />
     <span class="title-text">Bishal Regmi</span>
   </a>
   <span class="spacer"></span>
 
-  <!-- Desktop nav links -->
-  <nav class="desktop-nav">
+  <nav class="desktop-nav" aria-label="Primary">
     <a
       mat-button
       [routerLink]="['']"
       routerLinkActive="nav-active"
       [routerLinkActiveOptions]="{ exact: true }"
+      ariaCurrentWhenActive="page"
       >Home</a
     >
-    <a mat-button [routerLink]="['/project']" routerLinkActive="nav-active">Projects</a>
-    <a mat-button [routerLink]="['/blog']" routerLinkActive="nav-active">Blog</a>
-    <a mat-button [routerLink]="['/about']" routerLinkActive="nav-active">About</a>
+    <a
+      mat-button
+      [routerLink]="['/project']"
+      routerLinkActive="nav-active"
+      ariaCurrentWhenActive="page"
+      >Projects</a
+    >
+    <a
+      mat-button
+      [routerLink]="['/blog']"
+      routerLinkActive="nav-active"
+      ariaCurrentWhenActive="page"
+      >Blog</a
+    >
+    <a
+      mat-button
+      [routerLink]="['/about']"
+      routerLinkActive="nav-active"
+      ariaCurrentWhenActive="page"
+      >About</a
+    >
   </nav>
 
   <span class="user-profile" *ngIf="isAuthenticated">
@@ -39,60 +57,26 @@
   </span>
 </mat-toolbar>
 
-<div class="page-content-with-sidebar">
-  <mat-drawer-container class="nav-bar-container" autosize>
-    <mat-drawer #drawer class="sidenav glass" mode="over">
-      <div class="sidenav-header">
-        <img src="./assets/logo-96.webp" width="36" height="36" alt="Logo" class="sidenav-logo" />
-        <span class="sidenav-title">Portfolio</span>
-      </div>
-      <div class="sidenav-links">
-        <button
-          mat-button
-          class="sidenav-button"
-          [routerLink]="['']"
-          routerLinkActive="sidenav-active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          (click)="drawer.toggle()"
-        >
-          <mat-icon>home</mat-icon>
-          <span>Home</span>
-        </button>
-        <button
-          mat-button
-          class="sidenav-button"
-          [routerLink]="['/project']"
-          routerLinkActive="sidenav-active"
-          (click)="drawer.toggle()"
-        >
-          <mat-icon>code</mat-icon>
-          <span>Projects</span>
-        </button>
-        <button
-          mat-button
-          class="sidenav-button"
-          [routerLink]="['/blog']"
-          routerLinkActive="sidenav-active"
-          (click)="drawer.toggle()"
-        >
-          <mat-icon>article</mat-icon>
-          <span>Blog</span>
-        </button>
-        <button
-          mat-button
-          class="sidenav-button"
-          [routerLink]="['/about']"
-          routerLinkActive="sidenav-active"
-          (click)="drawer.toggle()"
-        >
-          <mat-icon>person</mat-icon>
-          <span>About</span>
-        </button>
-      </div>
-    </mat-drawer>
-    <div class="page-content">
-      <ng-content></ng-content>
-      <app-footer></app-footer>
-    </div>
-  </mat-drawer-container>
+<nav id="mobile-nav" class="mobile-nav" aria-label="Primary" [hidden]="!menuOpen">
+  <a
+    [routerLink]="['']"
+    routerLinkActive="mobile-active"
+    [routerLinkActiveOptions]="{ exact: true }"
+    ariaCurrentWhenActive="page"
+    >Home</a
+  >
+  <a [routerLink]="['/project']" routerLinkActive="mobile-active" ariaCurrentWhenActive="page"
+    >Projects</a
+  >
+  <a [routerLink]="['/blog']" routerLinkActive="mobile-active" ariaCurrentWhenActive="page">Blog</a>
+  <a [routerLink]="['/about']" routerLinkActive="mobile-active" ariaCurrentWhenActive="page"
+    >About</a
+  >
+</nav>
+
+<div class="page-shell">
+  <main #main id="main" class="page-content" tabindex="-1">
+    <ng-content></ng-content>
+  </main>
+  <app-footer></app-footer>
 </div>
