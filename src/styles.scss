@@ -30,6 +30,8 @@
   /* Borders & shadows */
   --border-subtle: rgba(255, 255, 255, 0.06);
   --border-accent: rgba(240, 192, 64, 0.3);
+  // Visible edge for inputs and other controls (3:1 against cards).
+  --border-control: #6b6b85;
   --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
   --shadow-glow: 0 0 30px rgba(240, 192, 64, 0.15);
 
@@ -178,23 +180,14 @@ a:hover {
   }
 }
 
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-12px);
-  }
-}
-
-@keyframes pulse-glow {
-  0%,
-  100% {
-    box-shadow: 0 0 20px rgba(240, 192, 64, 0.1);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(240, 192, 64, 0.25);
+// Visitors who ask for less motion get none: no entrance fades or transitions.
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
   }
 }
 

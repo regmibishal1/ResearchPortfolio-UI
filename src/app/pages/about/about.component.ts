@@ -134,7 +134,7 @@ My work spans large-scale .NET microservice platforms, ML-powered financial fore
 
   contactLinks = [
     { label: 'GitHub', icon: 'code', url: 'https://github.com/regmibishal1' },
-    { label: 'LinkedIn', icon: 'person', url: 'https://linkedin.com/in/bishalregmi' },
-    { label: 'Email', icon: 'email', url: 'mailto:regmibishal.ai@gmail.com' },
+    { label: 'LinkedIn', icon: 'person', url: 'https://www.linkedin.com/in/bishalregmi/' },
+    { label: 'Email', icon: 'email', url: 'mailto:contact@bishalregmi.com' },
   ]
 }

@@ -6,10 +6,14 @@
   </div>
 
   <div class="hero-content animate-in">
-    <div class="hero-badge animate-in animate-in-delay-1">
+    <a
+      class="hero-badge animate-in animate-in-delay-1"
+      [routerLink]="['/about']"
+      fragment="contact"
+    >
       <span class="badge-dot"></span>
-      <span>Available for opportunities</span>
-    </div>
+      <span>Open to new roles, get in touch</span>
+    </a>
     <h1 class="hero-name animate-in animate-in-delay-2">
       Hi, I'm <span class="gold-text">Bishal Regmi</span>
     </h1>

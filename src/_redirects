@@ -1,1 +1,5 @@
-/home / 301
+/home      /      301
+/login     /404   200
+/register  /404   200
+/profile   /404   200
+/stocks    /404   200

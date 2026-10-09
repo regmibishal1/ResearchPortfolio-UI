@@ -140,10 +140,6 @@
   height: 6px;
   border-radius: 50%;
   background: currentColor;
-
-  .status-live & {
-    animation: pulse-green 2s infinite;
-  }
 }
 
 .period-badge {
@@ -182,16 +178,6 @@
     font-size: 13px;
     width: 13px;
     height: 13px;
-  }
-}
-
-@keyframes pulse-green {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.4;
   }
 }
 
