@@ -16,7 +16,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(
       routes,
-      withInMemoryScrolling({ scrollPositionRestoration: 'top' }),
+      withInMemoryScrolling({ scrollPositionRestoration: 'top', anchorScrolling: 'enabled' }),
       // Keep the small initial bundle, but fetch the remaining route chunks
       // in the background after the first page is interactive so in-app
       // navigations (e.g. clicking through to the World Cup page) are instant.

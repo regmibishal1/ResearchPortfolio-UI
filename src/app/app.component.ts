@@ -1,5 +1,5 @@
-import { Component } from '@angular/core'
-import { CommonModule } from '@angular/common'
+import { Component, inject } from '@angular/core'
+import { CommonModule, ViewportScroller } from '@angular/common'
 import { RouterOutlet } from '@angular/router'
 import { NavbarComponent } from './shared/navbar/navbar.component'
 import { HttpClientModule } from '@angular/common/http'
@@ -13,4 +13,9 @@ import { HttpClientModule } from '@angular/common/http'
 })
 export class AppComponent {
   title = 'Research Portfolio'
+
+  constructor() {
+    // Keep in-page anchors (e.g. /about#contact) clear of the fixed toolbar.
+    inject(ViewportScroller).setOffset([0, 80])
+  }
 }

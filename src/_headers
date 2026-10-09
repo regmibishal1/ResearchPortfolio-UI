@@ -1,0 +1,33 @@
+# Cloudflare Pages response headers.
+#
+# Script and stylesheet names carry a content hash (outputHashing: all),
+# so they can be cached for a year; anything else under assets/ keeps a
+# stable name and gets a shorter lifetime.
+/*.js
+  Cache-Control: public, max-age=31536000, immutable
+/*.css
+  Cache-Control: public, max-age=31536000, immutable
+/assets/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+# HSTS leaves out includeSubDomains on purpose: not every subdomain is
+# served over HTTPS. The CSP runs in report-only mode until the browser
+# console shows no violations across the site; frame-ancestors is not
+# enforced in that mode, so X-Frame-Options covers framing meanwhile.
+/*
+  Strict-Transport-Security: max-age=31536000
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-hashes' 'sha256-MhtPZXr7+LpJUY5qtMutB+qWfQtMaPccfe7QXtCcEYc=' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://api.bishalregmi.com https://auth.bishalregmi.com https://cloudflareinsights.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'
+
+# Pages that exist but should never appear in search results.
+/login
+  X-Robots-Tag: noindex
+/register
+  X-Robots-Tag: noindex
+/profile
+  X-Robots-Tag: noindex
+/stocks
+  X-Robots-Tag: noindex

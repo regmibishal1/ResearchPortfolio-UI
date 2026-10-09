@@ -73,17 +73,6 @@ $toolbar-height: 64px;
   height: 6px;
   border-radius: 50%;
   background: var(--color-positive);
-  animation: live-pulse 2s infinite;
-}
-
-@keyframes live-pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.35;
-  }
 }
 
 .live-text {
@@ -183,13 +172,18 @@ $toolbar-height: 64px;
   color: var(--accent-gold);
   margin-bottom: 28px;
   font-family: 'Inter', sans-serif;
+  text-decoration: none;
+  transition: background var(--transition-smooth);
+
+  &:hover {
+    background: rgba(240, 192, 64, 0.22);
+  }
 
   .badge-dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
     background: var(--color-positive);
-    animation: pulse-glow 2s ease-in-out infinite;
     box-shadow: 0 0 8px rgba(74, 222, 128, 0.5);
   }
 }
@@ -300,7 +294,7 @@ $toolbar-height: 64px;
 
   span {
     font-size: 0.75rem;
-    color: var(--text-muted);
+    color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.1em;
   }
@@ -321,7 +315,6 @@ $toolbar-height: 64px;
   height: 8px;
   background: var(--accent-gold);
   border-radius: 2px;
-  animation: float 2s ease-in-out infinite;
 }
 
 // ===== Skills Section =====
@@ -452,7 +445,7 @@ $toolbar-height: 64px;
     font-size: 40px;
     width: 40px;
     height: 40px;
-    color: var(--gold);
+    color: var(--accent-gold);
   }
 }
 

@@ -2,10 +2,11 @@
 # This file is the authoritative version; Cloudflare Pages serves static files
 # directly from the build output, so this copy is what crawlers actually receive.
 # Keep the two in sync if the Cloudflare-level rule is ever updated.
+#
+# Private pages stay out of search through noindex (meta tag and an
+# X-Robots-Tag header in _headers), not through Disallow lines here.
 
 User-agent: *
-Disallow: /profile
-Disallow: /login
-Disallow: /register
+Disallow:
 
 Sitemap: https://bishalregmi.com/sitemap.xml
