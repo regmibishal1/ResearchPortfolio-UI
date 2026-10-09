@@ -228,52 +228,6 @@ $toolbar-height: 64px;
   flex-wrap: wrap;
 }
 
-.btn-primary,
-.btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 32px;
-  border-radius: var(--radius-md);
-  font-family: 'Inter', sans-serif;
-  font-size: 0.95rem;
-  font-weight: 600;
-  text-transform: none;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  text-decoration: none;
-
-  mat-icon {
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
-  }
-}
-
-.btn-primary {
-  background: var(--accent-gradient);
-  color: var(--bg-primary);
-  border: none;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(240, 192, 64, 0.3);
-    color: var(--bg-primary);
-  }
-}
-
-.btn-secondary {
-  background: transparent;
-  color: var(--text-primary);
-  border: 1px solid var(--border-subtle);
-
-  &:hover {
-    border-color: var(--accent-gold);
-    color: var(--accent-gold);
-    transform: translateY(-2px);
-  }
-}
-
 // Scroll indicator
 .scroll-indicator {
   position: absolute;

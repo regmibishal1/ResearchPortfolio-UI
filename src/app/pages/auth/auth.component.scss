@@ -74,6 +74,8 @@
   transition: all 0.3s ease;
 
   &:focus-within {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
     border-color: var(--accent-gold);
     background: rgba(255, 255, 255, 0.05);
     box-shadow: 0 0 0 2px rgba(239, 199, 94, 0.2);
@@ -97,6 +99,7 @@
     padding: 0.75rem 0;
     width: 100%;
 
+    // The surrounding .input-group draws the focus ring.
     &:focus {
       outline: none;
     }

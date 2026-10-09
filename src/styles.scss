@@ -32,6 +32,7 @@
   --border-accent: rgba(240, 192, 64, 0.3);
   // Visible edge for inputs and other controls (3:1 against cards).
   --border-control: #6b6b85;
+  --focus-ring: #f0c040;
   --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
   --shadow-glow: 0 0 30px rgba(240, 192, 64, 0.15);
 
@@ -56,6 +57,18 @@
 
 html {
   scroll-behavior: smooth;
+  // Keeps focused elements and in-page anchors clear of the fixed toolbar.
+  scroll-padding-top: 80px;
+}
+
+// One visible focus ring for every interactive element, keyboard only.
+:focus-visible,
+// Material buttons reset outline on their own class, so they need the
+// extra specificity to show the same ring.
+.mdc-button:focus-visible,
+.mat-mdc-icon-button:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
 }
 
 html,
@@ -96,6 +109,58 @@ a {
 
 a:hover {
   color: var(--accent-gold-light);
+}
+
+/* ===== Buttons ===== */
+.btn-primary,
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  border-radius: var(--radius-md);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-transform: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.btn-primary {
+  background: var(--accent-gradient);
+  color: var(--bg-primary);
+  border: none;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(240, 192, 64, 0.3);
+    color: var(--bg-primary);
+  }
+
+  // A gold ring would vanish against the gold fill.
+  &:focus-visible {
+    outline-color: var(--text-primary);
+  }
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-control);
+
+  &:hover {
+    border-color: var(--accent-gold);
+    color: var(--accent-gold);
+    transform: translateY(-2px);
+  }
 }
 
 /* ===== Scrollbar ===== */
