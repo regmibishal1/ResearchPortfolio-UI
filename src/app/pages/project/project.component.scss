@@ -1,326 +1,194 @@
+@use 'breakpoints' as bp;
+
 .projects-page {
-  background: var(--bg-primary);
-  min-height: 100vh;
+  padding-top: var(--space-8);
+  padding-bottom: var(--space-9);
+
+  @include bp.down(bp.$sm) {
+    padding-top: var(--space-7);
+    padding-bottom: var(--space-7);
+  }
 }
 
 // ===== Header =====
 .projects-header {
-  text-align: center;
-  padding: 80px 24px 40px;
+  margin-bottom: var(--space-6);
 }
 
 .page-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: clamp(2.2rem, 5vw, 3.5rem);
-  font-weight: 700;
-  margin: 0 0 12px;
+  margin: 0 0 var(--space-3);
+  font-size: var(--fs-h1);
+  line-height: var(--lh-h1);
 }
 
-.page-subtitle {
+.page-intro {
+  max-width: 60ch;
+  margin: 0 0 var(--space-2);
   color: var(--text-secondary);
-  font-size: 1.05rem;
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
+}
+
+.page-count {
   margin: 0;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-// ===== Filters =====
-.filter-section {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding: 0 24px 48px;
-}
-
-.filter-btn {
-  padding: 8px 22px;
-  border-radius: 100px;
-  border: 1px solid var(--border-subtle);
-  background: transparent;
   color: var(--text-secondary);
-  font-family: 'Inter', sans-serif;
-  font-size: 0.88rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-
-  &:hover {
-    border-color: var(--border-accent);
-    color: var(--text-primary);
-    background: rgba(255, 255, 255, 0.03);
-  }
-
-  &.active {
-    background: var(--accent-gold-dim);
-    border-color: var(--accent-gold);
-    color: var(--accent-gold);
-  }
+  font-size: var(--fs-small);
+  font-variant-numeric: tabular-nums;
 }
 
-// ===== Projects Grid =====
-.projects-grid-section {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 24px 100px;
+// ===== Filter =====
+.filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-7);
 }
 
-.projects-grid {
+.toggle-count {
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+// ===== Sections =====
+.projects-section + .projects-section {
+  margin-top: var(--space-8);
+}
+
+.section-title {
+  margin: 0 0 var(--space-6);
+}
+
+.featured-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 24px;
-}
+  gap: var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
 
-.project-card {
-  position: relative;
-  padding: 32px;
-  border-radius: var(--radius-lg);
-  display: flex;
-  flex-direction: column;
-  transition: all var(--transition-smooth);
-  cursor: pointer;
-  overflow: hidden;
-
-  &:hover {
-    transform: translateY(-6px);
-    box-shadow: var(--shadow-card);
-    border-color: var(--border-accent);
-    background: var(--bg-card-hover);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--accent-gold);
-    outline-offset: 2px;
+  @include bp.up(bp.$md) {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-// Full-bleed screenshot strip across the top of the card
-.card-thumb {
-  margin: -32px -32px 20px;
-  height: 190px;
-  overflow: hidden;
-  border-bottom: 1px solid var(--border-subtle);
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: top center;
-    display: block;
-    transition: transform var(--transition-smooth);
-  }
-}
-
-.project-card:hover .card-thumb img {
-  transform: scale(1.03);
-}
-
-.card-details-hint {
-  color: var(--accent-gold) !important;
-  border-color: var(--border-accent) !important;
-}
-
-.card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-}
-
-.card-icon {
-  display: flex;
-  align-items: center;
-
-  .card-mat-icon {
-    font-size: 36px;
-    width: 36px;
-    height: 36px;
-    color: var(--accent-gold);
-  }
-}
-
-.card-logo {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
-  object-fit: contain;
-}
-
-.card-badges {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  /* Wrap whole pills when the row is tight; never break text inside one */
-  flex-wrap: wrap;
-  gap: 4px 8px;
-}
-
-.card-period {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--text-muted);
-  border: 1px solid var(--border-subtle);
-  padding: 3px 10px;
-  border-radius: 100px;
-  white-space: nowrap;
-
-  .card-school-icon {
-    font-size: 13px;
-    width: 13px;
-    height: 13px;
-  }
-}
-
-.card-category {
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--accent-gold);
-  background: var(--accent-gold-dim);
-  padding: 4px 12px;
-  border-radius: 100px;
-  white-space: nowrap;
-}
-
-.card-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: 1.3rem;
-  font-weight: 600;
-  margin: 0 0 12px;
-  color: var(--text-primary);
-}
-
-.card-description {
-  font-size: 0.9rem;
-  line-height: 1.7;
-  color: var(--text-secondary);
-  margin: 0 0 20px;
-  flex: 1;
-}
-
-.card-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 20px;
-}
-
-.card-tag {
-  padding: 4px 12px;
-  border-radius: 100px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text-secondary);
-  border: 1px solid var(--border-subtle);
-}
-
-.card-actions {
-  display: flex;
-  gap: 12px;
-  margin-top: auto;
-}
-
-.card-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 18px;
-  border-radius: var(--radius-sm);
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  border: 1px solid var(--border-subtle);
-  text-decoration: none;
-  transition: all var(--transition-fast);
-
-  mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
+// ===== Archive table =====
+.archive-table {
+  td {
+    height: 48px;
   }
 
-  &:hover {
-    border-color: var(--accent-gold);
-    color: var(--accent-gold);
-    background: var(--accent-gold-dim);
+  .col-year {
+    width: 5.5rem;
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
   }
 
-  &.card-link-primary {
-    background: var(--accent-gradient);
-    color: var(--bg-primary);
-    border: none;
+  .col-title a {
+    color: var(--text-primary);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: var(--border-control);
+    text-underline-offset: 3px;
 
     &:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 16px rgba(240, 192, 64, 0.3);
-      color: var(--bg-primary);
+      color: var(--accent-gold);
+      text-decoration-color: currentColor;
+    }
+  }
+
+  .col-type {
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+
+  .col-links {
+    white-space: nowrap;
+
+    a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+
+      & + a {
+        margin-left: var(--space-4);
+      }
+    }
+  }
+
+  // On narrow screens each row becomes a block: year above the title, then
+  // type, tags and links. The sortable headers stay as a sort bar.
+  @include bp.down(bp.$md) {
+    display: block;
+
+    thead {
+      display: block;
+    }
+
+    thead tr {
+      display: flex;
+      gap: var(--space-4);
+    }
+
+    th {
+      border-bottom: 0;
+      padding: 0;
+    }
+
+    th:not(.sortable) {
+      display: none;
+    }
+
+    tbody,
+    tbody tr,
+    td {
+      display: block;
+    }
+
+    tbody tr {
+      padding: var(--space-4) 0;
+      border-top: 1px solid var(--border-subtle);
+      background: none !important;
+    }
+
+    td {
+      height: auto;
+      padding: 0;
+      border: 0;
+    }
+
+    td.col-year {
+      width: auto;
+      font-size: var(--fs-micro);
+    }
+
+    td.col-title {
+      margin: var(--space-1) 0 var(--space-2);
+      font-size: var(--fs-body);
+    }
+
+    td.col-type {
+      margin-bottom: var(--space-2);
+      font-size: var(--fs-small);
+    }
+
+    td.col-tags {
+      margin-bottom: var(--space-2);
     }
   }
 }
 
-// ===== Empty State =====
+// ===== Empty state =====
 .empty-state {
-  text-align: center;
-  padding: 60px 24px;
-  color: var(--text-muted);
-
-  mat-icon {
-    font-size: 48px;
-    width: 48px;
-    height: 48px;
-    margin-bottom: 16px;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-7) 0;
 
   p {
-    font-size: 1rem;
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: var(--fs-lead);
   }
-}
-
-// ===== Responsive =====
-@media (max-width: 768px) {
-  .projects-header {
-    padding: 40px 24px 24px;
-  }
-
-  .projects-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .filter-section {
-    padding: 0 16px 32px;
-  }
-}
-
-// The title link stretches over the card so the whole card is clickable,
-// while the source and demo links stay separate targets above it.
-.card-title-link {
-  color: inherit;
-  text-decoration: none;
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-  }
-
-  &:focus-visible {
-    outline: none;
-
-    &::after {
-      outline: 2px solid var(--focus-ring);
-      outline-offset: 2px;
-    }
-  }
-}
-
-.card-actions {
-  position: relative;
-  z-index: 1;
 }
