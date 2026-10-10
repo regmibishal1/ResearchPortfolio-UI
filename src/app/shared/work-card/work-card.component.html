@@ -1,9 +1,9 @@
 <article class="work-card">
-  @if (project().image) {
+  @if (project().image; as image) {
     <div class="work-media">
       <img
-        [src]="project().image"
-        [attr.srcset]="srcset(project().image)"
+        [src]="image"
+        [attr.srcset]="srcset(image)"
         sizes="(min-width: 900px) 560px, calc(100vw - 32px)"
         alt=""
         width="640"

@@ -65,11 +65,9 @@
         final?.detail?.played ? 'Champion' : 'Predicted champion'
       }}</span>
       <span class="champion-name">{{ bracket().champion }}</span>
-      @if (final?.detail?.played && favorite()) {
+      @if (final?.detail?.played && favorite(); as pick) {
         <span class="champion-pick"
-          >Model's pick before kickoff: {{ favorite().team }} ({{
-            favorite().pct.toFixed(1)
-          }}%)</span
+          >Model's pick before kickoff: {{ pick.team }} ({{ pick.pct.toFixed(1) }}%)</span
         >
       }
     </div>
