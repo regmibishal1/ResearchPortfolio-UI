@@ -55,6 +55,11 @@ describe('NavbarComponent', () => {
     expect(document.activeElement).toBe(button)
   })
 
+  it('keeps the brand link inside the banner landmark', () => {
+    const el: HTMLElement = fixture.nativeElement
+    expect(el.querySelector('[role="banner"] .brand-link')).not.toBeNull()
+  })
+
   it('moves focus to the main region from the skip link', () => {
     const el: HTMLElement = fixture.nativeElement
     el.querySelector<HTMLAnchorElement>('.skip-link')!.click()
