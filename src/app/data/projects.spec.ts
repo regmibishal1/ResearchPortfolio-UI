@@ -85,4 +85,18 @@ describe('PROJECTS ordering', () => {
     expect(fileSize(208500)).toBe('204 KB')
     expect(fileSize(7877382)).toBe('7.5 MB')
   })
+
+  it('fills in every field of each model card', () => {
+    const cards = PROJECTS.filter((p) => p.modelCard)
+    expect(cards.map((p) => p.id).sort()).toEqual([
+      'empathy-emotion',
+      'mri-classification',
+      'world-cup-prediction',
+    ])
+    for (const p of cards) {
+      for (const [field, text] of Object.entries(p.modelCard!)) {
+        expect(text.trim()).withContext(`${p.id} ${field}`).not.toBe('')
+      }
+    }
+  })
 })

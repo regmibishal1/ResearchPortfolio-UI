@@ -26,6 +26,17 @@ export interface Paper {
   bytes: number
 }
 
+/** What a model was trained on, how it was judged, and where it falls short. */
+export interface ModelCard {
+  data: string
+  model: string
+  metric: string
+  result: string
+  limits: string
+  /** When the model last ran, e.g. the final forecast or the report date. */
+  lastRun: string
+}
+
 export interface Project {
   /** URL slug, used as the :id param in /project/:id */
   id: string
@@ -78,6 +89,8 @@ export interface Project {
   results?: { value: string; label: string }[]
   /** The caveat that belongs next to those numbers. */
   resultsNote?: string
+  /** A short model card for ML projects, from the project's own report and results. */
+  modelCard?: ModelCard
   /** Shown in Featured and in Home's selected work. */
   featured?: boolean
   /**
@@ -178,6 +191,18 @@ const PROJECT_DEFINITIONS: Project[] = [
     ],
     resultsNote:
       'The model edged the Elo baseline on accuracy and log loss and tied it on Brier score.',
+    modelCard: {
+      data: 'About 12,000 international matches since 2014, with Elo ratings going back to 1872, positional FIFA squad ratings, and rolling form.',
+      model:
+        'XGBoost win/draw/loss classifier with isotonic calibration, feeding a Poisson scoreline solver and 2 million Monte Carlo runs of the tournament per snapshot.',
+      metric:
+        'Accuracy, log loss and Brier score on all 104 matches, against an Elo-only baseline.',
+      result:
+        '67.3% of results called (Elo 66.3%), log loss 0.868 (Elo 0.871), Brier score 0.510 (Elo 0.510).',
+      limits:
+        'The edge over plain Elo is small, and 104 matches is a small sample to grade a forecaster on.',
+      lastRun: 'Final snapshot on July 19, 2026, the day of the final.',
+    },
     featured: true,
   },
   {
@@ -310,6 +335,16 @@ const PROJECT_DEFINITIONS: Project[] = [
     ],
     resultsNote:
       'Small, imbalanced public dataset (15 of the 1,280 test scans are Moderate); not a clinical result.',
+    modelCard: {
+      data: 'Public Hugging Face Alzheimer MRI dataset: 5,120 training and 1,280 test scans across four dementia stages, heavily imbalanced.',
+      model:
+        'ResNet-50 pre-trained on ImageNet and fine-tuned for 30 epochs, the best of five ResNet depths (18 to 152).',
+      metric: 'Test accuracy, with balanced accuracy to account for the class imbalance.',
+      result: '99.06% test accuracy and 97.22% balanced accuracy.',
+      limits:
+        'Only 15 Moderate scans in the test set, unknown label provenance, and checkpoints picked on test loss; a feasibility study, not a clinical result.',
+      lastRun: 'Summer 2023 (report dated August 14, 2023).',
+    },
     featured: true,
   },
   {
@@ -355,6 +390,17 @@ const PROJECT_DEFINITIONS: Project[] = [
     ],
     resultsNote:
       'The gains over the text-only baseline are small, under 0.004 on each target, and the error metrics rose with them.',
+    modelCard: {
+      data: 'WASSA 2023 Track 1 conversations about news articles: 8,776 training and 2,400 development speech turns, each scored for empathy, emotional intensity and polarity.',
+      model:
+        'RoBERTa-base text embeddings concatenated with conversation and speaker features (Multimodal Toolkit), one regression model per target.',
+      metric: 'Pearson correlation, the shared task metric, with MSE, RMSE and MAE alongside.',
+      result:
+        'Pearson r of 0.687 for empathy, 0.757 for intensity and 0.768 for polarity, each just above the text-only model.',
+      limits:
+        'Gains under 0.004 while the error metrics rose, no fusion method won on every target, and some metadata columns risk leakage.',
+      lastRun: 'Spring 2023 (report dated May 15, 2023).',
+    },
     featured: true,
   },
   {

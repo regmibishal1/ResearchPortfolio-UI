@@ -148,6 +148,39 @@
           </ul>
         </section>
       }
+
+      <!-- ===== Model card ===== -->
+      @if (project.modelCard; as card) {
+        <section class="detail-section" aria-labelledby="model-card-title">
+          <h2 id="model-card-title" class="section-heading">Model card</h2>
+          <dl class="model-card">
+            <div>
+              <dt>Data</dt>
+              <dd>{{ card.data }}</dd>
+            </div>
+            <div>
+              <dt>Model</dt>
+              <dd>{{ card.model }}</dd>
+            </div>
+            <div>
+              <dt>Metric</dt>
+              <dd>{{ card.metric }}</dd>
+            </div>
+            <div>
+              <dt>Result</dt>
+              <dd>{{ card.result }}</dd>
+            </div>
+            <div>
+              <dt>Known limits</dt>
+              <dd>{{ card.limits }}</dd>
+            </div>
+            <div>
+              <dt>Last run</dt>
+              <dd>{{ card.lastRun }}</dd>
+            </div>
+          </dl>
+        </section>
+      }
     </div>
 
     <!-- ===== Architecture ===== -->

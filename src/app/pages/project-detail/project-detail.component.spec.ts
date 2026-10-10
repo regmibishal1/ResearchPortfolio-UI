@@ -66,6 +66,24 @@ describe('ProjectDetailComponent', () => {
     expect(headings(el)).not.toContain('Results')
   })
 
+  it('shows a model card after what was built, only for projects that have one', () => {
+    const el = render('mri-classification')
+    const all = headings(el)
+    expect(all.indexOf('Model card')).toBe(all.indexOf('What I built') + 1)
+    const terms = [...el.querySelectorAll('.model-card dt')].map((dt) => dt.textContent!.trim())
+    expect(terms).toEqual(['Data', 'Model', 'Metric', 'Result', 'Known limits', 'Last run'])
+
+    expect(headings(render('showupmd'))).not.toContain('Model card')
+  })
+
+  it('says how big the report download is', () => {
+    const el = render('mri-classification')
+    const report = [...el.querySelectorAll('.actions a')].find((a) =>
+      a.textContent!.includes('report')
+    )!
+    expect(report.textContent!.trim()).toBe('Read the report (PDF, 7.5 MB)')
+  })
+
   it('orders the actions live site, report, then code', () => {
     const el = render('world-cup-prediction')
     const actions = [...el.querySelectorAll('.actions a')].map((a) => a.textContent!.trim())
