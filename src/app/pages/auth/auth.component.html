@@ -234,6 +234,94 @@
           </p>
         </div>
       }
+
+      <!-- Choose a new password, from a reset link -->
+      @if (mode === 'reset') {
+        <div class="form-section">
+          <h1 class="auth-title">Choose a new password</h1>
+          @if (resetDone) {
+            <p class="auth-subtitle" role="status">
+              Password changed. Every device was signed out; sign in with the new password.
+            </p>
+            <button type="button" class="btn-primary auth-submit" (click)="setMode('login')">
+              Sign in
+            </button>
+          } @else if (!resetToken) {
+            <p class="auth-subtitle">
+              This reset link is incomplete. Copy the whole link, or ask for a new one.
+            </p>
+          } @else {
+            <p class="auth-subtitle">
+              The link works once and expires 30 minutes after it was made.
+            </p>
+            @if (formError || (submitted && resetForm.invalid)) {
+              <div #errorSummary class="error-summary" role="alert" tabindex="-1">
+                <app-icon name="error_outline" />
+                <span>{{ formError || 'Fill in the highlighted fields.' }}</span>
+              </div>
+            }
+            <form class="auth-form" (ngSubmit)="onReset(resetForm)" #resetForm="ngForm" novalidate>
+              <div class="field">
+                <label for="reset-password">New password</label>
+                <div class="input-group" [class.invalid]="submitted && resetPassword.invalid">
+                  <app-icon class="input-icon" name="lock" />
+                  <input
+                    id="reset-password"
+                    [type]="showPassword ? 'text' : 'password'"
+                    name="newPassword"
+                    autocomplete="new-password"
+                    [(ngModel)]="newPassword"
+                    #resetPassword="ngModel"
+                    required
+                    [minlength]="minPasswordLength"
+                    [attr.aria-invalid]="submitted && resetPassword.invalid"
+                    aria-describedby="reset-password-hint"
+                  />
+                  <button
+                    type="button"
+                    class="visibility-btn"
+                    aria-label="Show password"
+                    [attr.aria-pressed]="showPassword"
+                    (click)="showPassword = !showPassword"
+                  >
+                    <app-icon [name]="showPassword ? 'visibility_off' : 'visibility'" />
+                  </button>
+                </div>
+                <p
+                  class="field-hint"
+                  [class.field-error]="submitted && resetPassword.invalid"
+                  id="reset-password-hint"
+                >
+                  At least {{ minPasswordLength }} characters.
+                </p>
+              </div>
+              <div class="field">
+                <label for="reset-confirm">Type it again</label>
+                <div class="input-group" [class.invalid]="submitted && resetConfirm.invalid">
+                  <app-icon class="input-icon" name="lock" />
+                  <input
+                    id="reset-confirm"
+                    [type]="showPassword ? 'text' : 'password'"
+                    name="confirmPassword"
+                    autocomplete="new-password"
+                    [(ngModel)]="confirmPassword"
+                    #resetConfirm="ngModel"
+                    required
+                    [attr.aria-invalid]="submitted && resetConfirm.invalid"
+                    [attr.aria-describedby]="
+                      submitted && resetConfirm.invalid ? 'reset-confirm-error' : null
+                    "
+                  />
+                </div>
+                @if (submitted && resetConfirm.invalid) {
+                  <p class="field-error" id="reset-confirm-error">Type the new password again.</p>
+                }
+              </div>
+              <button type="submit" class="btn-primary auth-submit">Set new password</button>
+            </form>
+          }
+        </div>
+      }
     </div>
   </div>
 </div>

@@ -7,6 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar'
 import { finalize } from 'rxjs/operators'
 import { UserService, UserProfile, ChangePasswordRequest } from '../../services/user.service'
 import { AuthService } from '../auth/auth.service'
+import { SeoService } from '../../services/seo.service'
 import { IconComponent } from '../../shared/icon/icon.component'
 
 @Component({
@@ -35,15 +36,23 @@ export class ProfileComponent implements OnInit {
   showNewPassword = false
   showConfirmPassword = false
 
+  constructor() {
+    // Signed-in only; without its own title the tab kept the sign-in page's.
+    inject(SeoService).setNoIndex('Profile | Bishal Regmi')
+  }
+
   ngOnInit(): void {
     this.userService
       .getProfile()
       .pipe(finalize(() => (this.loadingProfile = false)))
       .subscribe({
         next: (profile) => (this.profile = profile),
+        // An expired session is renewed, or ended, by the interceptor; this
+        // only sees the requests that failed for another reason.
         error: () => {
-          // Token invalid or expired, so clear the session and send to login
-          this.authService.logout().subscribe({ complete: () => this.router.navigate(['/login']) })
+          this.snackBar.open('Could not load your profile. Try again in a moment.', 'Close', {
+            duration: 6000,
+          })
         },
       })
   }
@@ -73,8 +82,11 @@ export class ProfileComponent implements OnInit {
       .changePassword(this.passwordForm)
       .pipe(finalize(() => (this.changingPassword = false)))
       .subscribe({
-        next: () => {
-          this.snackBar.open('Password updated successfully!', 'Close', { duration: 4000 })
+        next: (session) => {
+          this.authService.setSession(session)
+          this.snackBar.open('Password changed. Other devices are signed out.', 'Close', {
+            duration: 6000,
+          })
           this.passwordForm = { currentPassword: '', newPassword: '', confirmationPassword: '' }
         },
         error: (err) => {
@@ -87,6 +99,7 @@ export class ProfileComponent implements OnInit {
   onLogout(): void {
     this.authService.logout().subscribe({
       complete: () => this.router.navigate(['/login']),
+      error: () => this.router.navigate(['/login']),
     })
   }
 }

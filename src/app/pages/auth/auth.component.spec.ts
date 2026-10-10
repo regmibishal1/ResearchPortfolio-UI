@@ -2,7 +2,9 @@ import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testin
 import { provideHttpClientTesting } from '@angular/common/http/testing'
 import { Title } from '@angular/platform-browser'
 import { AuthComponent } from './auth.component'
-import { AuthService } from './auth.service'
+import { AuthResponse, AuthService } from './auth.service'
+import { ActivatedRoute, Router, provideRouter } from '@angular/router'
+import { of } from 'rxjs'
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http'
 
 describe('AuthComponent', () => {
@@ -14,6 +16,7 @@ describe('AuthComponent', () => {
     await TestBed.configureTestingModule({
       imports: [AuthComponent],
       providers: [
+        provideRouter([]),
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
       ],
@@ -64,5 +67,88 @@ describe('AuthComponent', () => {
     expect(el.querySelector('#login-username')?.getAttribute('aria-describedby')).toBe(
       'login-username-error'
     )
+  }))
+
+  it('goes back to the page that asked for sign-in, but never off the site', fakeAsync(() => {
+    const router = TestBed.inject(Router)
+    const go = spyOn(router, 'navigateByUrl').and.resolveTo(true)
+    spyOn(TestBed.inject(AuthService), 'login').and.returnValue(of(new AuthResponse()))
+    const route = (component as unknown as { route: ActivatedRoute }).route
+    spyOn(route.snapshot.queryParamMap, 'get').and.returnValue('//evil.example')
+
+    component.loginObj = { username: 'me', password: 'pw' }
+    fixture.detectChanges()
+    tick()
+    el.querySelector<HTMLButtonElement>('.auth-submit')!.click()
+    tick()
+    expect(go).toHaveBeenCalledWith('/')
+  }))
+})
+
+describe('AuthComponent on a reset link', () => {
+  let fixture: ComponentFixture<AuthComponent>
+  let component: AuthComponent
+  let el: HTMLElement
+
+  async function open(hash: string) {
+    await TestBed.configureTestingModule({
+      imports: [AuthComponent],
+      providers: [
+        provideRouter([]),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+      ],
+    }).compileComponents()
+    spyOnProperty(TestBed.inject(Router), 'url').and.returnValue('/reset')
+    history.replaceState(history.state, '', location.pathname + location.search + hash)
+    fixture = TestBed.createComponent(AuthComponent)
+    component = fixture.componentInstance
+    el = fixture.nativeElement
+    fixture.detectChanges()
+  }
+
+  afterEach(() => history.replaceState(history.state, '', location.pathname + location.search))
+
+  it('takes the token from the link and removes it from the address bar', async () => {
+    await open('#token=abc123')
+    expect(component.mode).toBe('reset')
+    expect(component.resetToken).toBe('abc123')
+    expect(location.hash).toBe('')
+    expect(TestBed.inject(Title).getTitle()).toBe('Choose a new password | Bishal Regmi')
+    expect(el.querySelector('#reset-password')?.getAttribute('autocomplete')).toBe('new-password')
+  })
+
+  it('says the link is incomplete when it has no token', async () => {
+    await open('')
+    expect(el.querySelector('form')).toBeNull()
+    expect(el.textContent).toContain('This reset link is incomplete')
+  })
+
+  it('checks the two passwords match before sending anything', fakeAsync(async () => {
+    await open('#token=abc123')
+    const reset = spyOn(TestBed.inject(AuthService), 'resetPassword')
+    component.newPassword = 'first-password'
+    component.confirmPassword = 'second-password'
+    fixture.detectChanges()
+    tick()
+    el.querySelector<HTMLButtonElement>('.auth-submit')!.click()
+    fixture.detectChanges()
+    tick()
+    expect(reset).not.toHaveBeenCalled()
+    expect(el.querySelector('.error-summary')?.textContent).toContain('do not match')
+  }))
+
+  it('sets the new password with the token and confirms', fakeAsync(async () => {
+    await open('#token=abc123')
+    const reset = spyOn(TestBed.inject(AuthService), 'resetPassword').and.returnValue(of(undefined))
+    component.newPassword = 'a-new-password'
+    component.confirmPassword = 'a-new-password'
+    fixture.detectChanges()
+    tick()
+    el.querySelector<HTMLButtonElement>('.auth-submit')!.click()
+    fixture.detectChanges()
+    tick()
+    expect(reset).toHaveBeenCalledWith('abc123', 'a-new-password')
+    expect(el.querySelector('[role="status"]')?.textContent).toContain('Password changed')
   }))
 })

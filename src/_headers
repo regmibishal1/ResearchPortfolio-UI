@@ -29,6 +29,11 @@
   X-Robots-Tag: noindex
 /profile
   X-Robots-Tag: noindex
+# Reset links carry their token in the fragment; no-referrer keeps the
+# page address out of any request it makes.
+/reset
+  X-Robots-Tag: noindex
+  Referrer-Policy: no-referrer
 /stocks
   X-Robots-Tag: noindex
 

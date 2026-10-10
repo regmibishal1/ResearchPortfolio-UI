@@ -28,6 +28,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/auth/auth.component').then((m) => m.AuthComponent),
   },
   {
+    path: 'reset',
+    loadComponent: () => import('./pages/auth/auth.component').then((m) => m.AuthComponent),
+  },
+  {
     path: 'project',
     loadComponent: () =>
       import('./pages/project/project.component').then((m) => m.ProjectComponent),
