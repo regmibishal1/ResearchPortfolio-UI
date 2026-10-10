@@ -63,6 +63,10 @@ export interface Project {
   statusLabel?: string
   /** One line on what the work achieved, shown on Home cards. Real results only. */
   outcome?: string
+  /** Two to four headline numbers for the case study, from the project's own results. */
+  results?: { value: string; label: string }[]
+  /** The caveat that belongs next to those numbers. */
+  resultsNote?: string
   /** Shown in Featured and in Home's selected work. */
   featured?: boolean
   /**
@@ -154,7 +158,15 @@ const PROJECT_DEFINITIONS: Project[] = [
     ],
     statusLabel: 'Final results',
     outcome:
-      '34 daily forecasts from June 11 to the July 19 final, then graded against the results.',
+      'Forecast the tournament on 33 days from June 11 to the final, then graded against all 104 results.',
+    results: [
+      { value: 'Spain', label: 'Favorite before kickoff (14.8%), and the champion' },
+      { value: '67.3%', label: 'Match results called (Elo baseline 66.3%)' },
+      { value: '0.868', label: 'Log loss, lower is better (Elo baseline 0.871)' },
+      { value: '0.510', label: 'Brier score, lower is better (Elo baseline 0.510)' },
+    ],
+    resultsNote:
+      'The model edged the Elo baseline on accuracy and log loss and tied it on Brier score.',
     featured: true,
   },
   {
@@ -274,6 +286,13 @@ const PROJECT_DEFINITIONS: Project[] = [
       'The preferred dataset (ADNI) was inaccessible, and the substitute ships no label provenance, so how the stage labels were assigned is unknown. The whole study is a feasibility proof on a limited dataset, not a clinical result',
     ],
     outcome: 'ResNet-50 reached 99.06% test accuracy on a small, imbalanced public dataset.',
+    results: [
+      { value: '99.06%', label: 'Test accuracy, ResNet-50' },
+      { value: '97.22%', label: 'Balanced accuracy, ResNet-50' },
+      { value: '1,280', label: 'Test scans across four dementia stages' },
+    ],
+    resultsNote:
+      'Small, imbalanced public dataset (15 of the 1,280 test scans are Moderate); not a clinical result.',
     featured: true,
   },
   {
@@ -307,6 +326,13 @@ const PROJECT_DEFINITIONS: Project[] = [
       'The attention and gating fusion strategies underperformed and were dropped after only 3 to 5 epochs. A fair comparison would give every method the same training budget before ruling it out',
     ],
     outcome: 'Multimodal fusion beat the text-only baseline on all three regression targets.',
+    results: [
+      { value: '0.687', label: 'Empathy, Pearson r (text-only 0.686)' },
+      { value: '0.757', label: 'Emotional intensity, Pearson r (text-only 0.756)' },
+      { value: '0.768', label: 'Emotional polarity, Pearson r (text-only 0.764)' },
+    ],
+    resultsNote:
+      'The gains over the text-only baseline are small, under 0.004 on each target, and the error metrics rose with them.',
     featured: true,
   },
   {

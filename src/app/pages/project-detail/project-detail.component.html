@@ -1,206 +1,232 @@
 @if (project) {
-  <div class="detail-page">
-    <!-- ===== Back Nav ===== -->
-    <nav class="breadcrumb animate-in">
-      <a [routerLink]="['/project']" class="back-link">
-        <mat-icon>arrow_back</mat-icon>
-        <span>All Projects</span>
-      </a>
-    </nav>
-    <!-- ===== Hero ===== -->
-    <header class="detail-hero animate-in animate-in-delay-1">
-      <div class="hero-identity">
-        <div class="hero-icon">
-          @if (project.logo) {
-            <img [src]="project.logo" [alt]="project.title + ' logo'" class="hero-logo" />
-          }
-          @if (!project.logo) {
-            <mat-icon class="hero-emoji">{{ project.icon }}</mat-icon>
-          }
-        </div>
-        <div class="hero-meta">
-          <div class="hero-badges">
-            <span class="category-badge">{{ project.category }}</span>
-            <app-status-badge [project]="project" />
-            @if (project.period) {
-              <span class="period-badge">
-                <mat-icon class="period-icon">calendar_today</mat-icon>
-                {{ project.period }}
-              </span>
+  <article class="detail-page container">
+    <div class="prose">
+      <!-- ===== Breadcrumb ===== -->
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a [routerLink]="['/project']">Projects</a></li>
+          <li aria-current="page">{{ project.title }}</li>
+        </ol>
+      </nav>
+
+      <!-- ===== Title and meta ===== -->
+      <h1 class="detail-title">{{ project.title }}</h1>
+      <ul class="meta-row" aria-label="About this project">
+        @if (project.status) {
+          <li><app-status-badge [project]="project" /></li>
+        }
+        @if (project.period) {
+          <li class="chip">{{ project.period }}</li>
+        }
+        <!-- The type, unless the status badge already says it ("Research"). -->
+        @if (typeLabel[project.type] !== statusLabel(project)) {
+          <li class="chip">{{ typeLabel[project.type] }}</li>
+        }
+        @if (project.coursework) {
+          <li class="chip">{{ project.coursework }}</li>
+        }
+      </ul>
+
+      <!-- ===== Summary ===== -->
+      <section class="detail-section" aria-labelledby="summary-title">
+        <h2 id="summary-title" class="section-heading">Summary</h2>
+        <p class="summary">{{ project.description }}</p>
+      </section>
+
+      <!-- ===== Results ===== -->
+      @if (project.results?.length) {
+        <section class="detail-section" aria-labelledby="results-title">
+          <h2 id="results-title" class="section-heading">Results</h2>
+          <dl class="result-tiles">
+            @for (result of project.results; track result.label) {
+              <div class="result-tile">
+                <dt>{{ result.label }}</dt>
+                <dd>{{ result.value }}</dd>
+              </div>
             }
-            @if (project.coursework) {
-              <span class="coursework-badge">
-                <mat-icon class="coursework-icon">school</mat-icon>
-                {{ project.coursework }}
-              </span>
+          </dl>
+          @if (project.resultsNote) {
+            <p class="results-note">
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+                <path
+                  d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                />
+              </svg>
+              <span>{{ project.resultsNote }}</span>
+            </p>
+          }
+        </section>
+      }
+
+      <!-- ===== Actions: live site, report, code ===== -->
+      @if (project.demo || project.paper || project.repoLinks?.length || project.github) {
+        <div class="actions">
+          @if (project.demo) {
+            @if (isExternal(project.demo)) {
+              <a
+                class="btn-primary btn-md"
+                [href]="project.demo"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Open live site</a
+              >
+            } @else {
+              <a class="btn-primary btn-md" [routerLink]="project.demo">Open the dashboard</a>
             }
-          </div>
-          <h1 class="hero-title">{{ project.title }}</h1>
-        </div>
-      </div>
-      <!-- Action buttons -->
-      <div class="hero-actions">
-        <!-- Multiple repo links (e.g. Research Portfolio) -->
-        @if (project.repoLinks && project.repoLinks.length > 0) {
-          @for (repo of project.repoLinks; track $index) {
+          }
+          @if (project.paper) {
             <a
+              class="btn-secondary btn-md"
+              [href]="project.paper"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Read the report (PDF)</a
+            >
+          }
+          @for (repo of project.repoLinks ?? []; track repo.url) {
+            <a
+              class="btn-secondary btn-md"
               [href]="repo.url"
               target="_blank"
               rel="noopener noreferrer"
-              class="action-btn action-btn-secondary"
+              >Code: {{ repo.label }}</a
             >
-              <mat-icon>code</mat-icon>
-              <span>{{ repo.label }}</span>
-            </a>
           }
-        }
-        <!-- Single GitHub link -->
-        @if (project.github && (!project.repoLinks || project.repoLinks.length === 0)) {
-          <a
-            [href]="project.github"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="action-btn action-btn-secondary"
-          >
-            <mat-icon>code</mat-icon>
-            <span>Source Code</span>
-          </a>
-        }
-        <!-- Report / paper PDF -->
-        @if (project.paper) {
-          <a
-            [href]="project.paper"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="action-btn action-btn-secondary"
-          >
-            <mat-icon>description</mat-icon>
-            <span>Read the Report</span>
-          </a>
-        }
-        <!-- Demo link -->
-        @if (project.demo) {
-          <a
-            [href]="project.demo"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="action-btn action-btn-primary"
-          >
-            <mat-icon>open_in_new</mat-icon>
-            <span>Live Demo</span>
-          </a>
-        }
-      </div>
-    </header>
-    <!-- ===== Body ===== -->
-    <div class="detail-body">
-      <!-- Live embed (opt-in per project via project.liveEmbed) -->
-      @if (project.liveEmbed === 'world-cup-summary') {
-        <section class="detail-section animate-in animate-in-delay-2">
-          <h2 class="section-heading">
-            <mat-icon>insights</mat-icon>
-            Final Snapshot
-          </h2>
-          <app-world-cup-summary></app-world-cup-summary>
-        </section>
-      }
-      @if (project.liveEmbed === 'mri-explorer') {
-        <section class="detail-section animate-in animate-in-delay-2">
-          <h2 class="section-heading">
-            <mat-icon>science</mat-icon>
-            Results Explorer
-          </h2>
-          <app-mri-explorer></app-mri-explorer>
-        </section>
-      }
-      @if (project.liveEmbed === 'empathy-explorer') {
-        <section class="detail-section animate-in animate-in-delay-2">
-          <h2 class="section-heading">
-            <mat-icon>science</mat-icon>
-            Results Explorer
-          </h2>
-          <app-empathy-explorer></app-empathy-explorer>
-        </section>
-      }
-      <!-- Screenshot (projects without a live embed) -->
-      @if (project.image && !project.liveEmbed) {
-        <section class="detail-section animate-in animate-in-delay-2">
-          <div class="detail-screenshot">
-            <app-zoomable-image [src]="project.image!" [alt]="project.title + ' screenshot'" />
-          </div>
-        </section>
-      }
-      <!-- About -->
-      <section class="detail-section animate-in animate-in-delay-2">
-        <h2 class="section-heading">
-          <mat-icon>info_outline</mat-icon>
-          About the Project
-        </h2>
-        <p class="detail-description">{{ project.description }}</p>
-      </section>
-      <!-- Architecture -->
-      @if (project.architecture) {
-        <section class="detail-section animate-in animate-in-delay-3">
-          <h2 class="section-heading">
-            <mat-icon>account_tree</mat-icon>
-            Architecture
-          </h2>
-          <div class="architecture-diagram">
-            <app-zoomable-image
-              [src]="project.architecture!"
-              [alt]="project.title + ' architecture diagram'"
-            />
-          </div>
-        </section>
-      }
-      <!-- Highlights -->
-      @if (project.highlights && project.highlights.length > 0) {
-        <section class="detail-section animate-in animate-in-delay-3">
-          <h2 class="section-heading">
-            <mat-icon>star_outline</mat-icon>
-            Key Highlights
-          </h2>
-          <ul class="highlights-list">
-            @for (highlight of project.highlights; track $index) {
-              <li class="highlight-item">
-                <mat-icon class="check-icon">check_circle_outline</mat-icon>
-                <span>{{ highlight }}</span>
-              </li>
-            }
-          </ul>
-        </section>
-      }
-      <!-- Lessons Learned -->
-      @if (project.lessons && project.lessons.length > 0) {
-        <section class="detail-section animate-in animate-in-delay-3">
-          <h2 class="section-heading">
-            <mat-icon>lightbulb_outline</mat-icon>
-            Lessons Learned &amp; Limitations
-          </h2>
-          <ul class="lessons-list">
-            @for (lesson of project.lessons; track $index) {
-              <li class="lesson-item">
-                <mat-icon class="lesson-icon">arrow_right</mat-icon>
-                <span>{{ lesson }}</span>
-              </li>
-            }
-          </ul>
-        </section>
-      }
-      <!-- Tech Stack -->
-      <section class="detail-section animate-in animate-in-delay-4">
-        <h2 class="section-heading">
-          <mat-icon>layers</mat-icon>
-          Tech Stack
-        </h2>
-        <div class="tech-tags">
-          @for (tag of project.tags; track $index) {
-            <span class="tech-tag">{{ tag }}</span>
+          @if (project.github && !project.repoLinks?.length) {
+            <a
+              class="btn-secondary btn-md"
+              [href]="project.github"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Code</a
+            >
           }
         </div>
-      </section>
+      }
     </div>
-  </div>
+
+    <!-- ===== Live explorer or screenshot (wider than the text) ===== -->
+    @if (project.liveEmbed) {
+      <section class="detail-section wide" aria-labelledby="explorer-title">
+        <h2 id="explorer-title" class="section-heading">
+          {{ project.liveEmbed === 'world-cup-summary' ? 'Final snapshot' : 'Explore the results' }}
+        </h2>
+        <!-- Loaded when scrolled into view, so the charts stay out of the first load. -->
+        @defer (on viewport) {
+          @switch (project.liveEmbed) {
+            @case ('world-cup-summary') {
+              <app-world-cup-summary />
+            }
+            @case ('mri-explorer') {
+              <app-mri-explorer />
+            }
+            @case ('empathy-explorer') {
+              <app-empathy-explorer />
+            }
+          }
+        } @placeholder {
+          <div class="explorer-placeholder">Loading the results...</div>
+        }
+      </section>
+    } @else if (project.image) {
+      <section class="detail-section wide">
+        <div class="screenshot">
+          <app-zoomable-image [src]="project.image" [alt]="project.title + ' screenshot'" />
+        </div>
+      </section>
+    }
+
+    <div class="prose">
+      <!-- ===== What I built ===== -->
+      @if (project.highlights?.length) {
+        <section class="detail-section" aria-labelledby="built-title">
+          <h2 id="built-title" class="section-heading">What I built</h2>
+          <ul class="bullet-list">
+            @for (highlight of project.highlights; track $index) {
+              <li>{{ highlight }}</li>
+            }
+          </ul>
+        </section>
+      }
+    </div>
+
+    <!-- ===== Architecture ===== -->
+    @if (project.architecture) {
+      <section class="detail-section wide" aria-labelledby="architecture-title">
+        <h2 id="architecture-title" class="section-heading">Architecture</h2>
+        <div class="architecture">
+          <app-zoomable-image
+            [src]="project.architecture"
+            [alt]="project.title + ' architecture diagram'"
+          />
+        </div>
+      </section>
+    }
+
+    <div class="prose">
+      <!-- ===== Lessons and limits ===== -->
+      @if (project.lessons?.length) {
+        <section class="detail-section" aria-labelledby="lessons-title">
+          <h2 id="lessons-title" class="section-heading">Lessons and limits</h2>
+          <ul class="bullet-list">
+            @for (lesson of project.lessons; track $index) {
+              <li>{{ lesson }}</li>
+            }
+          </ul>
+        </section>
+      }
+
+      <!-- ===== Stack ===== -->
+      <section class="detail-section" aria-labelledby="stack-title">
+        <h2 id="stack-title" class="section-heading">Stack</h2>
+        <ul class="chip-list">
+          @for (tag of project.tags; track tag) {
+            <li class="chip">{{ tag }}</li>
+          }
+        </ul>
+      </section>
+
+      <!-- ===== Previous and next ===== -->
+      @if (previous || next) {
+        <nav class="pager" aria-label="More projects">
+          @if (previous) {
+            <a class="pager-link pager-prev" [routerLink]="['/project', previous.id]">
+              <span class="pager-label">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="16"
+                  height="16"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                </svg>
+                Previous
+              </span>
+              <span class="pager-title">{{ previous.title }}</span>
+            </a>
+          }
+          @if (next) {
+            <a class="pager-link pager-next" [routerLink]="['/project', next.id]">
+              <span class="pager-label">
+                Next
+                <svg
+                  viewBox="0 0 24 24"
+                  width="16"
+                  height="16"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+                </svg>
+              </span>
+              <span class="pager-title">{{ next.title }}</span>
+            </a>
+          }
+        </nav>
+      }
+    </div>
+  </article>
 }
 
 @if (!project) {
