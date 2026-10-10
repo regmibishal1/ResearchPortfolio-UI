@@ -2,6 +2,8 @@
 
 Angular frontend for my personal research portfolio: prerendered static pages with hydration, a dark theme built on design tokens, Cloudflare Pages hosting.
 
+To report a security problem privately, see [SECURITY.md](SECURITY.md).
+
 ## Stack
 
 - Angular 22 (standalone components), prerendered at build time and hydrated in the browser
