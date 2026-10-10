@@ -10,7 +10,6 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core'
 import { CommonModule, isPlatformBrowser } from '@angular/common'
-import { MatIconModule } from '@angular/material/icon'
 import {
   Chart,
   LineController,
@@ -67,7 +66,7 @@ const CLASSIFICATION_CURVE = [
 
 @Component({
   selector: 'app-empathy-explorer',
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule],
   templateUrl: './empathy-explorer.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './empathy-explorer.component.scss',
