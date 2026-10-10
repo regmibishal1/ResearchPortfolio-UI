@@ -106,7 +106,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   onLogout() {
     this.authService.logout().subscribe({
       next: () => {
-        this.openSnackBar('Logged out successfully!')
+        this.openSnackBar('Signed out.')
       },
       error: (error: Error) => {
         this.openSnackBar(error.message)

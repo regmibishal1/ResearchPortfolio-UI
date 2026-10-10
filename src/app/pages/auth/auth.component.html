@@ -1,139 +1,260 @@
 <div class="auth-page page-container">
-  <div class="animated-bg">
+  <div class="animated-bg" aria-hidden="true">
     <div class="glow glow-1"></div>
     <div class="glow glow-2"></div>
     <div class="glow glow-3"></div>
   </div>
 
-  <mat-progress-bar *ngIf="isLoading" mode="indeterminate" class="auth-progress"></mat-progress-bar>
+  <mat-progress-bar
+    *ngIf="isLoading"
+    mode="indeterminate"
+    class="auth-progress"
+    aria-label="Signing in"
+  ></mat-progress-bar>
 
   <div class="auth-container">
     <div class="auth-card glass animate-in">
-      <!-- Login Form -->
-      <div class="form-section" *ngIf="isLoginDivVisible">
-        <h1 class="auth-title">Welcome Back</h1>
-        <p class="auth-subtitle">Sign in to access advanced features</p>
+      <!-- Sign in -->
+      <div class="form-section" *ngIf="mode === 'login'">
+        <h1 class="auth-title">Sign in</h1>
+        <p class="auth-subtitle">Accounts are by invitation.</p>
 
-        <form class="auth-form" (ngSubmit)="onLogin()" #loginForm="ngForm">
-          <div class="input-group">
-            <mat-icon class="input-icon">person</mat-icon>
-            <input
-              type="text"
-              name="username"
-              [(ngModel)]="loginObj.username"
-              placeholder="Username"
-              required
-            />
+        <div
+          #errorSummary
+          class="error-summary"
+          role="alert"
+          tabindex="-1"
+          *ngIf="formError || (submitted && loginForm.invalid)"
+        >
+          <mat-icon aria-hidden="true">error_outline</mat-icon>
+          <span>{{ formError || 'Fill in the highlighted fields to sign in.' }}</span>
+        </div>
+
+        <form class="auth-form" (ngSubmit)="onLogin(loginForm)" #loginForm="ngForm" novalidate>
+          <div class="field">
+            <label for="login-username">Username</label>
+            <div class="input-group" [class.invalid]="submitted && username.invalid">
+              <mat-icon class="input-icon" aria-hidden="true">person</mat-icon>
+              <input
+                id="login-username"
+                type="text"
+                name="username"
+                autocomplete="username"
+                [(ngModel)]="loginObj.username"
+                #username="ngModel"
+                required
+                [attr.aria-invalid]="submitted && username.invalid"
+                [attr.aria-describedby]="
+                  submitted && username.invalid ? 'login-username-error' : null
+                "
+              />
+            </div>
+            <p class="field-error" id="login-username-error" *ngIf="submitted && username.invalid">
+              Enter your username.
+            </p>
           </div>
-          <div class="input-group">
-            <mat-icon class="input-icon">lock</mat-icon>
-            <input
-              type="password"
-              name="password"
-              [(ngModel)]="loginObj.password"
-              placeholder="Password"
-              required
-            />
+
+          <div class="field">
+            <label for="login-password">Password</label>
+            <div class="input-group" [class.invalid]="submitted && password.invalid">
+              <mat-icon class="input-icon" aria-hidden="true">lock</mat-icon>
+              <input
+                id="login-password"
+                [type]="showPassword ? 'text' : 'password'"
+                name="password"
+                autocomplete="current-password"
+                [(ngModel)]="loginObj.password"
+                #password="ngModel"
+                required
+                [attr.aria-invalid]="submitted && password.invalid"
+                [attr.aria-describedby]="
+                  submitted && password.invalid ? 'login-password-error' : null
+                "
+              />
+              <button
+                type="button"
+                class="visibility-btn"
+                aria-label="Show password"
+                [attr.aria-pressed]="showPassword"
+                (click)="showPassword = !showPassword"
+              >
+                <mat-icon aria-hidden="true">{{
+                  showPassword ? 'visibility_off' : 'visibility'
+                }}</mat-icon>
+              </button>
+            </div>
+            <p class="field-error" id="login-password-error" *ngIf="submitted && password.invalid">
+              Enter your password.
+            </p>
           </div>
-          <button
-            type="submit"
-            class="btn-primary auth-submit"
-            [disabled]="isLoading || !loginForm.form.valid"
-          >
-            Sign In
-          </button>
+
+          <button type="submit" class="btn-primary auth-submit">Sign in</button>
         </form>
 
-        <p class="auth-toggle-text">
-          Don't have an account?
-          <a
-            role="button"
-            tabindex="0"
-            (click)="isLoginDivVisible = false"
-            (keydown.enter)="isLoginDivVisible = false"
-            >Create one here</a
-          >.
+        <p class="auth-toggle-text" *ngIf="registrationOpen">
+          Have an invitation?
+          <button type="button" class="link-button" (click)="setMode('register')">
+            Create your account
+          </button>
         </p>
       </div>
 
-      <!-- Register Form -->
-      <div class="form-section" *ngIf="!isLoginDivVisible">
-        <h1 class="auth-title">Create Account</h1>
-        <p class="auth-subtitle">Join us to explore the research portfolio</p>
+      <!-- Create account (only while registration is open) -->
+      <div class="form-section" *ngIf="mode === 'register'">
+        <h1 class="auth-title">Create your account</h1>
+        <p class="auth-subtitle">Use the email address your invitation was sent to.</p>
 
-        <form class="auth-form" (ngSubmit)="onRegister()" #registerForm="ngForm">
+        <div
+          #errorSummary
+          class="error-summary"
+          role="alert"
+          tabindex="-1"
+          *ngIf="formError || (submitted && registerForm.invalid)"
+        >
+          <mat-icon aria-hidden="true">error_outline</mat-icon>
+          <span>{{ formError || 'Fill in the highlighted fields to create your account.' }}</span>
+        </div>
+
+        <form
+          class="auth-form"
+          (ngSubmit)="onRegister(registerForm)"
+          #registerForm="ngForm"
+          novalidate
+        >
           <div class="input-row">
-            <div class="input-group">
-              <mat-icon class="input-icon">badge</mat-icon>
-              <input
-                type="text"
-                name="firstname"
-                [(ngModel)]="registerObj.firstname"
-                placeholder="First Name"
-                required
-              />
+            <div class="field">
+              <label for="reg-firstname">First name</label>
+              <div class="input-group" [class.invalid]="submitted && firstname.invalid">
+                <input
+                  id="reg-firstname"
+                  type="text"
+                  name="firstname"
+                  autocomplete="given-name"
+                  [(ngModel)]="registerObj.firstname"
+                  #firstname="ngModel"
+                  required
+                  [attr.aria-invalid]="submitted && firstname.invalid"
+                  [attr.aria-describedby]="
+                    submitted && firstname.invalid ? 'reg-firstname-error' : null
+                  "
+                />
+              </div>
+              <p
+                class="field-error"
+                id="reg-firstname-error"
+                *ngIf="submitted && firstname.invalid"
+              >
+                Enter your first name.
+              </p>
             </div>
-            <div class="input-group">
-              <mat-icon class="input-icon">badge</mat-icon>
-              <input
-                type="text"
-                name="lastname"
-                [(ngModel)]="registerObj.lastname"
-                placeholder="Last Name"
-                required
-              />
+            <div class="field">
+              <label for="reg-lastname">Last name</label>
+              <div class="input-group" [class.invalid]="submitted && lastname.invalid">
+                <input
+                  id="reg-lastname"
+                  type="text"
+                  name="lastname"
+                  autocomplete="family-name"
+                  [(ngModel)]="registerObj.lastname"
+                  #lastname="ngModel"
+                  required
+                  [attr.aria-invalid]="submitted && lastname.invalid"
+                  [attr.aria-describedby]="
+                    submitted && lastname.invalid ? 'reg-lastname-error' : null
+                  "
+                />
+              </div>
+              <p class="field-error" id="reg-lastname-error" *ngIf="submitted && lastname.invalid">
+                Enter your last name.
+              </p>
             </div>
           </div>
 
-          <div class="input-group">
-            <mat-icon class="input-icon">email</mat-icon>
-            <input
-              type="email"
-              name="email"
-              [(ngModel)]="registerObj.email"
-              placeholder="Email"
-              required
-            />
-          </div>
-          <div class="input-group">
-            <mat-icon class="input-icon">person</mat-icon>
-            <input
-              type="text"
-              name="username"
-              [(ngModel)]="registerObj.username"
-              placeholder="Username"
-              required
-            />
-          </div>
-          <div class="input-group">
-            <mat-icon class="input-icon">lock</mat-icon>
-            <input
-              type="password"
-              name="password"
-              [(ngModel)]="registerObj.password"
-              placeholder="Password"
-              required
-            />
+          <div class="field">
+            <label for="reg-email">Email</label>
+            <div class="input-group" [class.invalid]="submitted && email.invalid">
+              <mat-icon class="input-icon" aria-hidden="true">email</mat-icon>
+              <input
+                id="reg-email"
+                type="email"
+                name="email"
+                autocomplete="email"
+                [(ngModel)]="registerObj.email"
+                #email="ngModel"
+                required
+                email
+                [attr.aria-invalid]="submitted && email.invalid"
+                [attr.aria-describedby]="submitted && email.invalid ? 'reg-email-error' : null"
+              />
+            </div>
+            <p class="field-error" id="reg-email-error" *ngIf="submitted && email.invalid">
+              Enter an email address like name&#64;example.com.
+            </p>
           </div>
 
-          <button
-            type="submit"
-            class="btn-primary auth-submit"
-            [disabled]="isLoading || !registerForm.form.valid"
-          >
-            Sign Up
-          </button>
+          <div class="field">
+            <label for="reg-username">Username</label>
+            <div class="input-group" [class.invalid]="submitted && regUsername.invalid">
+              <mat-icon class="input-icon" aria-hidden="true">person</mat-icon>
+              <input
+                id="reg-username"
+                type="text"
+                name="username"
+                autocomplete="username"
+                [(ngModel)]="registerObj.username"
+                #regUsername="ngModel"
+                required
+                [attr.aria-invalid]="submitted && regUsername.invalid"
+                [attr.aria-describedby]="
+                  submitted && regUsername.invalid ? 'reg-username-error' : null
+                "
+              />
+            </div>
+            <p class="field-error" id="reg-username-error" *ngIf="submitted && regUsername.invalid">
+              Choose a username.
+            </p>
+          </div>
+
+          <div class="field">
+            <label for="reg-password">Password</label>
+            <div class="input-group" [class.invalid]="submitted && regPassword.invalid">
+              <mat-icon class="input-icon" aria-hidden="true">lock</mat-icon>
+              <input
+                id="reg-password"
+                [type]="showPassword ? 'text' : 'password'"
+                name="password"
+                autocomplete="new-password"
+                [(ngModel)]="registerObj.password"
+                #regPassword="ngModel"
+                required
+                [attr.aria-invalid]="submitted && regPassword.invalid"
+                [attr.aria-describedby]="
+                  submitted && regPassword.invalid ? 'reg-password-error' : null
+                "
+              />
+              <button
+                type="button"
+                class="visibility-btn"
+                aria-label="Show password"
+                [attr.aria-pressed]="showPassword"
+                (click)="showPassword = !showPassword"
+              >
+                <mat-icon aria-hidden="true">{{
+                  showPassword ? 'visibility_off' : 'visibility'
+                }}</mat-icon>
+              </button>
+            </div>
+            <p class="field-error" id="reg-password-error" *ngIf="submitted && regPassword.invalid">
+              Choose a password.
+            </p>
+          </div>
+
+          <button type="submit" class="btn-primary auth-submit">Create account</button>
         </form>
 
         <p class="auth-toggle-text">
           Already have an account?
-          <a
-            role="button"
-            tabindex="0"
-            (click)="isLoginDivVisible = true"
-            (keydown.enter)="isLoginDivVisible = true"
-            >Sign in here</a
-          >.
+          <button type="button" class="link-button" (click)="setMode('login')">Sign in</button>
         </p>
       </div>
     </div>

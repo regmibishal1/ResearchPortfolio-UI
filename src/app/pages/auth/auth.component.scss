@@ -58,8 +58,91 @@
   gap: 1rem;
   width: 100%;
 
-  .input-group {
+  .field {
     flex: 1;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+
+  label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+}
+
+.field-error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--color-negative);
+}
+
+.input-group.invalid {
+  border-color: var(--color-negative);
+}
+
+// Announced on submit; also receives focus so keyboard users land on it.
+.error-summary {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 1.5rem;
+  padding: 12px 14px;
+  border: 1px solid var(--color-negative);
+  border-radius: var(--radius-md);
+  background: rgba(248, 113, 113, 0.08);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  text-align: left;
+
+  mat-icon {
+    flex-shrink: 0;
+    color: var(--color-negative);
+  }
+}
+
+.visibility-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-right: -8px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+
+  &:hover,
+  &[aria-pressed='true'] {
+    color: var(--accent-gold);
+  }
+}
+
+.link-button {
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-weight: 600;
+  color: var(--accent-gold);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--accent-gold-light);
   }
 }
 
@@ -69,8 +152,9 @@
   align-items: center;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--border-control);
-  border-radius: 12px;
-  padding: 0.25rem 1rem;
+  border-radius: var(--radius-md);
+  min-height: 48px;
+  padding: 0 0.875rem;
   transition: all 0.3s ease;
 
   &:focus-within {
@@ -112,38 +196,18 @@
 
 .auth-submit {
   width: 100%;
-  padding: 1rem;
-  font-size: 1.1rem;
+  min-height: 48px;
+  justify-content: center;
+  padding: 0 1rem;
+  font-size: 1rem;
   margin-top: 0.5rem;
-  border-radius: 12px;
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    background: var(--bg-card-hover);
-    color: var(--text-muted);
-    border-color: transparent;
-    box-shadow: none;
-  }
+  border-radius: var(--radius-md);
 }
 
 .auth-toggle-text {
   margin-top: 2rem;
   color: var(--text-secondary);
   font-size: 0.95rem;
-
-  a {
-    color: var(--accent-gold);
-    text-decoration: none;
-    font-weight: 600;
-    cursor: pointer;
-    transition: color 0.2s;
-
-    &:hover {
-      color: #fff;
-      text-decoration: underline;
-    }
-  }
 }
 
 /* Form transition animations */

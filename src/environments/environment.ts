@@ -6,4 +6,8 @@ export const environment = {
   // Sent as X-API-Key to both the AuthAPI and the FastAPI model server.
   // Must match RP_FASTAPI_API_KEY in your local .env (both services share the same key).
   apiKey: 'dev-api-key',
+  features: {
+    // Accounts are by invitation; the sign-up form stays hidden while false.
+    registration: false,
+  },
 }

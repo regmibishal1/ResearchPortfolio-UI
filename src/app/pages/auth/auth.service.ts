@@ -78,27 +78,21 @@ export class AuthService {
     )
   }
 
+  // Turns an HTTP failure into one plain sentence for the form. The server's
+  // own message is clearer than a generic one when it sends one.
   private handleError(error: HttpErrorResponse) {
-    let errorMessage = 'An unknown error occurred.'
-    if (error.error instanceof ErrorEvent) {
-      // A client-side or network error occurred. Handle it accordingly.
-      errorMessage = `Unhandled error: ${error.error.message}`
-      console.error(errorMessage)
+    const serverMessage = typeof error.error?.message === 'string' ? error.error.message : ''
+    let errorMessage: string
+    if (error.status === 0 || error.error instanceof ErrorEvent) {
+      errorMessage = 'Could not reach the sign-in service. Check your connection and try again.'
+    } else if (error.status === 401) {
+      errorMessage = 'That username and password do not match.'
+    } else if ([400, 403, 429].includes(error.status) && serverMessage) {
+      errorMessage = serverMessage
     } else {
-      if (error.status === 401) {
-        // Unauthorized
-        errorMessage = 'Invalid username or password.'
-      } else if (error.status === 403) {
-        // Forbidden
-        errorMessage = 'Access denied.'
-      } else {
-        // The backend returned an unsuccessful response code.
-        // The response body may contain clues as to what went wrong.
-        errorMessage = `Error Status ${error.status} - ${error.error.message}`
-        console.error(errorMessage)
-      }
+      errorMessage = 'Something went wrong. Try again in a moment.'
     }
-    // Return an observable with a user-facing error message
+    console.warn(`Auth request failed with status ${error.status}`)
     return throwError(() => new Error(errorMessage))
   }
 }
