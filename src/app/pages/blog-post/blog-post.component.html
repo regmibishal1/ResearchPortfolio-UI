@@ -1,29 +1,45 @@
-<article class="post-page" *ngIf="post">
-  <nav class="breadcrumb">
-    <a [routerLink]="['/blog']" class="back-link">
-      <mat-icon>arrow_back</mat-icon>
-      <span>All Posts</span>
-    </a>
-  </nav>
-
-  <header class="post-hero">
-    <span class="post-date">{{ formatDate(post.date) }}</span>
-    <h1 class="post-title">{{ post.title }}</h1>
-    <div class="post-tags">
-      <span class="tag" *ngFor="let tag of post.tags">{{ tag }}</span>
+@if (post) {
+  <article class="post-page">
+    <nav class="breadcrumb">
+      <a [routerLink]="['/blog']" class="back-link">
+        <mat-icon>arrow_back</mat-icon>
+        <span>All Posts</span>
+      </a>
+    </nav>
+    <header class="post-hero">
+      <span class="post-date">{{ formatDate(post.date) }}</span>
+      <h1 class="post-title">{{ post.title }}</h1>
+      <div class="post-tags">
+        @for (tag of post.tags; track tag) {
+          <span class="tag">{{ tag }}</span>
+        }
+      </div>
+    </header>
+    <div class="post-body">
+      @for (block of post.body; track block) {
+        @switch (block.kind) {
+          @case ('h2') {
+            <h2 class="body-h2">{{ block.text }}</h2>
+          }
+          @case ('p') {
+            <p class="body-p">{{ block.text }}</p>
+          }
+          @case ('figure') {
+            <figure class="body-figure">
+              <app-zoomable-image
+                [src]="block.src!"
+                [alt]="block.alt || ''"
+                [caption]="block.caption"
+              />
+              <figcaption>{{ block.caption }}</figcaption>
+            </figure>
+          }
+        }
+      }
     </div>
-  </header>
+  </article>
+}
 
-  <div class="post-body">
-    <ng-container *ngFor="let block of post.body" [ngSwitch]="block.kind">
-      <h2 *ngSwitchCase="'h2'" class="body-h2">{{ block.text }}</h2>
-      <p *ngSwitchCase="'p'" class="body-p">{{ block.text }}</p>
-      <figure *ngSwitchCase="'figure'" class="body-figure">
-        <app-zoomable-image [src]="block.src!" [alt]="block.alt || ''" [caption]="block.caption" />
-        <figcaption>{{ block.caption }}</figcaption>
-      </figure>
-    </ng-container>
-  </div>
-</article>
-
-<app-page-not-found *ngIf="!post"></app-page-not-found>
+@if (!post) {
+  <app-page-not-found></app-page-not-found>
+}

@@ -13,16 +13,17 @@
     role="group"
     aria-label="Filter projects by category"
   >
-    <button
-      type="button"
-      class="filter-btn"
-      *ngFor="let category of categories"
-      [class.active]="activeFilter === category"
-      [attr.aria-pressed]="activeFilter === category"
-      (click)="setFilter(category)"
-    >
-      {{ category }}
-    </button>
+    @for (category of categories; track category) {
+      <button
+        type="button"
+        class="filter-btn"
+        [class.active]="activeFilter === category"
+        [attr.aria-pressed]="activeFilter === category"
+        (click)="setFilter(category)"
+      >
+        {{ category }}
+      </button>
+    }
   </section>
 
   <!-- ===== Projects Grid ===== -->
@@ -31,83 +32,91 @@
       {{ activeFilter === 'All' ? 'All projects' : activeFilter + ' projects' }}
     </h2>
     <div class="projects-grid">
-      <article
-        class="project-card glass"
-        *ngFor="let project of filteredProjects; let i = index"
-        [style.animation-delay]="i * 0.1 + 's'"
-      >
-        <div class="card-thumb" *ngIf="project.image">
-          <img [src]="project.image" alt="" loading="lazy" />
-        </div>
-        <div class="card-header">
-          <span class="card-icon">
-            <img
-              *ngIf="project.logo"
-              [src]="project.logo"
-              [alt]="project.title + ' logo'"
-              class="card-logo"
-            />
-            <mat-icon *ngIf="!project.logo" class="card-mat-icon">{{ project.icon }}</mat-icon>
-          </span>
-          <span class="card-badges">
-            <span
-              class="card-period"
-              *ngIf="project.period"
-              [attr.title]="project.coursework || null"
-            >
-              <mat-icon *ngIf="project.coursework" class="card-school-icon">school</mat-icon>
-              {{ project.period }}
+      @for (project of filteredProjects; track project; let i = $index) {
+        <article class="project-card glass" [style.animation-delay]="i * 0.1 + 's'">
+          @if (project.image) {
+            <div class="card-thumb">
+              <img [src]="project.image" alt="" loading="lazy" />
+            </div>
+          }
+          <div class="card-header">
+            <span class="card-icon">
+              @if (project.logo) {
+                <img [src]="project.logo" [alt]="project.title + ' logo'" class="card-logo" />
+              }
+              @if (!project.logo) {
+                <mat-icon class="card-mat-icon">{{ project.icon }}</mat-icon>
+              }
             </span>
-            <span class="card-category">{{ project.category }}</span>
-          </span>
-        </div>
-        <h3 class="card-title">
-          <!-- The title is the card's one link; its ::after covers the whole card. -->
-          <a class="card-title-link" [routerLink]="['/project', project.id]">{{ project.title }}</a>
-        </h3>
-        <p class="card-description">{{ project.shortDescription }}</p>
-        <div class="card-tags">
-          <span class="card-tag" *ngFor="let tag of project.tags">{{ tag }}</span>
-        </div>
-        <div class="card-actions">
-          <a
-            *ngIf="project.github && (!project.repoLinks || project.repoLinks.length === 0)"
-            [href]="project.github"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="card-link"
-          >
-            <mat-icon>code</mat-icon>
-            <span>Source</span>
-          </a>
-          <a
-            *ngIf="project.repoLinks && project.repoLinks.length > 0"
-            [href]="project.repoLinks[0].url"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="card-link"
-          >
-            <mat-icon>code</mat-icon>
-            <span>Source</span>
-          </a>
-          <a
-            *ngIf="project.demo"
-            [href]="project.demo"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="card-link card-link-primary"
-          >
-            <mat-icon>open_in_new</mat-icon>
-            <span>Demo</span>
-          </a>
-        </div>
-      </article>
+            <span class="card-badges">
+              @if (project.period) {
+                <span class="card-period" [attr.title]="project.coursework || null">
+                  @if (project.coursework) {
+                    <mat-icon class="card-school-icon">school</mat-icon>
+                  }
+                  {{ project.period }}
+                </span>
+              }
+              <span class="card-category">{{ project.category }}</span>
+            </span>
+          </div>
+          <h3 class="card-title">
+            <!-- The title is the card's one link; its ::after covers the whole card. -->
+            <a class="card-title-link" [routerLink]="['/project', project.id]">{{
+              project.title
+            }}</a>
+          </h3>
+          <p class="card-description">{{ project.shortDescription }}</p>
+          <div class="card-tags">
+            @for (tag of project.tags; track tag) {
+              <span class="card-tag">{{ tag }}</span>
+            }
+          </div>
+          <div class="card-actions">
+            @if (project.github && (!project.repoLinks || project.repoLinks.length === 0)) {
+              <a
+                [href]="project.github"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="card-link"
+              >
+                <mat-icon>code</mat-icon>
+                <span>Source</span>
+              </a>
+            }
+            @if (project.repoLinks && project.repoLinks.length > 0) {
+              <a
+                [href]="project.repoLinks[0].url"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="card-link"
+              >
+                <mat-icon>code</mat-icon>
+                <span>Source</span>
+              </a>
+            }
+            @if (project.demo) {
+              <a
+                [href]="project.demo"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="card-link card-link-primary"
+              >
+                <mat-icon>open_in_new</mat-icon>
+                <span>Demo</span>
+              </a>
+            }
+          </div>
+        </article>
+      }
     </div>
 
     <!-- Empty state -->
-    <div class="empty-state" *ngIf="filteredProjects.length === 0">
-      <mat-icon>search_off</mat-icon>
-      <p>No projects match this filter.</p>
-    </div>
+    @if (filteredProjects.length === 0) {
+      <div class="empty-state">
+        <mat-icon>search_off</mat-icon>
+        <p>No projects match this filter.</p>
+      </div>
+    }
   </section>
 </div>

@@ -1,5 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core'
-import { CommonModule } from '@angular/common'
+
 import { Router } from '@angular/router'
 import { AuthService, RegisterModel, LoginModel } from './auth.service'
 import { FormsModule, NgForm } from '@angular/forms'
@@ -14,7 +14,7 @@ type Mode = 'login' | 'register'
 
 @Component({
   selector: 'app-auth',
-  imports: [CommonModule, FormsModule, MatProgressBarModule, MatIconModule],
+  imports: [FormsModule, MatProgressBarModule, MatIconModule],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.scss',
 })

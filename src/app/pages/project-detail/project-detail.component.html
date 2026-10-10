@@ -1,212 +1,213 @@
-<div class="detail-page" *ngIf="project">
-  <!-- ===== Back Nav ===== -->
-  <nav class="breadcrumb animate-in">
-    <a [routerLink]="['/project']" class="back-link">
-      <mat-icon>arrow_back</mat-icon>
-      <span>All Projects</span>
-    </a>
-  </nav>
-
-  <!-- ===== Hero ===== -->
-  <header class="detail-hero animate-in animate-in-delay-1">
-    <div class="hero-identity">
-      <div class="hero-icon">
-        <img
-          *ngIf="project.logo"
-          [src]="project.logo"
-          [alt]="project.title + ' logo'"
-          class="hero-logo"
-        />
-        <mat-icon *ngIf="!project.logo" class="hero-emoji">{{ project.icon }}</mat-icon>
-      </div>
-      <div class="hero-meta">
-        <div class="hero-badges">
-          <span class="category-badge">{{ project.category }}</span>
-          <span *ngIf="statusDisplay" class="status-badge" [ngClass]="statusDisplay.cssClass">
-            <span class="status-dot"></span>
-            {{ statusDisplay.label }}
-          </span>
-          <span class="period-badge" *ngIf="project.period">
-            <mat-icon class="period-icon">calendar_today</mat-icon>
-            {{ project.period }}
-          </span>
-          <span class="coursework-badge" *ngIf="project.coursework">
-            <mat-icon class="coursework-icon">school</mat-icon>
-            {{ project.coursework }}
-          </span>
+@if (project) {
+  <div class="detail-page">
+    <!-- ===== Back Nav ===== -->
+    <nav class="breadcrumb animate-in">
+      <a [routerLink]="['/project']" class="back-link">
+        <mat-icon>arrow_back</mat-icon>
+        <span>All Projects</span>
+      </a>
+    </nav>
+    <!-- ===== Hero ===== -->
+    <header class="detail-hero animate-in animate-in-delay-1">
+      <div class="hero-identity">
+        <div class="hero-icon">
+          @if (project.logo) {
+            <img [src]="project.logo" [alt]="project.title + ' logo'" class="hero-logo" />
+          }
+          @if (!project.logo) {
+            <mat-icon class="hero-emoji">{{ project.icon }}</mat-icon>
+          }
         </div>
-        <h1 class="hero-title">{{ project.title }}</h1>
+        <div class="hero-meta">
+          <div class="hero-badges">
+            <span class="category-badge">{{ project.category }}</span>
+            @if (statusDisplay) {
+              <span class="status-badge" [ngClass]="statusDisplay.cssClass">
+                <span class="status-dot"></span>
+                {{ statusDisplay.label }}
+              </span>
+            }
+            @if (project.period) {
+              <span class="period-badge">
+                <mat-icon class="period-icon">calendar_today</mat-icon>
+                {{ project.period }}
+              </span>
+            }
+            @if (project.coursework) {
+              <span class="coursework-badge">
+                <mat-icon class="coursework-icon">school</mat-icon>
+                {{ project.coursework }}
+              </span>
+            }
+          </div>
+          <h1 class="hero-title">{{ project.title }}</h1>
+        </div>
       </div>
+      <!-- Action buttons -->
+      <div class="hero-actions">
+        <!-- Multiple repo links (e.g. Research Portfolio) -->
+        @if (project.repoLinks && project.repoLinks.length > 0) {
+          @for (repo of project.repoLinks; track repo) {
+            <a
+              [href]="repo.url"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="action-btn action-btn-secondary"
+            >
+              <mat-icon>code</mat-icon>
+              <span>{{ repo.label }}</span>
+            </a>
+          }
+        }
+        <!-- Single GitHub link -->
+        @if (project.github && (!project.repoLinks || project.repoLinks.length === 0)) {
+          <a
+            [href]="project.github"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="action-btn action-btn-secondary"
+          >
+            <mat-icon>code</mat-icon>
+            <span>Source Code</span>
+          </a>
+        }
+        <!-- Report / paper PDF -->
+        @if (project.paper) {
+          <a
+            [href]="project.paper"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="action-btn action-btn-secondary"
+          >
+            <mat-icon>description</mat-icon>
+            <span>Read the Report</span>
+          </a>
+        }
+        <!-- Demo link -->
+        @if (project.demo) {
+          <a
+            [href]="project.demo"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="action-btn action-btn-primary"
+          >
+            <mat-icon>open_in_new</mat-icon>
+            <span>Live Demo</span>
+          </a>
+        }
+      </div>
+    </header>
+    <!-- ===== Body ===== -->
+    <div class="detail-body">
+      <!-- Live embed (opt-in per project via project.liveEmbed) -->
+      @if (project.liveEmbed === 'world-cup-summary') {
+        <section class="detail-section animate-in animate-in-delay-2">
+          <h2 class="section-heading">
+            <mat-icon>insights</mat-icon>
+            Final Snapshot
+          </h2>
+          <app-world-cup-summary></app-world-cup-summary>
+        </section>
+      }
+      @if (project.liveEmbed === 'mri-explorer') {
+        <section class="detail-section animate-in animate-in-delay-2">
+          <h2 class="section-heading">
+            <mat-icon>science</mat-icon>
+            Results Explorer
+          </h2>
+          <app-mri-explorer></app-mri-explorer>
+        </section>
+      }
+      @if (project.liveEmbed === 'empathy-explorer') {
+        <section class="detail-section animate-in animate-in-delay-2">
+          <h2 class="section-heading">
+            <mat-icon>science</mat-icon>
+            Results Explorer
+          </h2>
+          <app-empathy-explorer></app-empathy-explorer>
+        </section>
+      }
+      <!-- Screenshot (projects without a live embed) -->
+      @if (project.image && !project.liveEmbed) {
+        <section class="detail-section animate-in animate-in-delay-2">
+          <div class="detail-screenshot">
+            <app-zoomable-image [src]="project.image!" [alt]="project.title + ' screenshot'" />
+          </div>
+        </section>
+      }
+      <!-- About -->
+      <section class="detail-section animate-in animate-in-delay-2">
+        <h2 class="section-heading">
+          <mat-icon>info_outline</mat-icon>
+          About the Project
+        </h2>
+        <p class="detail-description">{{ project.description }}</p>
+      </section>
+      <!-- Architecture -->
+      @if (project.architecture) {
+        <section class="detail-section animate-in animate-in-delay-3">
+          <h2 class="section-heading">
+            <mat-icon>account_tree</mat-icon>
+            Architecture
+          </h2>
+          <div class="architecture-diagram">
+            <app-zoomable-image
+              [src]="project.architecture!"
+              [alt]="project.title + ' architecture diagram'"
+            />
+          </div>
+        </section>
+      }
+      <!-- Highlights -->
+      @if (project.highlights && project.highlights.length > 0) {
+        <section class="detail-section animate-in animate-in-delay-3">
+          <h2 class="section-heading">
+            <mat-icon>star_outline</mat-icon>
+            Key Highlights
+          </h2>
+          <ul class="highlights-list">
+            @for (highlight of project.highlights; track highlight) {
+              <li class="highlight-item">
+                <mat-icon class="check-icon">check_circle_outline</mat-icon>
+                <span>{{ highlight }}</span>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+      <!-- Lessons Learned -->
+      @if (project.lessons && project.lessons.length > 0) {
+        <section class="detail-section animate-in animate-in-delay-3">
+          <h2 class="section-heading">
+            <mat-icon>lightbulb_outline</mat-icon>
+            Lessons Learned &amp; Limitations
+          </h2>
+          <ul class="lessons-list">
+            @for (lesson of project.lessons; track lesson) {
+              <li class="lesson-item">
+                <mat-icon class="lesson-icon">arrow_right</mat-icon>
+                <span>{{ lesson }}</span>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+      <!-- Tech Stack -->
+      <section class="detail-section animate-in animate-in-delay-4">
+        <h2 class="section-heading">
+          <mat-icon>layers</mat-icon>
+          Tech Stack
+        </h2>
+        <div class="tech-tags">
+          @for (tag of project.tags; track tag) {
+            <span class="tech-tag">{{ tag }}</span>
+          }
+        </div>
+      </section>
     </div>
-
-    <!-- Action buttons -->
-    <div class="hero-actions">
-      <!-- Multiple repo links (e.g. Research Portfolio) -->
-      <ng-container *ngIf="project.repoLinks && project.repoLinks.length > 0">
-        <a
-          *ngFor="let repo of project.repoLinks"
-          [href]="repo.url"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="action-btn action-btn-secondary"
-        >
-          <mat-icon>code</mat-icon>
-          <span>{{ repo.label }}</span>
-        </a>
-      </ng-container>
-
-      <!-- Single GitHub link -->
-      <a
-        *ngIf="project.github && (!project.repoLinks || project.repoLinks.length === 0)"
-        [href]="project.github"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="action-btn action-btn-secondary"
-      >
-        <mat-icon>code</mat-icon>
-        <span>Source Code</span>
-      </a>
-
-      <!-- Report / paper PDF -->
-      <a
-        *ngIf="project.paper"
-        [href]="project.paper"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="action-btn action-btn-secondary"
-      >
-        <mat-icon>description</mat-icon>
-        <span>Read the Report</span>
-      </a>
-
-      <!-- Demo link -->
-      <a
-        *ngIf="project.demo"
-        [href]="project.demo"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="action-btn action-btn-primary"
-      >
-        <mat-icon>open_in_new</mat-icon>
-        <span>Live Demo</span>
-      </a>
-    </div>
-  </header>
-
-  <!-- ===== Body ===== -->
-  <div class="detail-body">
-    <!-- Live embed (opt-in per project via project.liveEmbed) -->
-    <section
-      class="detail-section animate-in animate-in-delay-2"
-      *ngIf="project.liveEmbed === 'world-cup-summary'"
-    >
-      <h2 class="section-heading">
-        <mat-icon>insights</mat-icon>
-        Final Snapshot
-      </h2>
-      <app-world-cup-summary></app-world-cup-summary>
-    </section>
-
-    <section
-      class="detail-section animate-in animate-in-delay-2"
-      *ngIf="project.liveEmbed === 'mri-explorer'"
-    >
-      <h2 class="section-heading">
-        <mat-icon>science</mat-icon>
-        Results Explorer
-      </h2>
-      <app-mri-explorer></app-mri-explorer>
-    </section>
-
-    <section
-      class="detail-section animate-in animate-in-delay-2"
-      *ngIf="project.liveEmbed === 'empathy-explorer'"
-    >
-      <h2 class="section-heading">
-        <mat-icon>science</mat-icon>
-        Results Explorer
-      </h2>
-      <app-empathy-explorer></app-empathy-explorer>
-    </section>
-
-    <!-- Screenshot (projects without a live embed) -->
-    <section
-      class="detail-section animate-in animate-in-delay-2"
-      *ngIf="project.image && !project.liveEmbed"
-    >
-      <div class="detail-screenshot">
-        <app-zoomable-image [src]="project.image!" [alt]="project.title + ' screenshot'" />
-      </div>
-    </section>
-
-    <!-- About -->
-    <section class="detail-section animate-in animate-in-delay-2">
-      <h2 class="section-heading">
-        <mat-icon>info_outline</mat-icon>
-        About the Project
-      </h2>
-      <p class="detail-description">{{ project.description }}</p>
-    </section>
-
-    <!-- Architecture -->
-    <section class="detail-section animate-in animate-in-delay-3" *ngIf="project.architecture">
-      <h2 class="section-heading">
-        <mat-icon>account_tree</mat-icon>
-        Architecture
-      </h2>
-      <div class="architecture-diagram">
-        <app-zoomable-image
-          [src]="project.architecture!"
-          [alt]="project.title + ' architecture diagram'"
-        />
-      </div>
-    </section>
-
-    <!-- Highlights -->
-    <section
-      class="detail-section animate-in animate-in-delay-3"
-      *ngIf="project.highlights && project.highlights.length > 0"
-    >
-      <h2 class="section-heading">
-        <mat-icon>star_outline</mat-icon>
-        Key Highlights
-      </h2>
-      <ul class="highlights-list">
-        <li *ngFor="let highlight of project.highlights" class="highlight-item">
-          <mat-icon class="check-icon">check_circle_outline</mat-icon>
-          <span>{{ highlight }}</span>
-        </li>
-      </ul>
-    </section>
-
-    <!-- Lessons Learned -->
-    <section
-      class="detail-section animate-in animate-in-delay-3"
-      *ngIf="project.lessons && project.lessons.length > 0"
-    >
-      <h2 class="section-heading">
-        <mat-icon>lightbulb_outline</mat-icon>
-        Lessons Learned &amp; Limitations
-      </h2>
-      <ul class="lessons-list">
-        <li *ngFor="let lesson of project.lessons" class="lesson-item">
-          <mat-icon class="lesson-icon">arrow_right</mat-icon>
-          <span>{{ lesson }}</span>
-        </li>
-      </ul>
-    </section>
-
-    <!-- Tech Stack -->
-    <section class="detail-section animate-in animate-in-delay-4">
-      <h2 class="section-heading">
-        <mat-icon>layers</mat-icon>
-        Tech Stack
-      </h2>
-      <div class="tech-tags">
-        <span class="tech-tag" *ngFor="let tag of project.tags">{{ tag }}</span>
-      </div>
-    </section>
   </div>
-</div>
+}
 
-<app-page-not-found *ngIf="!project"></app-page-not-found>
+@if (!project) {
+  <app-page-not-found></app-page-not-found>
+}

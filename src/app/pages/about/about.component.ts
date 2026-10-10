@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { CommonModule } from '@angular/common'
+
 import { MatIconModule } from '@angular/material/icon'
 import { SeoService, PERSON_ID, SITE_URL } from '../../services/seo.service'
 import { SKILL_CATEGORIES } from '../../data/skills'
@@ -28,7 +28,7 @@ interface Stat {
 
 @Component({
   selector: 'app-about',
-  imports: [CommonModule, MatIconModule],
+  imports: [MatIconModule],
   templateUrl: './about.component.html',
   styleUrl: './about.component.scss',
 })

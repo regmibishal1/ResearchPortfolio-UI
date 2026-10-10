@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { CommonModule } from '@angular/common'
+
 import { RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
 import { SeoService } from '../../services/seo.service'
@@ -7,7 +7,7 @@ import { PROJECTS, Project } from '../../data/projects'
 
 @Component({
   selector: 'app-project',
-  imports: [CommonModule, RouterModule, MatIconModule],
+  imports: [RouterModule, MatIconModule],
   templateUrl: './project.component.html',
   styleUrl: './project.component.scss',
 })

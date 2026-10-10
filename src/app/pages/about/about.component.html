@@ -8,13 +8,17 @@
 
     <!-- Quick stats strip -->
     <div class="stats-strip animate-in animate-in-delay-2">
-      <div class="stat-item" *ngFor="let stat of stats">
-        <span class="stat-value" *ngIf="stat.value">{{ stat.value }}</span>
-        <mat-icon class="stat-value stat-icon" *ngIf="!stat.value && stat.icon">{{
-          stat.icon
-        }}</mat-icon>
-        <span class="stat-label">{{ stat.label }}</span>
-      </div>
+      @for (stat of stats; track stat) {
+        <div class="stat-item">
+          @if (stat.value) {
+            <span class="stat-value">{{ stat.value }}</span>
+          }
+          @if (!stat.value && stat.icon) {
+            <mat-icon class="stat-value stat-icon">{{ stat.icon }}</mat-icon>
+          }
+          <span class="stat-label">{{ stat.label }}</span>
+        </div>
+      }
     </div>
   </section>
 
@@ -39,26 +43,31 @@
     <p class="section-subtitle">Tools and technologies I work with</p>
 
     <div class="skills-categories">
-      <div
-        class="skill-category glass"
-        *ngFor="let category of skillCategories; let i = index"
-        [class.highlight-category]="!!category.highlight"
-        [style.animation-delay]="i * 0.1 + 's'"
-      >
-        <div class="category-header">
-          <mat-icon class="category-icon">{{ category.icon }}</mat-icon>
-          <h3 class="category-name">{{ category.name }}</h3>
+      @for (category of skillCategories; track category; let i = $index) {
+        <div
+          class="skill-category glass"
+          [class.highlight-category]="!!category.highlight"
+          [style.animation-delay]="i * 0.1 + 's'"
+        >
+          <div class="category-header">
+            <mat-icon class="category-icon">{{ category.icon }}</mat-icon>
+            <h3 class="category-name">{{ category.name }}</h3>
+          </div>
+          @if (category.highlight) {
+            <div class="category-highlight">
+              <span class="highlight-badge"
+                ><mat-icon class="highlight-check">check_circle</mat-icon>
+                {{ category.highlight }}</span
+              >
+            </div>
+          }
+          <div class="category-skills">
+            @for (skill of category.skills; track skill) {
+              <span class="skill-badge">{{ skill }}</span>
+            }
+          </div>
         </div>
-        <div class="category-highlight" *ngIf="category.highlight">
-          <span class="highlight-badge"
-            ><mat-icon class="highlight-check">check_circle</mat-icon>
-            {{ category.highlight }}</span
-          >
-        </div>
-        <div class="category-skills">
-          <span class="skill-badge" *ngFor="let skill of category.skills">{{ skill }}</span>
-        </div>
-      </div>
+      }
     </div>
   </section>
 
@@ -68,14 +77,16 @@
     <p class="section-subtitle">Verified credentials</p>
 
     <div class="certs-grid">
-      <div class="cert-card glass" *ngFor="let cert of certifications">
-        <mat-icon class="cert-icon" [style.color]="cert.color">{{ cert.icon }}</mat-icon>
-        <div class="cert-info">
-          <h3 class="cert-name">{{ cert.name }}</h3>
-          <p class="cert-issuer">{{ cert.issuer }}</p>
+      @for (cert of certifications; track cert) {
+        <div class="cert-card glass">
+          <mat-icon class="cert-icon" [style.color]="cert.color">{{ cert.icon }}</mat-icon>
+          <div class="cert-info">
+            <h3 class="cert-name">{{ cert.name }}</h3>
+            <p class="cert-issuer">{{ cert.issuer }}</p>
+          </div>
+          <span class="cert-badge">Certified</span>
         </div>
-        <span class="cert-badge">Certified</span>
-      </div>
+      }
     </div>
   </section>
 
@@ -85,27 +96,27 @@
     <p class="section-subtitle">Where I have worked and what I built there</p>
 
     <div class="timeline">
-      <div
-        class="timeline-item"
-        *ngFor="let item of experience; let i = index"
-        [style.animation-delay]="i * 0.15 + 's'"
-      >
-        <div class="timeline-marker">
-          <mat-icon>{{ item.icon }}</mat-icon>
-        </div>
-        <div class="timeline-card glass">
-          <div class="timeline-card-header">
-            <div>
-              <h3 class="timeline-title">{{ item.title }}</h3>
-              <p class="timeline-subtitle">{{ item.subtitle }}</p>
-            </div>
-            <span class="timeline-date">{{ item.date }}</span>
+      @for (item of experience; track item; let i = $index) {
+        <div class="timeline-item" [style.animation-delay]="i * 0.15 + 's'">
+          <div class="timeline-marker">
+            <mat-icon>{{ item.icon }}</mat-icon>
           </div>
-          <ul class="timeline-details">
-            <li *ngFor="let detail of item.description">{{ detail }}</li>
-          </ul>
+          <div class="timeline-card glass">
+            <div class="timeline-card-header">
+              <div>
+                <h3 class="timeline-title">{{ item.title }}</h3>
+                <p class="timeline-subtitle">{{ item.subtitle }}</p>
+              </div>
+              <span class="timeline-date">{{ item.date }}</span>
+            </div>
+            <ul class="timeline-details">
+              @for (detail of item.description; track detail) {
+                <li>{{ detail }}</li>
+              }
+            </ul>
+          </div>
         </div>
-      </div>
+      }
     </div>
   </section>
 
@@ -115,27 +126,27 @@
     <p class="section-subtitle">Academic background</p>
 
     <div class="timeline">
-      <div
-        class="timeline-item"
-        *ngFor="let item of education; let i = index"
-        [style.animation-delay]="i * 0.15 + 's'"
-      >
-        <div class="timeline-marker">
-          <mat-icon>{{ item.icon }}</mat-icon>
-        </div>
-        <div class="timeline-card glass">
-          <div class="timeline-card-header">
-            <div>
-              <h3 class="timeline-title">{{ item.title }}</h3>
-              <p class="timeline-subtitle">{{ item.subtitle }}</p>
-            </div>
-            <span class="timeline-date">{{ item.date }}</span>
+      @for (item of education; track item; let i = $index) {
+        <div class="timeline-item" [style.animation-delay]="i * 0.15 + 's'">
+          <div class="timeline-marker">
+            <mat-icon>{{ item.icon }}</mat-icon>
           </div>
-          <ul class="timeline-details">
-            <li *ngFor="let detail of item.description">{{ detail }}</li>
-          </ul>
+          <div class="timeline-card glass">
+            <div class="timeline-card-header">
+              <div>
+                <h3 class="timeline-title">{{ item.title }}</h3>
+                <p class="timeline-subtitle">{{ item.subtitle }}</p>
+              </div>
+              <span class="timeline-date">{{ item.date }}</span>
+            </div>
+            <ul class="timeline-details">
+              @for (detail of item.description; track detail) {
+                <li>{{ detail }}</li>
+              }
+            </ul>
+          </div>
         </div>
-      </div>
+      }
     </div>
   </section>
 
@@ -145,14 +156,12 @@
     <p class="section-subtitle">What excites me in tech</p>
 
     <div class="interests-grid">
-      <div
-        class="interest-card"
-        *ngFor="let interest of interests; let i = index"
-        [style.animation-delay]="i * 0.08 + 's'"
-      >
-        <mat-icon class="interest-icon">{{ interest.icon }}</mat-icon>
-        <span class="interest-name">{{ interest.name }}</span>
-      </div>
+      @for (interest of interests; track interest; let i = $index) {
+        <div class="interest-card" [style.animation-delay]="i * 0.08 + 's'">
+          <mat-icon class="interest-icon">{{ interest.icon }}</mat-icon>
+          <span class="interest-name">{{ interest.name }}</span>
+        </div>
+      }
     </div>
   </section>
 
@@ -162,16 +171,12 @@
       <h2 class="contact-title">Let's <span class="gold-text">Connect</span></h2>
       <p class="contact-subtitle">Open to new opportunities and interesting problems</p>
       <div class="contact-links">
-        <a
-          *ngFor="let link of contactLinks"
-          [href]="link.url"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="contact-btn"
-        >
-          <mat-icon>{{ link.icon }}</mat-icon>
-          {{ link.label }}
-        </a>
+        @for (link of contactLinks; track link) {
+          <a [href]="link.url" target="_blank" rel="noopener noreferrer" class="contact-btn">
+            <mat-icon>{{ link.icon }}</mat-icon>
+            {{ link.label }}
+          </a>
+        }
       </div>
     </div>
   </section>

@@ -8,7 +8,7 @@ import {
   ViewChild,
   inject,
 } from '@angular/core'
-import { CommonModule, isPlatformBrowser } from '@angular/common'
+import { isPlatformBrowser } from '@angular/common'
 import { MatIconModule } from '@angular/material/icon'
 import { MatButtonModule } from '@angular/material/button'
 import { MatToolbarModule } from '@angular/material/toolbar'
@@ -20,14 +20,7 @@ import { Subscription, filter } from 'rxjs'
 
 @Component({
   selector: 'app-navbar',
-  imports: [
-    CommonModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
-    RouterModule,
-    FooterComponent,
-  ],
+  imports: [MatToolbarModule, MatButtonModule, MatIconModule, RouterModule, FooterComponent],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
 })
