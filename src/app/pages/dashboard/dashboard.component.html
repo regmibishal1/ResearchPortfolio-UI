@@ -12,6 +12,15 @@
       <a class="btn-primary" [routerLink]="['/project']">See my projects</a>
       <a class="btn-secondary" [routerLink]="['/resume']">R&eacute;sum&eacute;</a>
     </div>
+    @if (now; as note) {
+      <p class="hero-now">
+        <span class="now-label">Now</span>
+        <span>{{ note.text }}</span>
+        <time class="now-date" [attr.datetime]="note.updated"
+          >Updated {{ note.updated | date: 'MMM y' }}</time
+        >
+      </p>
+    }
   </div>
 </section>
 

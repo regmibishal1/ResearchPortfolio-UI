@@ -63,4 +63,19 @@ describe('DashboardComponent', () => {
     expect(link.textContent!.trim()).toBe(POSTS[0].title)
     expect(link.getAttribute('href')).toBe(`/blog/${POSTS[0].slug}`)
   })
+
+  it('hides the Now note until there is one, then shows it with its date', () => {
+    expect(el.querySelector('.hero-now')).toBeNull()
+
+    fixture.componentInstance.now = { text: 'Writing up the snow model.', updated: '2026-10-01' }
+    fixture.detectChanges()
+    const note = el.querySelector('.hero-now')!
+    expect(note.textContent).toContain('Writing up the snow model.')
+    expect(note.querySelector('time')!.getAttribute('datetime')).toBe('2026-10-01')
+  })
+
+  it('offers the projects and the resume from the hero', () => {
+    const links = [...el.querySelectorAll('.hero-actions a')].map((a) => a.getAttribute('href'))
+    expect(links).toEqual(['/project', '/resume'])
+  })
 })

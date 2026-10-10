@@ -6,6 +6,7 @@ import { PROJECTS, Project, SPOTLIGHT } from '../../data/projects'
 import { POSTS } from '../../data/blog'
 import { experienceLabel } from '../../data/experience'
 import { SUMMARY } from '../../data/resume'
+import { NOW, NowNote } from '../../data/now'
 import { WorkCardComponent } from '../../shared/work-card/work-card.component'
 
 @Component({
@@ -28,6 +29,9 @@ export class DashboardComponent {
   }
 
   readonly summary = SUMMARY
+
+  /** What I am working on now; the block is hidden while this is null. */
+  now: NowNote | null = NOW
 
   /** The project Home leads with; the section is skipped if none is flagged. */
   readonly spotlight = SPOTLIGHT
