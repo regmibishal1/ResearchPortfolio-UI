@@ -5,13 +5,14 @@ import {
   OnInit,
   ViewChild,
   ChangeDetectionStrategy,
+  NgZone,
   inject,
 } from '@angular/core'
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common'
-import { RouterModule } from '@angular/router'
+import { ActivatedRoute, Router, RouterModule } from '@angular/router'
 import { FormsModule } from '@angular/forms'
 import { MatIconModule } from '@angular/material/icon'
-import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs'
+import { MatTabsModule } from '@angular/material/tabs'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { SeoService } from '../../services/seo.service'
 import {
@@ -148,6 +149,9 @@ export interface ChartTable {
 })
 export class WorldCupComponent implements OnInit, OnDestroy {
   private wc = inject(WorldCupService)
+  private router = inject(Router)
+  private zone = inject(NgZone)
+  private route = inject(ActivatedRoute)
 
   @ViewChild('historyCanvas') historyCanvas?: ElementRef<HTMLCanvasElement>
   @ViewChild('calibCanvas') calibCanvas?: ElementRef<HTMLCanvasElement>
@@ -237,6 +241,17 @@ export class WorldCupComponent implements OnInit, OnDestroy {
 
   lockedMatchesForDate: EnrichedMatch[] = []
   showLockedMatches = false
+
+  /** The standings show this many teams until "Show all" is pressed. */
+  readonly standingsPreview = 8
+  showAllTeams = false
+
+  /**
+   * The open tab, by slug, so it can live in the URL (?tab=bracket). The
+   * first tab is Wrap-up once the tournament is complete and Standings for
+   * earlier snapshots; a slug whose tab is not shown falls back to it.
+   */
+  tabSlug = 'wrap-up'
   private enrichedMatches: EnrichedMatch[] = []
 
   readonly stageOptions: Array<{ value: HistoryStage; label: string }> = [
@@ -336,9 +351,6 @@ export class WorldCupComponent implements OnInit, OnDestroy {
 
         this.groupKeys = Object.keys(bracket.group_winners).sort()
         this.enrichedMatches = this.enrichPlayedMatches(played, bracket)
-        const split = this.splitRoundGroups(this.enrichedMatches)
-        this.groupStageRounds = split.group
-        this.knockoutRounds = split.knockout
 
         this.bracketHalves = this.computeBracketHalves(bracket)
         this.advancers = this.computeAdvancers(bracket)
@@ -348,10 +360,15 @@ export class WorldCupComponent implements OnInit, OnDestroy {
         if (this.availableDates.length > 0) {
           this.selectedDate = this.availableDates[0]
         }
+        const query = this.route.snapshot.queryParamMap
+        const date = query.get('date')
+        if (date && this.availableDates.includes(date)) this.selectedDate = date
+        this.tabSlug = query.get('tab') ?? this.tabSlug
         this.rebuildDisplayedLeaderboard()
         this.rebuildLockedMatchesForDate()
 
         this.loading = false
+        if (!this.isLatestDate) this.onDateChange()
         setTimeout(() => {
           this.renderHistoryChart()
           this.renderCalibrationChart()
@@ -409,6 +426,7 @@ export class WorldCupComponent implements OnInit, OnDestroy {
       this.fetchHistoricalBracket()
       this.fetchHistoricalAnalytics()
     }
+    this.writeUrl()
   }
 
   resetToLatest(): void {
@@ -559,6 +577,9 @@ export class WorldCupComponent implements OnInit, OnDestroy {
     this.lockedMatchesForDate = this.selectedDate
       ? this.enrichedMatches.filter((m) => m.match_date <= this.selectedDate)
       : this.enrichedMatches
+    const split = this.splitRoundGroups(this.lockedMatchesForDate)
+    this.groupStageRounds = split.group
+    this.knockoutRounds = split.knockout
   }
 
   onHistoryStageChange(): void {
@@ -779,13 +800,58 @@ export class WorldCupComponent implements OnInit, OnDestroy {
     this.buildScenarioViews()
   }
 
-  onTabChange(event: MatTabChangeEvent): void {
+  /** The tabs shown for the selected snapshot, in order. */
+  get tabs(): { slug: string; label: string }[] {
+    const complete = !!this.retro?.complete
+    const tabs = [
+      complete ? { slug: 'wrap-up', label: 'Wrap-up' } : { slug: 'standings', label: 'Standings' },
+      { slug: 'bracket', label: 'Bracket' },
+      { slug: 'odds', label: 'Odds over time' },
+    ]
+    if (this.analyticsUnlocked) tabs.push({ slug: 'grades', label: 'Model grades' })
+    if (!complete && this.analyticsUnlocked && this.scenarioViews.length > 0) {
+      tabs.push({ slug: 'what-if', label: 'What-if' })
+    }
+    return tabs
+  }
+
+  get selectedTabIndex(): number {
+    return Math.max(
+      0,
+      this.tabs.findIndex((t) => t.slug === this.tabSlug)
+    )
+  }
+
+  get visibleStandings(): TeamRow[] {
+    return this.showAllTeams
+      ? this.displayedLeaderboard
+      : this.displayedLeaderboard.slice(0, this.standingsPreview)
+  }
+
+  onTabIndexChange(index: number): void {
+    const slug = this.tabs[index]?.slug
+    if (!slug || slug === this.tabSlug) return
+    this.tabSlug = slug
+    this.writeUrl()
     // Charts initialize at zero size while their tab body is hidden, so
     // re-render after the tab switch animation settles.
     setTimeout(() => {
-      if (event.tab.textLabel === 'History') this.renderHistoryChart()
-      else if (event.tab.textLabel === 'Performance') this.renderCalibrationChart()
+      if (slug === 'odds') this.renderHistoryChart()
+      else if (slug === 'grades') this.renderCalibrationChart()
     }, 250)
+  }
+
+  // Only what differs from the default view goes in the URL.
+  private writeUrl(): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        tab: this.selectedTabIndex === 0 ? null : this.tabs[this.selectedTabIndex].slug,
+        date: this.isLatestDate ? null : this.selectedDate,
+      },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    })
   }
 
   private buildScenarioViews(): void {
@@ -846,40 +912,44 @@ export class WorldCupComponent implements OnInit, OnDestroy {
       rows: labels.map((date, i) => ({ label: date, values: datasets.map((d) => d.data[i]) })),
     }
 
-    this.chart?.destroy()
-    this.chart = new Chart(ctx, {
-      type: 'line',
-      data: { labels, datasets },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: 'bottom',
-            labels: { color: '#f0f0f5', boxWidth: 12, font: { size: 11 } },
+    // Outside Angular, so the chart's animation frames do not keep the
+    // app from settling (hydration finishes only once it is stable).
+    this.zone.runOutsideAngular(() => {
+      this.chart?.destroy()
+      this.chart = new Chart(ctx, {
+        type: 'line',
+        data: { labels, datasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { color: '#f0f0f5', boxWidth: 12, font: { size: 11 } },
+            },
+            tooltip: {
+              callbacks: {
+                label: (c) => ` ${c.dataset.label}: ${(c.raw as number)?.toFixed(2) ?? '-'}%`,
+              },
+            },
           },
-          tooltip: {
-            callbacks: {
-              label: (c) => ` ${c.dataset.label}: ${(c.raw as number)?.toFixed(2) ?? '-'}%`,
+          scales: {
+            x: {
+              ticks: { color: '#a0a0b8', maxRotation: 0 },
+              grid: { color: 'rgba(255,255,255,0.05)' },
+            },
+            y: {
+              ticks: { color: '#a0a0b8', callback: (v) => `${v}%` },
+              grid: { color: 'rgba(255,255,255,0.05)' },
+              title: {
+                display: true,
+                text: `${STAGE_LABELS[this.selectedHistoryStage]} %`,
+                color: '#a0a0b8',
+              },
             },
           },
         },
-        scales: {
-          x: {
-            ticks: { color: '#a0a0b8', maxRotation: 0 },
-            grid: { color: 'rgba(255,255,255,0.05)' },
-          },
-          y: {
-            ticks: { color: '#a0a0b8', callback: (v) => `${v}%` },
-            grid: { color: 'rgba(255,255,255,0.05)' },
-            title: {
-              display: true,
-              text: `${STAGE_LABELS[this.selectedHistoryStage]} %`,
-              color: '#a0a0b8',
-            },
-          },
-        },
-      },
+      })
     })
   }
 
@@ -909,65 +979,69 @@ export class WorldCupComponent implements OnInit, OnDestroy {
       })),
     }
 
-    this.calibChart?.destroy()
-    this.calibChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [
-          {
-            label: 'Favorite win rate (observed)',
-            data: bins.map((b) => b.observed * 100),
-            borderColor: '#4ade80',
-            backgroundColor: '#4ade80',
-            borderWidth: 2,
-            pointRadius: 4,
-            tension: 0.15,
-          },
-          {
-            label: 'Predicted (perfect calibration)',
-            data: bins.map((b) => b.predicted * 100),
-            borderColor: 'rgba(166, 173, 200, 0.6)',
-            backgroundColor: 'rgba(166, 173, 200, 0.6)',
-            borderWidth: 2,
-            borderDash: [6, 4],
-            pointRadius: 3,
-            tension: 0.15,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: 'bottom',
-            labels: { color: '#f0f0f5', boxWidth: 12, font: { size: 11 } },
-          },
-          tooltip: {
-            callbacks: {
-              label: (c) => {
-                const bin = bins[c.dataIndex]
-                return ` ${c.dataset.label}: ${(c.raw as number).toFixed(1)}% (${bin.n} matches)`
+    // Outside Angular, so the chart's animation frames do not keep the
+    // app from settling (hydration finishes only once it is stable).
+    this.zone.runOutsideAngular(() => {
+      this.calibChart?.destroy()
+      this.calibChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Favorite win rate (observed)',
+              data: bins.map((b) => b.observed * 100),
+              borderColor: '#4ade80',
+              backgroundColor: '#4ade80',
+              borderWidth: 2,
+              pointRadius: 4,
+              tension: 0.15,
+            },
+            {
+              label: 'Predicted (perfect calibration)',
+              data: bins.map((b) => b.predicted * 100),
+              borderColor: 'rgba(166, 173, 200, 0.6)',
+              backgroundColor: 'rgba(166, 173, 200, 0.6)',
+              borderWidth: 2,
+              borderDash: [6, 4],
+              pointRadius: 3,
+              tension: 0.15,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { color: '#f0f0f5', boxWidth: 12, font: { size: 11 } },
+            },
+            tooltip: {
+              callbacks: {
+                label: (c) => {
+                  const bin = bins[c.dataIndex]
+                  return ` ${c.dataset.label}: ${(c.raw as number).toFixed(1)}% (${bin.n} matches)`
+                },
               },
             },
           },
-        },
-        scales: {
-          x: {
-            ticks: { color: '#a0a0b8' },
-            grid: { color: 'rgba(255,255,255,0.05)' },
-            title: { display: true, text: 'Model confidence in favorite', color: '#a0a0b8' },
+          scales: {
+            x: {
+              ticks: { color: '#a0a0b8' },
+              grid: { color: 'rgba(255,255,255,0.05)' },
+              title: { display: true, text: 'Model confidence in favorite', color: '#a0a0b8' },
+            },
+            y: {
+              min: 0,
+              max: 100,
+              ticks: { color: '#a0a0b8', callback: (v) => `${v}%` },
+              grid: { color: 'rgba(255,255,255,0.05)' },
+              title: { display: true, text: 'How often the favorite won', color: '#a0a0b8' },
+            },
           },
-          y: {
-            min: 0,
-            max: 100,
-            ticks: { color: '#a0a0b8', callback: (v) => `${v}%` },
-            grid: { color: 'rgba(255,255,255,0.05)' },
-            title: { display: true, text: 'How often the favorite won', color: '#a0a0b8' },
-          },
         },
-      },
+      })
     })
   }
 }
