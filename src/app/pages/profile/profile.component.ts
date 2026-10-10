@@ -83,7 +83,8 @@ export class ProfileComponent implements OnInit {
       .pipe(finalize(() => (this.changingPassword = false)))
       .subscribe({
         next: (session) => {
-          this.authService.setSession(session)
+          // Older API versions answer with an empty body and keep the session.
+          if (session?.access_token) this.authService.setSession(session)
           this.snackBar.open('Password changed. Other devices are signed out.', 'Close', {
             duration: 6000,
           })
