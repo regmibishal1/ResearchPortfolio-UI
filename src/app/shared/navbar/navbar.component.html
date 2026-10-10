@@ -1,9 +1,8 @@
 <a class="skip-link" href="#main" (click)="skipToMain($event)">Skip to main content</a>
 
-<mat-toolbar class="toolbar-container" role="banner">
+<header class="toolbar-container" role="banner">
   <button
     #menuButton
-    mat-icon-button
     type="button"
     class="nav-menu-btn"
     aria-controls="mobile-nav"
@@ -40,7 +39,7 @@
       <button type="button" class="btn-secondary btn-md" (click)="onLogout()">Sign out</button>
     </span>
   }
-</mat-toolbar>
+</header>
 
 <nav id="mobile-nav" class="mobile-nav" aria-label="Primary" [hidden]="!menuOpen">
   @for (link of navLinks; track link.path) {
@@ -63,3 +62,5 @@
   </main>
   <app-footer></app-footer>
 </div>
+
+<app-toast-outlet />

@@ -17,6 +17,8 @@ export interface BlogPost {
   title: string
   date: string
   summary: string
+  /** Search result text when the summary is longer than 155 characters. */
+  seoDescription?: string
   tags: string[]
   body: BlogBlock[]
   /** Set when the post is revised after publishing (ISO date). */
@@ -32,6 +34,8 @@ const POST_DEFINITIONS: BlogPost[] = [
     date: '2026-07-25',
     summary:
       'The properly built version of my first model: a next-day snow predictor that has to beat real baselines on a fair test. Whether it snows turns out to be genuinely predictable. How much falls, barely at all, and the difference is the whole lesson.',
+    seoDescription:
+      'Rebuilding my first model properly: whether it snows tomorrow at BWI is predictable, beating real baselines on a fair test. How much falls is not.',
     tags: ['Data Science', 'Machine Learning', 'Climate', 'Python'],
     relatedProject: 'climate-snowfall',
     body: [
@@ -109,6 +113,8 @@ const POST_DEFINITIONS: BlogPost[] = [
     date: '2026-07-11',
     summary:
       'Reopening my first real data science project, finding where it went wrong, and redoing it properly: a real trend test on the full record, a couple of broken weather stations, and a warming signal that turns up on every continent.',
+    seoDescription:
+      'Redoing my first data science project properly: a real trend test on the full record, a couple of broken weather stations, and warming on every continent.',
     tags: ['Data Science', 'Climate', 'Python'],
     relatedProject: 'climate-snowfall',
     body: [

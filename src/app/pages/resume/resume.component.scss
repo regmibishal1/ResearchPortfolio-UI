@@ -277,7 +277,7 @@
 @media print {
   .resume-page {
     padding: 0;
-    color: #000;
+    color: var(--print-ink);
   }
 
   .resume-actions,
@@ -288,7 +288,7 @@
   .resume-role,
   .entry-title a,
   .contact-line a {
-    color: #000;
+    color: var(--print-ink);
   }
 
   .resume-name,
@@ -300,13 +300,13 @@
   .skill-row dt,
   .skill-row dd,
   .certs {
-    color: #000;
+    color: var(--print-ink);
   }
 
   .filtering .entry-points li,
   .filtering .project,
   .filtering .project :is(.entry-title a, .entry-text, .entry-tags, .entry-date) {
     background: none;
-    color: #000;
+    color: var(--print-ink);
   }
 }

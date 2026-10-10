@@ -13,10 +13,12 @@ export const routes: Routes = [
   { path: 'home', redirectTo: '', pathMatch: 'full' },
   {
     path: 'about',
+    data: { preload: true },
     loadComponent: () => import('./pages/about/about.component').then((m) => m.AboutComponent),
   },
   {
     path: 'resume',
+    data: { preload: true },
     loadComponent: () => import('./pages/resume/resume.component').then((m) => m.ResumeComponent),
   },
   {
@@ -33,11 +35,13 @@ export const routes: Routes = [
   },
   {
     path: 'project',
+    data: { preload: true },
     loadComponent: () =>
       import('./pages/project/project.component').then((m) => m.ProjectComponent),
   },
   {
     path: 'project/:id',
+    data: { preload: true },
     loadComponent: () =>
       import('./pages/project-detail/project-detail.component').then(
         (m) => m.ProjectDetailComponent
@@ -45,10 +49,12 @@ export const routes: Routes = [
   },
   {
     path: 'blog',
+    data: { preload: true },
     loadComponent: () => import('./pages/blog/blog.component').then((m) => m.BlogComponent),
   },
   {
     path: 'blog/:slug',
+    data: { preload: true },
     loadComponent: () =>
       import('./pages/blog-post/blog-post.component').then((m) => m.BlogPostComponent),
   },

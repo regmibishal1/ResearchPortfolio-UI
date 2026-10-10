@@ -1,3 +1,4 @@
+import { IMAGE_SIZES } from './image-sizes'
 import { PAPERS, PROJECTS, SPOTLIGHT, fileSize, statusText } from './projects'
 
 /** Index of a project id in the exported (sorted) list. */
@@ -97,6 +98,21 @@ describe('PROJECTS ordering', () => {
       for (const [field, text] of Object.entries(p.modelCard!)) {
         expect(text.trim()).withContext(`${p.id} ${field}`).not.toBe('')
       }
+    }
+  })
+
+  it('knows the size of every screenshot and diagram', () => {
+    for (const p of PROJECTS) {
+      for (const src of [p.image, p.architecture].filter((x): x is string => !!x)) {
+        expect(IMAGE_SIZES[src]).withContext(`${p.id}: ${src}`).toBeDefined()
+      }
+    }
+  })
+
+  it('keeps search descriptions to 155 characters', () => {
+    for (const p of PROJECTS) {
+      const description = p.seoDescription ?? p.shortDescription
+      expect(description.length).withContext(p.id).toBeLessThanOrEqual(155)
     }
   })
 })

@@ -60,7 +60,8 @@ export class ProjectDetailComponent {
     const path = `/project/${this.project.id}`
     this.seo.setPage({
       title: `${this.project.title} | Bishal Regmi`,
-      description: this.project.shortDescription,
+      description: this.project.seoDescription ?? this.project.shortDescription,
+      socialDescription: this.project.shortDescription,
       path,
       image: `/assets/og/project-${this.project.id}.jpg`,
       breadcrumbs: [

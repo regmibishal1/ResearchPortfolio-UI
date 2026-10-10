@@ -43,6 +43,11 @@ export interface Project {
   title: string
   /** Short blurb shown on cards (list page + dashboard featured section) */
   shortDescription: string
+  /**
+   * Search result text when the blurb is longer than 155 characters; the
+   * blurb still goes to link previews.
+   */
+  seoDescription?: string
   /** Full paragraph shown on the detail page */
   description: string
   tags: string[]
@@ -157,6 +162,8 @@ const PROJECT_DEFINITIONS: Project[] = [
     title: 'World Cup 2026 Prediction Engine',
     shortDescription:
       'Calibrated XGBoost + 2M-simulation Monte Carlo pipeline that forecast the 2026 FIFA World Cup, rerun daily through the tournament with every played match locked into each simulation.',
+    seoDescription:
+      'Calibrated XGBoost and 2 million Monte Carlo runs forecast the 2026 World Cup daily, then were graded on all 104 matches: 67.3% of results called.',
     description:
       'End-to-end machine-learning system that forecasts the 2026 FIFA World Cup. Trained a calibrated XGBoost classifier on ~12,000 international matches since 2014 with positional FIFA-rating features, Elo ratings dating back to 1872, rolling form, and tournament-weighted sample weights. Probabilities are isotonically calibrated and fed into a Monte Carlo simulator that runs 2 million tournaments, bridging classification probabilities to score distributions via a Poisson xG solver. The pipeline ran daily throughout the tournament: every completed match was locked into every subsequent simulation, sharpening predictions as the bracket unfolded. Each daily snapshot is versioned in Postgres, so the UI shows how the predictions evolved, and a post-tournament wrap-up grades the model against what actually happened.',
     tags: ['Python', 'XGBoost', 'FastAPI', 'PostgreSQL', 'Angular', 'Chart.js'],
@@ -210,6 +217,8 @@ const PROJECT_DEFINITIONS: Project[] = [
     title: 'ShowUpMD: Maryland Civic Engagement App',
     shortDescription:
       'Full-stack civic app for Maryland voters, with district lookup, candidate browser, legislation tracker, and an AI chat assistant powered by a RAG pipeline over real government data.',
+    seoDescription:
+      'Live civic app for Maryland voters: district lookup, candidates, a legislation tracker, and an AI assistant using RAG over 5+ government data sources.',
     description:
       'Full-stack civic web app that helps Maryland residents prepare for the 2026 primary election. Enter your address to instantly see your congressional and state legislative districts, current representatives, every candidate on your ballot, and relevant legislation, all in one place. Features "Civvy", an AI chat assistant powered by a RAG pipeline (BGE-M3 embeddings + pgvector) that answers plain-English questions about Maryland bills. Data is ingested from 5+ government sources including the Maryland General Assembly API, OpenStates, Census Geocoder, and the MD State Board of Elections.',
     tags: ['Next.js', 'FastAPI', 'PostgreSQL', 'pgvector', 'AI/RAG', 'Cloudflare'],
@@ -237,6 +246,8 @@ const PROJECT_DEFINITIONS: Project[] = [
     title: 'Research Portfolio Platform',
     shortDescription:
       'The platform serving this site: an Angular frontend on Cloudflare Pages, plus a Spring Boot auth API and a FastAPI model server running in Docker on home hardware.',
+    seoDescription:
+      'The platform behind this site: Angular on Cloudflare Pages, plus Spring Boot and FastAPI services in Docker on home hardware, with no cloud bill.',
     description:
       'The platform serving the site you are on. An Angular frontend on Cloudflare Pages talks to a Java Spring Boot authentication API and a Python FastAPI model server, both running in Docker on home hardware behind a Cloudflare Tunnel, so nothing needs a cloud bill. Includes structured request-scoped logging with real-IP detection and a dark-themed UI built with Angular Material.',
     tags: ['Angular', 'Java Spring Boot', 'Python FastAPI', 'PostgreSQL'],
@@ -266,6 +277,8 @@ const PROJECT_DEFINITIONS: Project[] = [
     title: 'Takeout Organizer',
     shortDescription:
       'Python tool that repairs Google Photos Takeout exports: restores real EXIF metadata from JSON sidecars, de-duplicates by perceptual hash, and organizes everything without ever touching the originals.',
+    seoDescription:
+      'Python tool that repairs Google Photos Takeout exports: restores EXIF from JSON sidecars and drops duplicates by perceptual hash, never touching originals.',
     description:
       'When you export a Google Photos library with Takeout, the photos arrive stripped of their metadata: capture dates and GPS coordinates are dumped into separate JSON sidecar files with famously inconsistent naming. Takeout Organizer matches each photo to its sidecar, writes the metadata back into the file itself with ExifTool, and rebuilds a clean date-organized library. A perceptual-hash de-duplication pass catches the same photo across re-compressions, which solves the overlap between a Takeout export and downloaded shared albums, and keeps the best copy of each. Every operation is copy-based and collision-safe: source files are never modified or deleted, which a dedicated source-integrity test enforces. Runs headless as a CLI or with a desktop GUI, resumes interrupted sessions, and has been exercised on a multi-terabyte library.',
     tags: ['Python', 'ExifTool', 'Pillow', 'CLI', 'GitHub Actions'],
@@ -408,6 +421,8 @@ const PROJECT_DEFINITIONS: Project[] = [
     title: 'Autism Tweet Sentiment Analysis',
     shortDescription:
       'Graduate capstone study design: measuring how autism awareness events shift public sentiment on Twitter, specified end to end from data and methods through ethics, communication, and resourcing.',
+    seoDescription:
+      'Capstone study design measuring how autism awareness events shift Twitter sentiment, from data and methods to ethics, communication and a costed plan.',
     description:
       'My graduate capstone (UMD DATA 698, Research Methods and Study Designs) produced a complete formal study design for a question the autism community actually has: which awareness events improve public sentiment toward autism, and which do not? The design pairs autism-related tweets collected around past awareness events with event timelines and CDC ADDM prevalence data, and specifies the full pipeline: preprocessing, sentiment scoring, a human-labeled validation set to check the sentiment model before trusting it, and the comparative analysis across events. It goes beyond the modeling to the parts research proposals usually skip: an ethics, legal, and privacy assessment of social media data, a communication plan for autism organizations and researchers, and a costed resource plan (two data scientists, two data labelers, a graphic designer, and a manager). An earlier course proposal for a Dask + NLTK processing pipeline grew into this design. The study was designed end to end but deliberately not executed.',
     tags: ['Python', 'Dask', 'NLTK', 'Scikit-Learn', 'Research Design'],
@@ -442,6 +457,8 @@ const PROJECT_DEFINITIONS: Project[] = [
     title: 'SpaceX Launch and Landing Prediction',
     shortDescription:
       'Classified SpaceX launch and booster-landing outcomes with grid-searched decision trees, kNN, SVM, and random forests, and reported plainly where rare-event class imbalance beat the models.',
+    seoDescription:
+      'Booster landings were predictable (random forest f1 0.95 on successes); launch failures, with four examples, were not. Trees, kNN and SVM compared.',
     description:
       'Final project for a graduate machine learning course (UMD DATA 603) asking what factors drive the success of SpaceX launches and booster recoveries. Using the launch data SpaceX publishes through its API (204 launches, with rocket, payload, core, and landing details), the project trains and grid-search-tunes four classifiers: decision tree, k-nearest neighbors, support vector machine, and random forest. Landing prediction worked: the random forest reached an f1 of 0.95 on successes and 0.86 on failures, and its feature importances made physical sense (whether a landing was attempted, payload mass, flight number of the core, landing legs, core reuse). Launch-failure prediction did not work, and the report says so: only four launches in the dataset carried a payload that failed, and no amount of tuning fixes four positive examples.',
     tags: ['Python', 'scikit-learn', 'Pandas', 'GridSearchCV'],
@@ -476,6 +493,8 @@ const PROJECT_DEFINITIONS: Project[] = [
     title: 'Data Representations for Image Classification',
     shortDescription:
       'MATLAB comparison of raw pixels, PCA, kernel PCA, and t-SNE as inputs to a kNN classifier on grayscale CIFAR10: PCA wins on consistency, and none of it rescues the wrong classifier.',
+    seoDescription:
+      'Raw pixels, PCA, kernel PCA and t-SNE as kNN inputs on grayscale CIFAR10, in MATLAB: PCA wins on consistency, but none rescues the wrong classifier.',
     description:
       'Final project for a graduate data representation course (UMD DATA 604), built entirely in MATLAB: a controlled comparison of what representation you hand a classifier. Grayscale CIFAR10 images are fed to a k-nearest-neighbors classifier four ways: raw pixels, principal component analysis, kernel PCA, and t-SNE embeddings, with the k and training-size choices tuned first on the raw baseline. PCA finished with the best global accuracy (31.7%), kernel PCA just behind (31.6%), t-SNE at 25.8%, and raw pixels last. The per-class picture was messier: t-SNE won five of the ten classes outright while losing the average, because PCA never had the lowest lows. A companion midterm applied the same PCA-plus-kNN machinery to Fashion MNIST.',
     tags: ['MATLAB', 'PCA', 'Kernel PCA', 't-SNE', 'kNN'],
@@ -510,6 +529,8 @@ const PROJECT_DEFINITIONS: Project[] = [
     title: 'Climate Change and Snowfall Trends',
     shortDescription:
       'My first real data science project: a three-person team study of temperature and snowfall trends from NOAA station data, from raw API exploration to a decision-tree snow model.',
+    seoDescription:
+      'My first data science project: a three-person study of NOAA temperature and snowfall trends, from raw API exploration to a decision-tree snow model.',
     description:
       'My first real data science project, built with two classmates in an introductory graduate course (UMD DATA 602). The team worked directly against the NOAA Climate Data API, first mapping its stations, datasets, and data-category endpoints to find stations with long, usable records, then pulling decades of daily temperature and precipitation data for the Baltimore-Washington region. The analysis looks for climate-change signals in average, maximum, and minimum temperature trends and in snowfall specifically, and finishes with a decision-tree model of snowfall that only became workable after reframing the target from snowfall amount to a binary snow or no-snow day. Most of the project, honestly, was learning to get real data into a usable state.',
     tags: ['Python', 'Pandas', 'NOAA API', 'Jupyter'],
@@ -538,6 +559,8 @@ const PROJECT_DEFINITIONS: Project[] = [
     title: 'Machine Learning Fundamentals, by Hand',
     shortDescription:
       'The notebook series behind the SpaceX project: Bayesian classifiers, logistic regression, PCA with eigenfaces, decision trees, and regression, each worked through from the math down.',
+    seoDescription:
+      'Notebooks behind the SpaceX project: Bayesian classifiers, logistic regression, PCA eigenfaces, decision trees and regression, worked from the math down.',
     description:
       'The working notebooks from a graduate machine learning course (UMD DATA 603), kept because they are where the fundamentals actually sank in. The series walks through Bayesian classifiers from their decision-theory notation, binary and multiclass logistic regression with confusion matrices, precision, recall, and ROC analysis, decision-tree exercises, and regression on housing data. The largest notebook applies PCA to the Labeled Faces in the Wild dataset, building eigenfaces, projecting the faces into the reduced basis, and classifying with kNN, which is the assignment that made dimensionality reduction concrete rather than abstract. These notebooks are coursework, not products, and that is the point: they are the reps that the later projects stand on.',
     tags: ['Python', 'scikit-learn', 'NumPy', 'Jupyter'],
@@ -566,6 +589,8 @@ const PROJECT_DEFINITIONS: Project[] = [
     title: 'Monte Carlo and Bayesian Sampling',
     shortDescription:
       'Sampling methods from first principles: inverse-transform and rejection sampling, then MCMC posterior estimation, built and visualized in notebooks before ever touching a library.',
+    seoDescription:
+      'Sampling from first principles: inverse-transform and rejection sampling, then MCMC posterior estimation, built and plotted before using a library.',
     description:
       'Notebooks from a graduate computational statistics course (UMD DATA 606) covering how random sampling actually works. The core notebook builds up from probability mass and density functions to inverse-transform sampling, then rejection sampling with an explicit envelope function, deriving and plotting each step. The homework applies Markov chain Monte Carlo to posterior estimation, running multiple chains and comparing their traces and densities to check convergence by eye. This is the probabilistic footing under the later calibrated-model work: isotonic calibration and Brier scores in the World Cup and EDGAR projects trace straight back to these exercises.',
     tags: ['Python', 'NumPy', 'Matplotlib', 'Bayesian Statistics'],
@@ -594,6 +619,8 @@ const PROJECT_DEFINITIONS: Project[] = [
     title: 'First Steps in Distributed Data: Dask and Spark',
     shortDescription:
       'A first contact with distributed tooling: Dask clients, partitioned dataframes over Tesla market and fundamentals data, Spark comparisons, and unit tests written inside the notebook.',
+    seoDescription:
+      'First steps with distributed tools: Dask clients, partitioned dataframes of Tesla market and fundamentals data, Spark comparisons, in-notebook tests.',
     description:
       'A working notebook from a graduate big data systems course (UMD DATA 605) that was less about the model and entirely about the plumbing. It stands up a local Dask cluster with explicit worker, thread, and memory limits, wraps the connection handling in helper functions, and then, unusually for a notebook, unit-tests those helpers with unittest right between the cells. Tesla price history and fundamentals load through dask.dataframe with lazy evaluation and type conversion, mirroring the same flow discussed for Spark, and a small decision tree at the end closes the train-test loop. The model itself trained on five rows of fundamentals data, which was never the point.',
     tags: ['Python', 'Dask', 'Spark', 'unittest'],
@@ -622,6 +649,8 @@ const PROJECT_DEFINITIONS: Project[] = [
     title: 'PyTorch Notebooks: CNNs and What They Learn',
     shortDescription:
       'The homework behind the Alzheimer project: training CNNs on MNIST, using a frozen ResNet50 as a feature extractor on CIFAR10, and watching t-SNE turn raw pixels into separable clusters.',
+    seoDescription:
+      'PyTorch notebooks behind the Alzheimer MRI project: CNNs on MNIST, a frozen ResNet50 as a CIFAR10 feature extractor, and t-SNE views of what it learns.',
     description:
       'The PyTorch homework notebooks from a graduate deep learning course (UMD DATA 612), the direct on-ramp to the Alzheimer MRI final project. The MNIST notebooks build the training loop from scratch (data loaders, network definition, optimization, evaluation) and then reload the trained network to visualize its learned embeddings with t-SNE, where the ten digits separate into clean, nearly disjoint clusters. The feature-extraction homework freezes a pretrained ResNet50, upsamples CIFAR10 images to fit it, harvests penultimate-layer features for train and test sets, and shows via t-SNE how much structure a network trained on ImageNet already imposes on images it has never seen.',
     tags: ['Python', 'PyTorch', 'ResNet', 't-SNE'],
@@ -650,6 +679,8 @@ const PROJECT_DEFINITIONS: Project[] = [
     title: 'First Notebooks: Learning Pandas the Hard Way',
     shortDescription:
       'The very first notebooks of the degree: a class-survey analysis and a Celtics box-score win-loss tree, kept as an honest record of where the learning curve started.',
+    seoDescription:
+      'The first notebooks of my degree: a class-survey analysis and a Celtics box-score win-loss tree, kept as an honest record of where the learning started.',
     description:
       "The earliest notebooks of the graduate program (UMD DATA 602, first semester), kept unpolished on purpose. The first analyzes a survey of the cohort's interests: reading the CSV, handling missing values, joining tables, and growing a decision tree over interest columns that, in hindsight, mostly memorized 35 classmates. The second pulls Boston Celtics box scores and hits real-world data cleaning immediately, non-breaking space characters hiding in both the values and the column names, before fitting a win-loss decision tree on a season of games and reading it against basketball intuition. Neither is a project so much as a record of first contact with pandas, scikit-learn, and messy data.",
     tags: ['Python', 'Pandas', 'scikit-learn', 'Jupyter'],

@@ -1,4 +1,5 @@
 import { POSTS, getPost, headingId, readingMinutes } from './blog'
+import { IMAGE_SIZES } from './image-sizes'
 import { PROJECTS } from './projects'
 
 describe('blog data', () => {
@@ -60,6 +61,21 @@ describe('blog data', () => {
       expect(PROJECTS.some((p) => p.id === post.relatedProject))
         .withContext(post.slug)
         .toBeTrue()
+    }
+  })
+
+  it('knows the size of every figure, so the page holds its space while it loads', () => {
+    for (const post of POSTS) {
+      for (const block of post.body.filter((b) => b.kind === 'figure')) {
+        expect(IMAGE_SIZES[block.src!]).withContext(`${post.slug}: ${block.src}`).toBeDefined()
+      }
+    }
+  })
+
+  it('keeps search descriptions to 155 characters', () => {
+    for (const post of POSTS) {
+      const description = post.seoDescription ?? post.summary
+      expect(description.length).withContext(post.slug).toBeLessThanOrEqual(155)
     }
   })
 })

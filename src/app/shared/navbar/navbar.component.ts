@@ -10,25 +10,23 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core'
 import { isPlatformBrowser } from '@angular/common'
-import { MatButtonModule } from '@angular/material/button'
-import { MatToolbarModule } from '@angular/material/toolbar'
-import { MatSnackBar } from '@angular/material/snack-bar'
 import { NavigationEnd, Router, RouterModule } from '@angular/router'
 import { AuthService } from '../../pages/auth/auth.service'
 import { FooterComponent } from '../footer/footer.component'
 import { Subscription, filter } from 'rxjs'
 import { IconComponent } from '../icon/icon.component'
 import { SiteSearchComponent } from '../site-search/site-search.component'
+import { ToastOutletComponent } from '../toast/toast-outlet.component'
+import { ToastService } from '../toast/toast.service'
 
 @Component({
   selector: 'app-navbar',
   imports: [
     IconComponent,
-    MatToolbarModule,
-    MatButtonModule,
     RouterModule,
     FooterComponent,
     SiteSearchComponent,
+    ToastOutletComponent,
   ],
   templateUrl: './navbar.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -36,7 +34,7 @@ import { SiteSearchComponent } from '../site-search/site-search.component'
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService)
-  private _snackBar = inject(MatSnackBar)
+  private toasts = inject(ToastService)
 
   // The logo links home, so the nav starts with the work.
   readonly navLinks = [
@@ -115,18 +113,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.closeMenu()
     // The local session ends even if the server cannot be reached.
     this.authService.logout().subscribe({
-      next: () => this.openSnackBar('Signed out.'),
-      error: () => this.openSnackBar('Signed out.'),
+      next: () => this.toasts.show('Signed out.'),
+      error: () => this.toasts.show('Signed out.'),
     })
   }
 
   ngOnDestroy() {
     this.subscriptions.unsubscribe()
-  }
-
-  openSnackBar(message: string) {
-    this._snackBar.open(message, 'Close', {
-      duration: 5000,
-    })
   }
 }

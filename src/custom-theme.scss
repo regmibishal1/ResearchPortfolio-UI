@@ -19,30 +19,13 @@ $ResearchPortfolio-UI-theme: mat.m2-define-dark-theme(
   )
 );
 
-@include mat.all-component-themes($ResearchPortfolio-UI-theme);
-
-// Override Material component backgrounds to match our design system
-.mat-mdc-snack-bar-container {
-  --mat-snackbar-container-color: #1a1a2e;
-  --mat-snackbar-supporting-text-color: #f0f0f5;
-}
-
-// The drawer container wraps every routed page and otherwise paints the
-// dark theme's #303030 grey, so pages without their own background drifted
-// off the near-black site background.
-.mat-drawer-container {
-  --mat-sidenav-content-background-color: #0a0a0f;
-}
-
-.mat-drawer {
-  background-color: #12121a !important;
-  border-right-color: rgba(255, 255, 255, 0.06) !important;
-}
-
-.mat-toolbar {
-  background-color: transparent !important;
-}
+// Only the components the site uses; the full set added about 60 KB of CSS
+// to every page.
+@include mat.core-theme($ResearchPortfolio-UI-theme);
+@include mat.progress-bar-theme($ResearchPortfolio-UI-theme);
+@include mat.progress-spinner-theme($ResearchPortfolio-UI-theme);
+@include mat.tabs-theme($ResearchPortfolio-UI-theme);
 
 .mdc-linear-progress__bar-inner {
-  border-color: #f0c040 !important;
+  border-color: var(--accent-gold) !important;
 }

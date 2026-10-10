@@ -67,7 +67,7 @@ const lineEndLabels = {
   afterDatasetsDraw(chart: Chart) {
     const { ctx } = chart
     ctx.save()
-    ctx.font = '600 12px Inter, sans-serif'
+    ctx.font = "600 12px 'Inter Variable', sans-serif"
     ctx.textBaseline = 'middle'
     chart.data.datasets.forEach((ds, i) => {
       const values = ds.data as (number | null)[]
@@ -264,6 +264,8 @@ export class WorldCupComponent implements OnInit, OnDestroy {
       path: '/world-cup',
       image: '/assets/og/world-cup.jpg',
       description:
+        "Final results of a 2026 World Cup forecast rerun daily: Spain, the pre-kickoff favorite, won. The model's report card and every daily snapshot.",
+      socialDescription:
         'Calibrated XGBoost + Monte Carlo forecasts for the 2026 FIFA World Cup, rerun daily ' +
         "through the tournament: final results, the model's report card, and every daily snapshot.",
       breadcrumbs: [

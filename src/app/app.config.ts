@@ -1,16 +1,11 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core'
-import {
-  provideRouter,
-  withInMemoryScrolling,
-  withPreloading,
-  PreloadAllModules,
-} from '@angular/router'
+import { provideRouter, withInMemoryScrolling, withPreloading } from '@angular/router'
 import { provideHttpClient, withInterceptors, withXhr } from '@angular/common/http'
 import { provideClientHydration, withNoIncrementalHydration } from '@angular/platform-browser'
-import { provideAnimations } from '@angular/platform-browser/animations'
 import { routes } from './app.routes'
 import { authInterceptor } from './auth.interceptor'
 import { prerenderInterceptor } from './prerender.interceptor'
+import { SelectivePreloadingStrategy } from './preload-strategy'
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,12 +15,10 @@ export const appConfig: ApplicationConfig = {
     provideRouter(
       routes,
       withInMemoryScrolling({ scrollPositionRestoration: 'top', anchorScrolling: 'enabled' }),
-      // Keep the small initial bundle, but fetch the remaining route chunks
-      // in the background after the first page is interactive so in-app
-      // navigations (e.g. clicking through to the World Cup page) are instant.
-      withPreloading(PreloadAllModules)
+      // Keep the initial bundle small, and fetch only the small, likely-next
+      // pages in the background (see SelectivePreloadingStrategy).
+      withPreloading(SelectivePreloadingStrategy)
     ),
-    provideAnimations(),
     provideHttpClient(withXhr(), withInterceptors([prerenderInterceptor, authInterceptor])),
     provideClientHydration(withNoIncrementalHydration()),
   ],

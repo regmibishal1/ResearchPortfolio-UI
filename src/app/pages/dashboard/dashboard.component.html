@@ -40,10 +40,10 @@
                 tabindex="-1"
                 aria-hidden="true"
               >
-                <img [src]="project.image" alt="" width="1280" height="800" loading="lazy" />
+                <img [src]="project.image" alt="" width="1280" height="800" fetchpriority="high" />
               </a>
             } @else {
-              <img [src]="project.image" alt="" width="1280" height="800" loading="lazy" />
+              <img [src]="project.image" alt="" width="1280" height="800" fetchpriority="high" />
             }
           </div>
         }

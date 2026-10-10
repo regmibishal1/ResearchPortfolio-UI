@@ -9,6 +9,7 @@ import {
 
 import { A11yModule } from '@angular/cdk/a11y'
 import { IconComponent } from '../icon/icon.component'
+import { IMAGE_SIZES } from '../../data/image-sizes'
 
 const PAN_STEP = 120
 
@@ -31,6 +32,14 @@ export class ZoomableImageComponent {
   @Input({ required: true }) src!: string
   @Input() alt = ''
   @Input() caption?: string
+
+  /**
+   * The image's pixel size, from the generated size map, so the page holds
+   * its space before the lazy image loads. Null for an image not in the map.
+   */
+  get size(): [number, number] | null {
+    return IMAGE_SIZES[this.src.replace(/^\//, '')] ?? null
+  }
 
   @ViewChild('stage') stage?: ElementRef<HTMLElement>
   @ViewChild('trigger') trigger?: ElementRef<HTMLButtonElement>
