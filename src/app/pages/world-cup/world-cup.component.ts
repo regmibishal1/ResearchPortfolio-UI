@@ -1,4 +1,11 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core'
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core'
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { FormsModule } from '@angular/forms'
@@ -135,6 +142,7 @@ export interface ChartTable {
     DecimalPipe,
   ],
   templateUrl: './world-cup.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './world-cup.component.scss',
 })
 export class WorldCupComponent implements OnInit, OnDestroy {

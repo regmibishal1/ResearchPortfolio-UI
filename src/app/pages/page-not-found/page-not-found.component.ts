@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, ChangeDetectionStrategy } from '@angular/core'
 
 import { RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
@@ -8,6 +8,7 @@ import { SeoService } from '../../services/seo.service'
   selector: 'app-page-not-found',
   imports: [RouterModule, MatIconModule],
   templateUrl: './page-not-found.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './page-not-found.component.scss',
 })
 export class PageNotFoundComponent {

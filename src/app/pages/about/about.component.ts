@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, ChangeDetectionStrategy } from '@angular/core'
 
 import { MatIconModule } from '@angular/material/icon'
 import { SeoService, PERSON_ID, SITE_URL } from '../../services/seo.service'
@@ -30,6 +30,7 @@ interface Stat {
   selector: 'app-about',
   imports: [MatIconModule],
   templateUrl: './about.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './about.component.scss',
 })
 export class AboutComponent {

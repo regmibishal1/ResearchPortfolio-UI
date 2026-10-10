@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core'
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
@@ -21,6 +21,7 @@ import { LatestResponse, WorldCupService } from '../../services/world-cup.servic
     DecimalPipe,
   ],
   templateUrl: './world-cup-summary.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './world-cup-summary.component.scss',
 })
 export class WorldCupSummaryComponent implements OnInit {
