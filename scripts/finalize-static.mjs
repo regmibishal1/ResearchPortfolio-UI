@@ -65,6 +65,9 @@ const shell = home
     /<title>[^<]*<\/title>/,
     '<title>Bishal Regmi</title><meta name="robots" content="noindex">'
   )
+  // ngcm tells Angular this page renders on the client, so it skips the
+  // hydration it would otherwise expect from prerendered markup.
+  .replace(/<body(?![^>]*\bngcm\b)([^>]*)>/, '<body ngcm$1>')
 
 if (shell.includes('ngh=') || !shell.includes('<app-root></app-root>')) {
   throw new Error('404.html still carries prerendered markup')
