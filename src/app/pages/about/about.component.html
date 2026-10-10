@@ -1,7 +1,7 @@
 <div class="about-page">
   <!-- ===== Header ===== -->
   <section class="about-header">
-    <h1 class="page-title animate-in">About <span class="gold-text">Me</span></h1>
+    <h1 class="page-title">About Me</h1>
     <p class="page-subtitle animate-in animate-in-delay-1">
       Software Engineer · Data Scientist · AWS Certified · Fintech
     </p>
@@ -24,7 +24,7 @@
 
   <!-- ===== Profile Section ===== -->
   <section class="profile-section animate-in animate-in-delay-2">
-    <div class="profile-card glass">
+    <div class="profile-card surface">
       <div class="profile-image-wrapper">
         <img class="profile-image" src="assets/profile-pic.jpg" alt="Bishal Regmi" />
         <div class="profile-image-ring"></div>
@@ -39,13 +39,13 @@
 
   <!-- ===== Skills Section ===== -->
   <section class="skills-section">
-    <h2 class="section-title gold-text">Skills & Technologies</h2>
+    <h2 class="section-title">Skills & Technologies</h2>
     <p class="section-subtitle">Tools and technologies I work with</p>
 
     <div class="skills-categories">
       @for (category of skillCategories; track $index; let i = $index) {
         <div
-          class="skill-category glass"
+          class="skill-category surface animate-in"
           [class.highlight-category]="!!category.highlight"
           [style.animation-delay]="i * 0.1 + 's'"
         >
@@ -73,12 +73,12 @@
 
   <!-- ===== Certifications Section ===== -->
   <section class="certs-section">
-    <h2 class="section-title gold-text">Certifications</h2>
+    <h2 class="section-title">Certifications</h2>
     <p class="section-subtitle">Verified credentials</p>
 
     <div class="certs-grid">
       @for (cert of certifications; track $index) {
-        <div class="cert-card glass">
+        <div class="cert-card surface">
           <mat-icon class="cert-icon" [style.color]="cert.color">{{ cert.icon }}</mat-icon>
           <div class="cert-info">
             <h3 class="cert-name">{{ cert.name }}</h3>
@@ -92,16 +92,16 @@
 
   <!-- ===== Experience Section ===== -->
   <section class="timeline-section">
-    <h2 class="section-title gold-text">Experience</h2>
+    <h2 class="section-title">Experience</h2>
     <p class="section-subtitle">Where I have worked and what I built there</p>
 
     <div class="timeline">
-      @for (item of experience; track $index; let i = $index) {
-        <div class="timeline-item" [style.animation-delay]="i * 0.15 + 's'">
+      @for (item of experience; track $index) {
+        <div class="timeline-item animate-in">
           <div class="timeline-marker">
             <mat-icon>{{ item.icon }}</mat-icon>
           </div>
-          <div class="timeline-card glass">
+          <div class="timeline-card surface">
             <div class="timeline-card-header">
               <div>
                 <h3 class="timeline-title">{{ item.title }}</h3>
@@ -122,16 +122,16 @@
 
   <!-- ===== Education Section ===== -->
   <section class="timeline-section">
-    <h2 class="section-title gold-text">Education</h2>
+    <h2 class="section-title">Education</h2>
     <p class="section-subtitle">Academic background</p>
 
     <div class="timeline">
-      @for (item of education; track $index; let i = $index) {
-        <div class="timeline-item" [style.animation-delay]="i * 0.15 + 's'">
+      @for (item of education; track $index) {
+        <div class="timeline-item animate-in">
           <div class="timeline-marker">
             <mat-icon>{{ item.icon }}</mat-icon>
           </div>
-          <div class="timeline-card glass">
+          <div class="timeline-card surface">
             <div class="timeline-card-header">
               <div>
                 <h3 class="timeline-title">{{ item.title }}</h3>
@@ -152,12 +152,12 @@
 
   <!-- ===== Interests Section ===== -->
   <section class="interests-section">
-    <h2 class="section-title gold-text">Interests</h2>
+    <h2 class="section-title">Interests</h2>
     <p class="section-subtitle">What excites me in tech</p>
 
     <div class="interests-grid">
-      @for (interest of interests; track $index; let i = $index) {
-        <div class="interest-card" [style.animation-delay]="i * 0.08 + 's'">
+      @for (interest of interests; track $index) {
+        <div class="interest-card animate-in">
           <mat-icon class="interest-icon">{{ interest.icon }}</mat-icon>
           <span class="interest-name">{{ interest.name }}</span>
         </div>
@@ -167,8 +167,8 @@
 
   <!-- ===== Contact CTA ===== -->
   <section class="contact-section" id="contact">
-    <div class="contact-card glass">
-      <h2 class="contact-title">Let's <span class="gold-text">Connect</span></h2>
+    <div class="contact-card surface">
+      <h2 class="contact-title">Let's Connect</h2>
       <p class="contact-subtitle">Open to new opportunities and interesting problems</p>
       <div class="contact-links">
         @for (link of contactLinks; track $index) {

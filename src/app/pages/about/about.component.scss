@@ -12,7 +12,7 @@
 .page-title {
   font-family: 'Outfit', sans-serif;
   font-size: clamp(2.2rem, 5vw, 3.5rem);
-  font-weight: 800;
+  font-weight: 700;
   margin: 0 0 12px;
 }
 
@@ -54,7 +54,7 @@
 
 .stat-value {
   font-size: 1.6rem;
-  font-weight: 800;
+  font-weight: 700;
   font-family: 'Outfit', sans-serif;
   color: var(--accent-gold);
   line-height: 1;
@@ -88,7 +88,7 @@
   display: flex;
   gap: 40px;
   padding: 40px;
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-lg);
   align-items: flex-start;
 }
 
@@ -181,7 +181,6 @@
 .skill-category {
   padding: 28px;
   border-radius: var(--radius-lg);
-  animation: fadeInUp 0.5s ease-out both;
   transition: all var(--transition-smooth);
 
   &:hover {
@@ -350,7 +349,6 @@
 .timeline-item {
   position: relative;
   margin-bottom: 32px;
-  animation: fadeInUp 0.5s ease-out both;
 
   &:last-child {
     margin-bottom: 0;
@@ -473,7 +471,6 @@
   border: 1px solid var(--border-subtle);
   border-radius: 100px;
   transition: all var(--transition-fast);
-  animation: fadeInUp 0.5s ease-out both;
 
   .interest-icon {
     font-size: 18px;
@@ -505,14 +502,14 @@
 .contact-card {
   text-align: center;
   padding: 56px 40px;
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-lg);
   border-color: var(--border-accent);
 }
 
 .contact-title {
   font-family: 'Outfit', sans-serif;
   font-size: clamp(1.8rem, 4vw, 2.4rem);
-  font-weight: 800;
+  font-weight: 700;
   margin: 0 0 12px;
 }
 

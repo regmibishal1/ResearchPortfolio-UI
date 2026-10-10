@@ -1,15 +1,16 @@
 /* ===== Design System: CSS Custom Properties ===== */
+// Components use these tokens rather than raw values.
 :root {
   /* Core palette */
   --bg-primary: #0a0a0f;
   --bg-secondary: #12121a;
   --bg-card: #1a1a2e;
   --bg-card-hover: #222240;
-  --bg-glass: rgba(26, 26, 46, 0.7);
 
-  /* Accent & gold tones */
+  /* Accent & gold tones. Gold is kept for the primary action, the current
+     page, focus, inline links and the accent bar under section titles. */
   --accent-gold: #f0c040;
-  --accent-gold-light: #ffd966;
+  --accent-gold-hover: #ffd966;
   --accent-gold-dim: rgba(240, 192, 64, 0.15);
   --accent-gradient: linear-gradient(135deg, #f0c040, #e6a810);
 
@@ -24,28 +25,78 @@
 
   /* Text */
   --text-primary: #f0f0f5;
+  // Long-form body copy, a step softer than headings.
+  --text-body: #e4e4ec;
   --text-secondary: #a0a0b8;
+  // Placeholders only; too faint for text on gold-dim.
   --text-muted: #8b8ba5;
 
   /* Borders & shadows */
+  // Decorative card edges only.
   --border-subtle: rgba(255, 255, 255, 0.06);
   --border-accent: rgba(240, 192, 64, 0.3);
   // Visible edge for inputs and other controls (3:1 against cards).
   --border-control: #6b6b85;
   --focus-ring: #f0c040;
-  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
+  // Cards rest flat with a border; the shadow is for hover only.
+  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.35);
   --shadow-glow: 0 0 30px rgba(240, 192, 64, 0.15);
 
-  /* Radius */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
-  --radius-xl: 28px;
+  /* Typography */
+  --font-display: 'Outfit', 'Inter', sans-serif;
+  --font-text: 'Inter', 'Roboto', 'Helvetica Neue', sans-serif;
+  --fs-display: clamp(40px, 5vw + 16px, 64px);
+  --fs-h1: 40px;
+  --fs-h2: 28px;
+  --fs-h3: 20px;
+  --fs-lead: 18px;
+  --fs-body: 16px;
+  --fs-small: 14px;
+  // The smallest size on the site; chips and badges.
+  --fs-micro: 13px;
+  --lh-display: 1.05;
+  --lh-h1: 1.15;
+  --lh-h2: 1.25;
+  --lh-h3: 1.35;
+  --lh-body: 1.6;
+  --lh-small: 1.5;
+  --lh-micro: 1.4;
 
-  /* Transitions */
-  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-spring: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* Spacing, on a 4px base */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+
+  /* Layout widths */
+  --container-prose: 720px;
+  --container: 1120px;
+  --container-wide: 1280px;
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  /* Motion */
+  --dur-fast: 150ms;
+  --dur-base: 250ms;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --transition-fast: var(--dur-fast) var(--ease);
+  --transition-smooth: var(--dur-base) var(--ease);
+}
+
+@media (max-width: 599.98px) {
+  :root {
+    --fs-h1: 32px;
+    --fs-h2: 24px;
+  }
 }
 
 /* ===== Global Reset & Base ===== */
@@ -76,7 +127,7 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
-  font-family: 'Inter', 'Roboto', 'Helvetica Neue', sans-serif;
+  font-family: var(--font-text);
   background-color: var(--bg-primary);
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
@@ -95,7 +146,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Outfit', 'Inter', sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
   color: var(--text-primary);
   letter-spacing: -0.02em;
@@ -108,7 +159,7 @@ a {
 }
 
 a:hover {
-  color: var(--accent-gold-light);
+  color: var(--accent-gold-hover);
 }
 
 // Hidden on screen, still read by screen readers.
@@ -138,20 +189,40 @@ a:hover {
 }
 
 /* ===== Buttons ===== */
+// Large (48px) by default; add .btn-md for the 40px size.
 .btn-primary,
 .btn-secondary {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 14px 32px;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 48px;
+  padding: 0 20px;
   border-radius: var(--radius-md);
-  font-family: 'Inter', sans-serif;
-  font-size: 0.95rem;
+  font-family: var(--font-text);
+  font-size: var(--fs-body);
   font-weight: 600;
+  line-height: 1.2;
   text-transform: none;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
   text-decoration: none;
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  // Disabled stays legible rather than fading out.
+  &:disabled,
+  &:disabled:hover {
+    background: var(--bg-card);
+    border-color: var(--border-subtle);
+    color: var(--text-secondary);
+    cursor: not-allowed;
+  }
 
   mat-icon {
     font-size: 20px;
@@ -160,14 +231,19 @@ a:hover {
   }
 }
 
+.btn-md {
+  min-height: 40px;
+  padding: 0 var(--space-4);
+  font-size: 15px;
+}
+
 .btn-primary {
-  background: var(--accent-gradient);
+  background: var(--accent-gold);
   color: var(--bg-primary);
-  border: none;
+  border: 1px solid transparent;
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(240, 192, 64, 0.3);
+    background: var(--accent-gold-hover);
     color: var(--bg-primary);
   }
 
@@ -183,9 +259,8 @@ a:hover {
   border: 1px solid var(--border-control);
 
   &:hover {
-    border-color: var(--accent-gold);
-    color: var(--accent-gold);
-    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
   }
 }
 
@@ -220,10 +295,10 @@ a:hover {
 }
 
 /* ===== Utility Classes ===== */
-.glass {
-  background: var(--bg-glass);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+// Solid card surface. Only the toolbar keeps a blurred, see-through
+// background.
+.surface {
+  background: var(--bg-card);
   border: 1px solid var(--border-subtle);
 }
 
@@ -235,8 +310,9 @@ a:hover {
 }
 
 .section-title {
-  font-size: 2.2rem;
-  margin-bottom: 0.5rem;
+  font-size: var(--fs-h2);
+  line-height: var(--lh-h2);
+  margin-bottom: var(--space-2);
   position: relative;
   display: inline-block;
 }
@@ -248,13 +324,13 @@ a:hover {
   left: 0;
   width: 50px;
   height: 3px;
-  background: var(--accent-gradient);
+  background: var(--accent-gold);
   border-radius: 2px;
 }
 
 .section-subtitle {
   color: var(--text-secondary);
-  font-size: 1.05rem;
+  font-size: var(--fs-body);
   margin-bottom: 2.5rem;
   font-weight: 400;
 }
@@ -263,7 +339,7 @@ a:hover {
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -282,22 +358,30 @@ a:hover {
   }
 }
 
+// Entrance animation, on the first page of a visit only: AppComponent adds
+// .entered to <html> on the first navigation away, after which pages
+// appear without it. Never put it on a page's H1 or hero image, since the
+// largest paint is counted when the animation ends.
 .animate-in {
-  animation: fadeInUp 0.6s ease-out both;
+  animation: fadeInUp var(--dur-base) var(--ease) backwards;
+}
+
+.entered .animate-in {
+  animation: none;
 }
 
 .animate-in-delay-1 {
-  animation-delay: 0.1s;
+  animation-delay: 50ms;
 }
 .animate-in-delay-2 {
-  animation-delay: 0.2s;
+  animation-delay: 100ms;
 }
 .animate-in-delay-3 {
-  animation-delay: 0.3s;
+  animation-delay: 150ms;
 }
 .animate-in-delay-4 {
-  animation-delay: 0.4s;
+  animation-delay: 200ms;
 }
 .animate-in-delay-5 {
-  animation-delay: 0.5s;
+  animation-delay: 250ms;
 }

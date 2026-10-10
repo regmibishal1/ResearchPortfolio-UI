@@ -5,7 +5,7 @@
     <div class="gradient-orb orb-2"></div>
   </div>
 
-  <div class="hero-content animate-in">
+  <div class="hero-content">
     <a
       class="hero-badge animate-in animate-in-delay-1"
       [routerLink]="['/about']"
@@ -14,9 +14,7 @@
       <span class="badge-dot"></span>
       <span>Open to new roles, get in touch</span>
     </a>
-    <h1 class="hero-name animate-in animate-in-delay-2">
-      Hi, I'm <span class="gold-text">Bishal Regmi</span>
-    </h1>
+    <h1 class="hero-name">Hi, I'm <span class="gold-text">Bishal Regmi</span></h1>
     <p class="hero-title animate-in animate-in-delay-3">Software Engineer & Data Scientist</p>
     <p class="hero-subtitle animate-in animate-in-delay-4">
       Building scalable applications and extracting insights from data. Focused on full-stack
@@ -67,12 +65,12 @@
 <!-- ===== Skills Section ===== -->
 <section class="skills-section">
   <div class="section-container">
-    <h2 class="section-title gold-text">Tech Stack</h2>
+    <h2 class="section-title">Tech Stack</h2>
     <p class="section-subtitle">Technologies and tools I work with</p>
 
     <div class="skills-grid">
-      @for (skill of skills; track $index; let i = $index) {
-        <div class="skill-chip" [style.animation-delay]="i * 0.05 + 's'">
+      @for (skill of skills; track $index) {
+        <div class="skill-chip animate-in">
           <mat-icon class="skill-icon">{{ skill.icon }}</mat-icon>
           <span class="skill-name">{{ skill.name }}</span>
         </div>
@@ -84,13 +82,13 @@
 <!-- ===== Featured Projects Section ===== -->
 <section class="featured-section">
   <div class="section-container">
-    <h2 class="section-title gold-text">Featured Projects</h2>
+    <h2 class="section-title">Featured Projects</h2>
     <p class="section-subtitle">A selection of my recent work</p>
 
     <div class="projects-grid">
       @for (project of featuredProjects; track project.id; let i = $index) {
         <a
-          class="project-card glass"
+          class="project-card surface animate-in"
           [routerLink]="['/project', project.id]"
           [style.animation-delay]="i * 0.1 + 's'"
         >

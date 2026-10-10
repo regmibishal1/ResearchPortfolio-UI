@@ -142,7 +142,7 @@
   cursor: pointer;
 
   &:hover {
-    color: var(--accent-gold-light);
+    color: var(--accent-gold-hover);
   }
 }
 
@@ -213,7 +213,7 @@
 /* Form transition animations */
 .form-section {
   width: 100%;
-  animation: fadeUp 0.4s ease forwards;
+  animation: fadeUp var(--dur-base) var(--ease) forwards;
 }
 
 @keyframes fadeUp {
