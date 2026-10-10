@@ -238,7 +238,7 @@
                 }
                 @if (showLockedMatches && lockedMatchesForDate.length > 0) {
                   <span class="context-matches">
-                    @for (m of lockedMatchesForDate; track m; let last = $last) {
+                    @for (m of lockedMatchesForDate; track $index; let last = $last) {
                       {{ m.home_team }} {{ m.home_score }}-{{ m.away_score }} {{ m.away_team }}
                       @if (!last) {
                         ·
@@ -284,7 +284,7 @@
                 @if (d.played) {
                   <span class="factors-note">Model's pre-match read</span>
                 }
-                @for (f of d.top_factors; track f) {
+                @for (f of d.top_factors; track $index) {
                   <div class="factor">
                     <span class="factor-label">{{ f.label }}</span>
                     <span class="factor-value">{{ formatFactorValue(f.feature, f.value) }}</span>
@@ -624,7 +624,7 @@
           <h3 class="bracket-section-title">Best 8 third-placed teams</h3>
           @if (bracket) {
             <div class="thirds-row">
-              @for (t of bracket.best_thirds; track t) {
+              @for (t of bracket.best_thirds; track $index) {
                 <span class="third-chip">{{ t }}</span>
               }
             </div>
@@ -642,7 +642,7 @@
                 [(ngModel)]="selectedHistoryStage"
                 (change)="onHistoryStageChange()"
               >
-                @for (opt of stageOptions; track opt) {
+                @for (opt of stageOptions; track $index) {
                   <option [value]="opt.value">
                     {{ opt.label }}
                   </option>
@@ -779,7 +779,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      @for (m of reportCard.matches; track m) {
+                      @for (m of reportCard.matches; track $index) {
                         <tr>
                           <td>{{ m.date | date: 'MMM d' }}</td>
                           <td class="team-col">{{ m.home }} vs {{ m.away }}</td>
@@ -826,14 +826,14 @@
             }
             @if (scenarioViews.length > 0) {
               <div class="scenario-grid">
-                @for (v of scenarioViews; track v; let i = $index) {
+                @for (v of scenarioViews; track $index; let i = $index) {
                   <div class="scenario-card">
                     <div class="scenario-header">
                       <span class="scenario-round">{{ v.round }}</span>
                       <span class="scenario-title">{{ v.teams[0] }} vs {{ v.teams[1] }}</span>
                     </div>
                     <div class="scenario-toggle">
-                      @for (t of v.teams; track t; let ti = $index) {
+                      @for (t of v.teams; track $index; let ti = $index) {
                         <button
                           class="scenario-side"
                           [class.active]="v.pick === t"
@@ -846,7 +846,7 @@
                     </div>
                     <table class="scenario-table">
                       <tbody>
-                        @for (row of v.rows; track row; let r = $index) {
+                        @for (row of v.rows; track $index; let r = $index) {
                           <tr>
                             <td class="rank-col">{{ r + 1 }}</td>
                             <td class="team-col">{{ row.team }}</td>
@@ -985,7 +985,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      @for (u of r.biggest_upsets; track u) {
+                      @for (u of r.biggest_upsets; track $index) {
                         <tr>
                           <td>{{ u.date | date: 'MMM d' }}</td>
                           <td class="team-col">{{ u.home }} vs {{ u.away }}</td>
@@ -1011,7 +1011,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      @for (s of r.biggest_swings; track s) {
+                      @for (s of r.biggest_swings; track $index) {
                         <tr>
                           <td>{{ s.date | date: 'MMM d' }}</td>
                           <td class="team-col">{{ s.team }}</td>
@@ -1158,7 +1158,7 @@
           <thead>
             <tr>
               <th scope="col">{{ label }}</th>
-              @for (c of table.columns; track c) {
+              @for (c of table.columns; track $index) {
                 <th scope="col">{{ c }}</th>
               }
             </tr>

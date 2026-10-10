@@ -10,7 +10,7 @@
     trade-off the report attributes to the naive feature-combination strategy.
   </p>
 
-  @for (table of regressionTables; track table) {
+  @for (table of regressionTables; track $index) {
     <div class="table-wrap">
       <h4 class="table-title">{{ table.target }}</h4>
       <table class="results-table">
@@ -24,7 +24,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (row of table.rows; track row) {
+          @for (row of table.rows; track $index) {
             <tr [class.baseline-row]="row.baseline">
               <td>
                 {{ row.method }}
@@ -71,7 +71,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (r of curve; track r) {
+          @for (r of curve; track $index) {
             <tr>
               <th scope="row">{{ r.epoch }}</th>
               <td>{{ r.acc | number: '1.3-3' }}</td>

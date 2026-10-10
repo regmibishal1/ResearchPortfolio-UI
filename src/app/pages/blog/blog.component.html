@@ -8,14 +8,14 @@
   </header>
 
   <div class="post-list">
-    @for (post of posts; track post) {
+    @for (post of posts; track post.slug) {
       <a class="post-card" [routerLink]="['/blog', post.slug]">
         <span class="post-date">{{ formatDate(post.date) }}</span>
         <h2 class="post-card-title">{{ post.title }}</h2>
         <p class="post-summary">{{ post.summary }}</p>
         <div class="post-footer">
           <div class="post-tags">
-            @for (tag of post.tags; track tag) {
+            @for (tag of post.tags; track $index) {
               <span class="tag">{{ tag }}</span>
             }
           </div>
