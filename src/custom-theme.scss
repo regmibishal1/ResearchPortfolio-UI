@@ -23,8 +23,8 @@ $ResearchPortfolio-UI-theme: mat.m2-define-dark-theme(
 
 // Override Material component backgrounds to match our design system
 .mat-mdc-snack-bar-container {
-  --mdc-snackbar-container-color: #1a1a2e;
-  --mdc-snackbar-supporting-text-color: #f0f0f5;
+  --mat-snackbar-container-color: #1a1a2e;
+  --mat-snackbar-supporting-text-color: #f0f0f5;
 }
 
 // The drawer container wraps every routed page and otherwise paints the
