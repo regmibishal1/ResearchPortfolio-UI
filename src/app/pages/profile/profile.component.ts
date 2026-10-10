@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core'
-import { CommonModule } from '@angular/common'
+
 import { FormsModule } from '@angular/forms'
 import { Router } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
@@ -11,7 +11,7 @@ import { AuthService } from '../auth/auth.service'
 
 @Component({
   selector: 'app-profile',
-  imports: [CommonModule, FormsModule, MatIconModule, MatProgressSpinnerModule],
+  imports: [FormsModule, MatIconModule, MatProgressSpinnerModule],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
 })

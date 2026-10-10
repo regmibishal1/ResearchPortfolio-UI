@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { CommonModule } from '@angular/common'
+
 import { RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
 import { SeoService } from '../../services/seo.service'
@@ -7,7 +7,7 @@ import { POSTS, BlogPost } from '../../data/blog'
 
 @Component({
   selector: 'app-blog',
-  imports: [CommonModule, RouterModule, MatIconModule],
+  imports: [RouterModule, MatIconModule],
   templateUrl: './blog.component.html',
   styleUrl: './blog.component.scss',
 })

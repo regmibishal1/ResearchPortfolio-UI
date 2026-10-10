@@ -8,7 +8,7 @@ import {
   PLATFORM_ID,
   inject,
 } from '@angular/core'
-import { CommonModule, isPlatformBrowser } from '@angular/common'
+import { isPlatformBrowser } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 import { MatCardModule } from '@angular/material/card'
 import { MatSelectModule } from '@angular/material/select'
@@ -68,7 +68,6 @@ const DISTRIBUTIONS: Record<Distribution, DistributionConfig> = {
 @Component({
   selector: 'app-stats-explorer',
   imports: [
-    CommonModule,
     FormsModule,
     MatCardModule,
     MatSelectModule,

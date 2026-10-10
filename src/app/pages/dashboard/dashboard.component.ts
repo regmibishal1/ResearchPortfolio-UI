@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { CommonModule } from '@angular/common'
+
 import { RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
 import { SeoService } from '../../services/seo.service'
@@ -10,7 +10,7 @@ import { experienceLabel } from '../../data/experience'
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, RouterModule, MatIconModule, StatsExplorerComponent],
+  imports: [RouterModule, MatIconModule, StatsExplorerComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })

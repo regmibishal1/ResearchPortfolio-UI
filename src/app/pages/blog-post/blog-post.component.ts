@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core'
-import { CommonModule } from '@angular/common'
+
 import { ActivatedRoute, RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
 import { PageNotFoundComponent } from '../page-not-found/page-not-found.component'
@@ -9,13 +9,7 @@ import { ZoomableImageComponent } from '../../shared/zoomable-image/zoomable-ima
 
 @Component({
   selector: 'app-blog-post',
-  imports: [
-    PageNotFoundComponent,
-    CommonModule,
-    RouterModule,
-    MatIconModule,
-    ZoomableImageComponent,
-  ],
+  imports: [PageNotFoundComponent, RouterModule, MatIconModule, ZoomableImageComponent],
   templateUrl: './blog-post.component.html',
   styleUrl: './blog-post.component.scss',
 })

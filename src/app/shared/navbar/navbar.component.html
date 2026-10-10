@@ -51,10 +51,12 @@
     >
   </nav>
 
-  <span class="user-profile" *ngIf="isAuthenticated">
-    <button mat-stroked-button class="login-btn" [routerLink]="['/profile']">Profile</button>
-    <button mat-stroked-button class="login-btn" (click)="onLogout()">Logout</button>
-  </span>
+  @if (isAuthenticated) {
+    <span class="user-profile">
+      <button mat-stroked-button class="login-btn" [routerLink]="['/profile']">Profile</button>
+      <button mat-stroked-button class="login-btn" (click)="onLogout()">Logout</button>
+    </span>
+  }
 </mat-toolbar>
 
 <nav id="mobile-nav" class="mobile-nav" aria-label="Primary" [hidden]="!menuOpen">

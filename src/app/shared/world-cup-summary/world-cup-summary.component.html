@@ -10,17 +10,21 @@
     </a>
   </header>
 
-  <div class="state" *ngIf="loading">
-    <mat-spinner diameter="22"></mat-spinner>
-    <span>Loading latest run...</span>
-  </div>
+  @if (loading) {
+    <div class="state">
+      <mat-spinner diameter="22"></mat-spinner>
+      <span>Loading latest run...</span>
+    </div>
+  }
 
-  <div class="state state-error" *ngIf="error && !loading">
-    <mat-icon>cloud_off</mat-icon>
-    <span>{{ error }}</span>
-  </div>
+  @if (error && !loading) {
+    <div class="state state-error">
+      <mat-icon>cloud_off</mat-icon>
+      <span>{{ error }}</span>
+    </div>
+  }
 
-  <ng-container *ngIf="!loading && !error && data as d">
+  @if (!loading && !error && data; as d) {
     <div class="meta-line">
       <span
         >As of <strong>{{ d.run.as_of_date | date: 'mediumDate' }}</strong></span
@@ -30,16 +34,17 @@
       <span class="dot">·</span>
       <span>{{ d.run.n_played_matches_locked }} matches locked</span>
     </div>
-
     <ol class="top-list">
-      <li *ngFor="let row of d.leaderboard; let i = index">
-        <span class="pos">{{ i + 1 }}</span>
-        <span class="team">{{ row.team }}</span>
-        <span class="bar-wrap">
-          <span class="bar" [style.width.%]="row.winner_pct * 5"></span>
-        </span>
-        <span class="pct">{{ row.winner_pct | number: '1.2-2' }}%</span>
-      </li>
+      @for (row of d.leaderboard; track row; let i = $index) {
+        <li>
+          <span class="pos">{{ i + 1 }}</span>
+          <span class="team">{{ row.team }}</span>
+          <span class="bar-wrap">
+            <span class="bar" [style.width.%]="row.winner_pct * 5"></span>
+          </span>
+          <span class="pct">{{ row.winner_pct | number: '1.2-2' }}%</span>
+        </li>
+      }
     </ol>
-  </ng-container>
+  }
 </section>

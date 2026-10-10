@@ -1,4 +1,4 @@
-import { ApplicationConfig } from '@angular/core'
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core'
 import {
   provideRouter,
   withInMemoryScrolling,
@@ -14,6 +14,9 @@ import { prerenderInterceptor } from './prerender.interceptor'
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    // Angular 21 defaults to zoneless change detection; the app still relies
+    // on zone.js (e.g. charts run outside the zone so pages can settle).
+    provideZoneChangeDetection(),
     provideRouter(
       routes,
       withInMemoryScrolling({ scrollPositionRestoration: 'top', anchorScrolling: 'enabled' }),

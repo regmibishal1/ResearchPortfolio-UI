@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { CommonModule } from '@angular/common'
+
 import { MatIconModule } from '@angular/material/icon'
 
 interface MriModel {
@@ -22,7 +22,7 @@ type TabId = 'saliency' | 'confusion' | 'training'
 
 @Component({
   selector: 'app-mri-explorer',
-  imports: [CommonModule, MatIconModule],
+  imports: [MatIconModule],
   templateUrl: './mri-explorer.component.html',
   styleUrl: './mri-explorer.component.scss',
 })
