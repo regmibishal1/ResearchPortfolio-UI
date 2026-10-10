@@ -9,6 +9,7 @@ import { WorldCupSummaryComponent } from '../../shared/world-cup-summary/world-c
 import { MriExplorerComponent } from '../../shared/mri-explorer/mri-explorer.component'
 import { EmpathyExplorerComponent } from '../../shared/empathy-explorer/empathy-explorer.component'
 import { ZoomableImageComponent } from '../../shared/zoomable-image/zoomable-image.component'
+import { StatusBadgeComponent } from '../../shared/status-badge/status-badge.component'
 
 @Component({
   selector: 'app-project-detail',
@@ -21,6 +22,7 @@ import { ZoomableImageComponent } from '../../shared/zoomable-image/zoomable-ima
     MriExplorerComponent,
     EmpathyExplorerComponent,
     ZoomableImageComponent,
+    StatusBadgeComponent,
   ],
   templateUrl: './project-detail.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -31,13 +33,6 @@ export class ProjectDetailComponent implements OnInit {
   private seo = inject(SeoService)
 
   project: Project | null = null
-
-  readonly statusConfig: Record<string, { label: string; cssClass: string }> = {
-    live: { label: 'Live', cssClass: 'status-live' },
-    'in-progress': { label: 'In Progress', cssClass: 'status-wip' },
-    research: { label: 'Research', cssClass: 'status-research' },
-    proposal: { label: 'Research Proposal', cssClass: 'status-proposal' },
-  }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id')
@@ -57,11 +52,6 @@ export class ProjectDetailComponent implements OnInit {
       ],
       schema: [projectSchema(this.project, path)],
     })
-  }
-
-  get statusDisplay() {
-    if (!this.project?.status) return null
-    return this.statusConfig[this.project.status] ?? null
   }
 }
 

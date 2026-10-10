@@ -1,6 +1,7 @@
 /**
  * Central project data: single source of truth used by the project list,
- * featured section on the dashboard, and individual project detail pages.
+ * the Home page's spotlight and selected work, and individual project
+ * detail pages.
  */
 
 export interface RepoLink {
@@ -48,7 +49,19 @@ export interface Project {
    * about, not marketing.
    */
   lessons?: string[]
-  status?: 'live' | 'in-progress' | 'research' | 'proposal'
+  /** 'complete' is finished work that no longer updates. */
+  status?: 'live' | 'complete' | 'in-progress' | 'research' | 'proposal'
+  /** Overrides the default badge text for the status, e.g. "Final results". */
+  statusLabel?: string
+  /** One line on what the work achieved, shown on Home cards. Real results only. */
+  outcome?: string
+  /** Shown in Featured and in Home's selected work. */
+  featured?: boolean
+  /**
+   * The one project Home leads with. Exactly one public entry carries it
+   * (projects.spec.ts enforces this), and never the World Cup project.
+   */
+  spotlight?: boolean
   /**
    * Opt-in identifier for a live-data widget rendered above the About
    * section on the detail page. The detail-page component switches on
@@ -57,7 +70,7 @@ export interface Project {
   liveEmbed?: 'world-cup-summary' | 'mri-explorer' | 'empathy-explorer'
   /**
    * Excludes the entry from the exported list, and with it every surface
-   * that reads it: the project cards, the dashboard featured slice, and
+   * that reads it: the project cards, the Home page sections, and
    * the /project/:id detail page. For work that exists but is not ready
    * to be presented yet; remove the flag to publish it again.
    */
@@ -120,7 +133,7 @@ const PROJECT_DEFINITIONS: Project[] = [
     ],
     demo: '/world-cup',
     liveEmbed: 'world-cup-summary',
-    status: 'live',
+    status: 'complete',
     highlights: [
       'Calibrated XGBoost multi-class model on win/draw/loss with isotonic probability calibration',
       'Nine orthogonal features: Elo difference, positional squad strength (GK/DEF/MID/ATT), rolling form, neutral-venue flag',
@@ -129,6 +142,10 @@ const PROJECT_DEFINITIONS: Project[] = [
       'Daily reruns through the tournament: completed matches override Poisson sampling, so predictions sharpened as the bracket unfolded',
       'Per-snapshot versioning in Postgres with isolated read-only schema role for the public read endpoints',
     ],
+    statusLabel: 'Final results',
+    outcome:
+      '34 daily forecasts from June 11 to the July 19 final, then graded against the results.',
+    featured: true,
   },
   {
     id: 'showupmd',
@@ -152,14 +169,17 @@ const PROJECT_DEFINITIONS: Project[] = [
       'Data ingested and normalized from 5+ government sources including the MD State Board of Elections',
       'Deployed on Cloudflare with Cloudflare Tunnel for real-IP propagation and end-to-end request tracing',
     ],
+    outcome: 'Live at showupmd.org, built on data from 5+ Maryland government sources.',
+    featured: true,
+    spotlight: true,
   },
   {
     id: 'research-portfolio',
     title: 'Research Portfolio Platform',
     shortDescription:
-      'The platform serving this site: an Angular frontend, a Spring Boot auth API, and a FastAPI model server, all running in Docker on home hardware behind Cloudflare.',
+      'The platform serving this site: an Angular frontend on Cloudflare Pages, plus a Spring Boot auth API and a FastAPI model server running in Docker on home hardware.',
     description:
-      'The platform serving the site you are on. An Angular frontend on Cloudflare Pages talks to a Java Spring Boot authentication API and a Python FastAPI model server, both running in Docker on home hardware behind a Cloudflare Tunnel, so nothing needs a cloud bill. Includes a live statistics explorer powered by server-side NumPy sampling, structured request-scoped logging with real-IP detection, and a dark-themed UI built with Angular Material.',
+      'The platform serving the site you are on. An Angular frontend on Cloudflare Pages talks to a Java Spring Boot authentication API and a Python FastAPI model server, both running in Docker on home hardware behind a Cloudflare Tunnel, so nothing needs a cloud bill. Includes structured request-scoped logging with real-IP detection and a dark-themed UI built with Angular Material.',
     tags: ['Angular', 'Java Spring Boot', 'Python FastAPI', 'PostgreSQL'],
     category: 'Full Stack',
     period: '2023-present',
@@ -172,12 +192,14 @@ const PROJECT_DEFINITIONS: Project[] = [
     ],
     status: 'in-progress',
     highlights: [
-      'Angular 17 frontend with Material Design, dark theme, and custom glass morphism UI components',
+      'Angular 22 frontend with Material Design and a dark theme, prerendered to static pages for fast loads and search',
       'Spring Boot authentication API with JWT token-based security, CORS protection, and role-based access control',
       'Python FastAPI resource server with structured request-scoped logging, real-IP detection, and X-Request-ID tracing',
-      'Live statistics explorer with server-side NumPy sampling, returning histograms and summary stats in real time',
       'PostgreSQL database for user data and session management',
     ],
+    outcome:
+      'Serves this whole site with no cloud bill: Cloudflare Pages up front, two APIs in Docker at home.',
+    featured: true,
   },
   {
     id: 'takeout-organizer',
@@ -237,6 +259,8 @@ const PROJECT_DEFINITIONS: Project[] = [
       'Classification reports were not generated for every model during training due to compute cost, so model selection leaned too heavily on test loss alone',
       'The preferred dataset (ADNI) was inaccessible, and the substitute ships no label provenance, so how the stage labels were assigned is unknown. The whole study is a feasibility proof on a limited dataset, not a clinical result',
     ],
+    outcome: 'ResNet-50 reached 99.06% test accuracy on a small, imbalanced public dataset.',
+    featured: true,
   },
   {
     id: 'empathy-emotion',
@@ -267,6 +291,8 @@ const PROJECT_DEFINITIONS: Project[] = [
       'Early runs were unstable on local hardware (one eval produced NaN loss). Moving to Colab fixed reproducibility, underlining how much environment stability affects results',
       'The attention and gating fusion strategies underperformed and were dropped after only 3 to 5 epochs. A fair comparison would give every method the same training budget before ruling it out',
     ],
+    outcome: 'Multimodal fusion beat the text-only baseline on all three regression targets.',
+    featured: true,
   },
   {
     id: 'autism-sentiment',
@@ -534,10 +560,27 @@ function periodRank(period?: string): number {
 
 /**
  * Projects in reverse-chronological order (newest first), with hidden
- * entries excluded. The list page and the dashboard's featured slice both
+ * entries excluded. The list page and the Home page both
  * read this, so time order and visibility hold everywhere without any
  * component doing its own sorting or filtering.
  */
 export const PROJECTS: Project[] = PROJECT_DEFINITIONS.filter((p) => !p.hidden).sort(
   (a, b) => periodRank(b.period) - periodRank(a.period)
 )
+
+/** The project Home leads with, or null if none is flagged (Home then skips the section). */
+export const SPOTLIGHT: Project | null = PROJECTS.find((p) => p.spotlight) ?? null
+
+const STATUS_TEXT: Record<NonNullable<Project['status']>, string> = {
+  live: 'Live',
+  complete: 'Complete',
+  'in-progress': 'In progress',
+  research: 'Research',
+  proposal: 'Research proposal',
+}
+
+/** Badge text for a project's status, or null when it has none. */
+export function statusText(project: Project): string | null {
+  if (!project.status) return null
+  return project.statusLabel ?? STATUS_TEXT[project.status]
+}

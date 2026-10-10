@@ -1,181 +1,46 @@
-// ===== Hero Section =====
-// Toolbar is position:fixed at 64px; page-content scroll container is
-// calc(100vh - 64px) tall, so hero must match to avoid clipping the
-// scroll indicator at the bottom.
-$toolbar-height: 64px;
+@use 'breakpoints' as bp;
 
-.hero-section {
-  position: relative;
-  min-height: calc(100vh - #{$toolbar-height});
+// ===== Hero =====
+.hero {
+  padding: var(--space-9) 0 var(--space-8);
+
+  @include bp.down(bp.$sm) {
+    padding: 56px 0 40px;
+  }
+}
+
+// Centred on small screens; left-aligned from 900px so the name and the
+// work read in one sweep.
+.hero-inner {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  background: var(--bg-primary);
-}
-
-// ===== Live Demo Banners (inside the hero) =====
-.live-banners {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 44px;
-}
-
-.live-banner {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 18px 8px 8px;
-  background: rgba(26, 26, 46, 0.75);
-  border: 1px solid var(--border-subtle);
-  border-radius: 100px;
-  text-decoration: none;
-  backdrop-filter: blur(8px);
-  transition: all var(--transition-smooth);
-
-  &:hover {
-    border-color: var(--border-accent);
-    box-shadow: var(--shadow-glow);
-
-    .live-arrow {
-      transform: translateX(4px);
-      color: var(--accent-gold);
-    }
-  }
-}
-
-.live-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 13px;
-  border-radius: 100px;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--color-positive);
-  background: rgba(74, 222, 128, 0.12);
-  border: 1px solid rgba(74, 222, 128, 0.3);
-  flex-shrink: 0;
-
-  // A finished project: gold instead of the live green, and no pulse.
-  &.pill-final {
-    color: var(--accent-gold);
-    background: var(--accent-gold-dim);
-    border-color: var(--border-accent);
-  }
-}
-
-.live-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--color-positive);
-}
-
-.live-text {
-  color: var(--text-primary);
-  font-weight: 600;
-  font-size: 0.92rem;
-  font-family: 'Outfit', sans-serif;
-}
-
-.live-detail {
-  color: var(--text-secondary);
-  font-weight: 400;
-  font-size: 0.85rem;
-  font-family: 'Inter', sans-serif;
-
-  &::before {
-    content: '\00b7';
-    margin: 0 7px 0 5px;
-    color: var(--text-muted);
-  }
-}
-
-.live-arrow {
-  font-size: 18px;
-  width: 18px;
-  height: 18px;
-  color: var(--text-secondary);
-  transition: all var(--transition-fast);
-}
-
-@media (max-width: 640px) {
-  .live-banners {
-    margin-top: 32px;
-  }
-
-  .live-banner {
-    max-width: 100%;
-  }
-
-  .live-detail {
-    display: none;
-  }
-}
-
-.hero-bg {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  z-index: 0;
-}
-
-// Two static, blurred glows anchor the hero corners. No motion: an
-// imperceptible float on a 500px blur is animation for its own sake.
-.gradient-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.4;
-
-  &.orb-1 {
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, rgba(240, 192, 64, 0.3), transparent 70%);
-    top: -10%;
-    right: -5%;
-  }
-
-  &.orb-2 {
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(240, 192, 64, 0.1), transparent 70%);
-    bottom: -10%;
-    left: -5%;
-  }
-}
-
-.hero-content {
-  position: relative;
-  z-index: 1;
   text-align: center;
-  // Bottom padding reserves the strip the scroll indicator occupies so the
-  // centered content can never slide underneath it on short viewports.
-  padding: 24px 24px 110px;
-  max-width: 800px;
+
+  @include bp.up(bp.$md) {
+    align-items: flex-start;
+    text-align: left;
+  }
 }
 
 .hero-badge {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  background: var(--accent-gold-dim);
+  gap: var(--space-2);
+  min-height: 32px;
+  margin-bottom: var(--space-5);
+  padding: var(--space-1) var(--space-4);
   border: 1px solid var(--border-accent);
-  border-radius: 100px;
-  padding: 8px 20px;
-  font-size: 0.85rem;
-  font-weight: 500;
+  border-radius: var(--radius-pill);
+  background: var(--accent-gold-dim);
   color: var(--accent-gold);
-  margin-bottom: 28px;
-  font-family: 'Inter', sans-serif;
+  font-size: var(--fs-small);
+  font-weight: 500;
   text-decoration: none;
-  transition: background var(--transition-smooth);
+  transition: background-color var(--transition-fast);
 
   &:hover {
+    color: var(--accent-gold);
     background: rgba(240, 192, 64, 0.22);
   }
 
@@ -184,364 +49,246 @@ $toolbar-height: 64px;
     height: 8px;
     border-radius: 50%;
     background: var(--color-positive);
-    box-shadow: 0 0 8px rgba(74, 222, 128, 0.5);
   }
 }
 
 .hero-name {
-  font-family: 'Outfit', sans-serif;
-  font-size: clamp(2.5rem, 6vw, 4.5rem);
-  font-weight: 700;
-  line-height: 1.1;
-  margin: 0 0 16px;
-  color: var(--text-primary);
-
-  .gold-text {
-    background: linear-gradient(135deg, #f0c040, #ffd966, #e6a810);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
+  margin: 0 0 var(--space-3);
+  font-size: var(--fs-display);
+  line-height: var(--lh-display);
+  letter-spacing: -0.02em;
 }
 
-.hero-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: clamp(1.2rem, 3vw, 1.8rem);
-  font-weight: 500;
+.hero-role {
+  margin: 0 0 var(--space-4);
   color: var(--accent-gold);
-  margin: 0 0 20px;
+  font-size: var(--fs-h3);
+  font-weight: 500;
 }
 
-.hero-subtitle {
-  font-size: 1.05rem;
-  line-height: 1.7;
+.hero-intro {
+  max-width: 60ch;
+  margin: 0 0 var(--space-6);
   color: var(--text-secondary);
-  max-width: 640px;
-  margin: 0 auto 36px;
-  text-wrap: balance;
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
 }
 
 .hero-actions {
   display: flex;
-  gap: 16px;
-  justify-content: center;
   flex-wrap: wrap;
-}
-
-// Scroll indicator
-.scroll-indicator {
-  position: absolute;
-  bottom: 32px;
-  left: 0;
-  right: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  z-index: 1;
-
-  // Short viewports do not have a spare strip below the hero content;
-  // the fold is obvious there anyway.
-  @media (max-height: 760px) {
-    display: none;
-  }
-
-  span {
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-  }
-}
-
-.scroll-mouse {
-  width: 24px;
-  height: 38px;
-  border: 2px solid var(--text-muted);
-  border-radius: 12px;
-  display: flex;
   justify-content: center;
-  padding-top: 6px;
+  gap: var(--space-3);
 }
 
-.scroll-dot {
-  width: 4px;
-  height: 8px;
-  background: var(--accent-gold);
-  border-radius: 2px;
-}
+// ===== Sections =====
+.section {
+  padding-top: var(--space-9);
 
-// ===== Skills Section =====
-.skills-section {
-  background: var(--bg-secondary);
-  padding: 100px 0;
-  position: relative;
+  &:last-child {
+    padding-bottom: var(--space-9);
+  }
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border-accent), transparent);
+  @include bp.down(bp.$sm) {
+    padding-top: var(--space-7);
+
+    &:last-child {
+      padding-bottom: var(--space-7);
+    }
   }
 }
 
-.section-container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 24px;
+// The hero's bottom padding already separates it from the first section.
+.hero + .section {
+  padding-top: 0;
 }
 
-.skills-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  justify-content: center;
+.section-title {
+  margin: 0 0 var(--space-6);
 }
 
-.skill-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
+// ===== Latest work spotlight =====
+.spotlight {
+  display: grid;
+  gap: var(--space-6);
+  padding: var(--space-6);
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
-  border-radius: 100px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--text-primary);
-  transition: all var(--transition-fast);
-
-  .skill-icon {
-    font-size: 16px;
-    width: 16px;
-    height: 16px;
-    opacity: 0.5;
-  }
-
-  &:hover {
-    border-color: var(--border-accent);
-    background: var(--bg-card-hover);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-glow);
-  }
-}
-
-// ===== Featured Projects Section =====
-.featured-section {
-  background: var(--bg-primary);
-  padding: 100px 0;
-}
-
-.projects-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 24px;
-  margin-bottom: 48px;
-}
-
-.project-card {
-  padding: 32px;
   border-radius: var(--radius-lg);
-  transition: all var(--transition-smooth);
-  cursor: pointer;
-  text-decoration: none;
-  display: block;
-  overflow: hidden;
 
-  // Full-bleed screenshot strip across the top of the card
-  .card-thumb {
-    margin: -32px -32px 20px;
-    height: 170px;
-    overflow: hidden;
-    border-bottom: 1px solid var(--border-subtle);
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: top center;
-      display: block;
-      transition: transform var(--transition-smooth);
-    }
-  }
-
-  &:hover .card-thumb img {
-    transform: scale(1.03);
-  }
-
-  &:hover {
-    transform: translateY(-6px);
-    box-shadow: var(--shadow-card);
-    border-color: var(--border-accent);
-    background: var(--bg-card-hover);
-
-    .project-link {
-      color: var(--accent-gold);
-
-      mat-icon {
-        transform: translateX(4px);
-      }
-    }
-  }
-}
-
-.project-icon {
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-
-  .project-mat-icon {
-    font-size: 40px;
-    width: 40px;
-    height: 40px;
-    color: var(--accent-gold);
-  }
-}
-
-.project-logo {
-  width: 48px;
-  height: 48px;
-  border-radius: 10px;
-  object-fit: contain;
-}
-
-.project-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: 1.3rem;
-  font-weight: 600;
-  margin: 0 0 10px;
-  color: var(--text-primary);
-}
-
-.project-desc {
-  font-size: 0.92rem;
-  line-height: 1.6;
-  color: var(--text-secondary);
-  margin: 0 0 20px;
-}
-
-.project-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 20px;
-}
-
-.tag {
-  padding: 4px 12px;
-  border-radius: 100px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  background: var(--accent-gold-dim);
-  color: var(--accent-gold);
-  letter-spacing: 0.02em;
-}
-
-.project-link {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  transition: color var(--transition-fast);
-
-  mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-    transition: transform var(--transition-fast);
-  }
-}
-
-.view-all-container {
-  text-align: center;
-}
-
-// ===== Responsive =====
-@media (max-width: 768px) {
-  .hero-section {
-    // Mobile browsers have smaller chrome, so use dvh so the scroll indicator
-    // isn't clipped by browser UI (address bar, bottom bar).
-    min-height: calc(100dvh - #{$toolbar-height});
-  }
-
-  .hero-subtitle {
-    font-size: 0.95rem;
-  }
-
-  .hero-actions {
-    flex-direction: column;
+  @include bp.up(bp.$md) {
+    grid-template-columns: 7fr 5fr;
     align-items: center;
   }
 
-  .btn-primary,
-  .btn-secondary {
-    width: 100%;
-    max-width: 280px;
-    justify-content: center;
-  }
-
-  .skills-section,
-  .featured-section {
-    padding: 60px 0;
-  }
-
-  .projects-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .scroll-indicator {
-    display: none;
-  }
-
-  .footer-links {
-    flex-wrap: wrap;
-    justify-content: center;
+  @include bp.down(bp.$sm) {
+    padding: var(--space-5);
   }
 }
 
-// ===== Live Demo Section =====
-.demo-section {
+.spotlight-media {
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
   background: var(--bg-secondary);
-  padding: 100px 0;
+
+  a {
+    display: block;
+    height: 100%;
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+  }
+}
+
+.spotlight-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.spotlight-title {
+  margin: 0;
+  font-size: var(--fs-h2);
+  line-height: var(--lh-h2);
+}
+
+.spotlight-summary {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 17px;
+  line-height: var(--lh-body);
+}
+
+.spotlight-outcome {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 15px;
+  line-height: var(--lh-small);
+}
+
+.spotlight-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+// ===== Selected work =====
+.work-grid {
+  display: grid;
+  gap: var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @include bp.up(bp.$md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.all-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  width: fit-content;
+  min-height: 40px;
+  margin: var(--space-5) 0 0 auto;
+  font-size: 15px;
+  font-weight: 600;
+
+  svg {
+    fill: currentColor;
+  }
+}
+
+// ===== Latest writing =====
+.post-card {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-5);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast);
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border-accent), transparent);
+  &:hover {
+    border-color: var(--border-control);
+    box-shadow: var(--shadow-card);
+    transform: translateY(-2px);
   }
 
-  .section-header {
-    text-align: center;
-    margin-bottom: 48px;
+  &:has(a:focus-visible) {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
   }
 
-  .section-title {
-    font-size: 2rem;
-    font-weight: 700;
+  @media (prefers-reduced-motion: reduce) {
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
+.post-date {
+  color: var(--text-secondary);
+  font-size: var(--fs-micro);
+  font-variant-numeric: tabular-nums;
+}
+
+.post-title {
+  margin: 0;
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  line-height: var(--lh-h3);
+
+  // The title is the card's link; its click area covers the card.
+  a {
     color: var(--text-primary);
-    margin-bottom: 12px;
-  }
+    text-decoration: none;
 
-  .section-subtitle {
-    color: var(--text-secondary);
-    font-size: 1rem;
-    max-width: 500px;
-    margin: 0 auto;
-  }
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+    }
 
-  .demo-container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 0 24px;
+    &:focus-visible {
+      outline: none;
+    }
+  }
+}
+
+.post-summary {
+  max-width: 70ch;
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+}
+
+.post-read {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--accent-gold);
+  font-size: 15px;
+  font-weight: 600;
+
+  svg {
+    fill: currentColor;
   }
 }
