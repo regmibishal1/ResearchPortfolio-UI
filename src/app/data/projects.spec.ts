@@ -1,4 +1,4 @@
-import { PROJECTS, SPOTLIGHT, statusText } from './projects'
+import { PAPERS, PROJECTS, SPOTLIGHT, fileSize, statusText } from './projects'
 
 /** Index of a project id in the exported (sorted) list. */
 function at(id: string): number {
@@ -63,5 +63,26 @@ describe('PROJECTS ordering', () => {
     for (const p of PROJECTS) {
       expect(p.hidden).withContext(`'${p.id}' is hidden and should not export`).toBeFalsy()
     }
+  })
+
+  it('records each report at its real file size, so the download labels are right', async () => {
+    expect(PAPERS.length).toBeGreaterThan(0)
+    for (const p of PAPERS) {
+      const res = await fetch(`/${p.paper.url}`, { method: 'HEAD' })
+      expect(res.ok).withContext(`${p.paper.url} is served`).toBeTrue()
+      const length = res.headers.get('content-length')
+      if (length) expect(Number(length)).withContext(p.paper.url).toBe(p.paper.bytes)
+    }
+  })
+
+  it('lists reports newest first with an ISO cover date', () => {
+    const dates = PAPERS.map((p) => p.paper.date)
+    expect(dates).toEqual([...dates].sort().reverse())
+    for (const date of dates) expect(date).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+  })
+
+  it('formats download sizes in KB below a megabyte and MB above', () => {
+    expect(fileSize(208500)).toBe('204 KB')
+    expect(fileSize(7877382)).toBe('7.5 MB')
   })
 })

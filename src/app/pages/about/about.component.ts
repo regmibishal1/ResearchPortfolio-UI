@@ -1,8 +1,10 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core'
-import { SeoService, PERSON_ID, SITE_URL } from '../../services/seo.service'
+import { RouterModule } from '@angular/router'
+import { SeoService, PERSON_ID, SITE_URL, paperSchema } from '../../services/seo.service'
 import { SKILL_CATEGORIES } from '../../data/skills'
 import { experienceLabel } from '../../data/experience'
 import { CERTIFICATIONS, CONTACT, EDUCATION, EXPERIENCE } from '../../data/resume'
+import { PAPERS, fileSize } from '../../data/projects'
 import { IconComponent } from '../../shared/icon/icon.component'
 import { CopyEmailComponent } from '../../shared/copy-email/copy-email.component'
 
@@ -13,7 +15,7 @@ interface Stat {
 
 @Component({
   selector: 'app-about',
-  imports: [IconComponent, CopyEmailComponent],
+  imports: [RouterModule, IconComponent, CopyEmailComponent],
   templateUrl: './about.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './about.component.scss',
@@ -36,6 +38,7 @@ export class AboutComponent {
           name: 'About Bishal Regmi',
           mainEntity: { '@id': PERSON_ID },
         },
+        ...PAPERS.map(paperSchema),
       ],
     })
   }
@@ -61,6 +64,8 @@ My work spans large-scale .NET microservice platforms, ML-powered financial fore
   certifications = CERTIFICATIONS
   education = EDUCATION
   experience = EXPERIENCE
+  papers = PAPERS
+  readonly fileSize = fileSize
 
   contactLinks = [
     {
