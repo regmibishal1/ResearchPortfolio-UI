@@ -1,10 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core'
-import { CommonModule } from '@angular/common'
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core'
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { ActivatedRoute, RouterModule } from '@angular/router'
-import { MatIconModule } from '@angular/material/icon'
 import { PageNotFoundComponent } from '../page-not-found/page-not-found.component'
 import { SeoService, PERSON_ID, SITE_URL } from '../../services/seo.service'
-import { PROJECTS, Project } from '../../data/projects'
+import { PROJECTS, Project, TYPE_LABEL, statusText } from '../../data/projects'
 import { WorldCupSummaryComponent } from '../../shared/world-cup-summary/world-cup-summary.component'
 import { MriExplorerComponent } from '../../shared/mri-explorer/mri-explorer.component'
 import { EmpathyExplorerComponent } from '../../shared/empathy-explorer/empathy-explorer.component'
@@ -15,9 +14,7 @@ import { StatusBadgeComponent } from '../../shared/status-badge/status-badge.com
   selector: 'app-project-detail',
   imports: [
     PageNotFoundComponent,
-    CommonModule,
     RouterModule,
-    MatIconModule,
     WorldCupSummaryComponent,
     MriExplorerComponent,
     EmpathyExplorerComponent,
@@ -28,15 +25,34 @@ import { StatusBadgeComponent } from '../../shared/status-badge/status-badge.com
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './project-detail.component.scss',
 })
-export class ProjectDetailComponent implements OnInit {
-  private route = inject(ActivatedRoute)
+export class ProjectDetailComponent {
   private seo = inject(SeoService)
 
-  project: Project | null = null
+  readonly typeLabel = TYPE_LABEL
+  readonly statusLabel = statusText
 
-  ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id')
-    this.project = PROJECTS.find((p) => p.id === id) ?? null
+  project: Project | null = null
+  /** Neighbors in the Projects list order, for the links at the foot of the page. */
+  previous: Project | null = null
+  next: Project | null = null
+
+  constructor() {
+    // The component stays in place when the previous/next links change the
+    // id, so it follows the parameter rather than reading it once.
+    inject(ActivatedRoute)
+      .paramMap.pipe(takeUntilDestroyed())
+      .subscribe((params) => this.show(params.get('id')))
+  }
+
+  isExternal(url: string): boolean {
+    return /^https?:\/\//.test(url)
+  }
+
+  private show(id: string | null) {
+    const index = PROJECTS.findIndex((p) => p.id === id)
+    this.project = PROJECTS[index] ?? null
+    this.previous = index > 0 ? PROJECTS[index - 1] : null
+    this.next = index >= 0 && index < PROJECTS.length - 1 ? PROJECTS[index + 1] : null
     // An unknown slug shows the 404 page in place rather than redirecting,
     // so a broken link is visible instead of silently landing on the list.
     if (!this.project) return

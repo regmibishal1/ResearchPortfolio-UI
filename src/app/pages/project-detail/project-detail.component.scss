@@ -1,349 +1,244 @@
+@use 'breakpoints' as bp;
+
+// Text sits in a 720px reading column; explorers, screenshots and diagrams
+// use the full page width.
 .detail-page {
-  max-width: 860px;
-  margin: 0 auto;
-  padding: 40px 24px 100px;
+  padding-top: var(--space-6);
+  padding-bottom: var(--space-9);
+
+  @include bp.down(bp.$sm) {
+    padding-bottom: var(--space-7);
+  }
 }
 
-// ===== Back nav =====
-.breadcrumb {
-  margin-bottom: 32px;
+.prose {
+  max-width: var(--container-prose);
+  margin-inline: auto;
 }
 
-.back-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+// ===== Breadcrumb =====
+.breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-5);
+  padding: 0;
+  list-style: none;
   color: var(--text-secondary);
-  text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: color var(--transition-fast);
+  font-size: var(--fs-micro);
 
-  mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
+  li + li::before {
+    content: '/' / '';
+    margin-right: var(--space-2);
+    color: var(--text-muted);
   }
 
-  &:hover {
-    color: var(--accent-gold);
-  }
-}
-
-// ===== Hero =====
-.detail-hero {
-  margin-bottom: 48px;
-}
-
-.hero-identity {
-  display: flex;
-  align-items: flex-start;
-  gap: 24px;
-  margin-bottom: 28px;
-
-  @media (max-width: 600px) {
-    flex-direction: column;
-    gap: 16px;
-  }
-}
-
-.hero-icon {
-  flex-shrink: 0;
-  width: 72px;
-  height: 72px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--accent-gold-dim);
-  border: 1px solid var(--border-accent);
-  border-radius: 18px;
-}
-
-.hero-logo {
-  width: 48px;
-  height: 48px;
-  object-fit: contain;
-  border-radius: 10px;
-}
-
-.hero-emoji {
-  font-size: 36px;
-  width: 36px;
-  height: 36px;
-  color: var(--accent-gold);
-}
-
-.hero-meta {
-  flex: 1;
-  min-width: 0;
-}
-
-.hero-badges {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.category-badge {
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--accent-gold);
-  background: var(--accent-gold-dim);
-  border: 1px solid rgba(240, 192, 64, 0.25);
-  padding: 4px 12px;
-  border-radius: 100px;
-}
-
-.period-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--text-muted);
-  border: 1px solid var(--border-subtle);
-  padding: 4px 12px;
-  border-radius: 100px;
-
-  .period-icon {
-    font-size: 13px;
-    width: 13px;
-    height: 13px;
-  }
-}
-
-.coursework-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--color-info);
-  background: rgba(137, 180, 250, 0.08);
-  border: 1px solid rgba(137, 180, 250, 0.25);
-  padding: 4px 12px;
-  border-radius: 100px;
-
-  .coursework-icon {
-    font-size: 13px;
-    width: 13px;
-    height: 13px;
-  }
-}
-
-.hero-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: clamp(1.5rem, 4vw, 2.2rem);
-  font-weight: 700;
-  color: var(--text-primary);
-  margin: 0;
-  line-height: 1.2;
-}
-
-.hero-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.action-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 22px;
-  border-radius: var(--radius-sm);
-  font-size: 0.9rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all var(--transition-fast);
-  font-family: 'Inter', sans-serif;
-
-  mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-  }
-
-  &.action-btn-secondary {
+  a {
     color: var(--text-secondary);
-    border: 1px solid var(--border-subtle);
-    background: transparent;
+    text-decoration: underline;
+    text-underline-offset: 3px;
 
     &:hover {
-      border-color: var(--accent-gold);
-      color: var(--accent-gold);
-      background: var(--accent-gold-dim);
-    }
-  }
-
-  &.action-btn-primary {
-    background: var(--accent-gradient);
-    color: var(--bg-primary);
-    border: none;
-
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(240, 192, 64, 0.35);
+      color: var(--text-primary);
     }
   }
 }
 
-// ===== Body =====
-.detail-body {
+// ===== Title and meta =====
+.detail-title {
+  margin: 0 0 var(--space-4);
+  font-size: var(--fs-h1);
+  line-height: var(--lh-h1);
+}
+
+.meta-row {
   display: flex;
-  flex-direction: column;
-  gap: 40px;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
+// ===== Sections =====
 .detail-section {
-  padding: 32px;
-  border-radius: var(--radius-lg);
-  background: var(--bg-card, rgba(255, 255, 255, 0.03));
-  border: 1px solid var(--border-subtle);
-}
-
-.detail-screenshot {
-  margin: -32px;
-  overflow: hidden;
-  border-radius: var(--radius-lg);
-
-  img {
-    width: 100%;
-    display: block;
-  }
-}
-
-.architecture-diagram img {
-  width: 100%;
-  display: block;
+  margin-top: var(--space-7);
 }
 
 .section-heading {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: 'Outfit', sans-serif;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin: 0 0 20px;
+  margin: 0 0 var(--space-4);
+  font-size: var(--fs-h2);
+  line-height: var(--lh-h2);
+}
 
-  mat-icon {
-    color: var(--accent-gold);
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
+.summary {
+  max-width: 65ch;
+  margin: 0;
+  color: var(--text-body);
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
+}
+
+// ===== Results =====
+.result-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+}
+
+// The label comes first for screen readers; the number shows on top.
+.result-tile {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  background: var(--bg-card);
+
+  dt {
+    color: var(--text-secondary);
+    font-size: var(--fs-micro);
+    line-height: var(--lh-micro);
+  }
+
+  dd {
+    margin: 0;
+    color: var(--text-primary);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 700;
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
   }
 }
 
-// About
-.detail-description {
-  font-size: 0.95rem;
-  line-height: 1.85;
-  color: var(--text-secondary);
-  margin: 0;
-}
-
-// Highlights
-.highlights-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.highlight-item {
+.results-note {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  font-size: 0.92rem;
-  line-height: 1.6;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
   color: var(--text-secondary);
+  font-size: var(--fs-small);
+  line-height: var(--lh-small);
+
+  svg {
+    flex: none;
+    margin-top: 1px;
+    fill: currentColor;
+  }
 }
 
-.check-icon {
-  color: var(--accent-gold);
-  font-size: 20px;
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-  margin-top: 1px;
-}
-
-// Lessons learned
-.lessons-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.lesson-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  font-size: 0.92rem;
-  line-height: 1.6;
-  color: var(--text-muted);
-}
-
-.lesson-icon {
-  color: var(--text-muted);
-  font-size: 22px;
-  width: 22px;
-  height: 22px;
-  flex-shrink: 0;
-  margin-top: -1px;
-}
-
-// Tech stack
-.tech-tags {
+// ===== Actions =====
+.actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
 }
 
-.tech-tag {
-  padding: 6px 16px;
-  border-radius: 100px;
-  font-size: 0.82rem;
-  font-weight: 600;
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text-secondary);
+// ===== Explorer, screenshot, diagram =====
+.explorer-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 480px;
   border: 1px solid var(--border-subtle);
-  transition: all var(--transition-fast);
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-size: var(--fs-small);
+}
+
+.screenshot,
+.architecture {
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+}
+
+.architecture {
+  padding: var(--space-4);
+}
+
+// ===== Lists =====
+.bullet-list {
+  margin: 0;
+  padding-left: 1.25em;
+  color: var(--text-body);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+
+  li + li {
+    margin-top: var(--space-2);
+  }
+
+  li::marker {
+    color: var(--accent-gold);
+  }
+}
+
+// ===== Previous and next =====
+.pager {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+  margin-top: var(--space-8);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--border-subtle);
+
+  @include bp.down(bp.$sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pager-link {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  background: var(--bg-card);
+  text-decoration: none;
+  transition: border-color var(--transition-fast);
 
   &:hover {
-    border-color: var(--border-accent);
-    color: var(--text-primary);
+    border-color: var(--border-control);
   }
 }
 
-// ===== Responsive =====
-@media (max-width: 600px) {
-  .detail-page {
-    padding: 24px 16px 80px;
+// A lone "Next" link still sits on the right.
+.pager-next {
+  grid-column: 2;
+  text-align: right;
+
+  .pager-label {
+    justify-content: flex-end;
   }
 
-  .detail-section {
-    padding: 24px 20px;
+  @include bp.down(bp.$sm) {
+    grid-column: 1;
   }
+}
 
-  .hero-actions {
-    flex-direction: column;
+.pager-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--text-secondary);
+  font-size: var(--fs-micro);
 
-    .action-btn {
-      justify-content: center;
-    }
+  svg {
+    fill: currentColor;
   }
+}
+
+.pager-title {
+  color: var(--text-primary);
+  font-weight: 600;
 }
