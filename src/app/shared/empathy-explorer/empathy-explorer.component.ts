@@ -76,6 +76,12 @@ export class EmpathyExplorerComponent implements AfterViewInit, OnDestroy {
   private zone = inject(NgZone)
   @ViewChild('curveCanvas') curveCanvas!: ElementRef<HTMLCanvasElement>
 
+  readonly curve = CLASSIFICATION_CURVE
+  readonly curveSummary =
+    `Line chart of evaluation accuracy, macro F1 and loss over ${CLASSIFICATION_CURVE.length} ` +
+    `epochs. Accuracy settles near ${Math.round(CLASSIFICATION_CURVE[CLASSIFICATION_CURVE.length - 1].acc * 100)}% ` +
+    `while macro F1 stays low, which is the class-imbalance problem described in the report.`
+
   private chart?: Chart
 
   /** Regression results from the final report (Tables 1 and 2) */

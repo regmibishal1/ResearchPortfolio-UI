@@ -1378,3 +1378,35 @@ h1 {
 .receipts-table .delta-down {
   color: $accent-4;
 }
+
+// "View as table" under each chart.
+.chart-table {
+  margin-top: 12px;
+
+  summary {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    color: $accent;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+
+  .chart-table-scroll {
+    max-height: 360px;
+    margin-top: 8px;
+    overflow: auto;
+  }
+
+  td,
+  tbody th {
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  tbody th {
+    text-align: left;
+    font-weight: 500;
+  }
+}

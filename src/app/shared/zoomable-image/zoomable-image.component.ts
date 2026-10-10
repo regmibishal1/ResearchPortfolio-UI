@@ -1,17 +1,22 @@
 import { Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core'
 import { CommonModule } from '@angular/common'
+import { A11yModule } from '@angular/cdk/a11y'
 import { MatIconModule } from '@angular/material/icon'
 
+const PAN_STEP = 120
+
 /**
- * An image that opens in a full-screen lightbox on click. In the lightbox the
- * image is fit to the screen; clicking it toggles to full resolution, and when
- * zoomed the user drags to pan (the stage scrolls). Escape or a click on the
- * backdrop closes it.
+ * An image that opens in a full-screen lightbox. In the lightbox the image is
+ * fit to the screen; the Zoom button (or a click on the image) shows it at full
+ * resolution, and it can then be panned by dragging, swiping, the arrow keys or
+ * the pan buttons. The lightbox is a modal dialog: focus stays inside while it
+ * is open and returns to the image when it closes. Escape, the close button or
+ * a click on the backdrop closes it.
  */
 @Component({
   selector: 'app-zoomable-image',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule, MatIconModule, A11yModule],
   templateUrl: './zoomable-image.component.html',
   styleUrl: './zoomable-image.component.scss',
 })
@@ -21,6 +26,7 @@ export class ZoomableImageComponent {
   @Input() caption?: string
 
   @ViewChild('stage') stage?: ElementRef<HTMLElement>
+  @ViewChild('trigger') trigger?: ElementRef<HTMLButtonElement>
 
   isOpen = false
   zoomed = false
@@ -39,10 +45,12 @@ export class ZoomableImageComponent {
   }
 
   close(): void {
+    if (!this.isOpen) return
     this.isOpen = false
     this.zoomed = false
     this.dragging = false
     document.body.style.overflow = ''
+    this.trigger?.nativeElement.focus()
   }
 
   onBackdrop(event: MouseEvent): void {
@@ -52,15 +60,37 @@ export class ZoomableImageComponent {
   }
 
   toggleZoom(): void {
+    this.zoomed = !this.zoomed
+    if (!this.zoomed) {
+      this.stage?.nativeElement.scrollTo({ left: 0, top: 0 })
+    }
+  }
+
+  onImageClick(): void {
     // A drag ends in a click; ignore that click so panning does not also zoom.
     if (this.moved) {
       this.moved = false
       return
     }
-    this.zoomed = !this.zoomed
-    if (!this.zoomed) {
-      this.stage?.nativeElement.scrollTo({ left: 0, top: 0 })
+    this.toggleZoom()
+  }
+
+  pan(dx: number, dy: number): void {
+    this.stage?.nativeElement.scrollBy({ left: dx * PAN_STEP, top: dy * PAN_STEP })
+  }
+
+  onKeydown(event: KeyboardEvent): void {
+    if (!this.zoomed) return
+    const moves: Record<string, [number, number]> = {
+      ArrowLeft: [-1, 0],
+      ArrowRight: [1, 0],
+      ArrowUp: [0, -1],
+      ArrowDown: [0, 1],
     }
+    const move = moves[event.key]
+    if (!move) return
+    event.preventDefault()
+    this.pan(move[0], move[1])
   }
 
   onDown(event: MouseEvent): void {

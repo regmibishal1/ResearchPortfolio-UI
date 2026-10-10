@@ -1,32 +1,67 @@
-<img
-  class="zoomable-thumb"
-  [src]="src"
-  [alt]="alt"
-  loading="lazy"
-  role="button"
-  tabindex="0"
+<button
+  #trigger
+  type="button"
+  class="zoomable-trigger"
   [attr.aria-label]="'Enlarge image' + (alt ? ': ' + alt : '')"
   (click)="open()"
-  (keydown.enter)="open()"
-/>
+>
+  <img class="zoomable-thumb" [src]="src" [alt]="alt" loading="lazy" />
+</button>
 
-<div class="lightbox" *ngIf="isOpen" (click)="onBackdrop($event)">
-  <button type="button" class="lightbox-close" aria-label="Close" (click)="close()">
-    <mat-icon>close</mat-icon>
-  </button>
+<div
+  *ngIf="isOpen"
+  class="lightbox"
+  role="dialog"
+  aria-modal="true"
+  [attr.aria-label]="caption || alt || 'Enlarged image'"
+  cdkTrapFocus
+  [cdkTrapFocusAutoCapture]="true"
+  (click)="onBackdrop($event)"
+  (keydown)="onKeydown($event)"
+>
+  <div class="lightbox-toolbar">
+    <button type="button" class="lightbox-btn" [attr.aria-pressed]="zoomed" (click)="toggleZoom()">
+      <mat-icon aria-hidden="true">{{ zoomed ? 'zoom_out' : 'zoom_in' }}</mat-icon>
+      <span>Zoom</span>
+    </button>
+    <button type="button" class="lightbox-btn lightbox-close" aria-label="Close" (click)="close()">
+      <mat-icon aria-hidden="true">close</mat-icon>
+    </button>
+  </div>
 
+  <!-- Scrollable when zoomed, so it takes focus then; Enter toggles zoom like a click. -->
   <div
     #stage
     class="lightbox-stage"
+    role="region"
+    aria-label="Image"
     [class.zoomed]="zoomed"
-    (click)="toggleZoom()"
+    [tabindex]="zoomed ? 0 : -1"
+    (click)="onImageClick()"
+    (keydown.enter)="toggleZoom()"
     (mousedown)="onDown($event)"
   >
     <img class="lightbox-img" [class.zoomed]="zoomed" [src]="src" [alt]="alt" draggable="false" />
   </div>
 
+  <div class="lightbox-pan" *ngIf="zoomed" role="group" aria-label="Pan the image">
+    <button type="button" class="lightbox-btn pan-up" aria-label="Pan up" (click)="pan(0, -1)">
+      <mat-icon aria-hidden="true">keyboard_arrow_up</mat-icon>
+    </button>
+    <button type="button" class="lightbox-btn pan-left" aria-label="Pan left" (click)="pan(-1, 0)">
+      <mat-icon aria-hidden="true">keyboard_arrow_left</mat-icon>
+    </button>
+    <button type="button" class="lightbox-btn pan-right" aria-label="Pan right" (click)="pan(1, 0)">
+      <mat-icon aria-hidden="true">keyboard_arrow_right</mat-icon>
+    </button>
+    <button type="button" class="lightbox-btn pan-down" aria-label="Pan down" (click)="pan(0, 1)">
+      <mat-icon aria-hidden="true">keyboard_arrow_down</mat-icon>
+    </button>
+  </div>
+
   <p class="lightbox-caption" *ngIf="caption">{{ caption }}</p>
-  <p class="lightbox-hint" *ngIf="!zoomed">
-    Tap the image to zoom, drag to pan, tap outside to close
+  <p class="lightbox-hint">
+    Use Zoom or select the image to enlarge it. Drag, swipe, use the arrow keys or the pan buttons
+    to move around. Press Escape to close.
   </p>
 </div>

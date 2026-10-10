@@ -115,6 +115,13 @@ type WcSortKey =
 /** Only the team name reads better ascending; probabilities lead with the top. */
 const WC_TEXT_COLUMNS: ReadonlySet<WcSortKey> = new Set<WcSortKey>(['team'])
 
+/** A chart's data as rows and columns, shown under the chart on request. */
+export interface ChartTable {
+  caption: string
+  columns: string[]
+  rows: { label: string; values: (number | null)[] }[]
+}
+
 @Component({
   selector: 'app-world-cup',
   standalone: true,
@@ -235,6 +242,12 @@ export class WorldCupComponent implements OnInit, OnDestroy {
 
   private chart: Chart | null = null
   private calibChart: Chart | null = null
+
+  // Text versions of the two charts, for screen readers and "View as table".
+  historySummary = ''
+  historyTable: ChartTable | null = null
+  calibSummary = ''
+  calibTable: ChartTable | null = null
 
   constructor(
     private wc: WorldCupService,
@@ -811,6 +824,19 @@ export class WorldCupComponent implements OnInit, OnDestroy {
       }
     })
 
+    const stageLabel = STAGE_LABELS[this.selectedHistoryStage]
+    const lastValues = datasets.map((d) => d.data[d.data.length - 1] ?? 0)
+    const leader = datasets[lastValues.indexOf(Math.max(...lastValues))]
+    this.historySummary =
+      `Line chart of ${stageLabel} probability for ${datasets.length} teams across ` +
+      `${labels.length} daily snapshots, ${labels[0]} to ${labels[labels.length - 1]}. ` +
+      (leader ? `${leader.label} ends highest at ${Math.max(...lastValues).toFixed(1)}%.` : '')
+    this.historyTable = {
+      caption: `${stageLabel} probability (%) by snapshot date`,
+      columns: datasets.map((d) => d.label),
+      rows: labels.map((date, i) => ({ label: date, values: datasets.map((d) => d.data[i]) })),
+    }
+
     this.chart?.destroy()
     this.chart = new Chart(ctx, {
       type: 'line',
@@ -860,6 +886,19 @@ export class WorldCupComponent implements OnInit, OnDestroy {
     if (!ctx) return
 
     const labels = bins.map((b) => `${Math.round(b.lo * 100)}-${Math.round(b.hi * 100)}%`)
+
+    this.calibSummary =
+      `Line chart comparing how often the favorite actually won with the model's predicted ` +
+      `probability, across ${bins.length} probability bins. Points on the dashed line mean ` +
+      `the predictions were well calibrated.`
+    this.calibTable = {
+      caption: 'Predicted and observed favorite win rate (%) by probability bin',
+      columns: ['Predicted', 'Observed', 'Matches'],
+      rows: bins.map((b, i) => ({
+        label: labels[i],
+        values: [b.predicted * 100, b.observed * 100, b.n],
+      })),
+    }
 
     this.calibChart?.destroy()
     this.calibChart = new Chart(ctx, {

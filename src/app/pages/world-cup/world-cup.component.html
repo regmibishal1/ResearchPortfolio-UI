@@ -602,8 +602,11 @@
             </p>
           </div>
           <div class="chart-wrapper">
-            <canvas #historyCanvas></canvas>
+            <canvas #historyCanvas role="img" [attr.aria-label]="historySummary"></canvas>
           </div>
+          <ng-container
+            *ngTemplateOutlet="chartTable; context: { $implicit: historyTable, label: 'Date' }"
+          ></ng-container>
         </section>
       </mat-tab>
 
@@ -664,8 +667,11 @@
               actually win? A well-calibrated model tracks the dashed line.
             </p>
             <div class="chart-wrapper chart-wrapper-short">
-              <canvas #calibCanvas></canvas>
+              <canvas #calibCanvas role="img" [attr.aria-label]="calibSummary"></canvas>
             </div>
+            <ng-container
+              *ngTemplateOutlet="chartTable; context: { $implicit: calibTable, label: 'Bin' }"
+            ></ng-container>
 
             <h3 class="bracket-section-title">By stage</h3>
             <div class="stage-table-wrap">
@@ -1040,3 +1046,31 @@
     </mat-tab-group>
   </ng-container>
 </div>
+
+<!-- A chart's data as a table, collapsed under the chart. -->
+<ng-template #chartTable let-table let-label="label">
+  <details class="chart-table" *ngIf="table">
+    <summary>View as table</summary>
+    <div class="chart-table-scroll" role="region" [attr.aria-label]="table.caption" tabindex="0">
+      <table class="leaderboard">
+        <caption class="visually-hidden">
+          {{
+            table.caption
+          }}
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">{{ label }}</th>
+            <th scope="col" *ngFor="let c of table.columns">{{ c }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of table.rows">
+            <th scope="row">{{ row.label }}</th>
+            <td *ngFor="let v of row.values">{{ v === null ? '-' : (v | number: '1.0-1') }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+</ng-template>
