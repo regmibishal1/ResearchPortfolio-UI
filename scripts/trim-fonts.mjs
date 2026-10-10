@@ -1,7 +1,7 @@
 // Writes a smaller copy of the Latin Inter font to src/assets/fonts. The
 // fontsource file covers every weight from 100 to 900, but the site only uses
 // 400 to 700, and pinning the weight axis to that range takes the file from
-// about 48 KB to about 29 KB. Outfit gains almost nothing, so it ships as is.
+// about 48 KB to about 31 KB. Outfit gains almost nothing, so it ships as is.
 // Run it after upgrading @fontsource-variable/inter, then commit the result:
 //   node scripts/trim-fonts.mjs
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
@@ -9,7 +9,10 @@ import { resolve } from 'node:path'
 import subsetFont from 'subset-font'
 import { root } from './lib/load-data.mjs'
 
-const SOURCE = resolve(root, 'node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2')
+const SOURCE = resolve(
+  root,
+  'node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2'
+)
 const OUT_DIR = resolve(root, 'src/assets/fonts')
 const OUT = resolve(OUT_DIR, 'inter-latin-wght-400-700.woff2')
 
