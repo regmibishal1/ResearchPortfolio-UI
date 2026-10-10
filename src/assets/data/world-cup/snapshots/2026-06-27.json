@@ -1,0 +1,1893 @@
+{
+  "bracket": {
+    "run_id": 239,
+    "as_of_date": "2026-06-27",
+    "tournament_key": "2026",
+    "group_winners": {
+      "A": ["Mexico", "South Africa"],
+      "B": ["Switzerland", "Canada"],
+      "C": ["Brazil", "Morocco"],
+      "D": ["United States", "Australia"],
+      "E": ["Germany", "Ivory Coast"],
+      "F": ["Netherlands", "Japan"],
+      "G": ["Belgium", "Egypt"],
+      "H": ["Spain", "Cape Verde"],
+      "I": ["France", "Norway"],
+      "J": ["Argentina", "Austria"],
+      "K": ["Colombia", "Portugal"],
+      "L": ["England", "Croatia"]
+    },
+    "best_thirds": [
+      "DR Congo",
+      "Sweden",
+      "Ecuador",
+      "Ghana",
+      "Bosnia and Herzegovina",
+      "Algeria",
+      "Paraguay",
+      "Senegal"
+    ],
+    "r32": [
+      ["Germany", "DR Congo"],
+      ["France", "Senegal"],
+      ["South Africa", "Canada"],
+      ["Netherlands", "Morocco"],
+      ["Portugal", "Croatia"],
+      ["Spain", "Austria"],
+      ["United States", "Sweden"],
+      ["Belgium", "Ecuador"],
+      ["Brazil", "Japan"],
+      ["Ivory Coast", "Norway"],
+      ["Mexico", "Bosnia and Herzegovina"],
+      ["England", "Ghana"],
+      ["Argentina", "Cape Verde"],
+      ["Australia", "Egypt"],
+      ["Switzerland", "Algeria"],
+      ["Colombia", "Paraguay"]
+    ],
+    "r16": [
+      ["Germany", "France"],
+      ["Canada", "Netherlands"],
+      ["Portugal", "Spain"],
+      ["United States", "Belgium"],
+      ["Brazil", "Norway"],
+      ["Mexico", "England"],
+      ["Argentina", "Egypt"],
+      ["Switzerland", "Colombia"]
+    ],
+    "qf": [
+      ["France", "Netherlands"],
+      ["Spain", "Belgium"],
+      ["Brazil", "England"],
+      ["Argentina", "Switzerland"]
+    ],
+    "sf": [
+      ["France", "Spain"],
+      ["Brazil", "Argentina"]
+    ],
+    "final_pair": ["France", "Brazil"],
+    "champion": "France",
+    "match_details": {
+      "QF": [
+        {
+          "teams": ["France", "Netherlands"],
+          "predicted_score": [1, 1],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "is_neutral",
+              "label": "Neutral venue",
+              "value": 1,
+              "impact": -0.15045279264450073,
+              "favors": "Netherlands"
+            },
+            {
+              "feature": "elo_diff",
+              "label": "Rating gap",
+              "value": 101.94838913907233,
+              "impact": 0.1176149770617485,
+              "favors": "France"
+            },
+            {
+              "feature": "squad_quality_diff",
+              "label": "Squad quality",
+              "value": 2.3636363636363598,
+              "impact": 0.07234074175357819,
+              "favors": "France"
+            }
+          ]
+        },
+        {
+          "teams": ["Spain", "Belgium"],
+          "predicted_score": [1, 1],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "elo_diff",
+              "label": "Rating gap",
+              "value": 202.83422064860747,
+              "impact": 0.22204503417015076,
+              "favors": "Spain"
+            },
+            {
+              "feature": "is_neutral",
+              "label": "Neutral venue",
+              "value": 1,
+              "impact": -0.13822175562381744,
+              "favors": "Belgium"
+            },
+            {
+              "feature": "squad_quality_diff",
+              "label": "Squad quality",
+              "value": 2.6363636363636402,
+              "impact": 0.11911311745643616,
+              "favors": "Spain"
+            }
+          ]
+        },
+        {
+          "teams": ["Brazil", "England"],
+          "predicted_score": [2, 1],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "squad_quality_diff",
+              "label": "Squad quality",
+              "value": 1.0909090909090935,
+              "impact": 0.11901123821735382,
+              "favors": "Brazil"
+            },
+            {
+              "feature": "elo_diff",
+              "label": "Rating gap",
+              "value": 0.7730918040329016,
+              "impact": -0.11276794970035553,
+              "favors": "England"
+            },
+            {
+              "feature": "is_neutral",
+              "label": "Neutral venue",
+              "value": 1,
+              "impact": -0.06924200057983398,
+              "favors": "England"
+            }
+          ]
+        },
+        {
+          "teams": ["Argentina", "Switzerland"],
+          "predicted_score": [2, 1],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "squad_quality_diff",
+              "label": "Squad quality",
+              "value": 4.7272727272727195,
+              "impact": 0.18193930387496948,
+              "favors": "Argentina"
+            },
+            {
+              "feature": "elo_diff",
+              "label": "Rating gap",
+              "value": 223.58815996926705,
+              "impact": 0.17525555193424225,
+              "favors": "Argentina"
+            },
+            {
+              "feature": "is_neutral",
+              "label": "Neutral venue",
+              "value": 1,
+              "impact": -0.15797124803066254,
+              "favors": "Switzerland"
+            }
+          ]
+        }
+      ],
+      "SF": [
+        {
+          "teams": ["France", "Spain"],
+          "predicted_score": [1, 1],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "is_neutral",
+              "label": "Neutral venue",
+              "value": 1,
+              "impact": -0.1063125804066658,
+              "favors": "Spain"
+            },
+            {
+              "feature": "squad_quality_diff",
+              "label": "Squad quality",
+              "value": 1.2727272727272663,
+              "impact": 0.10430949926376343,
+              "favors": "France"
+            },
+            {
+              "feature": "elo_diff",
+              "label": "Rating gap",
+              "value": -1.4905829699400783,
+              "impact": -0.09451555460691452,
+              "favors": "Spain"
+            }
+          ]
+        },
+        {
+          "teams": ["Brazil", "Argentina"],
+          "predicted_score": [1, 1],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "elo_diff",
+              "label": "Rating gap",
+              "value": -115.8082447177876,
+              "impact": -0.1910657286643982,
+              "favors": "Argentina"
+            },
+            {
+              "feature": "is_neutral",
+              "label": "Neutral venue",
+              "value": 1,
+              "impact": -0.0892041027545929,
+              "favors": "Argentina"
+            },
+            {
+              "feature": "squad_quality_diff",
+              "label": "Squad quality",
+              "value": 1.9090909090909207,
+              "impact": 0.08488000929355621,
+              "favors": "Brazil"
+            }
+          ]
+        }
+      ],
+      "R16": [
+        {
+          "teams": ["Germany", "France"],
+          "predicted_score": [1, 1],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "elo_diff",
+              "label": "Rating gap",
+              "value": -135.8153448737562,
+              "impact": 0.19108660519123077,
+              "favors": "France"
+            },
+            {
+              "feature": "is_neutral",
+              "label": "Neutral venue",
+              "value": 1,
+              "impact": 0.13911788165569305,
+              "favors": "France"
+            },
+            {
+              "feature": "midfield_control",
+              "label": "Midfield control",
+              "value": 8,
+              "impact": 0.11286463588476181,
+              "favors": "France"
+            }
+          ]
+        },
+        {
+          "teams": ["Canada", "Netherlands"],
+          "predicted_score": [1, 1],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "squad_quality_diff",
+              "label": "Squad quality",
+              "value": -8.818181818181827,
+              "impact": 0.3693309724330902,
+              "favors": "Netherlands"
+            },
+            {
+              "feature": "midfield_control",
+              "label": "Midfield control",
+              "value": -14,
+              "impact": 0.11510341614484787,
+              "favors": "Netherlands"
+            },
+            {
+              "feature": "elo_diff",
+              "label": "Rating gap",
+              "value": -162.62354463520546,
+              "impact": 0.10593004524707794,
+              "favors": "Netherlands"
+            }
+          ]
+        },
+        {
+          "teams": ["Portugal", "Spain"],
+          "predicted_score": [1, 1],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "is_neutral",
+              "label": "Neutral venue",
+              "value": 1,
+              "impact": 0.18359306454658508,
+              "favors": "Spain"
+            },
+            {
+              "feature": "elo_diff",
+              "label": "Rating gap",
+              "value": -113.5461674580074,
+              "impact": 0.16699829697608948,
+              "favors": "Spain"
+            },
+            {
+              "feature": "gk_diff",
+              "label": "Goalkeeping",
+              "value": -2,
+              "impact": 0.059426598250865936,
+              "favors": "Spain"
+            }
+          ]
+        },
+        {
+          "teams": ["United States", "Belgium"],
+          "predicted_score": [1, 1],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "squad_quality_diff",
+              "label": "Squad quality",
+              "value": -5.181818181818187,
+              "impact": 0.3317936956882477,
+              "favors": "Belgium"
+            },
+            {
+              "feature": "elo_diff",
+              "label": "Rating gap",
+              "value": 7.804525153125269,
+              "impact": -0.2022242546081543,
+              "favors": "United States"
+            },
+            {
+              "feature": "is_neutral",
+              "label": "Neutral venue",
+              "value": 0,
+              "impact": -0.08563346415758133,
+              "favors": "United States"
+            }
+          ]
+        },
+        {
+          "teams": ["Brazil", "Norway"],
+          "predicted_score": [2, 1],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "squad_quality_diff",
+              "label": "Squad quality",
+              "value": 8,
+              "impact": 0.28660404682159424,
+              "favors": "Brazil"
+            },
+            {
+              "feature": "elo_diff",
+              "label": "Rating gap",
+              "value": 103.27600386759786,
+              "impact": 0.14157427847385406,
+              "favors": "Brazil"
+            },
+            {
+              "feature": "gk_diff",
+              "label": "Goalkeeping",
+              "value": 19,
+              "impact": 0.0948648750782013,
+              "favors": "Brazil"
+            }
+          ]
+        },
+        {
+          "teams": ["Mexico", "England"],
+          "predicted_score": [1, 1],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "squad_quality_diff",
+              "label": "Squad quality",
+              "value": -7.0909090909090935,
+              "impact": 0.2409590184688568,
+              "favors": "England"
+            },
+            {
+              "feature": "is_neutral",
+              "label": "Neutral venue",
+              "value": 0,
+              "impact": -0.08586153388023376,
+              "favors": "Mexico"
+            },
+            {
+              "feature": "elo_diff",
+              "label": "Rating gap",
+              "value": -39.96510439130134,
+              "impact": -0.08297242224216461,
+              "favors": "Mexico"
+            }
+          ]
+        },
+        {
+          "teams": ["Argentina", "Egypt"],
+          "predicted_score": [2, 1],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "elo_diff",
+              "label": "Rating gap",
+              "value": 324.49352678389505,
+              "impact": 0.2503264844417572,
+              "favors": "Argentina"
+            },
+            {
+              "feature": "is_neutral",
+              "label": "Neutral venue",
+              "value": 1,
+              "impact": -0.15569621324539185,
+              "favors": "Egypt"
+            },
+            {
+              "feature": "squad_quality_diff",
+              "label": "Squad quality",
+              "value": 4.649468947101724,
+              "impact": 0.13786931335926056,
+              "favors": "Argentina"
+            }
+          ]
+        },
+        {
+          "teams": ["Switzerland", "Colombia"],
+          "predicted_score": [1, 1],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "elo_diff",
+              "label": "Rating gap",
+              "value": -102.73992714256883,
+              "impact": -0.20748968422412872,
+              "favors": "Colombia"
+            },
+            {
+              "feature": "is_neutral",
+              "label": "Neutral venue",
+              "value": 1,
+              "impact": -0.08717183023691177,
+              "favors": "Colombia"
+            },
+            {
+              "feature": "gk_diff",
+              "label": "Goalkeeping",
+              "value": 7,
+              "impact": 0.07110337167978287,
+              "favors": "Switzerland"
+            }
+          ]
+        }
+      ],
+      "R32": [
+        {
+          "teams": ["Germany", "DR Congo"],
+          "predicted_score": [2, 1],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "squad_quality_diff",
+              "label": "Squad quality",
+              "value": 10.72727272727272,
+              "impact": 0.2965454161167145,
+              "favors": "Germany"
+            },
+            {
+              "feature": "elo_diff",
+              "label": "Rating gap",
+              "value": 239.33641788308205,
+              "impact": 0.19725511968135834,
+              "favors": "Germany"
+            },
+            {
+              "feature": "pace_advantage",
+              "label": "Pace",
+              "value": -6.5,
+              "impact": -0.17586492002010345,
+              "favors": "DR Congo"
+            }
+          ]
+        },
+        {
+          "teams": ["France", "Senegal"],
+          "predicted_score": [2, 1],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "squad_quality_diff",
+              "label": "Squad quality",
+              "value": 7.272727272727266,
+              "impact": 0.32416489720344543,
+              "favors": "France"
+            },
+            {
+              "feature": "elo_diff",
+              "label": "Rating gap",
+              "value": 262.4415078744835,
+              "impact": 0.309418261051178,
+              "favors": "France"
+            },
+            {
+              "feature": "is_neutral",
+              "label": "Neutral venue",
+              "value": 1,
+              "impact": -0.1238250732421875,
+              "favors": "Senegal"
+            }
+          ]
+        },
+        {
+          "teams": ["South Africa", "Canada"],
+          "predicted_score": [1, 2],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "elo_diff",
+              "label": "Rating gap",
+              "value": -156.81393612397778,
+              "impact": 0.22513385117053986,
+              "favors": "Canada"
+            },
+            {
+              "feature": "is_neutral",
+              "label": "Neutral venue",
+              "value": 1,
+              "impact": 0.15868334472179413,
+              "favors": "Canada"
+            },
+            {
+              "feature": "squad_quality_diff",
+              "label": "Squad quality",
+              "value": -1.7461309041168533,
+              "impact": 0.10379157960414886,
+              "favors": "Canada"
+            }
+          ]
+        },
+        {
+          "teams": ["Netherlands", "Morocco"],
+          "predicted_score": [1, 1],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "is_neutral",
+              "label": "Neutral venue",
+              "value": 1,
+              "impact": -0.11972595006227493,
+              "favors": "Morocco"
+            },
+            {
+              "feature": "elo_diff",
+              "label": "Rating gap",
+              "value": 18.85752876879087,
+              "impact": 0.11554451286792755,
+              "favors": "Netherlands"
+            },
+            {
+              "feature": "squad_quality_diff",
+              "label": "Squad quality",
+              "value": 3.6363636363636402,
+              "impact": 0.09148713201284409,
+              "favors": "Netherlands"
+            }
+          ]
+        },
+        {
+          "teams": ["Portugal", "Croatia"],
+          "predicted_score": [2, 1],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "is_neutral",
+              "label": "Neutral venue",
+              "value": 1,
+              "impact": -0.19620390236377716,
+              "favors": "Croatia"
+            },
+            {
+              "feature": "squad_quality_diff",
+              "label": "Squad quality",
+              "value": 4.0909090909090935,
+              "impact": 0.15828077495098114,
+              "favors": "Portugal"
+            },
+            {
+              "feature": "elo_diff",
+              "label": "Rating gap",
+              "value": 101.70853154163206,
+              "impact": 0.10156945139169693,
+              "favors": "Portugal"
+            }
+          ]
+        },
+        {
+          "teams": ["Spain", "Austria"],
+          "predicted_score": [2, 1],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "elo_diff",
+              "label": "Rating gap",
+              "value": 251.69090277470582,
+              "impact": 0.3172290623188019,
+              "favors": "Spain"
+            },
+            {
+              "feature": "squad_quality_diff",
+              "label": "Squad quality",
+              "value": 4.818181818181827,
+              "impact": 0.16011014580726624,
+              "favors": "Spain"
+            },
+            {
+              "feature": "is_neutral",
+              "label": "Neutral venue",
+              "value": 1,
+              "impact": -0.12250204384326935,
+              "favors": "Austria"
+            }
+          ]
+        },
+        {
+          "teams": ["United States", "Sweden"],
+          "predicted_score": [2, 1],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "elo_diff",
+              "label": "Rating gap",
+              "value": 139.2097239249772,
+              "impact": 0.15754500031471252,
+              "favors": "United States"
+            },
+            {
+              "feature": "squad_quality_diff",
+              "label": "Squad quality",
+              "value": -0.6363636363636402,
+              "impact": -0.08404486626386642,
+              "favors": "Sweden"
+            },
+            {
+              "feature": "is_neutral",
+              "label": "Neutral venue",
+              "value": 0,
+              "impact": 0.07403438538312912,
+              "favors": "United States"
+            }
+          ]
+        },
+        {
+          "teams": ["Belgium", "Ecuador"],
+          "predicted_score": [1, 1],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "squad_quality_diff",
+              "label": "Squad quality",
+              "value": 6.454545454545453,
+              "impact": 0.23080198466777802,
+              "favors": "Belgium"
+            },
+            {
+              "feature": "elo_diff",
+              "label": "Rating gap",
+              "value": -1.1947709744435997,
+              "impact": -0.08971025049686432,
+              "favors": "Ecuador"
+            },
+            {
+              "feature": "gk_diff",
+              "label": "Goalkeeping",
+              "value": 15,
+              "impact": 0.0785704180598259,
+              "favors": "Belgium"
+            }
+          ]
+        },
+        {
+          "teams": ["Brazil", "Japan"],
+          "predicted_score": [2, 1],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "squad_quality_diff",
+              "label": "Squad quality",
+              "value": 8.181818181818187,
+              "impact": 0.29836463928222656,
+              "favors": "Brazil"
+            },
+            {
+              "feature": "elo_diff",
+              "label": "Rating gap",
+              "value": 67.64117817018064,
+              "impact": 0.1272735893726349,
+              "favors": "Brazil"
+            },
+            {
+              "feature": "is_neutral",
+              "label": "Neutral venue",
+              "value": 1,
+              "impact": -0.10203545540571213,
+              "favors": "Japan"
+            }
+          ]
+        },
+        {
+          "teams": ["Ivory Coast", "Norway"],
+          "predicted_score": [1, 1],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "is_neutral",
+              "label": "Neutral venue",
+              "value": 1,
+              "impact": 0.1466173678636551,
+              "favors": "Norway"
+            },
+            {
+              "feature": "goals_form_diff",
+              "label": "Goal-scoring form",
+              "value": -2.2,
+              "impact": 0.078330859541893,
+              "favors": "Norway"
+            },
+            {
+              "feature": "form_diff",
+              "label": "Recent form",
+              "value": -0.30000000000000004,
+              "impact": -0.05355476960539818,
+              "favors": "Ivory Coast"
+            }
+          ]
+        },
+        {
+          "teams": ["Mexico", "Bosnia and Herzegovina"],
+          "predicted_score": [2, 1],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "elo_diff",
+              "label": "Rating gap",
+              "value": 326.518702046498,
+              "impact": 0.1927783489227295,
+              "favors": "Mexico"
+            },
+            {
+              "feature": "squad_quality_diff",
+              "label": "Squad quality",
+              "value": 2.0909090909090935,
+              "impact": 0.08469094336032867,
+              "favors": "Mexico"
+            },
+            {
+              "feature": "is_neutral",
+              "label": "Neutral venue",
+              "value": 0,
+              "impact": 0.048202671110630035,
+              "favors": "Mexico"
+            }
+          ]
+        },
+        {
+          "teams": ["England", "Ghana"],
+          "predicted_score": [2, 1],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "squad_quality_diff",
+              "label": "Squad quality",
+              "value": 7.545454545454547,
+              "impact": 0.26450276374816895,
+              "favors": "England"
+            },
+            {
+              "feature": "elo_diff",
+              "label": "Rating gap",
+              "value": 360.6822396038558,
+              "impact": 0.24233189225196838,
+              "favors": "England"
+            },
+            {
+              "feature": "pace_advantage",
+              "label": "Pace",
+              "value": -14.5,
+              "impact": -0.1827721744775772,
+              "favors": "Ghana"
+            }
+          ]
+        },
+        {
+          "teams": ["Argentina", "Cape Verde"],
+          "predicted_score": [2, 1],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "elo_diff",
+              "label": "Rating gap",
+              "value": 469.88840414957735,
+              "impact": 0.42538729310035706,
+              "favors": "Argentina"
+            },
+            {
+              "feature": "squad_quality_diff",
+              "label": "Squad quality",
+              "value": 10.376613227102709,
+              "impact": 0.3402819335460663,
+              "favors": "Argentina"
+            },
+            {
+              "feature": "gk_diff",
+              "label": "Goalkeeping",
+              "value": 13.103885954375443,
+              "impact": 0.10085389018058777,
+              "favors": "Argentina"
+            }
+          ]
+        },
+        {
+          "teams": ["Australia", "Egypt"],
+          "predicted_score": [1, 1],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "squad_quality_diff",
+              "label": "Squad quality",
+              "value": -6.441440143807355,
+              "impact": 0.31318309903144836,
+              "favors": "Egypt"
+            },
+            {
+              "feature": "is_neutral",
+              "label": "Neutral venue",
+              "value": 1,
+              "impact": 0.2516297698020935,
+              "favors": "Egypt"
+            },
+            {
+              "feature": "attack_defense_asymmetry",
+              "label": "Attack vs defense",
+              "value": -18.746516651251085,
+              "impact": 0.15035027265548706,
+              "favors": "Egypt"
+            }
+          ]
+        },
+        {
+          "teams": ["Switzerland", "Algeria"],
+          "predicted_score": [1, 1],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "is_neutral",
+              "label": "Neutral venue",
+              "value": 1,
+              "impact": -0.1509484052658081,
+              "favors": "Algeria"
+            },
+            {
+              "feature": "gk_diff",
+              "label": "Goalkeeping",
+              "value": 14,
+              "impact": 0.1005285307765007,
+              "favors": "Switzerland"
+            },
+            {
+              "feature": "elo_diff",
+              "label": "Rating gap",
+              "value": 80.77544671083251,
+              "impact": 0.09041938185691833,
+              "favors": "Switzerland"
+            }
+          ]
+        },
+        {
+          "teams": ["Colombia", "Paraguay"],
+          "predicted_score": [2, 1],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "elo_diff",
+              "label": "Rating gap",
+              "value": 202.86149704852528,
+              "impact": 0.24212966859340668,
+              "favors": "Colombia"
+            },
+            {
+              "feature": "is_neutral",
+              "label": "Neutral venue",
+              "value": 1,
+              "impact": -0.13693499565124512,
+              "favors": "Paraguay"
+            },
+            {
+              "feature": "squad_quality_diff",
+              "label": "Squad quality",
+              "value": 3.181818181818187,
+              "impact": 0.07137726992368698,
+              "favors": "Colombia"
+            }
+          ]
+        }
+      ],
+      "Final": [
+        {
+          "teams": ["France", "Brazil"],
+          "predicted_score": [1, 1],
+          "predicted_winner": null,
+          "played": false,
+          "actual_score": null,
+          "went_to_penalties": false,
+          "winner": null,
+          "top_factors": [
+            {
+              "feature": "is_neutral",
+              "label": "Neutral venue",
+              "value": 1,
+              "impact": -0.14816364645957947,
+              "favors": "Brazil"
+            },
+            {
+              "feature": "elo_diff",
+              "label": "Rating gap",
+              "value": 83.33640067150873,
+              "impact": 0.13724935054779053,
+              "favors": "France"
+            },
+            {
+              "feature": "squad_quality_diff",
+              "label": "Squad quality",
+              "value": -0.18181818181818699,
+              "impact": -0.06315223127603531,
+              "favors": "Brazil"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "reportCard": {
+    "run_id": 239,
+    "as_of_date": "2026-06-27",
+    "report_card": {
+      "model": { "n": 72, "brier": 0.5349, "accuracy": 0.625, "log_loss": 0.8996 },
+      "matches": [
+        {
+          "away": "South Africa",
+          "date": "2026-06-11",
+          "home": "Mexico",
+          "probs": [0.793, 0.151, 0.056],
+          "score": [2, 0],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": true,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Czech Republic",
+          "date": "2026-06-11",
+          "home": "South Korea",
+          "probs": [0.478, 0.251, 0.27],
+          "score": [2, 1],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": true,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Bosnia and Herzegovina",
+          "date": "2026-06-12",
+          "home": "Canada",
+          "probs": [0.609, 0.228, 0.162],
+          "score": [1, 1],
+          "stage": "group",
+          "actual": "draw",
+          "correct": false,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Paraguay",
+          "date": "2026-06-12",
+          "home": "United States",
+          "probs": [0.606, 0.265, 0.128],
+          "score": [4, 1],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": true,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Switzerland",
+          "date": "2026-06-13",
+          "home": "Qatar",
+          "probs": [0.155, 0.172, 0.673],
+          "score": [1, 1],
+          "stage": "group",
+          "actual": "draw",
+          "correct": false,
+          "predicted": "away_win"
+        },
+        {
+          "away": "Morocco",
+          "date": "2026-06-13",
+          "home": "Brazil",
+          "probs": [0.587, 0.257, 0.156],
+          "score": [1, 1],
+          "stage": "group",
+          "actual": "draw",
+          "correct": false,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Scotland",
+          "date": "2026-06-13",
+          "home": "Haiti",
+          "probs": [0.262, 0.282, 0.456],
+          "score": [0, 1],
+          "stage": "group",
+          "actual": "away_win",
+          "correct": true,
+          "predicted": "away_win"
+        },
+        {
+          "away": "Turkey",
+          "date": "2026-06-13",
+          "home": "Australia",
+          "probs": [0.275, 0.277, 0.448],
+          "score": [2, 0],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": false,
+          "predicted": "away_win"
+        },
+        {
+          "away": "Tunisia",
+          "date": "2026-06-14",
+          "home": "Sweden",
+          "probs": [0.559, 0.274, 0.167],
+          "score": [5, 1],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": true,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Japan",
+          "date": "2026-06-14",
+          "home": "Netherlands",
+          "probs": [0.559, 0.274, 0.167],
+          "score": [2, 2],
+          "stage": "group",
+          "actual": "draw",
+          "correct": false,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Curaçao",
+          "date": "2026-06-14",
+          "home": "Germany",
+          "probs": [0.793, 0.151, 0.056],
+          "score": [7, 1],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": true,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Ecuador",
+          "date": "2026-06-14",
+          "home": "Ivory Coast",
+          "probs": [0.478, 0.251, 0.27],
+          "score": [1, 0],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": true,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Egypt",
+          "date": "2026-06-15",
+          "home": "Belgium",
+          "probs": [0.651, 0.208, 0.14],
+          "score": [1, 1],
+          "stage": "group",
+          "actual": "draw",
+          "correct": false,
+          "predicted": "home_win"
+        },
+        {
+          "away": "New Zealand",
+          "date": "2026-06-15",
+          "home": "Iran",
+          "probs": [0.619, 0.223, 0.158],
+          "score": [2, 2],
+          "stage": "group",
+          "actual": "draw",
+          "correct": false,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Cape Verde",
+          "date": "2026-06-15",
+          "home": "Spain",
+          "probs": [0.849, 0.092, 0.06],
+          "score": [0, 0],
+          "stage": "group",
+          "actual": "draw",
+          "correct": false,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Uruguay",
+          "date": "2026-06-15",
+          "home": "Saudi Arabia",
+          "probs": [0.155, 0.172, 0.673],
+          "score": [1, 1],
+          "stage": "group",
+          "actual": "draw",
+          "correct": false,
+          "predicted": "away_win"
+        },
+        {
+          "away": "Jordan",
+          "date": "2026-06-16",
+          "home": "Austria",
+          "probs": [0.487, 0.256, 0.257],
+          "score": [3, 1],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": true,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Algeria",
+          "date": "2026-06-16",
+          "home": "Argentina",
+          "probs": [0.712, 0.228, 0.06],
+          "score": [3, 0],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": true,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Senegal",
+          "date": "2026-06-16",
+          "home": "France",
+          "probs": [0.715, 0.164, 0.121],
+          "score": [3, 1],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": true,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Norway",
+          "date": "2026-06-16",
+          "home": "Iraq",
+          "probs": [0.264, 0.265, 0.471],
+          "score": [1, 4],
+          "stage": "group",
+          "actual": "away_win",
+          "correct": true,
+          "predicted": "away_win"
+        },
+        {
+          "away": "DR Congo",
+          "date": "2026-06-17",
+          "home": "Portugal",
+          "probs": [0.793, 0.151, 0.056],
+          "score": [1, 1],
+          "stage": "group",
+          "actual": "draw",
+          "correct": false,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Colombia",
+          "date": "2026-06-17",
+          "home": "Uzbekistan",
+          "probs": [0.262, 0.282, 0.456],
+          "score": [1, 3],
+          "stage": "group",
+          "actual": "away_win",
+          "correct": true,
+          "predicted": "away_win"
+        },
+        {
+          "away": "Croatia",
+          "date": "2026-06-17",
+          "home": "England",
+          "probs": [0.478, 0.251, 0.27],
+          "score": [4, 2],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": true,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Panama",
+          "date": "2026-06-17",
+          "home": "Ghana",
+          "probs": [0.304, 0.266, 0.431],
+          "score": [1, 0],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": false,
+          "predicted": "away_win"
+        },
+        {
+          "away": "South Africa",
+          "date": "2026-06-18",
+          "home": "Czech Republic",
+          "probs": [0.559, 0.274, 0.167],
+          "score": [1, 1],
+          "stage": "group",
+          "actual": "draw",
+          "correct": false,
+          "predicted": "home_win"
+        },
+        {
+          "away": "South Korea",
+          "date": "2026-06-18",
+          "home": "Mexico",
+          "probs": [0.651, 0.232, 0.118],
+          "score": [1, 0],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": true,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Bosnia and Herzegovina",
+          "date": "2026-06-18",
+          "home": "Switzerland",
+          "probs": [0.579, 0.284, 0.137],
+          "score": [4, 1],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": true,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Qatar",
+          "date": "2026-06-18",
+          "home": "Canada",
+          "probs": [0.756, 0.173, 0.072],
+          "score": [6, 0],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": true,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Paraguay",
+          "date": "2026-06-19",
+          "home": "Turkey",
+          "probs": [0.559, 0.274, 0.167],
+          "score": [0, 1],
+          "stage": "group",
+          "actual": "away_win",
+          "correct": false,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Morocco",
+          "date": "2026-06-19",
+          "home": "Scotland",
+          "probs": [0.275, 0.277, 0.448],
+          "score": [0, 1],
+          "stage": "group",
+          "actual": "away_win",
+          "correct": true,
+          "predicted": "away_win"
+        },
+        {
+          "away": "Haiti",
+          "date": "2026-06-19",
+          "home": "Brazil",
+          "probs": [0.793, 0.151, 0.056],
+          "score": [3, 0],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": true,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Australia",
+          "date": "2026-06-19",
+          "home": "United States",
+          "probs": [0.559, 0.274, 0.167],
+          "score": [2, 0],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": true,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Sweden",
+          "date": "2026-06-20",
+          "home": "Netherlands",
+          "probs": [0.666, 0.213, 0.12],
+          "score": [5, 1],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": true,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Japan",
+          "date": "2026-06-20",
+          "home": "Tunisia",
+          "probs": [0.146, 0.228, 0.626],
+          "score": [0, 4],
+          "stage": "group",
+          "actual": "away_win",
+          "correct": true,
+          "predicted": "away_win"
+        },
+        {
+          "away": "Ivory Coast",
+          "date": "2026-06-20",
+          "home": "Germany",
+          "probs": [0.611, 0.268, 0.121],
+          "score": [2, 1],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": true,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Curaçao",
+          "date": "2026-06-20",
+          "home": "Ecuador",
+          "probs": [0.587, 0.257, 0.156],
+          "score": [0, 0],
+          "stage": "group",
+          "actual": "draw",
+          "correct": false,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Iran",
+          "date": "2026-06-21",
+          "home": "Belgium",
+          "probs": [0.478, 0.251, 0.27],
+          "score": [0, 0],
+          "stage": "group",
+          "actual": "draw",
+          "correct": false,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Egypt",
+          "date": "2026-06-21",
+          "home": "New Zealand",
+          "probs": [0.141, 0.256, 0.603],
+          "score": [1, 3],
+          "stage": "group",
+          "actual": "away_win",
+          "correct": true,
+          "predicted": "away_win"
+        },
+        {
+          "away": "Saudi Arabia",
+          "date": "2026-06-21",
+          "home": "Spain",
+          "probs": [0.849, 0.092, 0.06],
+          "score": [4, 0],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": true,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Cape Verde",
+          "date": "2026-06-21",
+          "home": "Uruguay",
+          "probs": [0.707, 0.226, 0.067],
+          "score": [2, 2],
+          "stage": "group",
+          "actual": "draw",
+          "correct": false,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Iraq",
+          "date": "2026-06-22",
+          "home": "France",
+          "probs": [0.793, 0.151, 0.056],
+          "score": [3, 0],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": true,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Senegal",
+          "date": "2026-06-22",
+          "home": "Norway",
+          "probs": [0.478, 0.251, 0.27],
+          "score": [3, 2],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": true,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Austria",
+          "date": "2026-06-22",
+          "home": "Argentina",
+          "probs": [0.71, 0.162, 0.128],
+          "score": [2, 0],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": true,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Algeria",
+          "date": "2026-06-22",
+          "home": "Jordan",
+          "probs": [0.304, 0.266, 0.431],
+          "score": [1, 2],
+          "stage": "group",
+          "actual": "away_win",
+          "correct": true,
+          "predicted": "away_win"
+        },
+        {
+          "away": "Uzbekistan",
+          "date": "2026-06-23",
+          "home": "Portugal",
+          "probs": [0.592, 0.259, 0.149],
+          "score": [5, 0],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": true,
+          "predicted": "home_win"
+        },
+        {
+          "away": "DR Congo",
+          "date": "2026-06-23",
+          "home": "Colombia",
+          "probs": [0.592, 0.259, 0.149],
+          "score": [1, 0],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": true,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Ghana",
+          "date": "2026-06-23",
+          "home": "England",
+          "probs": [0.611, 0.268, 0.121],
+          "score": [0, 0],
+          "stage": "group",
+          "actual": "draw",
+          "correct": false,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Croatia",
+          "date": "2026-06-23",
+          "home": "Panama",
+          "probs": [0.275, 0.277, 0.448],
+          "score": [0, 1],
+          "stage": "group",
+          "actual": "away_win",
+          "correct": true,
+          "predicted": "away_win"
+        },
+        {
+          "away": "Haiti",
+          "date": "2026-06-24",
+          "home": "Morocco",
+          "probs": [0.681, 0.254, 0.065],
+          "score": [4, 2],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": true,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Qatar",
+          "date": "2026-06-24",
+          "home": "Bosnia and Herzegovina",
+          "probs": [0.559, 0.274, 0.167],
+          "score": [3, 1],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": true,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Brazil",
+          "date": "2026-06-24",
+          "home": "Scotland",
+          "probs": [0.155, 0.172, 0.673],
+          "score": [0, 3],
+          "stage": "group",
+          "actual": "away_win",
+          "correct": true,
+          "predicted": "away_win"
+        },
+        {
+          "away": "South Korea",
+          "date": "2026-06-24",
+          "home": "South Africa",
+          "probs": [0.251, 0.27, 0.479],
+          "score": [1, 0],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": false,
+          "predicted": "away_win"
+        },
+        {
+          "away": "Czech Republic",
+          "date": "2026-06-24",
+          "home": "Mexico",
+          "probs": [0.624, 0.225, 0.151],
+          "score": [3, 0],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": true,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Switzerland",
+          "date": "2026-06-24",
+          "home": "Canada",
+          "probs": [0.323, 0.282, 0.395],
+          "score": [1, 2],
+          "stage": "group",
+          "actual": "away_win",
+          "correct": true,
+          "predicted": "away_win"
+        },
+        {
+          "away": "Turkey",
+          "date": "2026-06-25",
+          "home": "United States",
+          "probs": [0.559, 0.274, 0.167],
+          "score": [2, 3],
+          "stage": "group",
+          "actual": "away_win",
+          "correct": false,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Australia",
+          "date": "2026-06-25",
+          "home": "Paraguay",
+          "probs": [0.478, 0.251, 0.27],
+          "score": [0, 0],
+          "stage": "group",
+          "actual": "draw",
+          "correct": false,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Ivory Coast",
+          "date": "2026-06-25",
+          "home": "Curaçao",
+          "probs": [0.231, 0.248, 0.52],
+          "score": [0, 2],
+          "stage": "group",
+          "actual": "away_win",
+          "correct": true,
+          "predicted": "away_win"
+        },
+        {
+          "away": "Germany",
+          "date": "2026-06-25",
+          "home": "Ecuador",
+          "probs": [0.14, 0.254, 0.607],
+          "score": [2, 1],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": false,
+          "predicted": "away_win"
+        },
+        {
+          "away": "Sweden",
+          "date": "2026-06-25",
+          "home": "Japan",
+          "probs": [0.595, 0.237, 0.168],
+          "score": [1, 1],
+          "stage": "group",
+          "actual": "draw",
+          "correct": false,
+          "predicted": "home_win"
+        },
+        {
+          "away": "Netherlands",
+          "date": "2026-06-25",
+          "home": "Tunisia",
+          "probs": [0.137, 0.176, 0.687],
+          "score": [1, 3],
+          "stage": "group",
+          "actual": "away_win",
+          "correct": true,
+          "predicted": "away_win"
+        },
+        {
+          "away": "Iraq",
+          "date": "2026-06-26",
+          "home": "Senegal",
+          "probs": [0.559, 0.274, 0.167],
+          "score": [5, 0],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": true,
+          "predicted": "home_win"
+        },
+        {
+          "away": "France",
+          "date": "2026-06-26",
+          "home": "Norway",
+          "probs": [0.151, 0.274, 0.575],
+          "score": [1, 4],
+          "stage": "group",
+          "actual": "away_win",
+          "correct": true,
+          "predicted": "away_win"
+        },
+        {
+          "away": "Spain",
+          "date": "2026-06-26",
+          "home": "Uruguay",
+          "probs": [0.264, 0.265, 0.471],
+          "score": [0, 1],
+          "stage": "group",
+          "actual": "away_win",
+          "correct": true,
+          "predicted": "away_win"
+        },
+        {
+          "away": "Belgium",
+          "date": "2026-06-26",
+          "home": "New Zealand",
+          "probs": [0.145, 0.226, 0.629],
+          "score": [1, 5],
+          "stage": "group",
+          "actual": "away_win",
+          "correct": true,
+          "predicted": "away_win"
+        },
+        {
+          "away": "Iran",
+          "date": "2026-06-26",
+          "home": "Egypt",
+          "probs": [0.275, 0.277, 0.448],
+          "score": [1, 1],
+          "stage": "group",
+          "actual": "draw",
+          "correct": false,
+          "predicted": "away_win"
+        },
+        {
+          "away": "Saudi Arabia",
+          "date": "2026-06-26",
+          "home": "Cape Verde",
+          "probs": [0.478, 0.251, 0.27],
+          "score": [0, 0],
+          "stage": "group",
+          "actual": "draw",
+          "correct": false,
+          "predicted": "home_win"
+        },
+        {
+          "away": "England",
+          "date": "2026-06-27",
+          "home": "Panama",
+          "probs": [0.145, 0.226, 0.629],
+          "score": [0, 2],
+          "stage": "group",
+          "actual": "away_win",
+          "correct": true,
+          "predicted": "away_win"
+        },
+        {
+          "away": "Austria",
+          "date": "2026-06-27",
+          "home": "Algeria",
+          "probs": [0.275, 0.277, 0.448],
+          "score": [3, 3],
+          "stage": "group",
+          "actual": "draw",
+          "correct": false,
+          "predicted": "away_win"
+        },
+        {
+          "away": "Argentina",
+          "date": "2026-06-27",
+          "home": "Jordan",
+          "probs": [0.155, 0.172, 0.673],
+          "score": [1, 3],
+          "stage": "group",
+          "actual": "away_win",
+          "correct": true,
+          "predicted": "away_win"
+        },
+        {
+          "away": "Portugal",
+          "date": "2026-06-27",
+          "home": "Colombia",
+          "probs": [0.275, 0.277, 0.448],
+          "score": [0, 0],
+          "stage": "group",
+          "actual": "draw",
+          "correct": false,
+          "predicted": "away_win"
+        },
+        {
+          "away": "Uzbekistan",
+          "date": "2026-06-27",
+          "home": "DR Congo",
+          "probs": [0.231, 0.248, 0.52],
+          "score": [3, 1],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": false,
+          "predicted": "away_win"
+        },
+        {
+          "away": "Ghana",
+          "date": "2026-06-27",
+          "home": "Croatia",
+          "probs": [0.542, 0.285, 0.173],
+          "score": [2, 1],
+          "stage": "group",
+          "actual": "home_win",
+          "correct": true,
+          "predicted": "home_win"
+        }
+      ],
+      "baseline": { "n": 72, "brier": 0.5401, "accuracy": 0.6111, "log_loss": 0.9093 },
+      "by_stage": { "group": { "n": 72, "brier": 0.5349, "accuracy": 0.625, "log_loss": 0.8996 } },
+      "n_matches": 72,
+      "as_of_date": "2026-06-27",
+      "calibration": [
+        { "n": 9, "hi": 0.45, "lo": 0.33, "observed": 0.4444, "predicted": 0.4383 },
+        { "n": 16, "hi": 0.55, "lo": 0.45, "observed": 0.6875, "predicted": 0.4845 },
+        { "n": 26, "hi": 0.65, "lo": 0.55, "observed": 0.5769, "predicted": 0.5907 },
+        { "n": 13, "hi": 0.75, "lo": 0.65, "observed": 0.6923, "predicted": 0.6824 },
+        { "n": 8, "hi": 1, "lo": 0.75, "observed": 0.75, "predicted": 0.8023 }
+      ]
+    }
+  },
+  "scenarios": {
+    "run_id": 239,
+    "as_of_date": "2026-06-27",
+    "scenarios": { "matches": [], "as_of_date": "2026-06-27" }
+  },
+  "retrospective": { "run_id": 239, "as_of_date": "2026-06-27", "retrospective": null }
+}
