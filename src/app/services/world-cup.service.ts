@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core'
-import { HttpClient, HttpParams } from '@angular/common/http'
-import { Observable } from 'rxjs'
-import { environment } from '../../environments/environment'
+import { HttpClient } from '@angular/common/http'
+import { Observable, map, shareReplay, throwError } from 'rxjs'
+import { switchMap } from 'rxjs/operators'
 
 export interface RunMeta {
   id: number
@@ -213,65 +213,113 @@ export interface RetrospectiveResponse {
 
 export type HistoryStage = 'winner' | 'final' | 'sf' | 'qf' | 'r16' | 'r32'
 
+/** Shape of assets/data/world-cup/latest.json: everything the page loads on open. */
+interface LatestBundle {
+  latest: LatestResponse
+  bracket: BracketResponse
+  played: PlayedMatchesResponse
+  reportCard: ReportCardResponse | null
+  scenarios: ScenariosResponse | null
+  retrospective: RetrospectiveResponse | null
+}
+
+/** Shape of assets/data/world-cup/snapshots/<date>.json. */
+interface SnapshotBundle {
+  bracket: BracketResponse | null
+  reportCard: ReportCardResponse | null
+  scenarios: ScenariosResponse | null
+  retrospective: RetrospectiveResponse | null
+}
+
+const DATA_URL = '/assets/data/world-cup'
+
+// The tournament is over, so the dashboard reads a frozen export of the API
+// (scripts/export-worldcup.mjs) served with the site instead of calling the
+// API. Each file is fetched once and shared by every call that needs it.
 @Injectable({ providedIn: 'root' })
 export class WorldCupService {
   private http = inject(HttpClient)
 
-  private readonly apiUrl = `${environment.modelApiUrl}/worldcup`
+  private readonly bundle$ = this.load<LatestBundle>('latest.json')
+  private readonly history$ = this.load<Record<HistoryStage, HistoryResponse>>('history.json')
+  private readonly snapshots = new Map<string, Observable<SnapshotBundle>>()
 
-  getLatest(
-    opts: { tournament?: string; limit?: number; as_of_date?: string } = {}
-  ): Observable<LatestResponse> {
-    let params = new HttpParams()
-    if (opts.tournament) params = params.set('tournament', opts.tournament)
-    if (opts.limit !== undefined) params = params.set('limit', String(opts.limit))
-    if (opts.as_of_date) params = params.set('as_of_date', opts.as_of_date)
-    return this.http.get<LatestResponse>(`${this.apiUrl}/latest`, { params })
+  getLatest(opts: { limit?: number } = {}): Observable<LatestResponse> {
+    return this.bundle$.pipe(
+      map(({ latest }) => {
+        const leaderboard = [...latest.leaderboard].sort(byFinish)
+        return { ...latest, leaderboard: leaderboard.slice(0, opts.limit ?? leaderboard.length) }
+      })
+    )
   }
 
-  getBracket(opts: { tournament?: string; as_of_date?: string } = {}): Observable<BracketResponse> {
-    let params = new HttpParams().set('tournament', opts.tournament ?? '2026')
-    if (opts.as_of_date) params = params.set('as_of_date', opts.as_of_date)
-    return this.http.get<BracketResponse>(`${this.apiUrl}/bracket`, { params })
+  getBracket(opts: { as_of_date?: string } = {}): Observable<BracketResponse> {
+    return this.pick(opts.as_of_date, 'bracket')
   }
 
-  getHistory(
-    opts: { tournament?: string; stage?: HistoryStage; teams?: string[] } = {}
-  ): Observable<HistoryResponse> {
-    let params = new HttpParams()
-    if (opts.tournament) params = params.set('tournament', opts.tournament)
-    if (opts.stage) params = params.set('stage', opts.stage)
-    if (opts.teams?.length) params = params.set('teams', opts.teams.join(','))
-    return this.http.get<HistoryResponse>(`${this.apiUrl}/history`, { params })
+  getHistory(opts: { stage?: HistoryStage } = {}): Observable<HistoryResponse> {
+    return this.history$.pipe(map((history) => history[opts.stage ?? 'winner']))
   }
 
-  getPlayedMatches(tournament = '2026'): Observable<PlayedMatchesResponse> {
-    return this.http.get<PlayedMatchesResponse>(`${this.apiUrl}/played-matches`, {
-      params: new HttpParams().set('tournament', tournament),
-    })
+  getPlayedMatches(): Observable<PlayedMatchesResponse> {
+    return this.bundle$.pipe(map((b) => b.played))
   }
 
-  getReportCard(
-    opts: { tournament?: string; as_of_date?: string } = {}
-  ): Observable<ReportCardResponse> {
-    let params = new HttpParams().set('tournament', opts.tournament ?? '2026')
-    if (opts.as_of_date) params = params.set('as_of_date', opts.as_of_date)
-    return this.http.get<ReportCardResponse>(`${this.apiUrl}/report-card`, { params })
+  getReportCard(opts: { as_of_date?: string } = {}): Observable<ReportCardResponse> {
+    return this.pick(opts.as_of_date, 'reportCard')
   }
 
-  getScenarios(
-    opts: { tournament?: string; as_of_date?: string } = {}
-  ): Observable<ScenariosResponse> {
-    let params = new HttpParams().set('tournament', opts.tournament ?? '2026')
-    if (opts.as_of_date) params = params.set('as_of_date', opts.as_of_date)
-    return this.http.get<ScenariosResponse>(`${this.apiUrl}/scenarios`, { params })
+  getScenarios(opts: { as_of_date?: string } = {}): Observable<ScenariosResponse> {
+    return this.pick(opts.as_of_date, 'scenarios')
   }
 
-  getRetrospective(
-    opts: { tournament?: string; as_of_date?: string } = {}
-  ): Observable<RetrospectiveResponse> {
-    let params = new HttpParams().set('tournament', opts.tournament ?? '2026')
-    if (opts.as_of_date) params = params.set('as_of_date', opts.as_of_date)
-    return this.http.get<RetrospectiveResponse>(`${this.apiUrl}/retrospective`, { params })
+  getRetrospective(opts: { as_of_date?: string } = {}): Observable<RetrospectiveResponse> {
+    return this.pick(opts.as_of_date, 'retrospective')
   }
+
+  // One field from the latest bundle, or from a dated snapshot. A field the
+  // API did not have for that date errors, as the API's 404 used to.
+  private pick<K extends keyof SnapshotBundle>(
+    date: string | undefined,
+    field: K
+  ): Observable<NonNullable<SnapshotBundle[K]>> {
+    const source$: Observable<SnapshotBundle> = date ? this.snapshot(date) : this.bundle$
+    return source$.pipe(
+      switchMap((b) => {
+        const value = b[field]
+        return value
+          ? [value as NonNullable<SnapshotBundle[K]>]
+          : throwError(() => new Error(`No ${field} for ${date ?? 'the latest run'}`))
+      })
+    )
+  }
+
+  private snapshot(date: string): Observable<SnapshotBundle> {
+    let snap = this.snapshots.get(date)
+    if (!snap) {
+      snap = this.load<SnapshotBundle>(`snapshots/${date}.json`)
+      this.snapshots.set(date, snap)
+    }
+    return snap
+  }
+
+  // shareReplay resets on error, so a failed load is retried on the next call.
+  private load<T>(file: string): Observable<T> {
+    return this.http.get<T>(`${DATA_URL}/${file}`).pipe(shareReplay(1))
+  }
+}
+
+// Furthest stage reached first: after the final every team but the champion
+// sits at 0% to win, so ties fall through to the final, semifinal and so on,
+// then Elo. The API returned those ties in no particular order.
+function byFinish(a: TeamRow, b: TeamRow): number {
+  return (
+    b.winner_pct - a.winner_pct ||
+    b.final_pct - a.final_pct ||
+    b.sf_pct - a.sf_pct ||
+    b.qf_pct - a.qf_pct ||
+    b.r16_pct - a.r16_pct ||
+    b.r32_pct - a.r32_pct ||
+    b.elo - a.elo
+  )
 }
