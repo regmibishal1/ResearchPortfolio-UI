@@ -81,7 +81,7 @@ describe('ProjectDetailComponent', () => {
     const report = [...el.querySelectorAll('.actions a')].find((a) =>
       a.textContent!.includes('report')
     )!
-    expect(report.textContent!.trim()).toBe('Read the report (PDF, 7.5 MB)')
+    expect(report.textContent!.trim()).toBe('Read the report (PDF, 7.5 MB) (opens in a new tab)')
   })
 
   it('orders the actions live site, report, then code', () => {
