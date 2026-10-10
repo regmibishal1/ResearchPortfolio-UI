@@ -108,12 +108,16 @@
               <td class="col-links">
                 @if (codeLink(project); as code) {
                   <a [href]="code" target="_blank" rel="noopener noreferrer"
-                    >Code<span class="visually-hidden"> for {{ project.title }}</span></a
+                    >Code<span class="visually-hidden">
+                      for {{ project.title }} (opens in a new tab)</span
+                    ></a
                   >
                 }
                 @if (project.paper) {
                   <a [href]="project.paper.url" target="_blank" rel="noopener noreferrer"
-                    >Report<span class="visually-hidden"> for {{ project.title }}</span></a
+                    >Report<span class="visually-hidden">
+                      for {{ project.title }} (PDF, opens in a new tab)</span
+                    ></a
                   >
                 }
                 @if (!codeLink(project) && !project.paper) {

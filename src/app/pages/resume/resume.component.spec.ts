@@ -27,7 +27,12 @@ describe('ResumeComponent', () => {
 
   it('lists exactly the public contact details', () => {
     const items = [...el.querySelectorAll('.contact-line li')].map((li) => li.textContent!.trim())
-    expect(items).toEqual(['Ellicott City, MD', 'contact@bishalregmi.com', 'LinkedIn', 'GitHub'])
+    expect(items).toEqual([
+      'Ellicott City, MD',
+      'contact@bishalregmi.com',
+      'LinkedIn (opens in a new tab)',
+      'GitHub (opens in a new tab)',
+    ])
   })
 
   it('only offers skills that appear somewhere in the work', () => {

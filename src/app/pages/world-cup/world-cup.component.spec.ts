@@ -91,6 +91,15 @@ describe('WorldCupComponent leaderboard sorting', () => {
   })
 })
 
+describe('WorldCupComponent accuracy', () => {
+  it('works from the count of correct calls, not the rounded rate', () => {
+    const cmp = makeComponent()
+    const pct = cmp.accuracyPct({ n: 104, accuracy: 0.6635, brier: null, log_loss: null })
+    expect(pct.toFixed(1)).toBe('66.3')
+    expect(cmp.accuracyPct({ n: 0, accuracy: null, brier: null, log_loss: null })).toBe(0)
+  })
+})
+
 describe('WorldCupComponent tabs', () => {
   type Internals = {
     retro: { complete: boolean } | null

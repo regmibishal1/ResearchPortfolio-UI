@@ -86,7 +86,9 @@
                   [href]="project.demo"
                   target="_blank"
                   rel="noopener noreferrer"
-                  >Open live site</a
+                  >Open live site<span class="visually-hidden" data-pagefind-ignore>
+                    (opens in a new tab)</span
+                  ></a
                 >
               } @else {
                 <a class="btn-secondary btn-md" [routerLink]="project.demo">Open live site</a>

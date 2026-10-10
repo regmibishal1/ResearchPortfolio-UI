@@ -68,7 +68,9 @@
                 [href]="project.demo"
                 target="_blank"
                 rel="noopener noreferrer"
-                >Open live site</a
+                >Open live site<span class="visually-hidden" data-pagefind-ignore>
+                  (opens in a new tab)</span
+                ></a
               >
             } @else {
               <a class="btn-primary btn-md" [routerLink]="project.demo">Open the dashboard</a>
@@ -80,7 +82,12 @@
               [href]="project.paper.url"
               target="_blank"
               rel="noopener noreferrer"
-              >Read the report (PDF, {{ fileSize(project.paper.bytes) }})</a
+              >Read the report (PDF, {{ fileSize(project.paper.bytes) }})<span
+                class="visually-hidden"
+                data-pagefind-ignore
+              >
+                (opens in a new tab)</span
+              ></a
             >
           }
           @for (repo of project.repoLinks ?? []; track repo.url) {
@@ -89,7 +96,8 @@
               [href]="repo.url"
               target="_blank"
               rel="noopener noreferrer"
-              >Code: {{ repo.label }}</a
+              >Code: {{ repo.label
+              }}<span class="visually-hidden" data-pagefind-ignore> (opens in a new tab)</span></a
             >
           }
           @if (project.github && !project.repoLinks?.length) {
@@ -98,7 +106,9 @@
               [href]="project.github"
               target="_blank"
               rel="noopener noreferrer"
-              >Code</a
+              >Code<span class="visually-hidden" data-pagefind-ignore>
+                (opens in a new tab)</span
+              ></a
             >
           }
         </div>

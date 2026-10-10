@@ -81,9 +81,10 @@
           <app-icon name="description" class="paper-icon" />
           <div class="paper-text">
             <h3 class="paper-title">
-              <a [href]="project.paper.url" target="_blank" rel="noopener noreferrer">{{
-                project.paper.title
-              }}</a>
+              <a [href]="project.paper.url" target="_blank" rel="noopener noreferrer"
+                >{{ project.paper.title
+                }}<span class="visually-hidden" data-pagefind-ignore> (opens in a new tab)</span></a
+              >
             </h3>
             <p class="paper-meta" data-pagefind-ignore>
               <span>{{ project.coursework }}</span>
