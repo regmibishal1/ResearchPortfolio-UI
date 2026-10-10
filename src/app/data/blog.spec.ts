@@ -1,4 +1,5 @@
-import { POSTS, getPost } from './blog'
+import { POSTS, getPost, headingId, readingMinutes } from './blog'
+import { PROJECTS } from './projects'
 
 describe('blog data', () => {
   it('has at least one post', () => {
@@ -33,6 +34,25 @@ describe('blog data', () => {
           expect(block.text).toBeTruthy()
         }
       }
+    }
+  })
+
+  it('estimates reading time at 230 words a minute', () => {
+    const words = (n: number) => Array(n).fill('word').join(' ')
+    const post = { ...POSTS[0], body: [{ kind: 'p' as const, text: words(690) }] }
+    expect(readingMinutes(post)).toBe(3)
+    expect(readingMinutes({ ...post, body: [{ kind: 'p' as const, text: 'short' }] })).toBe(1)
+  })
+
+  it('makes heading anchors from the heading text', () => {
+    expect(headingId('The harder question: how much?')).toBe('the-harder-question-how-much')
+  })
+
+  it('points each related project at a real project', () => {
+    for (const post of POSTS.filter((p) => p.relatedProject)) {
+      expect(PROJECTS.some((p) => p.id === post.relatedProject))
+        .withContext(post.slug)
+        .toBeTrue()
     }
   })
 })

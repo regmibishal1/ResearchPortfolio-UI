@@ -19,6 +19,10 @@ export interface BlogPost {
   summary: string
   tags: string[]
   body: BlogBlock[]
+  /** Set when the post is revised after publishing (ISO date). */
+  updated?: string
+  /** The project the post is about, by its id in projects.ts. */
+  relatedProject?: string
 }
 
 const POST_DEFINITIONS: BlogPost[] = [
@@ -29,6 +33,7 @@ const POST_DEFINITIONS: BlogPost[] = [
     summary:
       'The properly built version of my first model: a next-day snow predictor that has to beat real baselines on a fair test. Whether it snows turns out to be genuinely predictable. How much falls, barely at all, and the difference is the whole lesson.',
     tags: ['Data Science', 'Machine Learning', 'Climate', 'Python'],
+    relatedProject: 'climate-snowfall',
     body: [
       {
         kind: 'p',
@@ -105,6 +110,7 @@ const POST_DEFINITIONS: BlogPost[] = [
     summary:
       'Reopening my first real data science project, finding where it went wrong, and redoing it properly: a real trend test on the full record, a couple of broken weather stations, and a warming signal that turns up on every continent.',
     tags: ['Data Science', 'Climate', 'Python'],
+    relatedProject: 'climate-snowfall',
     body: [
       {
         kind: 'p',
@@ -216,4 +222,21 @@ export const POSTS: BlogPost[] = [...POST_DEFINITIONS].sort((a, b) => b.date.loc
 
 export function getPost(slug: string): BlogPost | undefined {
   return POSTS.find((p) => p.slug === slug)
+}
+
+const WORDS_PER_MINUTE = 230
+
+/** Whole minutes to read the post, at least one. */
+export function readingMinutes(post: BlogPost): number {
+  const text = post.body.map((b) => [b.text, b.caption].filter(Boolean).join(' ')).join(' ')
+  const words = text.split(/\s+/).filter(Boolean).length
+  return Math.max(1, Math.round(words / WORDS_PER_MINUTE))
+}
+
+/** A heading's anchor id, e.g. "The result" -> "the-result". */
+export function headingId(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
 }

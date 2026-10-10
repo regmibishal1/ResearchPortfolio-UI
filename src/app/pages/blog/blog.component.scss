@@ -1,114 +1,124 @@
+@use 'breakpoints' as bp;
+
 .blog-page {
-  max-width: 860px;
-  margin: 0 auto;
-  padding: 2.5rem 1.5rem 4rem;
+  max-width: var(--container-prose);
+  padding-top: var(--space-8);
+  padding-bottom: var(--space-9);
+
+  @include bp.down(bp.$sm) {
+    padding-top: var(--space-7);
+    padding-bottom: var(--space-7);
+  }
 }
 
 .blog-header {
-  margin-bottom: 2.5rem;
+  margin-bottom: var(--space-6);
 }
 
-.blog-title {
-  font-size: clamp(2rem, 5vw, 2.75rem);
-  font-weight: 700;
-  margin: 0 0 0.5rem;
-  background: var(--accent-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+.page-title {
+  margin: 0 0 var(--space-3);
+  font-size: var(--fs-h1);
+  line-height: var(--lh-h1);
 }
 
-.blog-subtitle {
-  color: var(--text-secondary);
-  font-size: 1.05rem;
-  max-width: 60ch;
+.page-intro {
   margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
 }
 
 .post-list {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
+// The title is the card's one link; its click area covers the card.
 .post-card {
-  display: block;
-  text-decoration: none;
-  color: inherit;
-  background: var(--bg-card);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-5);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
-  padding: 1.5rem 1.75rem;
-  transition: var(--transition-smooth);
-}
-
-.post-card:hover {
-  background: var(--bg-card-hover);
-  border-color: var(--border-accent);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-card);
-}
-
-.post-date {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  letter-spacing: 0.02em;
-}
-
-.post-card-title {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin: 0.35rem 0 0.6rem;
-  line-height: 1.25;
-}
-
-.post-summary {
-  color: var(--text-secondary);
-  line-height: 1.6;
-  margin: 0 0 1.1rem;
-}
-
-.post-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.post-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.tag {
-  font-size: 0.78rem;
-  color: var(--text-secondary);
   background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  padding: 0.2rem 0.6rem;
-}
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast);
 
-.read-more {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  color: var(--accent-gold);
-  font-weight: 600;
-  font-size: 0.9rem;
-  white-space: nowrap;
+  &:hover {
+    border-color: var(--border-control);
+    box-shadow: var(--shadow-card);
+    transform: translateY(-2px);
+  }
 
-  mat-icon {
-    font-size: 1.1rem;
-    width: 1.1rem;
-    height: 1.1rem;
-    transition: var(--transition-fast);
+  &:has(a:focus-visible) {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &:hover {
+      transform: none;
+    }
+  }
+
+  @include bp.down(bp.$sm) {
+    padding: var(--space-4);
   }
 }
 
-.post-card:hover .read-more mat-icon {
-  transform: translateX(3px);
+.post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--fs-micro);
+  font-variant-numeric: tabular-nums;
+}
+
+.meta-item::before {
+  content: '\00B7' / '';
+  margin-right: var(--space-2);
+}
+
+.post-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: var(--lh-h3);
+
+  a {
+    color: var(--text-primary);
+    text-decoration: none;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+    }
+
+    &:focus-visible {
+      outline: none;
+    }
+  }
+}
+
+.post-summary {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+}
+
+.chip-list {
+  margin-top: var(--space-1);
 }
