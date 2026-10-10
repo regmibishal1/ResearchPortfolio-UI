@@ -2,7 +2,7 @@
   <!-- ===== Back link ===== -->
   <nav class="breadcrumb">
     <a [routerLink]="['/project', 'edgar-signals']" class="back-link">
-      <mat-icon>arrow_back</mat-icon>
+      <app-icon name="arrow_back" />
       <span>Project overview</span>
     </a>
   </nav>
@@ -54,7 +54,7 @@
   <!-- ===== Error ===== -->
   @if (error && !loading) {
     <div class="state-block state-error">
-      <mat-icon>error_outline</mat-icon>
+      <app-icon name="error_outline" />
       <span>{{ error }}</span>
     </div>
   }
@@ -121,33 +121,33 @@
               <tr>
                 <th class="sortable" [attr.aria-sort]="ariaSort('ticker')">
                   <button type="button" class="sort-btn th-label" (click)="sortBy('ticker')">
-                    Ticker <mat-icon class="sort-icon">{{ sortIcon('ticker') }}</mat-icon>
+                    Ticker <app-icon class="sort-icon" [name]="sortIcon('ticker')" />
                   </button>
                 </th>
                 <th class="sortable" [attr.aria-sort]="ariaSort('sector')">
                   <button type="button" class="sort-btn th-label" (click)="sortBy('sector')">
-                    Sector <mat-icon class="sort-icon">{{ sortIcon('sector') }}</mat-icon>
+                    Sector <app-icon class="sort-icon" [name]="sortIcon('sector')" />
                   </button>
                 </th>
                 <th class="num sortable" [attr.aria-sort]="ariaSort('sue')">
                   <button type="button" class="sort-btn th-label" (click)="sortBy('sue')">
-                    SUE <mat-icon class="sort-icon">{{ sortIcon('sue') }}</mat-icon>
+                    SUE <app-icon class="sort-icon" [name]="sortIcon('sue')" />
                   </button>
                 </th>
                 <th class="num sortable" [attr.aria-sort]="ariaSort('predicted_vol')">
                   <button type="button" class="sort-btn th-label" (click)="sortBy('predicted_vol')">
                     Predicted vol
-                    <mat-icon class="sort-icon">{{ sortIcon('predicted_vol') }}</mat-icon>
+                    <app-icon class="sort-icon" [name]="sortIcon('predicted_vol')" />
                   </button>
                 </th>
                 <th class="num sortable" [attr.aria-sort]="ariaSort('exret_63')">
                   <button type="button" class="sort-btn th-label" (click)="sortBy('exret_63')">
-                    Fwd excess 63d <mat-icon class="sort-icon">{{ sortIcon('exret_63') }}</mat-icon>
+                    Fwd excess 63d <app-icon class="sort-icon" [name]="sortIcon('exret_63')" />
                   </button>
                 </th>
                 <th class="num sortable" [attr.aria-sort]="ariaSort('sue_quintile')">
                   <button type="button" class="sort-btn th-label" (click)="sortBy('sue_quintile')">
-                    Quintile <mat-icon class="sort-icon">{{ sortIcon('sue_quintile') }}</mat-icon>
+                    Quintile <app-icon class="sort-icon" [name]="sortIcon('sue_quintile')" />
                   </button>
                 </th>
               </tr>

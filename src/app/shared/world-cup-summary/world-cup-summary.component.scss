@@ -1,159 +1,120 @@
-// Surfaces and text follow the site design tokens; accents stay distinct.
-$bg-2: #12121a;
-$bg-3: #1a1a2e;
-$text: #f0f0f5;
-$muted: #a0a0b8;
-$accent: #f0c040;
-$accent-3: #fab387;
-$accent-4: #f87171;
+@use 'breakpoints' as bp;
 
 .wc-summary {
-  background: $bg-3;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  padding: 20px 22px;
-  color: $text;
+  padding: var(--space-5);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+
+  @include bp.down(bp.$sm) {
+    padding: var(--space-4);
+  }
 }
 
 .summary-header {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 14px;
-}
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
 
-.eyebrow {
-  display: inline-block;
-  font-size: 0.7rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: $accent;
-  font-weight: 600;
-}
-
-.summary-title {
-  margin: 4px 0 0;
-  font-size: 1.05rem;
-  font-weight: 600;
-}
-
-.cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  background: rgba(240, 192, 64, 0.1);
-  color: $accent;
-  text-decoration: none;
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  transition: background 0.15s ease;
-
-  mat-icon {
-    font-size: 16px;
-    width: 16px;
-    height: 16px;
-  }
-  &:hover {
-    background: rgba(240, 192, 64, 0.18);
-  }
-}
-
-.state {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: $muted;
-  font-size: 0.88rem;
-  padding: 12px 0;
-}
-
-.state-error {
-  color: $accent-4;
-  mat-icon {
-    color: $accent-4;
-    font-size: 18px;
+  app-icon {
     width: 18px;
     height: 18px;
   }
 }
 
-.meta-line {
-  color: $muted;
-  font-size: 0.82rem;
-  margin-bottom: 14px;
+.summary-title {
+  margin: 0;
+  font-size: var(--fs-body);
+  font-weight: 600;
+}
 
-  strong {
-    color: $text;
-    font-weight: 600;
-  }
-  .dot {
-    margin: 0 6px;
-    opacity: 0.5;
+.state {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) 0;
+  color: var(--text-secondary);
+  font-size: var(--fs-small);
+}
+
+.state-error {
+  color: var(--color-negative);
+}
+
+.meta-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
+  margin: 0 0 var(--space-3);
+  padding: 0;
+  list-style: none;
+  color: var(--text-secondary);
+  font-size: var(--fs-micro);
+  font-variant-numeric: tabular-nums;
+
+  li + li::before {
+    content: '\00B7' / '';
+    margin-right: var(--space-2);
   }
 }
 
 .top-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 
   li {
     display: grid;
-    grid-template-columns: 22px 130px 1fr 60px;
+    grid-template-columns: 1.5rem minmax(0, 8rem) 1fr 4rem;
     align-items: center;
-    gap: 10px;
-    padding: 6px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    gap: var(--space-3);
+    min-height: 40px;
+    border-bottom: 1px solid var(--border-subtle);
 
     &:last-child {
-      border-bottom: none;
+      border-bottom: 0;
     }
   }
 
   .pos {
-    color: $muted;
-    font-size: 0.85rem;
-    font-weight: 500;
+    color: var(--text-secondary);
+    font-size: var(--fs-small);
+    font-variant-numeric: tabular-nums;
   }
+
   .team {
+    overflow: hidden;
+    color: var(--text-primary);
     font-weight: 600;
-    font-size: 0.92rem;
-    white-space: nowrap;
-    overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
   }
+
   .bar-wrap {
-    background: rgba(255, 255, 255, 0.03);
-    height: 8px;
-    border-radius: 4px;
-    overflow: hidden;
     position: relative;
+    height: 6px;
+    overflow: hidden;
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.05);
   }
+
   .bar {
     display: block;
     height: 100%;
-    background: linear-gradient(90deg, $accent, $accent-3);
-    border-radius: 4px;
     max-width: 100%;
+    border-radius: var(--radius-pill);
+    background: var(--accent-gold);
   }
-  .pct {
-    color: $accent;
-    font-weight: 600;
-    font-size: 0.88rem;
-    text-align: right;
-  }
-}
 
-@media (max-width: 560px) {
-  .top-list li {
-    grid-template-columns: 22px 100px 1fr 56px;
-    gap: 8px;
+  .pct {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
   }
 }

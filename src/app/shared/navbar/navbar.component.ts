@@ -10,7 +10,6 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core'
 import { isPlatformBrowser } from '@angular/common'
-import { MatIconModule } from '@angular/material/icon'
 import { MatButtonModule } from '@angular/material/button'
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatSnackBar } from '@angular/material/snack-bar'
@@ -18,10 +17,11 @@ import { NavigationEnd, Router, RouterModule } from '@angular/router'
 import { AuthService } from '../../pages/auth/auth.service'
 import { FooterComponent } from '../footer/footer.component'
 import { Subscription, filter } from 'rxjs'
+import { IconComponent } from '../icon/icon.component'
 
 @Component({
   selector: 'app-navbar',
-  imports: [MatToolbarModule, MatButtonModule, MatIconModule, RouterModule, FooterComponent],
+  imports: [IconComponent, MatToolbarModule, MatButtonModule, RouterModule, FooterComponent],
   templateUrl: './navbar.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './navbar.component.scss',

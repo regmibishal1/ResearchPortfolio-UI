@@ -26,7 +26,7 @@
         [attr.aria-pressed]="zoomed"
         (click)="toggleZoom()"
       >
-        <mat-icon aria-hidden="true">{{ zoomed ? 'zoom_out' : 'zoom_in' }}</mat-icon>
+        <app-icon [name]="zoomed ? 'zoom_out' : 'zoom_in'" />
         <span>Zoom</span>
       </button>
       <button
@@ -35,7 +35,7 @@
         aria-label="Close"
         (click)="close()"
       >
-        <mat-icon aria-hidden="true">close</mat-icon>
+        <app-icon name="close" />
       </button>
     </div>
     <!-- Scrollable when zoomed, so it takes focus then; Enter toggles zoom like a click. -->
@@ -55,7 +55,7 @@
     @if (zoomed) {
       <div class="lightbox-pan" role="group" aria-label="Pan the image">
         <button type="button" class="lightbox-btn pan-up" aria-label="Pan up" (click)="pan(0, -1)">
-          <mat-icon aria-hidden="true">keyboard_arrow_up</mat-icon>
+          <app-icon name="keyboard_arrow_up" />
         </button>
         <button
           type="button"
@@ -63,7 +63,7 @@
           aria-label="Pan left"
           (click)="pan(-1, 0)"
         >
-          <mat-icon aria-hidden="true">keyboard_arrow_left</mat-icon>
+          <app-icon name="keyboard_arrow_left" />
         </button>
         <button
           type="button"
@@ -71,7 +71,7 @@
           aria-label="Pan right"
           (click)="pan(1, 0)"
         >
-          <mat-icon aria-hidden="true">keyboard_arrow_right</mat-icon>
+          <app-icon name="keyboard_arrow_right" />
         </button>
         <button
           type="button"
@@ -79,7 +79,7 @@
           aria-label="Pan down"
           (click)="pan(0, 1)"
         >
-          <mat-icon aria-hidden="true">keyboard_arrow_down</mat-icon>
+          <app-icon name="keyboard_arrow_down" />
         </button>
       </div>
     }

@@ -2,16 +2,16 @@ import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/cor
 
 import { FormsModule } from '@angular/forms'
 import { Router } from '@angular/router'
-import { MatIconModule } from '@angular/material/icon'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { finalize } from 'rxjs/operators'
 import { UserService, UserProfile, ChangePasswordRequest } from '../../services/user.service'
 import { AuthService } from '../auth/auth.service'
+import { IconComponent } from '../../shared/icon/icon.component'
 
 @Component({
   selector: 'app-profile',
-  imports: [FormsModule, MatIconModule, MatProgressSpinnerModule],
+  imports: [IconComponent, FormsModule, MatProgressSpinnerModule],
   templateUrl: './profile.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './profile.component.scss',

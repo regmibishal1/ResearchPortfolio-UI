@@ -5,16 +5,16 @@ import { AuthService, RegisterModel, LoginModel } from './auth.service'
 import { FormsModule, NgForm } from '@angular/forms'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { MatProgressBarModule } from '@angular/material/progress-bar'
-import { MatIconModule } from '@angular/material/icon'
 import { finalize } from 'rxjs/operators'
 import { SeoService } from '../../services/seo.service'
 import { environment } from '../../../environments/environment'
+import { IconComponent } from '../../shared/icon/icon.component'
 
 type Mode = 'login' | 'register'
 
 @Component({
   selector: 'app-auth',
-  imports: [FormsModule, MatProgressBarModule, MatIconModule],
+  imports: [IconComponent, FormsModule, MatProgressBarModule],
   templateUrl: './auth.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './auth.component.scss',

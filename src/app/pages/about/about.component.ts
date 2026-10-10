@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, inject } from '@angular/core'
 import { SeoService, PERSON_ID, SITE_URL } from '../../services/seo.service'
 import { SKILL_CATEGORIES } from '../../data/skills'
 import { experienceLabel } from '../../data/experience'
-import { SocialIconComponent } from '../../shared/social-icon/social-icon.component'
+import { IconComponent } from '../../shared/icon/icon.component'
 
 interface TimelineItem {
   title: string
@@ -23,7 +23,7 @@ interface Stat {
 
 @Component({
   selector: 'app-about',
-  imports: [SocialIconComponent],
+  imports: [IconComponent],
   templateUrl: './about.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './about.component.scss',

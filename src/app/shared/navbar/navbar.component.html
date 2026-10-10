@@ -11,7 +11,7 @@
     [attr.aria-label]="menuOpen ? 'Close menu' : 'Open menu'"
     (click)="toggleMenu()"
   >
-    <mat-icon aria-hidden="true">{{ menuOpen ? 'close' : 'menu' }}</mat-icon>
+    <app-icon [name]="menuOpen ? 'close' : 'menu'" />
   </button>
   <a class="brand-link" [routerLink]="['']" aria-label="Bishal Regmi, home">
     <img class="logo-img" src="./assets/logo-96.webp" width="32" height="32" alt="" />

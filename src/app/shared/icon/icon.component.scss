@@ -1,0 +1,13 @@
+// 20px unless the page sets a size on the app-icon element.
+:host {
+  display: inline-flex;
+  flex: none;
+  width: 20px;
+  height: 20px;
+}
+
+svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}

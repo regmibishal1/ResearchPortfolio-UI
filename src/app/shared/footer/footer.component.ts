@@ -1,13 +1,13 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core'
 import { DatePipe } from '@angular/common'
-import { SocialIconComponent } from '../social-icon/social-icon.component'
+import { IconComponent } from '../icon/icon.component'
 
 // Set by scripts/build-app.mjs on production builds; absent in dev and tests.
 declare const BUILD_DATE: string | undefined
 
 @Component({
   selector: 'app-footer',
-  imports: [DatePipe, SocialIconComponent],
+  imports: [DatePipe, IconComponent],
   templateUrl: './footer.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './footer.component.scss',
