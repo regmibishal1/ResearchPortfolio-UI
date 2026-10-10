@@ -17,7 +17,7 @@ import { SeoService } from '../../services/seo.service'
 import { environment } from '../../../environments/environment'
 import { IconComponent } from '../../shared/icon/icon.component'
 
-type Mode = 'login' | 'register' | 'reset'
+type Mode = 'login' | 'register' | 'reset' | 'forgot'
 
 const MIN_PASSWORD_LENGTH = 8
 
@@ -37,6 +37,8 @@ export class AuthComponent {
 
   /** Accounts are by invitation; sign-up only appears when this is switched on. */
   readonly registrationOpen = environment.features.registration
+  /** Reset links by email; off until the AuthAPI can send mail. */
+  resetByEmail = environment.features.passwordResetEmail
 
   mode: Mode = 'login'
   registerObj: RegisterModel = new RegisterModel()
@@ -51,6 +53,8 @@ export class AuthComponent {
   newPassword = ''
   confirmPassword = ''
   resetDone = false
+  forgotEmail = ''
+  forgotSent = false
   readonly minPasswordLength = MIN_PASSWORD_LENGTH
 
   @ViewChild('errorSummary') errorSummary?: ElementRef<HTMLElement>
@@ -81,11 +85,13 @@ export class AuthComponent {
     this.mode = mode
     this.submitted = false
     this.formError = ''
+    this.forgotSent = false
     this.showPassword = false
     const titles: Record<Mode, string> = {
       login: 'Sign in | Bishal Regmi',
       register: 'Create your account | Bishal Regmi',
       reset: 'Choose a new password | Bishal Regmi',
+      forgot: 'Reset your password | Bishal Regmi',
     }
     this.seo.setNoIndex(titles[mode])
   }
@@ -116,6 +122,18 @@ export class AuthComponent {
           this.toasts.show('Account created. You are signed in.')
           this.router.navigate(['/'])
         },
+        error: (error: Error) => this.showError(error.message),
+      })
+  }
+
+  onForgot(form: NgForm) {
+    if (!this.validate(form)) return
+    this.isLoading = true
+    this.authService
+      .forgotPassword(this.forgotEmail.trim())
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe({
+        next: () => (this.forgotSent = true),
         error: (error: Error) => this.showError(error.message),
       })
   }

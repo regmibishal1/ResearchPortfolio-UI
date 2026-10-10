@@ -85,6 +85,58 @@ describe('AuthComponent', () => {
   }))
 })
 
+describe('AuthComponent forgot password', () => {
+  let fixture: ComponentFixture<AuthComponent>
+  let component: AuthComponent
+  let el: HTMLElement
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [AuthComponent],
+      providers: [
+        provideRouter([]),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+      ],
+    }).compileComponents()
+    fixture = TestBed.createComponent(AuthComponent)
+    component = fixture.componentInstance
+    el = fixture.nativeElement
+    fixture.detectChanges()
+  })
+
+  it('stays hidden until mail is set up', () => {
+    expect(component.resetByEmail).toBeFalse()
+    expect(el.textContent).not.toContain('Forgot your password?')
+  })
+
+  it('sends the address and answers the same way for any address', fakeAsync(() => {
+    component.resetByEmail = true
+    fixture.detectChanges()
+    const link = [...el.querySelectorAll<HTMLButtonElement>('.link-button')].find((b) =>
+      b.textContent!.includes('Forgot your password?')
+    )!
+    link.click()
+    fixture.detectChanges()
+    expect(component.mode).toBe('forgot')
+    expect(el.querySelector('#forgot-email')?.getAttribute('autocomplete')).toBe('email')
+
+    const forgot = spyOn(TestBed.inject(AuthService), 'forgotPassword').and.returnValue(
+      of(undefined)
+    )
+    component.forgotEmail = 'me@example.test'
+    fixture.detectChanges()
+    tick()
+    el.querySelector<HTMLButtonElement>('.auth-submit')!.click()
+    fixture.detectChanges()
+    tick()
+    expect(forgot).toHaveBeenCalledWith('me@example.test')
+    expect(el.querySelector('[role="status"]')?.textContent).toContain(
+      'If that address has an account'
+    )
+  }))
+})
+
 describe('AuthComponent on a reset link', () => {
   let fixture: ComponentFixture<AuthComponent>
   let component: AuthComponent

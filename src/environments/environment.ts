@@ -9,5 +9,8 @@ export const environment = {
   features: {
     // Accounts are by invitation; the sign-up form stays hidden while false.
     registration: false,
+    // "Forgot your password?" on the sign-in page. Turn on once the AuthAPI
+    // can send mail (RESEND_API_KEY set and the sending domain verified).
+    passwordResetEmail: false,
   },
 }

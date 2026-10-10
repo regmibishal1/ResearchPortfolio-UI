@@ -19,8 +19,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router)
   const toAuthApi = req.url.startsWith(environment.apiBaseUrl)
 
-  // JWT Bearer: only ever sent to the AuthAPI, never to another host. A
-  // request that already names its own token (the refresh call) keeps it.
+  // JWT Bearer: only ever sent to the AuthAPI, never to another host.
   const withToken = (request: HttpRequest<unknown>, token: string) =>
     toAuthApi && token && !req.headers.has('Authorization')
       ? request.clone({ setHeaders: { Authorization: 'Bearer ' + token } })
@@ -31,10 +30,13 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   // it is not user-specific and not truly secret, so it acts as a lightweight
   // gate against anonymous bot abuse. Real protection is CORS + CF rate limiting.
   const isBackendRequest = toAuthApi || req.url.startsWith(environment.modelApiUrl)
-  const base =
+  const withKey =
     isBackendRequest && environment.apiKey
       ? req.clone({ setHeaders: { 'X-API-Key': environment.apiKey } })
       : req
+  // The refresh token is an HttpOnly cookie on the AuthAPI's origin, so calls
+  // there carry credentials (the cookie is sent and can be set).
+  const base = toAuthApi ? withKey.clone({ withCredentials: true }) : withKey
 
   const managesSession = SESSION_PATHS.some((path) => req.url.includes(path))
 
@@ -45,7 +47,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         error.status === 401 &&
         toAuthApi &&
         !managesSession &&
-        authService.hasRefreshToken()
+        authService.hasSession()
       if (!expired) return throwError(() => error)
 
       // The access token ran out: renew it once and replay the request. If

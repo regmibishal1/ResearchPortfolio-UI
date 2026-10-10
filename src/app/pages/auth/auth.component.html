@@ -76,6 +76,13 @@
             </div>
             <button type="submit" class="btn-primary auth-submit">Sign in</button>
           </form>
+          @if (resetByEmail) {
+            <p class="auth-toggle-text">
+              <button type="button" class="link-button" (click)="setMode('forgot')">
+                Forgot your password?
+              </button>
+            </p>
+          }
           @if (registrationOpen) {
             <p class="auth-toggle-text">
               Have an invitation?
@@ -231,6 +238,57 @@
           <p class="auth-toggle-text">
             Already have an account?
             <button type="button" class="link-button" (click)="setMode('login')">Sign in</button>
+          </p>
+        </div>
+      }
+
+      <!-- Ask for a reset link by email -->
+      @if (mode === 'forgot') {
+        <div class="form-section">
+          <h1 class="auth-title">Reset your password</h1>
+          @if (forgotSent) {
+            <p class="auth-subtitle" role="status">
+              If that address has an account, a reset link is on its way. It works once, for 30
+              minutes.
+            </p>
+          } @else {
+            <p class="auth-subtitle">Enter the email address on your account.</p>
+            @if (formError || (submitted && forgotForm.invalid)) {
+              <div #errorSummary class="error-summary" role="alert" tabindex="-1">
+                <app-icon name="error_outline" />
+                <span>{{ formError || 'Enter your email address.' }}</span>
+              </div>
+            }
+            <form
+              class="auth-form"
+              (ngSubmit)="onForgot(forgotForm)"
+              #forgotForm="ngForm"
+              novalidate
+            >
+              <div class="field">
+                <label for="forgot-email">Email</label>
+                <div class="input-group" [class.invalid]="submitted && forgotEmailField.invalid">
+                  <app-icon class="input-icon" name="email" />
+                  <input
+                    id="forgot-email"
+                    type="email"
+                    name="email"
+                    autocomplete="email"
+                    [(ngModel)]="forgotEmail"
+                    #forgotEmailField="ngModel"
+                    required
+                    email
+                    [attr.aria-invalid]="submitted && forgotEmailField.invalid"
+                  />
+                </div>
+              </div>
+              <button type="submit" class="btn-primary auth-submit">Send the link</button>
+            </form>
+          }
+          <p class="auth-toggle-text">
+            <button type="button" class="link-button" (click)="setMode('login')">
+              Back to sign in
+            </button>
           </p>
         </div>
       }
