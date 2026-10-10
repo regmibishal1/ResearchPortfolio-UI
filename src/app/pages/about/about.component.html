@@ -85,7 +85,7 @@
                 project.paper.title
               }}</a>
             </h3>
-            <p class="paper-meta">
+            <p class="paper-meta" data-pagefind-ignore>
               <span>{{ project.coursework }}</span>
               <time [attr.datetime]="project.paper.date">{{ project.period }}</time>
               <span>PDF, {{ fileSize(project.paper.bytes) }}</span>
