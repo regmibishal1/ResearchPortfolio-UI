@@ -65,7 +65,7 @@ export type IconName = keyof typeof PATHS
   selector: 'app-icon',
   templateUrl: './icon.component.html',
   styleUrl: './icon.component.scss',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IconComponent {
   @Input({ required: true }) name!: IconName

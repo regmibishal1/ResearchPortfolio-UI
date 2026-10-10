@@ -5,7 +5,7 @@ import { Project, statusText } from '../../data/projects'
 @Component({
   selector: 'app-status-badge',
   templateUrl: './status-badge.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './status-badge.component.scss',
 })
 export class StatusBadgeComponent {

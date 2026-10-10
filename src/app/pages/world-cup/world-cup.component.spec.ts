@@ -1,3 +1,4 @@
+import { ChangeDetectorRef } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router'
 import { WorldCupComponent } from './world-cup.component'
@@ -12,6 +13,7 @@ function makeComponent(): WorldCupComponent {
     providers: [
       { provide: SeoService, useValue: { setPage: () => {} } },
       { provide: WorldCupService, useValue: {} },
+      { provide: ChangeDetectorRef, useValue: { markForCheck: () => {} } },
       provideRouter([]),
       { provide: ActivatedRoute, useValue: { snapshot: { queryParamMap: convertToParamMap({}) } } },
     ],

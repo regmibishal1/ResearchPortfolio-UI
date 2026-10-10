@@ -43,7 +43,7 @@ const MAX_RESULTS = 8
   imports: [IconComponent],
   templateUrl: './site-search.component.html',
   styleUrl: './site-search.component.scss',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SiteSearchComponent implements OnInit, OnDestroy {
   @ViewChild('dialog', { static: true }) dialog!: ElementRef<HTMLDialogElement>

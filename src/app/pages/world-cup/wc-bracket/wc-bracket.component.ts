@@ -42,7 +42,7 @@ export const BRACKET_ROUNDS: { key: BracketRound; short: string; label: string }
   selector: 'app-wc-bracket',
   imports: [NgTemplateOutlet],
   templateUrl: './wc-bracket.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './wc-bracket.component.scss',
 })
 export class WcBracketComponent implements OnChanges {

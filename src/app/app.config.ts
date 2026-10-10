@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core'
+import { ApplicationConfig, provideZonelessChangeDetection } from '@angular/core'
 import { provideRouter, withInMemoryScrolling, withPreloading } from '@angular/router'
 import { provideHttpClient, withInterceptors, withXhr } from '@angular/common/http'
 import { provideClientHydration, withNoIncrementalHydration } from '@angular/platform-browser'
@@ -9,9 +9,9 @@ import { SelectivePreloadingStrategy } from './preload-strategy'
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    // Angular 21 defaults to zoneless change detection; the app still relies
-    // on zone.js (e.g. charts run outside the zone so pages can settle).
-    provideZoneChangeDetection(),
+    // No zone.js: views update from template events, signals and
+    // markForCheck, and pending HTTP requests keep hydration waiting.
+    provideZonelessChangeDetection(),
     provideRouter(
       routes,
       withInMemoryScrolling({ scrollPositionRestoration: 'top', anchorScrolling: 'enabled' }),

@@ -6,6 +6,7 @@ import {
   ViewChild,
   ChangeDetectionStrategy,
   inject,
+  ChangeDetectorRef,
 } from '@angular/core'
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common'
 import { RouterModule } from '@angular/router'
@@ -77,11 +78,12 @@ const STOCK_TEXT_COLUMNS: ReadonlySet<StockSortKey> = new Set(['ticker', 'sector
     DecimalPipe,
   ],
   templateUrl: './stocks.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './stocks.component.scss',
 })
 export class StocksComponent implements OnInit, OnDestroy {
   private stocks = inject(StocksService)
+  private cdr = inject(ChangeDetectorRef)
 
   // The canvas only enters the DOM once the loading gate flips, which happens
   // in the same change-detection pass that delivers the data. Rendering from
@@ -148,10 +150,12 @@ export class StocksComponent implements OnInit, OnDestroy {
         this.trackRecord = track
         this.metricCards = this.buildMetricCards(latest)
         this.loading = false
+        this.cdr.markForCheck()
       },
       error: () => {
         this.error = 'Could not load the latest snapshot. The data feed may not be seeded yet.'
         this.loading = false
+        this.cdr.markForCheck()
       },
     })
   }
@@ -218,6 +222,7 @@ export class StocksComponent implements OnInit, OnDestroy {
       .subscribe((detail) => {
         this.companyDetail = detail
         this.companyLoading = false
+        this.cdr.markForCheck()
       })
   }
 

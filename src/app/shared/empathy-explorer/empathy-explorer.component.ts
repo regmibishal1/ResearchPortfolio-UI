@@ -4,7 +4,6 @@ import {
   ViewChild,
   AfterViewInit,
   OnDestroy,
-  NgZone,
   PLATFORM_ID,
   inject,
   ChangeDetectionStrategy,
@@ -68,12 +67,11 @@ const CLASSIFICATION_CURVE = [
   selector: 'app-empathy-explorer',
   imports: [CommonModule],
   templateUrl: './empathy-explorer.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './empathy-explorer.component.scss',
 })
 export class EmpathyExplorerComponent implements AfterViewInit, OnDestroy {
   private platformId = inject(PLATFORM_ID)
-  private zone = inject(NgZone)
   @ViewChild('curveCanvas') curveCanvas!: ElementRef<HTMLCanvasElement>
 
   readonly curve = CLASSIFICATION_CURVE
@@ -138,11 +136,9 @@ export class EmpathyExplorerComponent implements AfterViewInit, OnDestroy {
   ]
 
   ngAfterViewInit() {
-    // Chart.js needs a real canvas, so the chart is drawn in the browser only,
-    // and outside the Angular zone so its animation frames do not keep the
-    // app from settling.
+    // Chart.js needs a real canvas, so the chart is drawn in the browser only.
     if (!isPlatformBrowser(this.platformId)) return
-    this.zone.runOutsideAngular(() => this.drawCurve())
+    this.drawCurve()
   }
 
   private drawCurve() {

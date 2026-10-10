@@ -16,7 +16,7 @@ import { CONTACT } from '../../data/resume'
   selector: 'app-copy-email',
   templateUrl: './copy-email.component.html',
   styleUrl: './copy-email.component.scss',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CopyEmailComponent implements OnDestroy {
   @Input() email = CONTACT.email

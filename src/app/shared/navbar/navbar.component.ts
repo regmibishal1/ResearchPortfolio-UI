@@ -7,8 +7,10 @@ import {
   PLATFORM_ID,
   ViewChild,
   inject,
+  signal,
   ChangeDetectionStrategy,
 } from '@angular/core'
+import { toSignal } from '@angular/core/rxjs-interop'
 import { isPlatformBrowser } from '@angular/common'
 import { NavigationEnd, Router, RouterModule } from '@angular/router'
 import { AuthService } from '../../pages/auth/auth.service'
@@ -29,7 +31,7 @@ import { ToastService } from '../toast/toast.service'
     ToastOutletComponent,
   ],
   templateUrl: './navbar.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './navbar.component.scss',
 })
 export class NavbarComponent implements OnInit, OnDestroy {
@@ -44,8 +46,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
     { label: 'R\u00e9sum\u00e9', path: '/resume' },
   ]
 
-  isAuthenticated = false
-  menuOpen = false
+  readonly isAuthenticated = toSignal(this.authService.getAuthStatus(), { initialValue: false })
+  readonly menuOpen = signal(false)
 
   @ViewChild('main', { static: true }) main!: ElementRef<HTMLElement>
   @ViewChild('menuButton', { read: ElementRef }) menuButton?: ElementRef<HTMLElement>
@@ -57,11 +59,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscriptions.add(
-      this.authService.getAuthStatus().subscribe((isAuth) => {
-        this.isAuthenticated = isAuth
-      })
-    )
-    this.subscriptions.add(
       this.router.events
         .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
         .subscribe((e) => this.onNavigationEnd(e.urlAfterRedirects))
@@ -69,12 +66,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   toggleMenu() {
-    this.menuOpen = !this.menuOpen
+    this.menuOpen.update((open) => !open)
   }
 
   closeMenu(returnFocus = false) {
-    if (!this.menuOpen) return
-    this.menuOpen = false
+    if (!this.menuOpen()) return
+    this.menuOpen.set(false)
     if (returnFocus) this.menuButton?.nativeElement.focus()
   }
 

@@ -3,11 +3,14 @@ import { provideHttpClientTesting } from '@angular/common/http/testing'
 import { RouterModule } from '@angular/router'
 
 import { NavbarComponent } from './navbar.component'
+import { AuthService } from '../../pages/auth/auth.service'
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http'
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent
   let fixture: ComponentFixture<NavbarComponent>
+
+  afterEach(() => localStorage.clear())
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -50,7 +53,7 @@ describe('NavbarComponent', () => {
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
     fixture.detectChanges()
 
-    expect(component.menuOpen).toBeFalse()
+    expect(component.menuOpen()).toBeFalse()
     expect(document.activeElement).toBe(button)
   })
 
@@ -77,7 +80,7 @@ describe('NavbarComponent', () => {
   })
 
   it('offers sign out in the mobile menu when signed in', () => {
-    component.isAuthenticated = true
+    TestBed.inject(AuthService).setSession({ access_token: 'a' })
     fixture.detectChanges()
     const el: HTMLElement = fixture.nativeElement
     const signOut = [...el.querySelectorAll<HTMLButtonElement>('#mobile-nav button')].find(

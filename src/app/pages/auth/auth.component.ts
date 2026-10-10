@@ -1,9 +1,12 @@
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
+  Injector,
   PLATFORM_ID,
   ViewChild,
   ChangeDetectionStrategy,
+  afterNextRender,
   inject,
 } from '@angular/core'
 import { isPlatformBrowser } from '@angular/common'
@@ -25,7 +28,7 @@ const MIN_PASSWORD_LENGTH = 8
   selector: 'app-auth',
   imports: [IconComponent, FormsModule, MatProgressBarModule],
   templateUrl: './auth.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './auth.component.scss',
 })
 export class AuthComponent {
@@ -58,6 +61,15 @@ export class AuthComponent {
   readonly minPasswordLength = MIN_PASSWORD_LENGTH
 
   @ViewChild('errorSummary') errorSummary?: ElementRef<HTMLElement>
+
+  private cdr = inject(ChangeDetectorRef)
+  private injector = inject(Injector)
+  // Runs after each request's next/error handler, so one call re-renders
+  // whatever they changed.
+  private settle = () => {
+    this.isLoading = false
+    this.cdr.markForCheck()
+  }
 
   constructor() {
     // /login, /register and /reset share this component; pick the initial
@@ -101,7 +113,7 @@ export class AuthComponent {
     this.isLoading = true
     this.authService
       .login(this.loginObj)
-      .pipe(finalize(() => (this.isLoading = false)))
+      .pipe(finalize(this.settle))
       .subscribe({
         next: () => {
           this.toasts.show('Signed in.')
@@ -116,7 +128,7 @@ export class AuthComponent {
     this.isLoading = true
     this.authService
       .register(this.registerObj)
-      .pipe(finalize(() => (this.isLoading = false)))
+      .pipe(finalize(this.settle))
       .subscribe({
         next: () => {
           this.toasts.show('Account created. You are signed in.')
@@ -131,7 +143,7 @@ export class AuthComponent {
     this.isLoading = true
     this.authService
       .forgotPassword(this.forgotEmail.trim())
-      .pipe(finalize(() => (this.isLoading = false)))
+      .pipe(finalize(this.settle))
       .subscribe({
         next: () => (this.forgotSent = true),
         error: (error: Error) => this.showError(error.message),
@@ -147,7 +159,7 @@ export class AuthComponent {
     this.isLoading = true
     this.authService
       .resetPassword(this.resetToken, this.newPassword)
-      .pipe(finalize(() => (this.isLoading = false)))
+      .pipe(finalize(this.settle))
       .subscribe({
         next: () => {
           this.resetDone = true
@@ -177,6 +189,6 @@ export class AuthComponent {
   }
 
   private focusSummary() {
-    setTimeout(() => this.errorSummary?.nativeElement.focus())
+    afterNextRender(() => this.errorSummary?.nativeElement.focus(), { injector: this.injector })
   }
 }

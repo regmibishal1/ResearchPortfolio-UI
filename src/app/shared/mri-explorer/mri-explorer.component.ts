@@ -53,7 +53,7 @@ type TabId = 'saliency' | 'confusion' | 'training'
   selector: 'app-mri-explorer',
   imports: [DecimalPipe, ZoomableImageComponent],
   templateUrl: './mri-explorer.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './mri-explorer.component.scss',
 })
 export class MriExplorerComponent implements AfterViewInit {

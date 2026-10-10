@@ -14,7 +14,7 @@ import { projectSrcset } from '../project-srcset'
   selector: 'app-work-card',
   imports: [RouterModule, StatusBadgeComponent],
   templateUrl: './work-card.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './work-card.component.scss',
 })
 export class WorkCardComponent {

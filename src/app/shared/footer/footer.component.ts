@@ -9,7 +9,7 @@ declare const BUILD_DATE: string | undefined
   selector: 'app-footer',
   imports: [DatePipe, IconComponent],
   templateUrl: './footer.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './footer.component.scss',
 })
 export class FooterComponent {

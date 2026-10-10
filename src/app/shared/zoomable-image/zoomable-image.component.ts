@@ -25,7 +25,7 @@ const PAN_STEP = 120
   selector: 'app-zoomable-image',
   imports: [IconComponent, A11yModule],
   templateUrl: './zoomable-image.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './zoomable-image.component.scss',
 })
 export class ZoomableImageComponent {
