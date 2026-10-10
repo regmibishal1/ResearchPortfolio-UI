@@ -32,6 +32,8 @@
     <a class="nav-contact" [routerLink]="['/about']" fragment="contact">Contact</a>
   </nav>
 
+  <app-site-search />
+
   @if (isAuthenticated) {
     <span class="user-profile">
       <a class="btn-secondary btn-md" [routerLink]="['/profile']">Profile</a>

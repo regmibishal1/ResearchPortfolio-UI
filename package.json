@@ -4,7 +4,7 @@
 	"scripts": {
 		"ng": "ng",
 		"start": "ng serve",
-		"build": "node scripts/generate-sitemap.mjs && node scripts/generate-feed.mjs && NG_BUILD_MAX_WORKERS=1 node scripts/build-app.mjs && node scripts/finalize-static.mjs && node scripts/generate-resume-pdf.mjs",
+		"build": "node scripts/generate-sitemap.mjs && node scripts/generate-feed.mjs && NG_BUILD_MAX_WORKERS=1 node scripts/build-app.mjs && node scripts/finalize-static.mjs && node scripts/generate-resume-pdf.mjs && node scripts/build-search.mjs",
 		"build:cf": "sed -i \"s|%%API_URL%%|${API_URL:-}|g\" src/environments/environment.prod.ts && sed -i \"s|%%MODEL_API_URL%%|${MODEL_API_URL:-}|g\" src/environments/environment.prod.ts && sed -i \"s|%%APP_URL%%|${APP_URL:-}|g\" src/environments/environment.prod.ts && sed -i \"s|%%FASTAPI_API_KEY%%|${FASTAPI_API_KEY:-}|g\" src/environments/environment.prod.ts && yarn build",
 		"watch": "ng build --watch --configuration development",
 		"test": "ng test",
@@ -52,6 +52,7 @@
 		"karma-jasmine": "~5.1.0",
 		"karma-jasmine-html-reporter": "~2.1.0",
 		"lint-staged": "^15.2.2",
+		"pagefind": "1.5.2",
 		"pdfkit": "0.20.2",
 		"prettier": "^3.2.5",
 		"typescript": "~6.0.3",
