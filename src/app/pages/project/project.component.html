@@ -1,7 +1,7 @@
 <div class="projects-page">
   <!-- ===== Header ===== -->
   <section class="projects-header">
-    <h1 class="page-title animate-in">My <span class="gold-text">Projects</span></h1>
+    <h1 class="page-title">My Projects</h1>
     <p class="page-subtitle animate-in animate-in-delay-1">
       Live products, ML research, and the graduate coursework behind them, newest first
     </p>
@@ -32,8 +32,8 @@
       {{ activeFilter === 'All' ? 'All projects' : activeFilter + ' projects' }}
     </h2>
     <div class="projects-grid">
-      @for (project of filteredProjects; track project.id; let i = $index) {
-        <article class="project-card glass" [style.animation-delay]="i * 0.1 + 's'">
+      @for (project of filteredProjects; track project.id) {
+        <article class="project-card surface animate-in">
           @if (project.image) {
             <div class="card-thumb">
               <img [src]="project.image" alt="" loading="lazy" />
