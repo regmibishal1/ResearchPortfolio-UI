@@ -498,6 +498,25 @@ a:hover {
   }
 }
 
+// Printing (the resume, mostly) leaves out the site chrome and the dark theme.
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  .skip-link,
+  .toolbar-container,
+  .mobile-nav,
+  app-footer {
+    display: none !important;
+  }
+
+  .page-shell {
+    margin-top: 0 !important;
+  }
+}
+
 // Visitors who ask for less motion get none: no entrance fades or transitions.
 @media (prefers-reduced-motion: reduce) {
   *,

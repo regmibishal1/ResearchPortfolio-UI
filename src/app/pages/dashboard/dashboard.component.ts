@@ -5,6 +5,7 @@ import { SeoService } from '../../services/seo.service'
 import { PROJECTS, Project, SPOTLIGHT } from '../../data/projects'
 import { POSTS } from '../../data/blog'
 import { experienceLabel } from '../../data/experience'
+import { SUMMARY } from '../../data/resume'
 import { WorkCardComponent } from '../../shared/work-card/work-card.component'
 
 @Component({
@@ -25,6 +26,8 @@ export class DashboardComponent {
       description: `Bishal Regmi is a Software Engineer and Data Scientist with ${experienceLabel()} years at T. Rowe Price. Case studies in applied ML, data systems and full-stack apps.`,
     })
   }
+
+  readonly summary = SUMMARY
 
   /** The project Home leads with; the section is skipped if none is flagged. */
   readonly spotlight = SPOTLIGHT

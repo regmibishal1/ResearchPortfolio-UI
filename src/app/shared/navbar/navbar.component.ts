@@ -35,6 +35,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     { label: 'Projects', path: '/project' },
     { label: 'Blog', path: '/blog' },
     { label: 'About', path: '/about' },
+    { label: 'R\u00e9sum\u00e9', path: '/resume' },
   ]
 
   isAuthenticated = false

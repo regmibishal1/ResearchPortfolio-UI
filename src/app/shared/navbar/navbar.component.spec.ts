@@ -62,15 +62,17 @@ describe('NavbarComponent', () => {
       'Projects',
       'Blog',
       'About',
+      'R\u00e9sum\u00e9',
       'Contact',
     ])
-    expect(desktop[3].getAttribute('href')).toBe('/about#contact')
+    expect(desktop[4].getAttribute('href')).toBe('/about#contact')
 
     const mobile = [...el.querySelectorAll<HTMLAnchorElement>('#mobile-nav a')]
     expect(mobile.map((a) => a.textContent!.trim())).toEqual([
       'Projects',
       'Blog',
       'About',
+      'R\u00e9sum\u00e9',
       'Contact',
     ])
   })
