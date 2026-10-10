@@ -7,7 +7,7 @@ import prettier from 'eslint-config-prettier/flat'
 
 export default defineConfig([
   {
-    ignores: ['dist/', '.angular/', 'coverage/'],
+    ignores: ['dist/', '.angular/', 'coverage/', 'src/app/api/fastapi-schema.ts'],
   },
   {
     files: ['**/*.ts'],
