@@ -37,7 +37,7 @@ export class AboutComponent {
       path: '/about',
       image: '/assets/og/about.jpg',
       description:
-        'Learn about Bishal Regmi, an AWS-certified Software Engineer and Data Scientist at T. Rowe Price, holding dual degrees from UMD and UMBC.',
+        'Learn about Bishal Regmi, an AWS-certified Software Engineer and Data Scientist at T. Rowe Price, with degrees from UMBC and the University of Maryland.',
       breadcrumbs: [{ name: 'About', path: '/about' }],
       schema: [
         {
@@ -55,14 +55,14 @@ export class AboutComponent {
     { label: 'Experience', value: `${experienceLabel()} years` },
     { label: 'Certification', value: 'AWS Solutions Architect' },
     { label: 'Domain', value: 'Fintech' },
-    { label: 'Education', value: "Dual Master's & B.S." },
+    { label: 'Education', value: "Master's & B.S." },
   ]
 
   roles = ['Software Engineer', 'Data Scientist', 'AWS Certified', 'Fintech']
 
   bio = `Software Engineer and Data Scientist with ${experienceLabel()} years of experience at T. Rowe Price, building systems that process billions of dollars in daily cash flows and serve thousands of traders. I hold an AWS Solutions Architect certification.
 
-I hold a B.S. in Computer Science (Summa Cum Laude) from UMBC and an M.S. in Data Science from the University of Maryland, College Park.
+I hold a B.S. in Computer Science (Summa Cum Laude) from UMBC and an M.P.S. in Data Science & Analytics from the University of Maryland, College Park.
 
 My work spans large-scale .NET microservice platforms, ML-powered financial forecasting, event-driven AWS architectures, and full-stack React and Angular applications. The projects on this site are the same skills applied to problems I picked myself.`
 
