@@ -14,66 +14,45 @@
     <mat-icon aria-hidden="true">{{ menuOpen ? 'close' : 'menu' }}</mat-icon>
   </button>
   <a class="brand-link" [routerLink]="['']" aria-label="Bishal Regmi, home">
-    <img class="logo-img" src="./assets/logo-96.webp" width="40" height="40" alt="" />
+    <img class="logo-img" src="./assets/logo-96.webp" width="32" height="32" alt="" />
     <span class="title-text">Bishal Regmi</span>
   </a>
   <span class="spacer"></span>
 
   <nav class="desktop-nav" aria-label="Primary">
-    <a
-      mat-button
-      [routerLink]="['']"
-      routerLinkActive="nav-active"
-      [routerLinkActiveOptions]="{ exact: true }"
-      ariaCurrentWhenActive="page"
-      >Home</a
-    >
-    <a
-      mat-button
-      [routerLink]="['/project']"
-      routerLinkActive="nav-active"
-      ariaCurrentWhenActive="page"
-      >Projects</a
-    >
-    <a
-      mat-button
-      [routerLink]="['/blog']"
-      routerLinkActive="nav-active"
-      ariaCurrentWhenActive="page"
-      >Blog</a
-    >
-    <a
-      mat-button
-      [routerLink]="['/about']"
-      routerLinkActive="nav-active"
-      ariaCurrentWhenActive="page"
-      >About</a
-    >
+    @for (link of navLinks; track link.path) {
+      <a
+        class="nav-link"
+        [routerLink]="link.path"
+        routerLinkActive="nav-active"
+        ariaCurrentWhenActive="page"
+        >{{ link.label }}</a
+      >
+    }
+    <a class="nav-contact" [routerLink]="['/about']" fragment="contact">Contact</a>
   </nav>
 
   @if (isAuthenticated) {
     <span class="user-profile">
-      <button mat-stroked-button class="login-btn" [routerLink]="['/profile']">Profile</button>
-      <button mat-stroked-button class="login-btn" (click)="onLogout()">Logout</button>
+      <a class="btn-secondary btn-md" [routerLink]="['/profile']">Profile</a>
+      <button type="button" class="btn-secondary btn-md" (click)="onLogout()">Sign out</button>
     </span>
   }
 </mat-toolbar>
 
 <nav id="mobile-nav" class="mobile-nav" aria-label="Primary" [hidden]="!menuOpen">
-  <a
-    [routerLink]="['']"
-    routerLinkActive="mobile-active"
-    [routerLinkActiveOptions]="{ exact: true }"
-    ariaCurrentWhenActive="page"
-    >Home</a
-  >
-  <a [routerLink]="['/project']" routerLinkActive="mobile-active" ariaCurrentWhenActive="page"
-    >Projects</a
-  >
-  <a [routerLink]="['/blog']" routerLinkActive="mobile-active" ariaCurrentWhenActive="page">Blog</a>
-  <a [routerLink]="['/about']" routerLinkActive="mobile-active" ariaCurrentWhenActive="page"
-    >About</a
-  >
+  @for (link of navLinks; track link.path) {
+    <a [routerLink]="link.path" routerLinkActive="mobile-active" ariaCurrentWhenActive="page">{{
+      link.label
+    }}</a>
+  }
+  <a [routerLink]="['/about']" fragment="contact">Contact</a>
+  @if (isAuthenticated) {
+    <a [routerLink]="['/profile']" routerLinkActive="mobile-active" ariaCurrentWhenActive="page"
+      >Profile</a
+    >
+    <button type="button" (click)="onLogout()">Sign out</button>
+  }
 </nav>
 
 <div class="page-shell">
