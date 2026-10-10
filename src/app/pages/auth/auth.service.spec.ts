@@ -1,9 +1,10 @@
 import { TestBed } from '@angular/core/testing'
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing'
-import { provideHttpClient, withXhr } from '@angular/common/http'
+import { provideHttpClient, withInterceptors, withXhr } from '@angular/common/http'
 import { provideRouter } from '@angular/router'
 import { firstValueFrom } from 'rxjs'
 import { AuthService, safeNext } from './auth.service'
+import { authInterceptor } from '../../auth.interceptor'
 import { environment } from '../../../environments/environment'
 
 describe('AuthService', () => {
@@ -48,22 +49,42 @@ describe('AuthService', () => {
       TestBed.inject(HttpTestingController).expectNone(refreshUrl)
     })
 
-    it('renews the session from the refresh cookie when this browser was signed in', () => {
+    it('renews the session from the refresh cookie when this browser was signed in', async () => {
       localStorage.setItem('signed_in', '1')
       const service = create()
       expect(signedIn(service)).toBeTrue()
+      await Promise.resolve()
       TestBed.inject(HttpTestingController).expectOne(refreshUrl).flush({ access_token: 'fresh' })
       expect(service.getAuthTokenValue()).toBe('fresh')
     })
 
-    it('signs out quietly when the cookie no longer works', () => {
+    it('signs out quietly when the cookie no longer works', async () => {
       localStorage.setItem('signed_in', '1')
       const service = create()
+      await Promise.resolve()
       TestBed.inject(HttpTestingController)
         .expectOne(refreshUrl)
         .flush(null, { status: 401, statusText: 'Unauthorized' })
       expect(signedIn(service)).toBeFalse()
       expect(localStorage.getItem('signed_in')).toBeNull()
+    })
+
+    it('renews through the real interceptor, which itself needs this service', async () => {
+      localStorage.setItem('signed_in', '1')
+      TestBed.configureTestingModule({
+        providers: [
+          provideRouter([]),
+          provideHttpClient(withXhr(), withInterceptors([authInterceptor])),
+          provideHttpClientTesting(),
+        ],
+      })
+      const service = TestBed.inject(AuthService)
+      await Promise.resolve()
+      const req = TestBed.inject(HttpTestingController).expectOne(refreshUrl)
+      expect(req.request.withCredentials).toBeTrue()
+      req.flush({ access_token: 'fresh' })
+      expect(service.getAuthTokenValue()).toBe('fresh')
+      expect(localStorage.getItem('signed_in')).toBe('1')
     })
 
     it('drops tokens left in storage by the old sign-in', () => {

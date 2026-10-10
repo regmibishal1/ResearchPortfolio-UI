@@ -49,7 +49,9 @@ export class AuthService {
     localStorage.removeItem('refresh_token')
     if (!localStorage.getItem(SESSION_HINT)) return
     this.isAuthenticated.next(true)
-    this.refresh().subscribe({ error: () => this.clearSession() })
+    // Started once this constructor returns: the request goes through the
+    // auth interceptor, which injects this service.
+    queueMicrotask(() => this.refresh().subscribe({ error: () => this.clearSession() }))
   }
 
   getAuthStatus(): Observable<boolean> {

@@ -39,8 +39,22 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const base = toAuthApi ? withKey.clone({ withCredentials: true }) : withKey
 
   const managesSession = SESSION_PATHS.some((path) => req.url.includes(path))
+  const renewOrEnd = () =>
+    authService.refresh().pipe(
+      catchError((refreshError: unknown) => {
+        authService.endSession(router.url)
+        return throwError(() => refreshError)
+      })
+    )
 
-  return next(withToken(base, authService.getAuthTokenValue())).pipe(
+  // Just after a page load the access token is still being renewed from the
+  // cookie; wait for it instead of sending the request without one.
+  const token = authService.getAuthTokenValue()
+  if (toAuthApi && !managesSession && !token && authService.hasSession()) {
+    return renewOrEnd().pipe(switchMap((fresh) => next(withToken(base, fresh))))
+  }
+
+  return next(withToken(base, token)).pipe(
     catchError((error: unknown) => {
       const expired =
         error instanceof HttpErrorResponse &&
@@ -52,13 +66,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
       // The access token ran out: renew it once and replay the request. If
       // the session cannot be renewed, it is over.
-      return authService.refresh().pipe(
-        catchError((refreshError: unknown) => {
-          authService.endSession(router.url)
-          return throwError(() => refreshError)
-        }),
-        switchMap((token) => next(withToken(base, token)))
-      )
+      return renewOrEnd().pipe(switchMap((fresh) => next(withToken(base, fresh))))
     })
   )
 }

@@ -94,6 +94,7 @@ describe('authInterceptor', () => {
     httpMock.expectOne(refreshUrl).flush({ access_token: newAccess })
     httpMock.expectOne(userUrl).flush({})
     httpMock.expectOne(`${userUrl}/other`).flush({})
+    expect(auth.getAuthTokenValue()).toBe(newAccess)
   })
 
   it('ends the session when it cannot be renewed', () => {
@@ -107,11 +108,26 @@ describe('authInterceptor', () => {
     expect(failed).toBeTrue()
   })
 
+  it('holds requests until the session is renewed after a page load', () => {
+    // A page load: this browser has a session, but no access token yet.
+    ;(auth as unknown as { authToken: { next(v: string): void } }).authToken.next('')
+    let body: unknown
+    http.get(userUrl).subscribe((b) => (body = b))
+    httpMock.expectNone(userUrl)
+
+    httpMock.expectOne(refreshUrl).flush({ access_token: newAccess })
+    const req = httpMock.expectOne(userUrl)
+    expect(req.request.headers.get('Authorization')).toBe('Bearer ' + newAccess)
+    req.flush({ username: 'me' })
+    expect(body).toEqual({ username: 'me' })
+  })
+
   it('leaves a failed sign-in alone instead of trying to renew', () => {
     http.post(`${environment.apiBaseUrl}/auth/authenticate`, {}).subscribe({ error: () => {} })
     httpMock
       .expectOne(`${environment.apiBaseUrl}/auth/authenticate`)
       .flush(null, { status: 401, statusText: 'Unauthorized' })
     httpMock.expectNone(refreshUrl)
+    expect(auth.hasSession()).toBeTrue()
   })
 })
