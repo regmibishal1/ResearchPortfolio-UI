@@ -273,6 +273,35 @@ const PROJECT_DEFINITIONS: Project[] = [
     featured: true,
   },
   {
+    id: 'multisource-downloader',
+    title: 'Multisource Downloader',
+    shortDescription:
+      'Desktop app and command line that archive posts, videos and photos from eight platforms, recording where each file came from, when, and its SHA-256.',
+    description:
+      "I built this to help me archive historical events, especially Nepal's 2025 anti-corruption protests, which affected me personally to some extent. Give it a list of links from YouTube, X, Instagram, TikTok, Facebook, Reddit, Google Drive or Bluesky and it saves the posts, videos and photos exactly as each platform served them, with no re-encoding. Every run records where each file came from, when it was saved and its SHA-256, and links saved before are never downloaded twice. Verify files re-hashes a run and checks its custody log, and Export package writes a BagIt (RFC 8493) package that archives and lawyers can check with standard tools. It runs as a desktop window, with a simple view for one link at a time, or from the command line for long lists, with yt-dlp, gallery-dl and Instaloader doing the downloading. It ships as a Windows app on the Releases page and as a pip install for Windows, macOS and Linux.",
+    tags: ['Python', 'yt-dlp', 'Tkinter', 'BagIt', 'CLI'],
+    category: 'Tools',
+    type: 'product',
+    period: '2025-present',
+    icon: 'download',
+    github: 'https://github.com/regmibishal1/multisource_downloader',
+    status: 'live',
+    statusLabel: 'Released',
+    highlights: [
+      'Saves from YouTube, X, Instagram, TikTok, Facebook, Reddit, Google Drive and Bluesky, from any text that contains links: a chat export, an email, notes. Threads links are recognized but cannot be downloaded yet',
+      'Every run writes a manifest, SHA256SUMS and an append-only custody log, and links saved in an earlier run are recorded as already saved instead of downloaded again',
+      'Files are kept exactly as the platform served them: no repairs, no re-encoding, nothing embedded into the media',
+      'Verify files re-hashes a run and checks the custody log; Export package writes a BagIt (RFC 8493) package that any BagIt tool can check',
+      'Optional notes for each run (event, where, collected by), with a reminder to leave out names that could put people at risk; exported reports leave account names out by default',
+      'A weekly canary runs real downloads on every platform and opens an issue when one breaks',
+    ],
+    lessons: [
+      'Keeping the downloads working is the main ongoing job: the platforms change, and the downloaders have to follow',
+      "Most platforms' terms do not allow automated downloading, so the app is meant for public-interest evidence and your own content, and it shows each platform's terms before the first sign-in",
+      'Screen readers do not hear status changes in the window (a Tk 8.6 limit), so the command line is the fully accessible way to run it',
+    ],
+  },
+  {
     id: 'takeout-organizer',
     title: 'Takeout Organizer',
     shortDescription:
