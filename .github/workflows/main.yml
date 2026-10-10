@@ -9,6 +9,8 @@ on:
       - main
 
 jobs:
+  # The required check. Every step here is deterministic, so a failure
+  # always means a real regression.
   test:
     runs-on: ubuntu-latest
 
@@ -25,8 +27,29 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
+      - name: Lint TypeScript and templates
+        run: yarn ng lint
+
+      - name: Lint styles (design tokens only)
+        run: yarn lint:styles
+
       - name: Run tests
         run: yarn test --browsers=ChromeHeadlessNoSandbox --watch=false
+
+      - name: Production build (bundle budgets)
+        run: yarn build
+
+      - name: Generated files are committed
+        run: git diff --exit-code -- src/sitemap.xml src/feed.xml src/app/data/image-sizes.ts
+
+      - name: Page weight and meta descriptions
+        run: node scripts/check-pages.mjs
+
+      - name: Install Chromium for the accessibility check
+        run: npx playwright install --with-deps chromium
+
+      - name: Accessibility (axe) on every page at 1280 and 320 px
+        run: node scripts/check-a11y.mjs
 
       - name: Check source punctuation is ASCII
         run: |
@@ -34,3 +57,47 @@ jobs:
             echo "Non-ASCII punctuation found in source; use plain ASCII equivalents."
             exit 1
           fi
+
+      - name: Keep the build for the Lighthouse job
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/research-portfolio-ui/browser
+          retention-days: 3
+
+  # Lighthouse on Home, a case study and a post. Accessibility, layout shift
+  # and page weight fail the job; the performance score and LCP only warn,
+  # because timings vary between runner machines.
+  lighthouse:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Download the build
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/research-portfolio-ui/browser
+
+      - name: Lighthouse CI
+        run: npx lhci autorun
+
+      - name: Keep the Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse
+          path: .lighthouseci
+          retention-days: 14

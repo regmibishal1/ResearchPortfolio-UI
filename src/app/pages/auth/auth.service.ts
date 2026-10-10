@@ -3,7 +3,7 @@ import { isPlatformBrowser } from '@angular/common'
 import { BehaviorSubject, Observable, throwError } from 'rxjs'
 import { HttpClient, HttpErrorResponse } from '@angular/common/http'
 import { Router } from '@angular/router'
-import { MatSnackBar } from '@angular/material/snack-bar'
+import { ToastService } from '../../shared/toast/toast.service'
 import { catchError, finalize, map, shareReplay, tap } from 'rxjs/operators'
 import { environment } from '../../../environments/environment'
 
@@ -40,7 +40,7 @@ export function safeNext(next: string | null | undefined): string {
 export class AuthService {
   private http = inject(HttpClient)
   private router = inject(Router)
-  private snackBar = inject(MatSnackBar)
+  private toasts = inject(ToastService)
 
   private isAuthenticated = new BehaviorSubject<boolean>(false)
   private authToken = new BehaviorSubject<string>('')
@@ -142,10 +142,7 @@ export class AuthService {
    */
   endSession(returnTo: string) {
     this.clearSession()
-    this.snackBar.open('Your session ended. Sign in again.', 'Close', {
-      duration: 6000,
-      politeness: 'polite',
-    })
+    this.toasts.show('Your session ended. Sign in again.', 6000)
     this.router.navigate(['/login'], { queryParams: { next: safeNext(returnTo) } })
   }
 

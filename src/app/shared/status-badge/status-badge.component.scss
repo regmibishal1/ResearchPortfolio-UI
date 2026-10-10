@@ -15,19 +15,19 @@
   text-transform: uppercase;
   white-space: nowrap;
   color: var(--text-secondary);
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--bg-subtle);
 }
 
 .status-dot {
   width: 6px;
   height: 6px;
-  border-radius: 50%;
+  border-radius: var(--radius-round);
   background: currentColor;
 }
 
 .status-live {
   color: var(--color-positive);
-  background: rgba(74, 222, 128, 0.12);
+  background: var(--color-positive-dim);
 }
 
 .status-complete {
@@ -37,15 +37,15 @@
 
 .status-in-progress {
   color: var(--color-warning);
-  background: rgba(250, 179, 135, 0.12);
+  background: var(--color-warning-dim);
 }
 
 .status-research {
   color: var(--color-info);
-  background: rgba(137, 180, 250, 0.12);
+  background: var(--color-info-dim);
 }
 
 .status-proposal {
   color: var(--color-purple);
-  background: rgba(196, 181, 253, 0.12);
+  background: var(--color-purple-dim);
 }

@@ -1,0 +1,29 @@
+{
+  "customSyntax": "postcss-scss",
+  "plugins": ["stylelint-declaration-strict-value"],
+  "ignoreFiles": ["src/app/pages/stocks/**", "dist/**", "node_modules/**"],
+  "rules": {
+    "scale-unlimited/declaration-strict-value": [
+      ["/color$/", "fill", "stroke", "background", "font-size", "border-radius"],
+      {
+        "ignoreValues": [
+          "transparent",
+          "inherit",
+          "initial",
+          "unset",
+          "currentColor",
+          "currentcolor",
+          "none",
+          "0",
+          "/^var\\(--/",
+          "/^calc\\(/",
+          "/^linear-gradient\\(/"
+        ],
+        "ignoreFunctions": false,
+        "expandShorthand": false,
+        "disableFix": true,
+        "message": "Use a design token from src/styles.scss for \"${property}\", not \"${value}\"."
+      }
+    ]
+  }
+}

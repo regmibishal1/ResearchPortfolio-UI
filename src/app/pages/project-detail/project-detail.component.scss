@@ -84,7 +84,7 @@
 .model-card {
   margin: 0;
   border: 1px solid var(--border-subtle);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   background: var(--bg-card);
 
   > div {
@@ -133,7 +133,7 @@
   gap: var(--space-1);
   padding: var(--space-4);
   border: 1px solid var(--border-subtle);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   background: var(--bg-card);
 
   dt {
@@ -239,7 +239,7 @@
   gap: var(--space-1);
   padding: var(--space-4);
   border: 1px solid var(--border-subtle);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   background: var(--bg-card);
   text-decoration: none;
   transition: border-color var(--transition-fast);

@@ -45,6 +45,17 @@ describe('SeoService', () => {
     expect(image()).toBe('https://bishalregmi.com/assets/og/home.jpg')
   })
 
+  it('keeps the short text for search results and the longer one for link previews', () => {
+    const meta = (selector: string) => doc.head.querySelector(selector)?.getAttribute('content')
+    seo.setPage({ title: 'C', description: 'Short', socialDescription: 'Longer text', path: '/c' })
+    expect(meta('meta[name="description"]')).toBe('Short')
+    expect(meta('meta[property="og:description"]')).toBe('Longer text')
+    expect(meta('meta[name="twitter:description"]')).toBe('Longer text')
+
+    seo.setPage({ title: 'D', description: 'Only one', path: '/d' })
+    expect(meta('meta[property="og:description"]')).toBe('Only one')
+  })
+
   it('emits page schema and a breadcrumb trail starting at Home as one graph', () => {
     seo.setPage({
       title: 'Post',

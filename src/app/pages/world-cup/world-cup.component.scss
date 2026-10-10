@@ -65,7 +65,7 @@
 }
 
 .how-link {
-  font-size: 15px;
+  font-size: var(--fs-ui);
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -108,6 +108,13 @@
   gap: var(--space-3);
   padding: var(--space-6) 0;
   color: var(--text-secondary);
+}
+
+// The data loads after the page shows. Holding the space keeps the footer
+// below the fold, so the content arriving does not shift what is on screen.
+.state-loading {
+  align-items: flex-start;
+  min-height: 100vh;
 }
 
 .state-error {
@@ -156,7 +163,7 @@
 .historical-badge {
   padding: 2px var(--space-2);
   border-radius: var(--radius-pill);
-  background: rgba(250, 179, 135, 0.12);
+  background: var(--color-warning-dim);
   color: var(--color-warning);
   font-size: var(--fs-micro);
   font-weight: 600;
@@ -186,7 +193,7 @@
     .mat-mdc-tab .mdc-tab__text-label {
       color: var(--text-secondary);
       font-family: var(--font-text);
-      font-size: 15px;
+      font-size: var(--fs-ui);
       font-weight: 500;
     }
 
@@ -331,7 +338,7 @@
 }
 
 .podium-card dd {
-  font-size: 24px;
+  font-size: var(--fs-h4);
 }
 
 .podium-champion {
@@ -357,11 +364,18 @@
 // Tables that scroll sideways show a soft edge while there is more to see.
 .table-scroll {
   overflow-x: auto;
-  background:
-    linear-gradient(to right, var(--bg-card) 30%, transparent) left / 24px 100% no-repeat local,
-    linear-gradient(to left, var(--bg-card) 30%, transparent) right / 24px 100% no-repeat local,
-    linear-gradient(to right, rgba(0, 0, 0, 0.45), transparent) left / 12px 100% no-repeat scroll,
-    linear-gradient(to left, rgba(0, 0, 0, 0.45), transparent) right / 12px 100% no-repeat scroll;
+  background-image: linear-gradient(to right, var(--bg-card) 30%, transparent),
+    linear-gradient(to left, var(--bg-card) 30%, transparent),
+    linear-gradient(to right, var(--edge-shadow), transparent),
+    linear-gradient(to left, var(--edge-shadow), transparent);
+  background-position: left, right, left, right;
+  background-size:
+    24px 100%,
+    24px 100%,
+    12px 100%,
+    12px 100%;
+  background-repeat: no-repeat;
+  background-attachment: local, local, scroll, scroll;
 
   &:focus-visible {
     outline-offset: 2px;
@@ -423,7 +437,7 @@
   tbody tr:nth-child(even) {
     .rank-col,
     .team-col {
-      background: #1d1d31;
+      background: var(--bg-row-alt);
     }
   }
 }

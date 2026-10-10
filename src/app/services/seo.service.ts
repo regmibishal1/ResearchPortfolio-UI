@@ -15,7 +15,10 @@ export interface Breadcrumb {
 
 export interface PageMeta {
   title: string
+  /** Search result text; keep it to 155 characters (checked at build). */
   description: string
+  /** Longer text for link previews (og:description); defaults to the description. */
+  socialDescription?: string
   /** Site-relative path of the page, used for the canonical link and og:url. */
   path: string
   type?: 'website' | 'article'
@@ -47,11 +50,17 @@ export class SeoService {
     this.title.setTitle(page.title)
     this.meta.updateTag({ name: 'description', content: page.description })
     this.meta.updateTag({ property: 'og:title', content: page.title })
-    this.meta.updateTag({ property: 'og:description', content: page.description })
+    this.meta.updateTag({
+      property: 'og:description',
+      content: page.socialDescription ?? page.description,
+    })
     this.meta.updateTag({ property: 'og:url', content: url })
     this.meta.updateTag({ property: 'og:type', content: page.type ?? 'website' })
     this.meta.updateTag({ name: 'twitter:title', content: page.title })
-    this.meta.updateTag({ name: 'twitter:description', content: page.description })
+    this.meta.updateTag({
+      name: 'twitter:description',
+      content: page.socialDescription ?? page.description,
+    })
     const image = SITE_URL + (page.image ?? DEFAULT_PREVIEW)
     this.meta.updateTag({ property: 'og:image', content: image })
     this.meta.updateTag({ property: 'og:image:alt', content: page.title })

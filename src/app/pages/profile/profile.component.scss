@@ -39,7 +39,7 @@
 .avatar-ring {
   width: 96px;
   height: 96px;
-  border-radius: 50%;
+  border-radius: var(--radius-round);
   background: var(--accent-gradient);
   padding: 3px;
   margin-bottom: 4px;
@@ -48,7 +48,7 @@
 .avatar {
   width: 100%;
   height: 100%;
-  border-radius: 50%;
+  border-radius: var(--radius-round);
   background: var(--bg-secondary);
   display: flex;
   align-items: center;
@@ -62,7 +62,7 @@
 
 .profile-name {
   font-family: var(--font-display);
-  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  font-size: var(--fs-h2);
   font-weight: 700;
   color: var(--text-primary);
   margin: 0;
@@ -77,7 +77,7 @@
   display: inline-flex;
   align-items: center;
   padding: 4px 16px;
-  border-radius: 100px;
+  border-radius: var(--radius-pill);
   font-size: var(--fs-micro);
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -113,7 +113,7 @@
 
   app-icon {
     color: var(--accent-gold);
-    font-size: 20px;
+    font-size: var(--fs-h3);
     width: 20px;
     height: 20px;
   }
@@ -210,7 +210,7 @@
   }
 
   app-icon {
-    font-size: 20px;
+    font-size: var(--fs-h3);
     width: 20px;
     height: 20px;
   }
@@ -240,10 +240,10 @@
     border-color var(--transition-fast);
   background: transparent;
   color: var(--color-negative);
-  border: 1px solid rgba(248, 113, 113, 0.3);
+  border: 1px solid var(--border-negative);
 
   app-icon {
-    font-size: 20px;
+    font-size: var(--fs-h3);
     width: 20px;
     height: 20px;
   }
@@ -253,7 +253,7 @@
   }
 
   &:hover {
-    background: rgba(248, 113, 113, 0.08);
+    background: var(--color-negative-dim);
     border-color: var(--color-negative);
   }
 }

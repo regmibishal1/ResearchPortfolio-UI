@@ -26,6 +26,16 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
+              {
+                "glob": "inter-latin{,-ext}-wght-normal.woff2",
+                "input": "node_modules/@fontsource-variable/inter/files",
+                "output": "assets/fonts"
+              },
+              {
+                "glob": "outfit-latin{,-ext}-wght-normal.woff2",
+                "input": "node_modules/@fontsource-variable/outfit/files",
+                "output": "assets/fonts"
+              },
               "src/_redirects",
               "src/_headers",
               "src/site.webmanifest",
@@ -44,13 +54,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "1500kb",
-                  "maximumError": "2mb"
+                  "maximumWarning": "500kb",
+                  "maximumError": "600kb"
                 },
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "10kb",
-                  "maximumError": "20kb"
+                  "maximumError": "12kb"
                 }
               ],
               "fileReplacements": [

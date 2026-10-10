@@ -80,7 +80,7 @@
   margin-top: var(--space-1);
   padding-left: calc(var(--space-2) + 3px);
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   line-height: 1.4;
 }
 
@@ -103,8 +103,8 @@
   margin-top: var(--space-2);
   padding: var(--space-2);
   border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.03);
-  font-size: 12px;
+  background: var(--bg-hover);
+  font-size: var(--fs-tiny);
 }
 
 .factors-note {
@@ -163,7 +163,7 @@
 }
 
 .champion-pick {
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   line-height: 1.4;
 }
 

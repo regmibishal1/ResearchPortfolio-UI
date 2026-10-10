@@ -10,7 +10,7 @@ import { isPlatformBrowser } from '@angular/common'
 import { ActivatedRoute, Router } from '@angular/router'
 import { AuthService, RegisterModel, LoginModel, safeNext } from './auth.service'
 import { FormsModule, NgForm } from '@angular/forms'
-import { MatSnackBar } from '@angular/material/snack-bar'
+import { ToastService } from '../../shared/toast/toast.service'
 import { MatProgressBarModule } from '@angular/material/progress-bar'
 import { finalize } from 'rxjs/operators'
 import { SeoService } from '../../services/seo.service'
@@ -32,7 +32,7 @@ export class AuthComponent {
   private router = inject(Router)
   private route = inject(ActivatedRoute)
   private authService = inject(AuthService)
-  private _snackBar = inject(MatSnackBar)
+  private toasts = inject(ToastService)
   private seo = inject(SeoService)
 
   /** Accounts are by invitation; sign-up only appears when this is switched on. */
@@ -98,7 +98,7 @@ export class AuthComponent {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
-          this._snackBar.open('Signed in.', 'Close', { duration: 5000 })
+          this.toasts.show('Signed in.')
           this.router.navigateByUrl(safeNext(this.route.snapshot.queryParamMap.get('next')))
         },
         error: (error: Error) => this.showError(error.message),
@@ -113,7 +113,7 @@ export class AuthComponent {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
-          this._snackBar.open('Account created. You are signed in.', 'Close', { duration: 5000 })
+          this.toasts.show('Account created. You are signed in.')
           this.router.navigate(['/'])
         },
         error: (error: Error) => this.showError(error.message),

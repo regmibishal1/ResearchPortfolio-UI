@@ -3,7 +3,6 @@ import { provideHttpClientTesting } from '@angular/common/http/testing'
 import { RouterModule } from '@angular/router'
 
 import { NavbarComponent } from './navbar.component'
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http'
 
 describe('NavbarComponent', () => {
@@ -12,7 +11,7 @@ describe('NavbarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NavbarComponent, RouterModule.forRoot([]), BrowserAnimationsModule],
+      imports: [NavbarComponent, RouterModule.forRoot([])],
       providers: [
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),

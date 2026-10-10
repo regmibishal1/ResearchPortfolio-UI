@@ -5,7 +5,14 @@
   [attr.aria-label]="'Enlarge image' + (alt ? ': ' + alt : '')"
   (click)="open()"
 >
-  <img class="zoomable-thumb" [src]="src" [alt]="alt" loading="lazy" />
+  <img
+    class="zoomable-thumb"
+    [src]="src"
+    [alt]="alt"
+    [attr.width]="size?.[0]"
+    [attr.height]="size?.[1]"
+    loading="lazy"
+  />
 </button>
 
 @if (isOpen) {

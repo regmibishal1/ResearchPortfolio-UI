@@ -69,7 +69,8 @@ export class BlogPostComponent {
     const figure = post.body.find((block) => block.kind === 'figure' && block.src)
     this.seo.setPage({
       title: `${post.title} | Bishal Regmi`,
-      description: post.summary,
+      description: post.seoDescription ?? post.summary,
+      socialDescription: post.summary,
       path,
       type: 'article',
       image: `/assets/og/blog-${post.slug}.jpg`,

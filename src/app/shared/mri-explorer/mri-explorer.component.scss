@@ -91,7 +91,7 @@
   background: none;
   color: var(--text-secondary);
   font-family: var(--font-text);
-  font-size: 15px;
+  font-size: var(--fs-ui);
   font-weight: 500;
   white-space: nowrap;
   cursor: pointer;
@@ -140,7 +140,7 @@
     display: block;
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-md);
-    background: #000;
+    background: var(--image-backdrop-dark);
   }
 
   figcaption {
@@ -160,7 +160,7 @@
   margin: 0 auto;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-  background: #fff;
+  background: var(--image-backdrop);
 }
 
 // ===== Attribution =====

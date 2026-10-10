@@ -3,7 +3,7 @@ import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/cor
 import { FormsModule } from '@angular/forms'
 import { Router } from '@angular/router'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
-import { MatSnackBar } from '@angular/material/snack-bar'
+import { ToastService } from '../../shared/toast/toast.service'
 import { finalize } from 'rxjs/operators'
 import { UserService, UserProfile, ChangePasswordRequest } from '../../services/user.service'
 import { AuthService } from '../auth/auth.service'
@@ -20,7 +20,7 @@ import { IconComponent } from '../../shared/icon/icon.component'
 export class ProfileComponent implements OnInit {
   private userService = inject(UserService)
   private authService = inject(AuthService)
-  private snackBar = inject(MatSnackBar)
+  private toasts = inject(ToastService)
   private router = inject(Router)
 
   profile: UserProfile | null = null
@@ -50,9 +50,7 @@ export class ProfileComponent implements OnInit {
         // An expired session is renewed, or ended, by the interceptor; this
         // only sees the requests that failed for another reason.
         error: () => {
-          this.snackBar.open('Could not load your profile. Try again in a moment.', 'Close', {
-            duration: 6000,
-          })
+          this.toasts.show('Could not load your profile. Try again in a moment.', 6000)
         },
       })
   }
@@ -69,11 +67,11 @@ export class ProfileComponent implements OnInit {
 
   onChangePassword(): void {
     if (this.passwordForm.newPassword !== this.passwordForm.confirmationPassword) {
-      this.snackBar.open('New passwords do not match.', 'Close', { duration: 4000 })
+      this.toasts.show('New passwords do not match.', 4000)
       return
     }
     if (this.passwordForm.newPassword.length < 8) {
-      this.snackBar.open('Password must be at least 8 characters.', 'Close', { duration: 4000 })
+      this.toasts.show('Password must be at least 8 characters.', 4000)
       return
     }
 
@@ -85,14 +83,12 @@ export class ProfileComponent implements OnInit {
         next: (session) => {
           // Older API versions answer with an empty body and keep the session.
           if (session?.access_token) this.authService.setSession(session)
-          this.snackBar.open('Password changed. Other devices are signed out.', 'Close', {
-            duration: 6000,
-          })
+          this.toasts.show('Password changed. Other devices are signed out.', 6000)
           this.passwordForm = { currentPassword: '', newPassword: '', confirmationPassword: '' }
         },
         error: (err) => {
           const msg = err?.error?.message ?? 'Failed to update password.'
-          this.snackBar.open(msg, 'Close', { duration: 5000 })
+          this.toasts.show(msg, 5000)
         },
       })
   }
