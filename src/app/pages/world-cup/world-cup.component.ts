@@ -124,7 +124,6 @@ export interface ChartTable {
 
 @Component({
   selector: 'app-world-cup',
-  standalone: true,
   imports: [
     CommonModule,
     RouterModule,

@@ -22,7 +22,6 @@ type TabId = 'saliency' | 'confusion' | 'training'
 
 @Component({
   selector: 'app-mri-explorer',
-  standalone: true,
   imports: [CommonModule, MatIconModule],
   templateUrl: './mri-explorer.component.html',
   styleUrl: './mri-explorer.component.scss',

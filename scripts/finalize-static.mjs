@@ -12,6 +12,7 @@ import {
   readFileSync,
   renameSync,
   rmdirSync,
+  rmSync,
   readdirSync,
   writeFileSync,
 } from 'node:fs'
@@ -22,7 +23,9 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const dist = join(root, 'dist/research-portfolio-ui')
 const browser = join(dist, 'browser')
 
-const { routes } = JSON.parse(readFileSync(join(dist, 'prerendered-routes.json'), 'utf8'))
+// Angular 17-18 write a list of routes; 19 and later write an object keyed by route.
+const manifest = JSON.parse(readFileSync(join(dist, 'prerendered-routes.json'), 'utf8'))
+const routes = Array.isArray(manifest.routes) ? manifest.routes : Object.keys(manifest.routes)
 
 // Deepest routes first so a parent folder is empty by the time it is checked.
 const nested = routes.filter((r) => r !== '/').sort((a, b) => b.length - a.length)
@@ -67,5 +70,9 @@ if (shell.includes('ngh=') || !shell.includes('<app-root></app-root>')) {
   throw new Error('404.html still carries prerendered markup')
 }
 writeFileSync(join(browser, '404.html'), shell)
+
+// Angular 19+ also emits its own client-only shell; 404.html already covers
+// that role, so drop the extra page rather than publish it at /index.csr.
+rmSync(join(browser, 'index.csr.html'), { force: true })
 
 console.log(`finalize-static: ${nested.length} routes flattened, 404.html written`)

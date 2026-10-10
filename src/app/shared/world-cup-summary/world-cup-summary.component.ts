@@ -12,7 +12,6 @@ import { LatestResponse, WorldCupService } from '../../services/world-cup.servic
  */
 @Component({
   selector: 'app-world-cup-summary',
-  standalone: true,
   imports: [
     CommonModule,
     RouterModule,

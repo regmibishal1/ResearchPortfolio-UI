@@ -7,7 +7,6 @@ import { PROJECTS, Project } from '../../data/projects'
 
 @Component({
   selector: 'app-project',
-  standalone: true,
   imports: [CommonModule, RouterModule, MatIconModule],
   templateUrl: './project.component.html',
   styleUrl: './project.component.scss',
