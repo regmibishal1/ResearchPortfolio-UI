@@ -1,4 +1,4 @@
-import { PROJECTS } from './projects'
+import { PROJECTS, SPOTLIGHT, statusText } from './projects'
 
 /** Index of a project id in the exported (sorted) list. */
 function at(id: string): number {
@@ -39,12 +39,24 @@ describe('PROJECTS ordering', () => {
     expect(PROJECTS[PROJECTS.length - 1].id).toBe('first-semester-notebooks')
   })
 
-  it('features current work first for the dashboard slice', () => {
-    for (const p of PROJECTS.slice(0, 4)) {
-      expect(p.period)
-        .withContext(`featured '${p.id}' should be current`)
-        .toMatch(/2026|present/)
+  it('spotlights exactly one public project, and never the World Cup', () => {
+    // There is no fallback: newest-first would put the World Cup back on Home.
+    const spotlit = PROJECTS.filter((p) => p.spotlight)
+    expect(spotlit.length).withContext('public projects with spotlight: true').toBe(1)
+    expect(spotlit[0].id).not.toBe('world-cup-prediction')
+    expect(SPOTLIGHT).toBe(spotlit[0])
+  })
+
+  it('features four projects besides the spotlight, for Home', () => {
+    expect(PROJECTS.filter((p) => p.featured && !p.spotlight).length).toBe(4)
+  })
+
+  it('labels a status badge for every project that has a status', () => {
+    for (const p of PROJECTS.filter((p) => p.status)) {
+      expect(statusText(p)).withContext(`'${p.id}' status`).toBeTruthy()
     }
+    const worldCup = PROJECTS.find((p) => p.id === 'world-cup-prediction')!
+    expect(statusText(worldCup)).toBe('Final results')
   })
 
   it('excludes hidden entries from the exported list', () => {

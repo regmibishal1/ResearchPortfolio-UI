@@ -1,143 +1,120 @@
-<!-- ===== Hero Section ===== -->
-<section class="hero-section">
-  <div class="hero-bg">
-    <div class="gradient-orb orb-1"></div>
-    <div class="gradient-orb orb-2"></div>
-  </div>
-
-  <div class="hero-content">
-    <a
-      class="hero-badge animate-in animate-in-delay-1"
-      [routerLink]="['/about']"
-      fragment="contact"
-    >
-      <span class="badge-dot"></span>
+<!-- ===== Hero ===== -->
+<section class="hero">
+  <div class="container hero-inner">
+    <a class="hero-badge animate-in" [routerLink]="['/about']" fragment="contact">
+      <span class="badge-dot" aria-hidden="true"></span>
       <span>Open to new roles, get in touch</span>
     </a>
-    <h1 class="hero-name">Hi, I'm <span class="gold-text">Bishal Regmi</span></h1>
-    <p class="hero-title animate-in animate-in-delay-3">Software Engineer & Data Scientist</p>
-    <p class="hero-subtitle animate-in animate-in-delay-4">
+    <h1 class="hero-name">Bishal Regmi</h1>
+    <p class="hero-role animate-in animate-in-delay-1">Software Engineer & Data Scientist</p>
+    <p class="hero-intro animate-in animate-in-delay-2">
       Building scalable applications and extracting insights from data. Focused on full-stack
       development, machine learning, and distributed systems.
     </p>
-    <div class="hero-actions animate-in animate-in-delay-5">
-      <a class="btn-primary" [routerLink]="['/project']">
-        <mat-icon>code</mat-icon>
-        View Projects
-      </a>
-      <a class="btn-secondary" [routerLink]="['/about']">
-        <mat-icon>person</mat-icon>
-        About Me
-      </a>
-    </div>
-
-    <div class="live-banners animate-in animate-in-delay-5">
-      <a class="live-banner" [routerLink]="['/world-cup']">
-        <span class="live-pill pill-final">FINAL</span>
-        <span class="live-text">
-          World Cup 2026 predictions
-          <span class="live-detail">results and model report card</span>
-        </span>
-        <mat-icon class="live-arrow">arrow_forward</mat-icon>
-      </a>
-      <a class="live-banner" href="https://showupmd.org" target="_blank" rel="noopener noreferrer">
-        <span class="live-pill">
-          <span class="live-dot"></span>
-          LIVE
-        </span>
-        <span class="live-text">
-          ShowUpMD
-          <span class="live-detail">civic app for Maryland voters</span>
-        </span>
-        <mat-icon class="live-arrow">arrow_forward</mat-icon>
-      </a>
-    </div>
-  </div>
-
-  <div class="scroll-indicator animate-in animate-in-delay-5">
-    <div class="scroll-mouse">
-      <div class="scroll-dot"></div>
-    </div>
-    <span>Scroll to explore</span>
-  </div>
-</section>
-
-<!-- ===== Skills Section ===== -->
-<section class="skills-section">
-  <div class="section-container">
-    <h2 class="section-title">Tech Stack</h2>
-    <p class="section-subtitle">Technologies and tools I work with</p>
-
-    <div class="skills-grid">
-      @for (skill of skills; track $index) {
-        <div class="skill-chip animate-in">
-          <mat-icon class="skill-icon">{{ skill.icon }}</mat-icon>
-          <span class="skill-name">{{ skill.name }}</span>
-        </div>
-      }
+    <div class="hero-actions animate-in animate-in-delay-3">
+      <a class="btn-primary" [routerLink]="['/project']">See my projects</a>
+      <a class="btn-secondary" [routerLink]="['/about']">About me</a>
     </div>
   </div>
 </section>
 
-<!-- ===== Featured Projects Section ===== -->
-<section class="featured-section">
-  <div class="section-container">
-    <h2 class="section-title">Featured Projects</h2>
-    <p class="section-subtitle">A selection of my recent work</p>
-
-    <div class="projects-grid">
-      @for (project of featuredProjects; track project.id; let i = $index) {
-        <a
-          class="project-card surface animate-in"
-          [routerLink]="['/project', project.id]"
-          [style.animation-delay]="i * 0.1 + 's'"
-        >
-          @if (project.image) {
-            <div class="card-thumb">
-              <img [src]="project.image" [alt]="project.title + ' preview'" loading="lazy" />
-            </div>
+<!-- ===== Latest work ===== -->
+@if (spotlight; as project) {
+  <section class="section" aria-labelledby="spotlight-title">
+    <div class="container">
+      <article class="spotlight">
+        @if (project.image) {
+          <div class="spotlight-media">
+            @if (project.demo && isExternal(project.demo)) {
+              <!-- The "Open live site" button is the keyboard route to the same place. -->
+              <a
+                [href]="project.demo"
+                target="_blank"
+                rel="noopener noreferrer"
+                tabindex="-1"
+                aria-hidden="true"
+              >
+                <img [src]="project.image" alt="" width="1280" height="800" loading="lazy" />
+              </a>
+            } @else {
+              <img [src]="project.image" alt="" width="1280" height="800" loading="lazy" />
+            }
+          </div>
+        }
+        <div class="spotlight-body">
+          <p class="eyebrow">Latest work</p>
+          <h2 id="spotlight-title" class="spotlight-title">{{ project.title }}</h2>
+          <p class="spotlight-summary">{{ project.shortDescription }}</p>
+          @if (project.outcome) {
+            <p class="spotlight-outcome">{{ project.outcome }}</p>
           }
-          <div class="project-icon">
-            @if (project.logo) {
-              <img [src]="project.logo" [alt]="project.title + ' logo'" class="project-logo" />
+          <ul class="chip-list" aria-label="Built with">
+            @for (tag of project.tags.slice(0, 4); track tag) {
+              <li class="chip">{{ tag }}</li>
             }
-            @if (!project.logo) {
-              <mat-icon class="project-mat-icon">{{ project.icon }}</mat-icon>
+          </ul>
+          <div class="spotlight-actions">
+            <a class="btn-primary btn-md" [routerLink]="['/project', project.id]"
+              >Read the case study</a
+            >
+            @if (project.demo) {
+              @if (isExternal(project.demo)) {
+                <a
+                  class="btn-secondary btn-md"
+                  [href]="project.demo"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Open live site</a
+                >
+              } @else {
+                <a class="btn-secondary btn-md" [routerLink]="project.demo">Open live site</a>
+              }
             }
           </div>
-          <h3 class="project-title">{{ project.title }}</h3>
-          <p class="project-desc">{{ project.shortDescription }}</p>
-          <div class="project-tags">
-            @for (tag of project.tags; track $index) {
-              <span class="tag">{{ tag }}</span>
-            }
-          </div>
-          <div class="project-link">
-            <span>View Details</span>
-            <mat-icon>arrow_forward</mat-icon>
-          </div>
-        </a>
+        </div>
+      </article>
+    </div>
+  </section>
+}
+
+<!-- ===== Selected work ===== -->
+<section class="section" aria-labelledby="selected-title">
+  <div class="container">
+    <h2 id="selected-title" class="section-title">Selected work</h2>
+    <ul class="work-grid">
+      @for (project of selectedWork; track project.id) {
+        <li class="animate-in"><app-work-card [project]="project" /></li>
       }
-    </div>
-
-    <div class="view-all-container">
-      <a class="btn-primary" [routerLink]="['/project']">
-        View All Projects
-        <mat-icon>arrow_forward</mat-icon>
-      </a>
-    </div>
+    </ul>
+    <a class="all-link" [routerLink]="['/project']">
+      All projects
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+        <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z" />
+      </svg>
+    </a>
   </div>
 </section>
 
-<!-- ===== Live Demo ===== -->
-<section class="demo-section">
-  <div class="section-header">
-    <h2 class="section-title">Live Demo</h2>
-    <p class="section-subtitle">
-      Real-time computation from the model server, with no screenshots or snapshots.
-    </p>
-  </div>
-  <div class="demo-container">
-    <app-stats-explorer />
-  </div>
-</section>
+<!-- ===== Latest writing ===== -->
+@if (latestPost; as post) {
+  <section class="section" aria-labelledby="writing-title">
+    <div class="container">
+      <h2 id="writing-title" class="section-title">Latest writing</h2>
+      <article class="post-card">
+        <time class="post-date" [attr.datetime]="post.date">{{
+          post.date | date: 'MMM d, y'
+        }}</time>
+        <h3 class="post-title">
+          <a [routerLink]="['/blog', post.slug]">{{ post.title }}</a>
+        </h3>
+        <p class="post-summary">{{ post.summary }}</p>
+        <span class="post-read" aria-hidden="true">
+          Read
+          <svg viewBox="0 0 24 24" width="16" height="16" focusable="false">
+            <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z" />
+          </svg>
+        </span>
+      </article>
+    </div>
+  </section>
+}

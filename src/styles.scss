@@ -320,6 +320,38 @@ a:hover {
   max-width: var(--container-wide);
 }
 
+// Tags: plain labels, not gold, since gold means "clickable".
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-secondary);
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  line-height: var(--lh-micro);
+}
+
+// Small uppercase label above a heading, e.g. "Latest work".
+.eyebrow {
+  margin: 0;
+  color: var(--accent-gold);
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
 // Solid card surface. Only the toolbar keeps a blurred, see-through
 // background.
 .surface {

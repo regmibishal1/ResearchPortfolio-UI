@@ -1,16 +1,15 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core'
-
+import { DatePipe } from '@angular/common'
 import { RouterModule } from '@angular/router'
-import { MatIconModule } from '@angular/material/icon'
 import { SeoService } from '../../services/seo.service'
-import { StatsExplorerComponent } from '../../shared/stats-explorer/stats-explorer.component'
-import { PROJECTS, Project } from '../../data/projects'
-import { Skill, homeSkills } from '../../data/skills'
+import { PROJECTS, Project, SPOTLIGHT } from '../../data/projects'
+import { POSTS } from '../../data/blog'
 import { experienceLabel } from '../../data/experience'
+import { WorkCardComponent } from '../../shared/work-card/work-card.component'
 
 @Component({
   selector: 'app-dashboard',
-  imports: [RouterModule, MatIconModule, StatsExplorerComponent],
+  imports: [RouterModule, DatePipe, WorkCardComponent],
   templateUrl: './dashboard.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './dashboard.component.scss',
@@ -27,8 +26,15 @@ export class DashboardComponent {
     })
   }
 
-  skills: Skill[] = homeSkills()
+  /** The project Home leads with; the section is skipped if none is flagged. */
+  readonly spotlight = SPOTLIGHT
 
-  /** Show the first 4 projects as featured on the home page */
-  featuredProjects: Project[] = PROJECTS.slice(0, 4)
+  /** Featured work other than the spotlight, newest first. */
+  readonly selectedWork: Project[] = PROJECTS.filter((p) => p.featured && !p.spotlight).slice(0, 4)
+
+  readonly latestPost = POSTS[0] ?? null
+
+  isExternal(url: string): boolean {
+    return /^https?:\/\//.test(url)
+  }
 }
