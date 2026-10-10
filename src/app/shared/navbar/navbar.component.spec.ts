@@ -1,9 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
-import { HttpClientTestingModule } from '@angular/common/http/testing'
+import { provideHttpClientTesting } from '@angular/common/http/testing'
 import { RouterModule } from '@angular/router'
 
 import { NavbarComponent } from './navbar.component'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent
@@ -11,12 +12,8 @@ describe('NavbarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        NavbarComponent,
-        RouterModule.forRoot([]),
-        HttpClientTestingModule,
-        BrowserAnimationsModule,
-      ],
+      imports: [NavbarComponent, RouterModule.forRoot([]), BrowserAnimationsModule],
+      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
     }).compileComponents()
 
     fixture = TestBed.createComponent(NavbarComponent)

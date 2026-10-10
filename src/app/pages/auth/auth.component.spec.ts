@@ -1,8 +1,9 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing'
-import { HttpClientTestingModule } from '@angular/common/http/testing'
+import { provideHttpClientTesting } from '@angular/common/http/testing'
 import { Title } from '@angular/platform-browser'
 import { AuthComponent } from './auth.component'
 import { AuthService } from './auth.service'
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 
 describe('AuthComponent', () => {
   let component: AuthComponent
@@ -11,7 +12,8 @@ describe('AuthComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AuthComponent, HttpClientTestingModule],
+      imports: [AuthComponent],
+      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
     }).compileComponents()
 
     fixture = TestBed.createComponent(AuthComponent)

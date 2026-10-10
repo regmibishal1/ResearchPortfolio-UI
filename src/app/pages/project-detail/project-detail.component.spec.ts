@@ -1,15 +1,18 @@
 import { TestBed } from '@angular/core/testing'
 import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router'
-import { HttpClientTestingModule } from '@angular/common/http/testing'
+import { provideHttpClientTesting } from '@angular/common/http/testing'
 
 import { ProjectDetailComponent } from './project-detail.component'
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 
 function render(id: string) {
   TestBed.configureTestingModule({
-    imports: [ProjectDetailComponent, HttpClientTestingModule],
+    imports: [ProjectDetailComponent],
     providers: [
       provideRouter([]),
       { provide: ActivatedRoute, useValue: { snapshot: { paramMap: convertToParamMap({ id }) } } },
+      provideHttpClient(withInterceptorsFromDi()),
+      provideHttpClientTesting(),
     ],
   })
   const fixture = TestBed.createComponent(ProjectDetailComponent)
