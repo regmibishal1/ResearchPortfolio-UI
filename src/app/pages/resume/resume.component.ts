@@ -44,7 +44,7 @@ export class ResumeComponent {
   readonly education = EDUCATION
   readonly certifications = CERTIFICATIONS
   readonly skillCategories = SKILL_CATEGORIES
-  readonly pdf = RESUME_PDF
+  readonly pdf = `/${RESUME_PDF}`
   readonly projects: Project[] = PROJECTS.filter((p) => p.featured)
 
   /** Skills that appear somewhere in the experience or projects, so each one finds something. */

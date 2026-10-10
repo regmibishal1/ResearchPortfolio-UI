@@ -22,7 +22,7 @@ describe('ResumeComponent', () => {
 
   it('links the generated PDF as a download', () => {
     const pdf = el.querySelector<HTMLAnchorElement>('.resume-actions a[download]')!
-    expect(pdf.getAttribute('href')).toBe(RESUME_PDF)
+    expect(pdf.getAttribute('href')).toBe(`/${RESUME_PDF}`)
   })
 
   it('lists exactly the public contact details', () => {
