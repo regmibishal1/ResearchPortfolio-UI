@@ -10,12 +10,14 @@ import { environment } from '../../../environments/environment'
   providedIn: 'root',
 })
 export class AuthService {
+  private http = inject(HttpClient)
+
   private isAuthenticated = new BehaviorSubject<boolean>(false)
   private authToken = new BehaviorSubject<string>('')
   private refreshToken = new BehaviorSubject<string>('')
   private apiURL: string = environment.apiBaseUrl + '/auth'
 
-  constructor(private http: HttpClient) {
+  constructor() {
     this.checkInitialAuth()
   }
 

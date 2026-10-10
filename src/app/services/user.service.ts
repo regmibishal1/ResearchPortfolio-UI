@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { Observable } from 'rxjs'
 import { environment } from '../../environments/environment'
@@ -26,9 +26,9 @@ export interface ChangePasswordRequest {
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  private readonly apiUrl = `${environment.apiBaseUrl}/user`
+  private http = inject(HttpClient)
 
-  constructor(private http: HttpClient) {}
+  private readonly apiUrl = `${environment.apiBaseUrl}/user`
 
   /** Returns only the authenticated user's own profile. */
   getProfile(): Observable<UserProfile> {

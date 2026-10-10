@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { Observable } from 'rxjs'
 import { environment } from '../../environments/environment'
@@ -88,9 +88,9 @@ export interface HistoryResponse {
 
 @Injectable({ providedIn: 'root' })
 export class StocksService {
-  private readonly apiUrl = `${environment.modelApiUrl}/stocks`
+  private http = inject(HttpClient)
 
-  constructor(private http: HttpClient) {}
+  private readonly apiUrl = `${environment.modelApiUrl}/stocks`
 
   getLatest(opts: { as_of_date?: string } = {}): Observable<LatestResponse> {
     let params = new HttpParams()

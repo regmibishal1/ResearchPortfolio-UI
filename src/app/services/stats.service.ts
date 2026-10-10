@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { Observable } from 'rxjs'
 import { environment } from '../../environments/environment'
@@ -29,9 +29,9 @@ export interface SampleResponse {
 
 @Injectable({ providedIn: 'root' })
 export class StatsService {
-  private readonly apiUrl = environment.modelApiUrl
+  private http = inject(HttpClient)
 
-  constructor(private http: HttpClient) {}
+  private readonly apiUrl = environment.modelApiUrl
 
   sample(req: SampleRequest): Observable<SampleResponse> {
     return this.http.post<SampleResponse>(`${this.apiUrl}/stats/sample`, req)

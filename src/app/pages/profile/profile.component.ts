@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core'
+import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core'
 
 import { FormsModule } from '@angular/forms'
 import { Router } from '@angular/router'
@@ -17,6 +17,11 @@ import { AuthService } from '../auth/auth.service'
   styleUrl: './profile.component.scss',
 })
 export class ProfileComponent implements OnInit {
+  private userService = inject(UserService)
+  private authService = inject(AuthService)
+  private snackBar = inject(MatSnackBar)
+  private router = inject(Router)
+
   profile: UserProfile | null = null
   loadingProfile = true
 
@@ -29,13 +34,6 @@ export class ProfileComponent implements OnInit {
   showCurrentPassword = false
   showNewPassword = false
   showConfirmPassword = false
-
-  constructor(
-    private userService: UserService,
-    private authService: AuthService,
-    private snackBar: MatSnackBar,
-    private router: Router
-  ) {}
 
   ngOnInit(): void {
     this.userService

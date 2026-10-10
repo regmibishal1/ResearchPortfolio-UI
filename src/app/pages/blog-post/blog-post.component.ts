@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core'
+import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core'
 
 import { ActivatedRoute, RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
@@ -15,12 +15,10 @@ import { ZoomableImageComponent } from '../../shared/zoomable-image/zoomable-ima
   styleUrl: './blog-post.component.scss',
 })
 export class BlogPostComponent implements OnInit {
-  post?: BlogPost
+  private route = inject(ActivatedRoute)
+  private seo = inject(SeoService)
 
-  constructor(
-    private route: ActivatedRoute,
-    private seo: SeoService
-  ) {}
+  post?: BlogPost
 
   ngOnInit(): void {
     const slug = this.route.snapshot.paramMap.get('slug') ?? ''

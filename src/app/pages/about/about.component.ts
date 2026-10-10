@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core'
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core'
 
 import { MatIconModule } from '@angular/material/icon'
 import { SeoService, PERSON_ID, SITE_URL } from '../../services/seo.service'
@@ -34,7 +34,9 @@ interface Stat {
   styleUrl: './about.component.scss',
 })
 export class AboutComponent {
-  constructor(seo: SeoService) {
+  constructor() {
+    const seo = inject(SeoService)
+
     seo.setPage({
       title: 'About | Bishal Regmi',
       path: '/about',

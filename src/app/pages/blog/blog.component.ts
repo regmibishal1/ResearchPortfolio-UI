@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core'
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core'
 
 import { RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
@@ -15,7 +15,9 @@ import { POSTS, BlogPost } from '../../data/blog'
 export class BlogComponent {
   posts: BlogPost[] = POSTS
 
-  constructor(seo: SeoService) {
+  constructor() {
+    const seo = inject(SeoService)
+
     seo.setPage({
       title: 'Blog | Bishal Regmi',
       path: '/blog',

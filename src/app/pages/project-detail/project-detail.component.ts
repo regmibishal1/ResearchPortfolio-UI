@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core'
+import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { ActivatedRoute, RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
@@ -27,6 +27,9 @@ import { ZoomableImageComponent } from '../../shared/zoomable-image/zoomable-ima
   styleUrl: './project-detail.component.scss',
 })
 export class ProjectDetailComponent implements OnInit {
+  private route = inject(ActivatedRoute)
+  private seo = inject(SeoService)
+
   project: Project | null = null
 
   readonly statusConfig: Record<string, { label: string; cssClass: string }> = {
@@ -35,11 +38,6 @@ export class ProjectDetailComponent implements OnInit {
     research: { label: 'Research', cssClass: 'status-research' },
     proposal: { label: 'Research Proposal', cssClass: 'status-proposal' },
   }
-
-  constructor(
-    private route: ActivatedRoute,
-    private seo: SeoService
-  ) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id')

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core'
+import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core'
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
@@ -25,11 +25,11 @@ import { LatestResponse, WorldCupService } from '../../services/world-cup.servic
   styleUrl: './world-cup-summary.component.scss',
 })
 export class WorldCupSummaryComponent implements OnInit {
+  private wc = inject(WorldCupService)
+
   loading = true
   error: string | null = null
   data: LatestResponse | null = null
-
-  constructor(private wc: WorldCupService) {}
 
   ngOnInit(): void {
     this.wc.getLatest({ limit: 5 }).subscribe({
