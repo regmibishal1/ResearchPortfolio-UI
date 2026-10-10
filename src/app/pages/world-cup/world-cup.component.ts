@@ -3,10 +3,10 @@ import {
   ElementRef,
   OnDestroy,
   OnInit,
-  ViewChild,
   ChangeDetectionStrategy,
-  NgZone,
+  ChangeDetectorRef,
   inject,
+  viewChild,
 } from '@angular/core'
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common'
 import { ActivatedRoute, Router, RouterModule } from '@angular/router'
@@ -160,17 +160,17 @@ export interface ChartTable {
     WcBracketComponent,
   ],
   templateUrl: './world-cup.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './world-cup.component.scss',
 })
 export class WorldCupComponent implements OnInit, OnDestroy {
   private wc = inject(WorldCupService)
   private router = inject(Router)
-  private zone = inject(NgZone)
+  private cdr = inject(ChangeDetectorRef)
   private route = inject(ActivatedRoute)
 
-  @ViewChild('historyCanvas') historyCanvas?: ElementRef<HTMLCanvasElement>
-  @ViewChild('calibCanvas') calibCanvas?: ElementRef<HTMLCanvasElement>
+  readonly historyCanvas = viewChild<ElementRef<HTMLCanvasElement>>('historyCanvas')
+  readonly calibCanvas = viewChild<ElementRef<HTMLCanvasElement>>('calibCanvas')
 
   loading = true
   error: string | null = null
@@ -348,6 +348,7 @@ export class WorldCupComponent implements OnInit, OnDestroy {
         this.rebuildLockedMatchesForDate()
 
         this.loading = false
+        this.cdr.markForCheck()
         if (!this.isLatestDate) this.onDateChange()
         setTimeout(() => {
           this.renderHistoryChart()
@@ -360,6 +361,7 @@ export class WorldCupComponent implements OnInit, OnDestroy {
           err?.error?.detail ??
           err?.message ??
           'Could not load predictions. The backend may still be warming up.'
+        this.cdr.markForCheck()
       },
     })
   }
@@ -417,9 +419,11 @@ export class WorldCupComponent implements OnInit, OnDestroy {
       next: (b) => {
         this.bracket = b
         this.bracketLoading = false
+        this.cdr.markForCheck()
       },
       error: () => {
         this.bracketLoading = false
+        this.cdr.markForCheck()
       },
     })
   }
@@ -445,6 +449,7 @@ export class WorldCupComponent implements OnInit, OnDestroy {
         whatIf?.scenarios ?? null,
         wrapUp?.retrospective ?? null
       )
+      this.cdr.markForCheck()
     })
   }
 
@@ -841,9 +846,10 @@ export class WorldCupComponent implements OnInit, OnDestroy {
 
   private renderHistoryChart(): void {
     const history = this.stageHistories[this.selectedHistoryStage]
-    if (!history || !this.historyCanvas) return
+    const canvas = this.historyCanvas()
+    if (!history || !canvas) return
 
-    const ctx = this.historyCanvas.nativeElement.getContext('2d')
+    const ctx = canvas.nativeElement.getContext('2d')
     if (!ctx) return
 
     const dateSet = new Set<string>()
@@ -882,56 +888,55 @@ export class WorldCupComponent implements OnInit, OnDestroy {
       rows: labels.map((date, i) => ({ label: date, values: datasets.map((d) => d.data[i]) })),
     }
 
-    // Outside Angular, so the chart's animation frames do not keep the
-    // app from settling (hydration finishes only once it is stable).
-    this.zone.runOutsideAngular(() => {
-      this.chart?.destroy()
-      this.chart = new Chart(ctx, {
-        type: 'line',
-        data: { labels, datasets },
-        plugins: [lineEndLabels],
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          // Room on the right for the team names at the line ends.
-          layout: { padding: { right: 96 } },
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              callbacks: {
-                label: (c) => ` ${c.dataset.label}: ${this.pct(c.raw as number)}`,
-              },
-            },
-          },
-          scales: {
-            x: {
-              ticks: { color: '#a0a0b8', maxRotation: 0 },
-              grid: { color: 'rgba(255,255,255,0.05)' },
-            },
-            y: {
-              ticks: { color: '#a0a0b8', callback: (v) => `${v}%` },
-              grid: { color: 'rgba(255,255,255,0.05)' },
-              title: {
-                display: true,
-                text: `${STAGE_LABELS[this.selectedHistoryStage]} %`,
-                color: '#a0a0b8',
-              },
+    // The summary and table above are shown in the template.
+    this.cdr.markForCheck()
+    this.chart?.destroy()
+    this.chart = new Chart(ctx, {
+      type: 'line',
+      data: { labels, datasets },
+      plugins: [lineEndLabels],
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        // Room on the right for the team names at the line ends.
+        layout: { padding: { right: 96 } },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (c) => ` ${c.dataset.label}: ${this.pct(c.raw as number)}`,
             },
           },
         },
-      })
+        scales: {
+          x: {
+            ticks: { color: '#a0a0b8', maxRotation: 0 },
+            grid: { color: 'rgba(255,255,255,0.05)' },
+          },
+          y: {
+            ticks: { color: '#a0a0b8', callback: (v) => `${v}%` },
+            grid: { color: 'rgba(255,255,255,0.05)' },
+            title: {
+              display: true,
+              text: `${STAGE_LABELS[this.selectedHistoryStage]} %`,
+              color: '#a0a0b8',
+            },
+          },
+        },
+      },
     })
   }
 
   private renderCalibrationChart(): void {
     const bins = this.reportCard?.calibration
-    if (!bins?.length || !this.calibCanvas) {
+    const canvas = this.calibCanvas()
+    if (!bins?.length || !canvas) {
       this.calibChart?.destroy()
       this.calibChart = null
       return
     }
 
-    const ctx = this.calibCanvas.nativeElement.getContext('2d')
+    const ctx = canvas.nativeElement.getContext('2d')
     if (!ctx) return
 
     const labels = bins.map((b) => `${Math.round(b.lo * 100)}-${Math.round(b.hi * 100)}%`)
@@ -949,69 +954,67 @@ export class WorldCupComponent implements OnInit, OnDestroy {
       })),
     }
 
-    // Outside Angular, so the chart's animation frames do not keep the
-    // app from settling (hydration finishes only once it is stable).
-    this.zone.runOutsideAngular(() => {
-      this.calibChart?.destroy()
-      this.calibChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels,
-          datasets: [
-            {
-              label: 'Favorite win rate (observed)',
-              data: bins.map((b) => b.observed * 100),
-              borderColor: '#4ade80',
-              backgroundColor: '#4ade80',
-              borderWidth: 2,
-              pointRadius: 4,
-              tension: 0.15,
-            },
-            {
-              label: 'Predicted (perfect calibration)',
-              data: bins.map((b) => b.predicted * 100),
-              borderColor: '#a0a0b8',
-              backgroundColor: '#a0a0b8',
-              borderWidth: 2,
-              borderDash: [4, 4],
-              pointRadius: 3,
-              tension: 0.15,
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'bottom',
-              labels: { color: '#f0f0f5', boxWidth: 12, font: { size: 11 } },
-            },
-            tooltip: {
-              callbacks: {
-                label: (c) => {
-                  const bin = bins[c.dataIndex]
-                  return ` ${c.dataset.label}: ${(c.raw as number).toFixed(1)}% (${bin.n} matches)`
-                },
+    // The summary and table above are shown in the template.
+    this.cdr.markForCheck()
+    this.calibChart?.destroy()
+    this.calibChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          {
+            label: 'Favorite win rate (observed)',
+            data: bins.map((b) => b.observed * 100),
+            borderColor: '#4ade80',
+            backgroundColor: '#4ade80',
+            borderWidth: 2,
+            pointRadius: 4,
+            tension: 0.15,
+          },
+          {
+            label: 'Predicted (perfect calibration)',
+            data: bins.map((b) => b.predicted * 100),
+            borderColor: '#a0a0b8',
+            backgroundColor: '#a0a0b8',
+            borderWidth: 2,
+            borderDash: [4, 4],
+            pointRadius: 3,
+            tension: 0.15,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { color: '#f0f0f5', boxWidth: 12, font: { size: 11 } },
+          },
+          tooltip: {
+            callbacks: {
+              label: (c) => {
+                const bin = bins[c.dataIndex]
+                return ` ${c.dataset.label}: ${(c.raw as number).toFixed(1)}% (${bin.n} matches)`
               },
             },
           },
-          scales: {
-            x: {
-              ticks: { color: '#a0a0b8' },
-              grid: { color: 'rgba(255,255,255,0.05)' },
-              title: { display: true, text: 'Predicted probability', color: '#a0a0b8' },
-            },
-            y: {
-              min: 0,
-              max: 100,
-              ticks: { color: '#a0a0b8', callback: (v) => `${v}%` },
-              grid: { color: 'rgba(255,255,255,0.05)' },
-              title: { display: true, text: 'Observed frequency', color: '#a0a0b8' },
-            },
+        },
+        scales: {
+          x: {
+            ticks: { color: '#a0a0b8' },
+            grid: { color: 'rgba(255,255,255,0.05)' },
+            title: { display: true, text: 'Predicted probability', color: '#a0a0b8' },
+          },
+          y: {
+            min: 0,
+            max: 100,
+            ticks: { color: '#a0a0b8', callback: (v) => `${v}%` },
+            grid: { color: 'rgba(255,255,255,0.05)' },
+            title: { display: true, text: 'Observed frequency', color: '#a0a0b8' },
           },
         },
-      })
+      },
     })
   }
 }

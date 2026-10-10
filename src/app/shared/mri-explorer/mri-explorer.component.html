@@ -72,7 +72,7 @@
           <figure class="saliency-figure">
             <app-zoomable-image
               [src]="saliencyImage(cls.id)"
-              [alt]="selectedModel.label + ' saliency map for ' + cls.label"
+              [alt]="saliencyAlt(cls)"
               [caption]="selectedModel.label + ', ' + cls.label"
             />
             <figcaption>{{ cls.label }}</figcaption>
@@ -96,7 +96,7 @@
       <img
         class="panel-image"
         [src]="confusionImage"
-        [alt]="selectedModel.label + ' confusion matrix'"
+        [alt]="confusionAlt"
         width="785"
         height="624"
         loading="lazy"
@@ -118,7 +118,7 @@
       <img
         class="panel-image"
         [src]="trainingImage"
-        [alt]="selectedModel.label + ' training curves'"
+        [alt]="trainingAlt"
         width="1189"
         height="490"
         loading="lazy"

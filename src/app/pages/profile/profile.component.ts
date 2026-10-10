@@ -1,4 +1,10 @@
-import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core'
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  inject,
+} from '@angular/core'
 
 import { FormsModule } from '@angular/forms'
 import { Router } from '@angular/router'
@@ -14,7 +20,7 @@ import { IconComponent } from '../../shared/icon/icon.component'
   selector: 'app-profile',
   imports: [IconComponent, FormsModule, MatProgressSpinnerModule],
   templateUrl: './profile.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './profile.component.scss',
 })
 export class ProfileComponent implements OnInit {
@@ -36,6 +42,8 @@ export class ProfileComponent implements OnInit {
   showNewPassword = false
   showConfirmPassword = false
 
+  private cdr = inject(ChangeDetectorRef)
+
   constructor() {
     // Signed-in only; without its own title the tab kept the sign-in page's.
     inject(SeoService).setNoIndex('Profile | Bishal Regmi')
@@ -44,7 +52,12 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     this.userService
       .getProfile()
-      .pipe(finalize(() => (this.loadingProfile = false)))
+      .pipe(
+        finalize(() => {
+          this.loadingProfile = false
+          this.cdr.markForCheck()
+        })
+      )
       .subscribe({
         next: (profile) => (this.profile = profile),
         // An expired session is renewed, or ended, by the interceptor; this
@@ -78,7 +91,12 @@ export class ProfileComponent implements OnInit {
     this.changingPassword = true
     this.userService
       .changePassword(this.passwordForm)
-      .pipe(finalize(() => (this.changingPassword = false)))
+      .pipe(
+        finalize(() => {
+          this.changingPassword = false
+          this.cdr.markForCheck()
+        })
+      )
       .subscribe({
         next: (session) => {
           // Older API versions answer with an empty body and keep the session.

@@ -6,11 +6,11 @@
     type="button"
     class="nav-menu-btn"
     aria-controls="mobile-nav"
-    [attr.aria-expanded]="menuOpen"
-    [attr.aria-label]="menuOpen ? 'Close menu' : 'Open menu'"
+    [attr.aria-expanded]="menuOpen()"
+    [attr.aria-label]="menuOpen() ? 'Close menu' : 'Open menu'"
     (click)="toggleMenu()"
   >
-    <app-icon [name]="menuOpen ? 'close' : 'menu'" />
+    <app-icon [name]="menuOpen() ? 'close' : 'menu'" />
   </button>
   <a class="brand-link" [routerLink]="['']" aria-label="Bishal Regmi, home">
     <img class="logo-img" src="./assets/logo-96.webp" width="32" height="32" alt="" />
@@ -33,7 +33,7 @@
 
   <app-site-search />
 
-  @if (isAuthenticated) {
+  @if (isAuthenticated()) {
     <span class="user-profile">
       <a class="btn-secondary btn-md" [routerLink]="['/profile']">Profile</a>
       <button type="button" class="btn-secondary btn-md" (click)="onLogout()">Sign out</button>
@@ -41,14 +41,14 @@
   }
 </header>
 
-<nav id="mobile-nav" class="mobile-nav" aria-label="Primary" [hidden]="!menuOpen">
+<nav id="mobile-nav" class="mobile-nav" aria-label="Primary" [hidden]="!menuOpen()">
   @for (link of navLinks; track link.path) {
     <a [routerLink]="link.path" routerLinkActive="mobile-active" ariaCurrentWhenActive="page">{{
       link.label
     }}</a>
   }
   <a [routerLink]="['/about']" fragment="contact">Contact</a>
-  @if (isAuthenticated) {
+  @if (isAuthenticated()) {
     <a [routerLink]="['/profile']" routerLinkActive="mobile-active" ariaCurrentWhenActive="page"
       >Profile</a
     >

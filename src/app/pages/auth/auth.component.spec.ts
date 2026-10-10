@@ -1,3 +1,4 @@
+import { ChangeDetectorRef } from '@angular/core'
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing'
 import { provideHttpClientTesting } from '@angular/common/http/testing'
 import { Title } from '@angular/platform-browser'
@@ -112,6 +113,7 @@ describe('AuthComponent forgot password', () => {
 
   it('sends the address and answers the same way for any address', fakeAsync(() => {
     component.resetByEmail = true
+    fixture.componentRef.injector.get(ChangeDetectorRef).markForCheck()
     fixture.detectChanges()
     const link = [...el.querySelectorAll<HTMLButtonElement>('.link-button')].find((b) =>
       b.textContent!.includes('Forgot your password?')
@@ -125,6 +127,7 @@ describe('AuthComponent forgot password', () => {
       of(undefined)
     )
     component.forgotEmail = 'me@example.test'
+    fixture.componentRef.injector.get(ChangeDetectorRef).markForCheck()
     fixture.detectChanges()
     tick()
     el.querySelector<HTMLButtonElement>('.auth-submit')!.click()

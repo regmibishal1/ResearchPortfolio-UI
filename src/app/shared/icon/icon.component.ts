@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, input } from '@angular/core'
 
 // Material icon shapes (Apache 2.0) plus the GitHub and LinkedIn marks,
 // drawn inline so nothing depends on an icon font loading.
@@ -65,10 +65,10 @@ export type IconName = keyof typeof PATHS
   selector: 'app-icon',
   templateUrl: './icon.component.html',
   styleUrl: './icon.component.scss',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IconComponent {
-  @Input({ required: true }) name!: IconName
+  readonly name = input.required<IconName>()
 
   readonly paths: Record<string, string> = PATHS
 }

@@ -7,21 +7,21 @@
     </a>
   </header>
 
-  @if (loading) {
+  @if (loading()) {
     <div class="state">
       <mat-spinner diameter="22"></mat-spinner>
       <span>Loading the final standings...</span>
     </div>
   }
 
-  @if (error && !loading) {
+  @if (error() && !loading()) {
     <div class="state state-error" role="alert">
       <app-icon name="cloud_off" />
-      <span>{{ error }}</span>
+      <span>{{ error() }}</span>
     </div>
   }
 
-  @if (!loading && !error && data; as d) {
+  @if (!loading() && !error() && data(); as d) {
     <ul class="meta-line" aria-label="About this run">
       <li>As of {{ d.run.as_of_date | date: 'mediumDate' }}</li>
       <li>{{ d.run.n_simulations | number }} simulations</li>

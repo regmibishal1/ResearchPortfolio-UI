@@ -2,13 +2,13 @@
   #trigger
   type="button"
   class="zoomable-trigger"
-  [attr.aria-label]="'Enlarge image' + (alt ? ': ' + alt : '')"
+  [attr.aria-label]="'Enlarge image' + (alt() ? ': ' + alt() : '')"
   (click)="open()"
 >
   <img
     class="zoomable-thumb"
-    [src]="src"
-    [alt]="alt"
+    [src]="src()"
+    [alt]="alt()"
     [attr.width]="size?.[0]"
     [attr.height]="size?.[1]"
     loading="lazy"
@@ -20,7 +20,7 @@
     class="lightbox"
     role="dialog"
     aria-modal="true"
-    [attr.aria-label]="caption || alt || 'Enlarged image'"
+    [attr.aria-label]="caption() || alt() || 'Enlarged image'"
     cdkTrapFocus
     [cdkTrapFocusAutoCapture]="true"
     (click)="onBackdrop($event)"
@@ -57,7 +57,13 @@
       (keydown.enter)="toggleZoom()"
       (mousedown)="onDown($event)"
     >
-      <img class="lightbox-img" [class.zoomed]="zoomed" [src]="src" [alt]="alt" draggable="false" />
+      <img
+        class="lightbox-img"
+        [class.zoomed]="zoomed"
+        [src]="src()"
+        [alt]="alt()"
+        draggable="false"
+      />
     </div>
     @if (zoomed) {
       <div class="lightbox-pan" role="group" aria-label="Pan the image">
@@ -90,8 +96,8 @@
         </button>
       </div>
     }
-    @if (caption) {
-      <p class="lightbox-caption">{{ caption }}</p>
+    @if (caption()) {
+      <p class="lightbox-caption">{{ caption() }}</p>
     }
     <p class="lightbox-hint">
       Use Zoom or select the image to enlarge it. Drag, swipe, use the arrow keys or the pan buttons

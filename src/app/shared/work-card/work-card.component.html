@@ -1,9 +1,9 @@
 <article class="work-card">
-  @if (project.image) {
+  @if (project().image; as image) {
     <div class="work-media">
       <img
-        [src]="project.image"
-        [attr.srcset]="srcset(project.image)"
+        [src]="image"
+        [attr.srcset]="srcset(image)"
         sizes="(min-width: 900px) 560px, calc(100vw - 32px)"
         alt=""
         width="640"
@@ -13,13 +13,13 @@
     </div>
   }
   <div class="work-body">
-    <app-status-badge [project]="project" />
+    <app-status-badge [project]="project()" />
     <h3 class="work-title">
-      <a [routerLink]="['/project', project.id]">{{ project.title }}</a>
+      <a [routerLink]="['/project', project().id]">{{ project().title }}</a>
     </h3>
-    <p class="work-outcome">{{ project.outcome ?? project.shortDescription }}</p>
+    <p class="work-outcome">{{ project().outcome ?? project().shortDescription }}</p>
     <ul class="chip-list" aria-label="Built with">
-      @for (tag of project.tags.slice(0, 3); track tag) {
+      @for (tag of project().tags.slice(0, 3); track tag) {
         <li class="chip">{{ tag }}</li>
       }
     </ul>

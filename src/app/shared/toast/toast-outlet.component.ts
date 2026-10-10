@@ -27,7 +27,7 @@ import { ToastService } from './toast.service'
     </div>
   `,
   styleUrl: './toast-outlet.component.scss',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToastOutletComponent {
   readonly toasts = inject(ToastService)

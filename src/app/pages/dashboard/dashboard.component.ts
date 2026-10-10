@@ -14,7 +14,7 @@ import { projectSrcset } from '../../shared/project-srcset'
   selector: 'app-dashboard',
   imports: [RouterModule, DatePipe, WorkCardComponent],
   templateUrl: './dashboard.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {

@@ -1,5 +1,5 @@
 import { Route } from '@angular/router'
-import { of } from 'rxjs'
+import { Subject, of } from 'rxjs'
 
 import { routes } from './app.routes'
 import { SelectivePreloadingStrategy } from './preload-strategy'
@@ -7,10 +7,15 @@ import { SelectivePreloadingStrategy } from './preload-strategy'
 describe('SelectivePreloadingStrategy', () => {
   const strategy = new SelectivePreloadingStrategy()
 
-  it('preloads only routes marked for it', () => {
+  it('preloads only routes marked for it, once the page is idle', () => {
+    const idle = new Subject<void>()
+    strategy.whenIdle = () => idle
     const load = jasmine.createSpy('load').and.returnValue(of('chunk'))
     strategy.preload({ path: 'a', data: { preload: true } }, load).subscribe()
     strategy.preload({ path: 'b' }, load).subscribe()
+    expect(load).not.toHaveBeenCalled()
+
+    idle.next()
     expect(load).toHaveBeenCalledTimes(1)
   })
 

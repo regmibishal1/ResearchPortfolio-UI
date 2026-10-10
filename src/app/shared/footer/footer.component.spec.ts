@@ -1,3 +1,4 @@
+import { ChangeDetectorRef } from '@angular/core'
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 
 import { FooterComponent } from './footer.component'
@@ -32,7 +33,7 @@ describe('FooterComponent', () => {
     expect(el.textContent).not.toContain('Last updated')
 
     fixture.componentRef.instance.buildDate = '2026-10-10'
-    fixture.componentRef.changeDetectorRef.markForCheck()
+    fixture.componentRef.injector.get(ChangeDetectorRef).markForCheck()
     fixture.detectChanges()
     expect(el.textContent).toContain('Last updated Oct 10, 2026')
   })
