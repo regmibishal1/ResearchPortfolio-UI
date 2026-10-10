@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, ChangeDetectionStrategy } from '@angular/core'
+import { Component, ElementRef, ViewChild, ChangeDetectionStrategy, inject } from '@angular/core'
 
 import { Router } from '@angular/router'
 import { AuthService, RegisterModel, LoginModel } from './auth.service'
@@ -20,6 +20,11 @@ type Mode = 'login' | 'register'
   styleUrl: './auth.component.scss',
 })
 export class AuthComponent {
+  private router = inject(Router)
+  private authService = inject(AuthService)
+  private _snackBar = inject(MatSnackBar)
+  private seo = inject(SeoService)
+
   /** Accounts are by invitation; sign-up only appears when this is switched on. */
   readonly registrationOpen = environment.features.registration
 
@@ -33,12 +38,7 @@ export class AuthComponent {
 
   @ViewChild('errorSummary') errorSummary?: ElementRef<HTMLElement>
 
-  constructor(
-    private router: Router,
-    private authService: AuthService,
-    private _snackBar: MatSnackBar,
-    private seo: SeoService
-  ) {
+  constructor() {
     // /login and /register share this component; pick the initial form
     // from the route so deep links to /register land on the right view.
     const wantsRegister = this.router.url.startsWith('/register')

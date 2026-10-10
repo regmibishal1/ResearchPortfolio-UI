@@ -1,13 +1,19 @@
+import { TestBed } from '@angular/core/testing'
 import { WorldCupComponent } from './world-cup.component'
 import { SeoService } from '../../services/seo.service'
 import { TeamRow, WorldCupService } from '../../services/world-cup.service'
 
 // The constructor only sets page metadata, so the component can be built
-// directly to exercise the pure leaderboard-sorting logic without standing up
-// the full data-loading view.
+// directly (inside an injection context, with stub services) to exercise the
+// pure leaderboard-sorting logic without standing up the full data-loading view.
 function makeComponent(): WorldCupComponent {
-  const seo = { setPage: () => {} } as unknown as SeoService
-  return new WorldCupComponent({} as unknown as WorldCupService, seo)
+  TestBed.configureTestingModule({
+    providers: [
+      { provide: SeoService, useValue: { setPage: () => {} } },
+      { provide: WorldCupService, useValue: {} },
+    ],
+  })
+  return TestBed.runInInjectionContext(() => new WorldCupComponent())
 }
 
 function team(name: string, winner: number, elo: number): TeamRow {
@@ -31,7 +37,7 @@ describe('WorldCupComponent leaderboard sorting', () => {
   ]
 
   function seed(cmp: WorldCupComponent): void {
-    (cmp as unknown as { baseLeaderboard: TeamRow[] }).baseLeaderboard = [...rows]
+    ;(cmp as unknown as { baseLeaderboard: TeamRow[] }).baseLeaderboard = [...rows]
     ;(cmp as unknown as { applyLeaderboardSort: () => void }).applyLeaderboardSort()
   }
 

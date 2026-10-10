@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core'
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core'
 
 import { RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
@@ -19,7 +19,9 @@ export class ProjectComponent {
 
   projects: Project[] = PROJECTS
 
-  constructor(seo: SeoService) {
+  constructor() {
+    const seo = inject(SeoService)
+
     seo.setPage({
       title: 'Projects | Bishal Regmi',
       path: '/project',

@@ -5,6 +5,7 @@ import {
   OnInit,
   ViewChild,
   ChangeDetectionStrategy,
+  inject,
 } from '@angular/core'
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common'
 import { RouterModule } from '@angular/router'
@@ -80,6 +81,8 @@ const STOCK_TEXT_COLUMNS: ReadonlySet<StockSortKey> = new Set(['ticker', 'sector
   styleUrl: './stocks.component.scss',
 })
 export class StocksComponent implements OnInit, OnDestroy {
+  private stocks = inject(StocksService)
+
   // The canvas only enters the DOM once the loading gate flips, which happens
   // in the same change-detection pass that delivers the data. Rendering from
   // a ViewChild setter draws the chart exactly when the element exists,
@@ -114,11 +117,10 @@ export class StocksComponent implements OnInit, OnDestroy {
 
   private chart: Chart | null = null
 
-  constructor(
-    private stocks: StocksService,
-    title: Title,
-    meta: Meta
-  ) {
+  constructor() {
+    const title = inject(Title)
+    const meta = inject(Meta)
+
     title.setTitle('EDGAR Fundamentals Signals | Bishal Regmi')
     meta.updateTag({
       name: 'description',

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core'
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core'
 
 import { RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
@@ -16,7 +16,9 @@ import { experienceLabel } from '../../data/experience'
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
-  constructor(seo: SeoService) {
+  constructor() {
+    const seo = inject(SeoService)
+
     seo.setPage({
       title: 'Bishal Regmi | Software Engineer & Data Scientist',
       path: '/',

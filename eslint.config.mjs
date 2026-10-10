@@ -18,7 +18,6 @@ export default defineConfig([
     ],
     processor: angular.processInlineTemplates,
     rules: {
-      '@angular-eslint/prefer-inject': 'off',
       // Components keep the Eager strategy they had before Angular 22 made
       // OnPush the default; moving each one over is its own change.
       '@angular-eslint/prefer-on-push-component-change-detection': 'off',

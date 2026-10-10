@@ -82,6 +82,8 @@ const DISTRIBUTIONS: Record<Distribution, DistributionConfig> = {
   styleUrls: ['./stats-explorer.component.scss'],
 })
 export class StatsExplorerComponent implements AfterViewInit, OnDestroy {
+  private statsService = inject(StatsService)
+
   @ViewChild('chartCanvas') chartCanvas!: ElementRef<HTMLCanvasElement>
 
   distributions = Object.entries(DISTRIBUTIONS).map(([key, cfg]) => ({
@@ -100,8 +102,6 @@ export class StatsExplorerComponent implements AfterViewInit, OnDestroy {
   private chart: Chart | null = null
   private platformId = inject(PLATFORM_ID)
   private zone = inject(NgZone)
-
-  constructor(private statsService: StatsService) {}
 
   get config(): DistributionConfig {
     return DISTRIBUTIONS[this.selectedDistribution]

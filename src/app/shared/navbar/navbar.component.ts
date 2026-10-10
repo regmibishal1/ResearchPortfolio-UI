@@ -27,6 +27,9 @@ import { Subscription, filter } from 'rxjs'
   styleUrl: './navbar.component.scss',
 })
 export class NavbarComponent implements OnInit, OnDestroy {
+  private authService = inject(AuthService)
+  private _snackBar = inject(MatSnackBar)
+
   isAuthenticated = false
   menuOpen = false
 
@@ -37,11 +40,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
   private isBrowser = isPlatformBrowser(inject(PLATFORM_ID))
   private router = inject(Router)
   private lastPath: string | null = null
-
-  constructor(
-    private authService: AuthService,
-    private _snackBar: MatSnackBar
-  ) {}
 
   ngOnInit() {
     this.subscriptions.add(

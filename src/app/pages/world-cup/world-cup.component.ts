@@ -5,6 +5,7 @@ import {
   OnInit,
   ViewChild,
   ChangeDetectionStrategy,
+  inject,
 } from '@angular/core'
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common'
 import { RouterModule } from '@angular/router'
@@ -146,6 +147,8 @@ export interface ChartTable {
   styleUrl: './world-cup.component.scss',
 })
 export class WorldCupComponent implements OnInit, OnDestroy {
+  private wc = inject(WorldCupService)
+
   @ViewChild('historyCanvas') historyCanvas?: ElementRef<HTMLCanvasElement>
   @ViewChild('calibCanvas') calibCanvas?: ElementRef<HTMLCanvasElement>
 
@@ -256,10 +259,9 @@ export class WorldCupComponent implements OnInit, OnDestroy {
   calibSummary = ''
   calibTable: ChartTable | null = null
 
-  constructor(
-    private wc: WorldCupService,
-    seo: SeoService
-  ) {
+  constructor() {
+    const seo = inject(SeoService)
+
     seo.setPage({
       title: 'World Cup 2026 Predictions and Final Results | Bishal Regmi',
       path: '/world-cup',
