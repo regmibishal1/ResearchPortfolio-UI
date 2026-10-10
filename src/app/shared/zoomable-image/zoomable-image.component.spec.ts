@@ -42,6 +42,36 @@ describe('ZoomableImageComponent', () => {
     expect(component.zoomed).toBe(false)
   })
 
+  it('opens from a real button and shows a labelled modal dialog', () => {
+    const el: HTMLElement = fixture.nativeElement
+    el.querySelector<HTMLButtonElement>('button.zoomable-trigger')!.click()
+    fixture.detectChanges()
+
+    const dialog = el.querySelector('[role="dialog"]')!
+    expect(dialog.getAttribute('aria-modal')).toBe('true')
+    expect(dialog.getAttribute('aria-label')).toBe('chart')
+  })
+
+  it('returns focus to the image button on close', () => {
+    const el: HTMLElement = fixture.nativeElement
+    const trigger = el.querySelector<HTMLButtonElement>('button.zoomable-trigger')!
+    trigger.click()
+    fixture.detectChanges()
+    component.close()
+    fixture.detectChanges()
+    expect(document.activeElement).toBe(trigger)
+  })
+
+  it('pans the zoomed image with the arrow keys', () => {
+    component.open()
+    component.toggleZoom()
+    fixture.detectChanges()
+    const panSpy = spyOn(component, 'pan')
+    const event = new KeyboardEvent('keydown', { key: 'ArrowRight' })
+    component.onKeydown(event)
+    expect(panSpy).toHaveBeenCalledWith(1, 0)
+  })
+
   it('closes on Escape only when open', () => {
     component.onEscape()
     expect(component.isOpen).toBe(false)

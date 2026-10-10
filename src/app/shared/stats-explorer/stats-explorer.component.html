@@ -56,13 +56,23 @@
 
     <!-- Chart -->
     <div class="chart-wrapper">
-      <canvas #chartCanvas></canvas>
+      <canvas
+        #chartCanvas
+        role="img"
+        [attr.aria-label]="
+          'Histogram of ' + nSamples + ' samples from the ' + config.label + ' distribution'
+        "
+      ></canvas>
     </div>
 
-    <!-- Error -->
-    @if (error) {
-      <p class="error-msg">{{ error }}</p>
-    }
+    <!-- Error and status, announced as they change -->
+    <div aria-live="polite">
+      @if (error) {
+        <p class="error-msg">{{ error }}</p>
+      } @else if (result && !loading) {
+        <p class="visually-hidden">Sampled {{ nSamples }} values.</p>
+      }
+    </div>
 
     <!-- Stats chips -->
     @if (result && !loading) {
