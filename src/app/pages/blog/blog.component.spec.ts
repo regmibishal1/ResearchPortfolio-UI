@@ -20,4 +20,12 @@ describe('BlogComponent', () => {
       )
     })
   })
+
+  it('links the RSS feed', () => {
+    TestBed.configureTestingModule({ imports: [BlogComponent], providers: [provideRouter([])] })
+    const fixture = TestBed.createComponent(BlogComponent)
+    fixture.detectChanges()
+    const feed = (fixture.nativeElement as HTMLElement).querySelector('.feed-link')!
+    expect(feed.getAttribute('href')).toBe('/feed.xml')
+  })
 })

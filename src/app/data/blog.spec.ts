@@ -11,6 +11,13 @@ describe('blog data', () => {
     expect(new Set(slugs).size).toBe(slugs.length)
   })
 
+  it('dates every post as a real ISO day, which the RSS feed relies on', () => {
+    for (const post of POSTS) {
+      expect(post.date).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+      expect(Number.isNaN(Date.parse(`${post.date}T12:00:00Z`))).toBeFalse()
+    }
+  })
+
   it('is sorted newest first by date', () => {
     const dates = POSTS.map((p) => p.date)
     const descending = [...dates].sort((a, b) => b.localeCompare(a))

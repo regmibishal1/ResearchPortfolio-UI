@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Bishal Regmi | Blog</title>
+    <link>https://bishalregmi.com/blog</link>
+    <atom:link href="https://bishalregmi.com/feed.xml" rel="self" type="application/rss+xml" />
+    <description>Going back through old projects, redoing them honestly, and writing down what the data actually says.</description>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 25 Jul 2026 12:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Will it snow tomorrow? Rebuilding my first model honestly</title>
+      <link>https://bishalregmi.com/blog/will-it-snow-tomorrow</link>
+      <guid isPermaLink="true">https://bishalregmi.com/blog/will-it-snow-tomorrow</guid>
+      <pubDate>Sat, 25 Jul 2026 12:00:00 GMT</pubDate>
+      <description>The properly built version of my first model: a next-day snow predictor that has to beat real baselines on a fair test. Whether it snows turns out to be genuinely predictable. How much falls, barely at all, and the difference is the whole lesson.</description>
+      <category>Data Science</category>
+      <category>Machine Learning</category>
+      <category>Climate</category>
+      <category>Python</category>
+    </item>
+    <item>
+      <title>Going back to my first data science project</title>
+      <link>https://bishalregmi.com/blog/going-back-to-my-first-data-science-project</link>
+      <guid isPermaLink="true">https://bishalregmi.com/blog/going-back-to-my-first-data-science-project</guid>
+      <pubDate>Sat, 11 Jul 2026 12:00:00 GMT</pubDate>
+      <description>Reopening my first real data science project, finding where it went wrong, and redoing it properly: a real trend test on the full record, a couple of broken weather stations, and a warming signal that turns up on every continent.</description>
+      <category>Data Science</category>
+      <category>Climate</category>
+      <category>Python</category>
+    </item>
+  </channel>
+</rss>

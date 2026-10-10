@@ -21,10 +21,11 @@ describe('FooterComponent', () => {
     expect(byName('LinkedIn').rel).toContain('noopener')
     expect(byName('Email').href).toBe('mailto:contact@bishalregmi.com')
     expect(byName('Email').hasAttribute('target')).toBeFalse()
+    expect(byName('RSS').getAttribute('href')).toBe('/feed.xml')
   })
 
   it('draws an icon for each link', () => {
-    expect(el.querySelectorAll('.footer-social-link svg').length).toBe(3)
+    expect(el.querySelectorAll('.footer-social-link svg').length).toBe(4)
   })
 
   it('shows the last updated date only when the build provides one', () => {
