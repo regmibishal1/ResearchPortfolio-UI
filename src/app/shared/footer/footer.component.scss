@@ -59,11 +59,6 @@
   text-decoration: none;
   transition: color var(--transition-fast);
 
-  svg {
-    flex: none;
-    fill: currentColor;
-  }
-
   &:hover {
     color: var(--text-primary);
   }

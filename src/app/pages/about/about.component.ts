@@ -1,34 +1,29 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core'
-
-import { MatIconModule } from '@angular/material/icon'
 import { SeoService, PERSON_ID, SITE_URL } from '../../services/seo.service'
 import { SKILL_CATEGORIES } from '../../data/skills'
 import { experienceLabel } from '../../data/experience'
+import { SocialIconComponent } from '../../shared/social-icon/social-icon.component'
 
 interface TimelineItem {
   title: string
   subtitle: string
   date: string
   description: string[]
-  icon: string
 }
 
 interface Certification {
   name: string
   issuer: string
-  icon: string
-  color: string
 }
 
 interface Stat {
-  value: string
   label: string
-  icon: string
+  value: string
 }
 
 @Component({
   selector: 'app-about',
-  imports: [MatIconModule],
+  imports: [SocialIconComponent],
   templateUrl: './about.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './about.component.scss',
@@ -55,12 +50,15 @@ export class AboutComponent {
     })
   }
 
+  /** Read as label and value pairs, e.g. "Experience: 5+ years". */
   stats: Stat[] = [
-    { value: experienceLabel(), label: 'Years Experience', icon: 'work_history' },
-    { value: '', label: 'AWS SA Certified', icon: 'cloud_done' },
-    { value: '', label: 'Fintech Domain', icon: 'account_balance' },
-    { value: '', label: "Dual Master's & B.S.", icon: 'school' },
+    { label: 'Experience', value: `${experienceLabel()} years` },
+    { label: 'Certification', value: 'AWS Solutions Architect' },
+    { label: 'Domain', value: 'Fintech' },
+    { label: 'Education', value: "Dual Master's & B.S." },
   ]
+
+  roles = ['Software Engineer', 'Data Scientist', 'AWS Certified', 'Fintech']
 
   bio = `Software Engineer and Data Scientist with ${experienceLabel()} years of experience at T. Rowe Price, building systems that process billions of dollars in daily cash flows and serve thousands of traders. I hold an AWS Solutions Architect certification.
 
@@ -74,8 +72,6 @@ My work spans large-scale .NET microservice platforms, ML-powered financial fore
     {
       name: 'AWS Certified Solutions Architect',
       issuer: 'Amazon Web Services',
-      icon: 'cloud_done',
-      color: '#FF9900',
     },
   ]
 
@@ -85,14 +81,12 @@ My work spans large-scale .NET microservice platforms, ML-powered financial fore
       subtitle: 'University of Maryland, College Park',
       date: 'Aug 2021 - Aug 2023',
       description: ['GPA: 4.0'],
-      icon: 'school',
     },
     {
       title: 'B.S. Computer Science, Summa Cum Laude',
       subtitle: 'University of Maryland, Baltimore County',
       date: 'Aug 2018 - May 2021',
       description: ['GPA: 4.0'],
-      icon: 'school',
     },
   ]
 
@@ -108,7 +102,6 @@ My work spans large-scale .NET microservice platforms, ML-powered financial fore
         'Delivered a Prophet-based cash forecasting tool for hundreds of investment accounts handling billions of dollars in daily cash flows, replacing manual processes with no prior forecasting capability',
         'Owned a React observability SPA for trade entry used by trading support and traders; wrote a Python Lambda smoke test that cut system failure detection from over an hour to under 2 minutes',
       ],
-      icon: 'work',
     },
     {
       title: 'Associate Software Engineer',
@@ -118,25 +111,27 @@ My work spans large-scale .NET microservice platforms, ML-powered financial fore
         'Built internal support tooling and a monitoring UI for financial data ingestion into the trading system using C# and Blazor, integrating with AWS Lambda, S3, and DynamoDB to surface stale data before market open',
         'Designed and delivered new data pipelines expanding the number of financial data sources feeding into the trading system, improving data coverage across asset types',
       ],
-      icon: 'work',
     },
   ]
 
-  interests = [
-    { name: 'Full-Stack Development', icon: 'terminal' },
-    { name: 'Data Science & Analytics', icon: 'analytics' },
-    { name: 'Machine Learning & AI', icon: 'psychology' },
-    { name: 'Distributed Computing', icon: 'hub' },
-    { name: 'Cloud Architecture', icon: 'cloud' },
-    { name: 'Open Source', icon: 'public' },
-    { name: 'System Design', icon: 'architecture' },
-    { name: 'Developer Tooling', icon: 'build' },
-    { name: 'Financial Technology', icon: 'trending_up' },
-  ]
-
   contactLinks = [
-    { label: 'GitHub', icon: 'code', url: 'https://github.com/regmibishal1' },
-    { label: 'LinkedIn', icon: 'person', url: 'https://www.linkedin.com/in/bishalregmi/' },
-    { label: 'Email', icon: 'email', url: 'mailto:contact@bishalregmi.com' },
+    {
+      label: 'GitHub',
+      icon: 'github' as const,
+      url: 'https://github.com/regmibishal1',
+      external: true,
+    },
+    {
+      label: 'LinkedIn',
+      icon: 'linkedin' as const,
+      url: 'https://www.linkedin.com/in/bishalregmi/',
+      external: true,
+    },
+    {
+      label: 'Email',
+      icon: 'email' as const,
+      url: 'mailto:contact@bishalregmi.com',
+      external: false,
+    },
   ]
 }

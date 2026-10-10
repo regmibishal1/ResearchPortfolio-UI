@@ -1,12 +1,13 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core'
 import { DatePipe } from '@angular/common'
+import { SocialIconComponent } from '../social-icon/social-icon.component'
 
 // Set by scripts/build-app.mjs on production builds; absent in dev and tests.
 declare const BUILD_DATE: string | undefined
 
 @Component({
   selector: 'app-footer',
-  imports: [DatePipe],
+  imports: [DatePipe, SocialIconComponent],
   templateUrl: './footer.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './footer.component.scss',
@@ -16,13 +17,23 @@ export class FooterComponent {
   buildDate: string | null = typeof BUILD_DATE === 'undefined' ? null : BUILD_DATE
 
   socialLinks = [
-    { name: 'GitHub', url: 'https://github.com/regmibishal1/', icon: 'github', external: true },
+    {
+      name: 'GitHub',
+      url: 'https://github.com/regmibishal1/',
+      icon: 'github' as const,
+      external: true,
+    },
     {
       name: 'LinkedIn',
       url: 'https://www.linkedin.com/in/bishalregmi/',
-      icon: 'linkedin',
+      icon: 'linkedin' as const,
       external: true,
     },
-    { name: 'Email', url: 'mailto:contact@bishalregmi.com', icon: 'email', external: false },
+    {
+      name: 'Email',
+      url: 'mailto:contact@bishalregmi.com',
+      icon: 'email' as const,
+      external: false,
+    },
   ]
 }

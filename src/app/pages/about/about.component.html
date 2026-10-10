@@ -1,183 +1,138 @@
-<div class="about-page">
-  <!-- ===== Header ===== -->
-  <section class="about-header">
-    <h1 class="page-title">About Me</h1>
-    <p class="page-subtitle animate-in animate-in-delay-1">
-      Software Engineer · Data Scientist · AWS Certified · Fintech
-    </p>
-
-    <!-- Quick stats strip -->
-    <div class="stats-strip animate-in animate-in-delay-2">
-      @for (stat of stats; track $index) {
-        <div class="stat-item">
-          @if (stat.value) {
-            <span class="stat-value">{{ stat.value }}</span>
-          }
-          @if (!stat.value && stat.icon) {
-            <mat-icon class="stat-value stat-icon">{{ stat.icon }}</mat-icon>
-          }
-          <span class="stat-label">{{ stat.label }}</span>
+<div class="about-page container">
+  <!-- ===== Intro ===== -->
+  <header class="about-header">
+    <h1 class="page-title">About</h1>
+    <ul class="roles" aria-label="Roles">
+      @for (role of roles; track role) {
+        <li>{{ role }}</li>
+      }
+    </ul>
+    <dl class="stats animate-in animate-in-delay-1">
+      @for (stat of stats; track stat.label) {
+        <div class="stat">
+          <dt>{{ stat.label }}</dt>
+          <dd>{{ stat.value }}</dd>
         </div>
       }
+    </dl>
+  </header>
+
+  <section class="profile surface animate-in animate-in-delay-2" aria-labelledby="profile-name">
+    <img
+      class="profile-photo"
+      src="assets/profile-pic.jpg"
+      alt="Bishal Regmi"
+      width="160"
+      height="160"
+    />
+    <div class="profile-text">
+      <h2 id="profile-name" class="profile-name">Bishal Regmi</h2>
+      <p class="profile-role">Software Engineer & Data Scientist</p>
+      <p class="profile-bio">{{ bio }}</p>
     </div>
   </section>
 
-  <!-- ===== Profile Section ===== -->
-  <section class="profile-section animate-in animate-in-delay-2">
-    <div class="profile-card surface">
-      <div class="profile-image-wrapper">
-        <img class="profile-image" src="assets/profile-pic.jpg" alt="Bishal Regmi" />
-        <div class="profile-image-ring"></div>
-      </div>
-      <div class="profile-info">
-        <h2 class="profile-name">Bishal Regmi</h2>
-        <p class="profile-role">Software Engineer & Data Scientist</p>
-        <p class="profile-bio">{{ bio }}</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== Skills Section ===== -->
-  <section class="skills-section">
-    <h2 class="section-title">Skills & Technologies</h2>
-    <p class="section-subtitle">Tools and technologies I work with</p>
-
-    <div class="skills-categories">
-      @for (category of skillCategories; track $index; let i = $index) {
-        <div
-          class="skill-category surface animate-in"
-          [class.highlight-category]="!!category.highlight"
-          [style.animation-delay]="i * 0.1 + 's'"
-        >
-          <div class="category-header">
-            <mat-icon class="category-icon">{{ category.icon }}</mat-icon>
-            <h3 class="category-name">{{ category.name }}</h3>
-          </div>
-          @if (category.highlight) {
-            <div class="category-highlight">
-              <span class="highlight-badge"
-                ><mat-icon class="highlight-check">check_circle</mat-icon>
-                {{ category.highlight }}</span
-              >
+  <!-- ===== Experience and education ===== -->
+  @for (
+    block of [
+      {
+        id: 'experience',
+        title: 'Experience',
+        intro: 'Where I have worked and what I built there',
+        items: experience
+      },
+      { id: 'education', title: 'Education', intro: 'Academic background', items: education }
+    ];
+    track block.id
+  ) {
+    <section class="about-section" [id]="block.id" [attr.aria-labelledby]="block.id + '-title'">
+      <h2 [id]="block.id + '-title'" class="section-title">{{ block.title }}</h2>
+      <p class="section-intro">{{ block.intro }}</p>
+      <ol class="timeline">
+        @for (item of block.items; track item.title) {
+          <li class="timeline-item">
+            <div class="timeline-card surface">
+              <div class="timeline-head">
+                <div>
+                  <h3 class="timeline-title">{{ item.title }}</h3>
+                  <p class="timeline-org">{{ item.subtitle }}</p>
+                </div>
+                <span class="timeline-date">{{ item.date }}</span>
+              </div>
+              <ul class="timeline-details">
+                @for (detail of item.description; track $index) {
+                  <li>{{ detail }}</li>
+                }
+              </ul>
             </div>
+          </li>
+        }
+      </ol>
+    </section>
+  }
+
+  <!-- ===== Skills ===== -->
+  <section class="about-section" id="skills" aria-labelledby="skills-title">
+    <h2 id="skills-title" class="section-title">Skills and technologies</h2>
+    <p class="section-intro">Tools and technologies I work with</p>
+    <div class="skills-grid">
+      @for (category of skillCategories; track category.name) {
+        <div class="skill-group surface">
+          <h3 class="skill-group-name">{{ category.name }}</h3>
+          @if (category.highlight) {
+            <p class="skill-highlight">
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+              </svg>
+              {{ category.highlight }}
+            </p>
           }
-          <div class="category-skills">
-            @for (skill of category.skills; track $index) {
-              <span class="skill-badge">{{ skill }}</span>
+          <ul class="chip-list">
+            @for (skill of category.skills; track skill) {
+              <li class="chip">{{ skill }}</li>
             }
-          </div>
+          </ul>
         </div>
       }
     </div>
   </section>
 
-  <!-- ===== Certifications Section ===== -->
-  <section class="certs-section">
-    <h2 class="section-title">Certifications</h2>
-    <p class="section-subtitle">Verified credentials</p>
-
-    <div class="certs-grid">
-      @for (cert of certifications; track $index) {
-        <div class="cert-card surface">
-          <mat-icon class="cert-icon" [style.color]="cert.color">{{ cert.icon }}</mat-icon>
-          <div class="cert-info">
+  <!-- ===== Certifications ===== -->
+  <section class="about-section" id="certifications" aria-labelledby="certs-title">
+    <h2 id="certs-title" class="section-title">Certifications</h2>
+    <ul class="certs">
+      @for (cert of certifications; track cert.name) {
+        <li class="cert surface">
+          <div>
             <h3 class="cert-name">{{ cert.name }}</h3>
             <p class="cert-issuer">{{ cert.issuer }}</p>
           </div>
           <span class="cert-badge">Certified</span>
-        </div>
+        </li>
       }
-    </div>
+    </ul>
   </section>
 
-  <!-- ===== Experience Section ===== -->
-  <section class="timeline-section">
-    <h2 class="section-title">Experience</h2>
-    <p class="section-subtitle">Where I have worked and what I built there</p>
-
-    <div class="timeline">
-      @for (item of experience; track $index) {
-        <div class="timeline-item animate-in">
-          <div class="timeline-marker">
-            <mat-icon>{{ item.icon }}</mat-icon>
-          </div>
-          <div class="timeline-card surface">
-            <div class="timeline-card-header">
-              <div>
-                <h3 class="timeline-title">{{ item.title }}</h3>
-                <p class="timeline-subtitle">{{ item.subtitle }}</p>
-              </div>
-              <span class="timeline-date">{{ item.date }}</span>
-            </div>
-            <ul class="timeline-details">
-              @for (detail of item.description; track $index) {
-                <li>{{ detail }}</li>
-              }
-            </ul>
-          </div>
-        </div>
-      }
-    </div>
-  </section>
-
-  <!-- ===== Education Section ===== -->
-  <section class="timeline-section">
-    <h2 class="section-title">Education</h2>
-    <p class="section-subtitle">Academic background</p>
-
-    <div class="timeline">
-      @for (item of education; track $index) {
-        <div class="timeline-item animate-in">
-          <div class="timeline-marker">
-            <mat-icon>{{ item.icon }}</mat-icon>
-          </div>
-          <div class="timeline-card surface">
-            <div class="timeline-card-header">
-              <div>
-                <h3 class="timeline-title">{{ item.title }}</h3>
-                <p class="timeline-subtitle">{{ item.subtitle }}</p>
-              </div>
-              <span class="timeline-date">{{ item.date }}</span>
-            </div>
-            <ul class="timeline-details">
-              @for (detail of item.description; track $index) {
-                <li>{{ detail }}</li>
-              }
-            </ul>
-          </div>
-        </div>
-      }
-    </div>
-  </section>
-
-  <!-- ===== Interests Section ===== -->
-  <section class="interests-section">
-    <h2 class="section-title">Interests</h2>
-    <p class="section-subtitle">What excites me in tech</p>
-
-    <div class="interests-grid">
-      @for (interest of interests; track $index) {
-        <div class="interest-card animate-in">
-          <mat-icon class="interest-icon">{{ interest.icon }}</mat-icon>
-          <span class="interest-name">{{ interest.name }}</span>
-        </div>
-      }
-    </div>
-  </section>
-
-  <!-- ===== Contact CTA ===== -->
-  <section class="contact-section" id="contact">
+  <!-- ===== Contact ===== -->
+  <section class="about-section contact" id="contact" aria-labelledby="contact-title">
     <div class="contact-card surface">
-      <h2 class="contact-title">Let's Connect</h2>
-      <p class="contact-subtitle">Open to new opportunities and interesting problems</p>
-      <div class="contact-links">
-        @for (link of contactLinks; track $index) {
-          <a [href]="link.url" target="_blank" rel="noopener noreferrer" class="contact-btn">
-            <mat-icon>{{ link.icon }}</mat-icon>
-            {{ link.label }}
-          </a>
+      <h2 id="contact-title" class="contact-title">Let's connect</h2>
+      <p class="contact-intro">Open to new opportunities and interesting problems.</p>
+      <ul class="contact-links">
+        @for (link of contactLinks; track link.label) {
+          <li>
+            <a
+              class="btn-secondary btn-md"
+              [href]="link.url"
+              [attr.target]="link.external ? '_blank' : null"
+              [attr.rel]="link.external ? 'noopener noreferrer' : null"
+            >
+              <app-social-icon [name]="link.icon" />
+              {{ link.label }}
+            </a>
+          </li>
         }
-      </div>
+      </ul>
     </div>
   </section>
 </div>
