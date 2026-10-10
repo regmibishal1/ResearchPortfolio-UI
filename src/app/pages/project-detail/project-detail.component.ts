@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { ActivatedRoute, Router, RouterModule } from '@angular/router'
+import { ActivatedRoute, RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
+import { PageNotFoundComponent } from '../page-not-found/page-not-found.component'
 import { SeoService, PERSON_ID, SITE_URL } from '../../services/seo.service'
 import { PROJECTS, Project } from '../../data/projects'
 import { WorldCupSummaryComponent } from '../../shared/world-cup-summary/world-cup-summary.component'
@@ -13,6 +14,7 @@ import { ZoomableImageComponent } from '../../shared/zoomable-image/zoomable-ima
   selector: 'app-project-detail',
   standalone: true,
   imports: [
+    PageNotFoundComponent,
     CommonModule,
     RouterModule,
     MatIconModule,
@@ -36,17 +38,15 @@ export class ProjectDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private seo: SeoService
   ) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id')
     this.project = PROJECTS.find((p) => p.id === id) ?? null
-    if (!this.project) {
-      this.router.navigate(['/project'])
-      return
-    }
+    // An unknown slug shows the 404 page in place rather than redirecting,
+    // so a broken link is visible instead of silently landing on the list.
+    if (!this.project) return
     const path = `/project/${this.project.id}`
     this.seo.setPage({
       title: `${this.project.title} | Bishal Regmi`,

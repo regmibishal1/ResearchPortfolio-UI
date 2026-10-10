@@ -30,7 +30,11 @@
               [step]="param.step"
               class="param-slider"
             >
-              <input matSliderThumb [(ngModel)]="paramValues[param.key]" />
+              <input
+                matSliderThumb
+                [(ngModel)]="paramValues[param.key]"
+                [attr.aria-label]="param.label"
+              />
             </mat-slider>
           </div>
         }
@@ -40,7 +44,7 @@
             >Samples: <strong>{{ nSamples }}</strong></span
           >
           <mat-slider [min]="500" [max]="10000" [step]="500" class="param-slider">
-            <input matSliderThumb [(ngModel)]="nSamples" />
+            <input matSliderThumb [(ngModel)]="nSamples" aria-label="Samples" />
           </mat-slider>
         </div>
       </div>

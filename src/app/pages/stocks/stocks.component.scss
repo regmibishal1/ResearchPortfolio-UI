@@ -282,7 +282,8 @@
     transition: opacity var(--transition-fast);
   }
 
-  th.sortable[aria-sort='none']:hover .sort-icon {
+  th.sortable[aria-sort='none']:hover .sort-icon,
+  th.sortable[aria-sort='none']:focus-within .sort-icon {
     opacity: 0.4;
   }
 

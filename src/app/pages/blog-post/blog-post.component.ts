@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { ActivatedRoute, Router, RouterModule } from '@angular/router'
+import { ActivatedRoute, RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
+import { PageNotFoundComponent } from '../page-not-found/page-not-found.component'
 import { SeoService, PERSON_ID, SITE_URL } from '../../services/seo.service'
 import { getPost, BlogPost } from '../../data/blog'
 import { ZoomableImageComponent } from '../../shared/zoomable-image/zoomable-image.component'
@@ -9,7 +10,13 @@ import { ZoomableImageComponent } from '../../shared/zoomable-image/zoomable-ima
 @Component({
   selector: 'app-blog-post',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatIconModule, ZoomableImageComponent],
+  imports: [
+    PageNotFoundComponent,
+    CommonModule,
+    RouterModule,
+    MatIconModule,
+    ZoomableImageComponent,
+  ],
   templateUrl: './blog-post.component.html',
   styleUrl: './blog-post.component.scss',
 })
@@ -18,17 +25,15 @@ export class BlogPostComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private seo: SeoService
   ) {}
 
   ngOnInit(): void {
     const slug = this.route.snapshot.paramMap.get('slug') ?? ''
     this.post = getPost(slug)
-    if (!this.post) {
-      this.router.navigate(['/blog'])
-      return
-    }
+    // An unknown slug shows the 404 page in place rather than redirecting,
+    // so a broken link is visible instead of silently landing on the list.
+    if (!this.post) return
     const path = `/blog/${this.post.slug}`
     const figure = this.post.body.find((block) => block.kind === 'figure' && block.src)
     this.seo.setPage({

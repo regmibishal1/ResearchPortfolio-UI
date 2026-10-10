@@ -139,6 +139,7 @@
 
   img {
     width: 100%;
+    height: auto;
     border-radius: var(--radius-md);
     border: 1px solid var(--border-subtle);
     background: #000;
@@ -157,6 +158,7 @@
   display: block;
   max-width: 640px;
   width: 100%;
+  height: auto;
   margin: 0 auto;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-subtle);
@@ -174,7 +176,8 @@
 
   a {
     color: var(--accent-gold);
-    text-decoration: none;
+    text-decoration: underline;
+    text-underline-offset: 3px;
 
     &:hover {
       text-decoration: underline;
