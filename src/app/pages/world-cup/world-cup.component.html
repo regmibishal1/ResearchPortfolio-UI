@@ -1,85 +1,82 @@
-<div class="wc-page">
-  <!-- ===== Back link ===== -->
-  <nav class="breadcrumb">
-    <a [routerLink]="['/project', 'world-cup-prediction']" class="back-link">
-      <mat-icon>arrow_back</mat-icon>
-      <span>Project overview</span>
-    </a>
+<div class="wc-page container-wide">
+  <!-- ===== Breadcrumb ===== -->
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <ol>
+      <li><a [routerLink]="['/project']">Projects</a></li>
+      <li><a [routerLink]="['/project', 'world-cup-prediction']">World Cup 2026</a></li>
+      <li aria-current="page">Dashboard</li>
+    </ol>
   </nav>
 
-  <!-- ===== Hero ===== -->
+  <!-- ===== Header ===== -->
   <header class="wc-hero">
     <div class="hero-text">
-      <span class="hero-eyebrow">Final results, July 19, 2026</span>
+      <p class="eyebrow">Final results, July 19, 2026</p>
       <h1>FIFA World Cup 2026</h1>
       <p class="hero-sub">
         Calibrated XGBoost + 2M-simulation Monte Carlo, rerun daily across the whole tournament.
         Every result is locked in, every prediction is preserved, and the wrap-up grades the model's
         full body of work.
       </p>
+      <a class="how-link" [routerLink]="['/project', 'world-cup-prediction']"
+        >How the model works</a
+      >
     </div>
 
     @if (latest; as l) {
-      <div class="hero-meta">
+      <dl class="hero-meta">
         <div class="meta-pill">
-          <span class="meta-label">As of</span>
-          <span class="meta-value">{{ l.run.as_of_date | date: 'longDate' }}</span>
+          <dt>As of</dt>
+          <dd>{{ l.run.as_of_date | date: 'longDate' }}</dd>
         </div>
         <div class="meta-pill">
-          <span class="meta-label">Simulations</span>
-          <span class="meta-value">{{ l.run.n_simulations | number }}</span>
+          <dt>Simulations</dt>
+          <dd>{{ l.run.n_simulations | number }}</dd>
         </div>
         <div class="meta-pill">
-          <span class="meta-label">Matches locked</span>
-          <span class="meta-value">{{ l.run.n_played_matches_locked }}</span>
+          <dt>Matches locked</dt>
+          <dd>{{ l.run.n_played_matches_locked }}</dd>
         </div>
-      </div>
+      </dl>
     }
   </header>
 
-  <!-- ===== Loading ===== -->
+  <!-- ===== Loading and error ===== -->
   @if (loading) {
     <div class="state-block">
-      <mat-spinner diameter="36"></mat-spinner>
+      <mat-spinner diameter="32"></mat-spinner>
       <span>Loading predictions...</span>
     </div>
   }
-
-  <!-- ===== Error ===== -->
   @if (error && !loading) {
-    <div class="state-block state-error">
-      <mat-icon>error_outline</mat-icon>
-      <span>{{ error }}</span>
-    </div>
+    <div class="state-block state-error" role="alert">{{ error }}</div>
   }
 
   <!-- ===== Content ===== -->
   @if (!loading && !error) {
-    <!-- Snapshot bar -->
+    <!-- Snapshot picker -->
     @if (availableDates.length > 1) {
       <div class="snapshot-bar">
-        <div class="snapshot-left">
-          <mat-icon class="snapshot-icon">history</mat-icon>
-          <label class="snapshot-label" for="snapshot-date">Snapshot</label>
-          <select
-            id="snapshot-date"
-            class="date-select"
-            [(ngModel)]="selectedDate"
-            (change)="onDateChange()"
-          >
-            @for (opt of dateOptions; track opt.value) {
-              <option [value]="opt.value">{{ opt.label }}</option>
-            }
-          </select>
-        </div>
+        <label class="snapshot-label" for="snapshot-date">View odds as of</label>
+        <select
+          id="snapshot-date"
+          class="select"
+          [(ngModel)]="selectedDate"
+          (change)="onDateChange()"
+        >
+          @for (opt of dateOptions; track opt.value) {
+            <option [value]="opt.value">{{ opt.label }}</option>
+          }
+        </select>
         @if (!isLatestDate) {
-          <div class="snapshot-right">
-            <span class="historical-badge">Historical</span>
-            <button class="reset-btn" (click)="resetToLatest()">Back to latest</button>
-          </div>
+          <span class="historical-badge">Earlier snapshot</span>
+          <button type="button" class="btn-secondary btn-md" (click)="resetToLatest()">
+            Back to the final
+          </button>
         }
       </div>
     }
+
     <mat-tab-group
       class="wc-tabs"
       animationDuration="200ms"
@@ -92,128 +89,120 @@
         <mat-tab label="Wrap-up">
           @if (retro; as r) {
             <section class="panel">
-              <div class="panel-header">
-                <p class="panel-sub">
-                  The tournament is done. Here is how the model's calls held up from the first
-                  simulation to the final whistle.
-                </p>
-              </div>
+              <p class="panel-intro">
+                The tournament is done. Here is how the model's calls held up from the first
+                simulation to the final whistle.
+              </p>
               @if (r.podium; as p) {
-                <div class="podium-row">
-                  <div class="podium-card podium-gold">
-                    <span class="podium-rank">Champion</span>
-                    <span class="podium-team">{{ p.champion }}</span>
+                <dl class="podium">
+                  <div class="podium-card podium-champion">
+                    <dt>Champion</dt>
+                    <dd>{{ p.champion }}</dd>
                   </div>
                   <div class="podium-card">
-                    <span class="podium-rank">Runner-up</span>
-                    <span class="podium-team">{{ p.runner_up }}</span>
+                    <dt>Runner-up</dt>
+                    <dd>{{ p.runner_up }}</dd>
                   </div>
                   @if (p.third_place) {
                     <div class="podium-card">
-                      <span class="podium-rank">Third place</span>
-                      <span class="podium-team">{{ p.third_place }}</span>
+                      <dt>Third place</dt>
+                      <dd>{{ p.third_place }}</dd>
                     </div>
                   }
-                </div>
+                </dl>
               }
               @if (r.verdict; as v) {
-                <h2 class="bracket-section-title">The model's verdict</h2>
-                <div class="metric-grid">
-                  <div class="metric-card">
-                    <span class="metric-label">Pre-tournament favorite</span>
-                    <span class="metric-value">{{ v.pre_tournament_favorite }}</span>
-                    <span class="metric-baseline">{{
-                      v.called_champion_pre_tournament
-                        ? 'Called the champion on day one'
-                        : 'Not the eventual champion'
-                    }}</span>
+                <h2 class="wc-h2">The model's verdict</h2>
+                <dl class="tile-grid">
+                  <div class="tile">
+                    <dt>Pre-tournament favorite</dt>
+                    <dd>{{ v.pre_tournament_favorite }}</dd>
+                    <dd class="tile-note">
+                      {{
+                        v.called_champion_pre_tournament
+                          ? 'Called the champion on day one'
+                          : 'Not the eventual champion'
+                      }}
+                    </dd>
                   </div>
-                  <div class="metric-card">
-                    <span class="metric-label">Champion odds, day one</span>
-                    <span class="metric-value"
-                      >{{ v.champion_pre_tournament_pct | number: '1.1-1' }}%</span
-                    >
-                    <span class="metric-baseline">of a 48-team field</span>
+                  <div class="tile">
+                    <dt>Champion odds, day one</dt>
+                    <dd>{{ pct(v.champion_pre_tournament_pct) }}</dd>
+                    <dd class="tile-note">of a 48-team field</dd>
                   </div>
-                  <div class="metric-card">
-                    <span class="metric-label">Days as favorite</span>
-                    <span class="metric-value"
-                      >{{ v.champion_days_as_favorite }} / {{ v.snapshot_days }}</span
-                    >
+                  <div class="tile">
+                    <dt>Days as favorite</dt>
+                    <dd>{{ v.champion_days_as_favorite }} of {{ v.snapshot_days }}</dd>
                     @if (v.champion_first_favorite_on) {
-                      <span class="metric-baseline"
-                        >first led on {{ v.champion_first_favorite_on | date: 'MMM d' }}</span
-                      >
+                      <dd class="tile-note">
+                        first led on {{ v.champion_first_favorite_on | date: 'MMM d' }}
+                      </dd>
                     }
                   </div>
-                  <div class="metric-card">
-                    <span class="metric-label">Odds before the final</span>
-                    <span class="metric-value"
-                      >{{ v.champion_final_eve_pct | number: '1.1-1' }}%</span
-                    >
-                    <span class="metric-baseline">championship probability</span>
+                  <div class="tile">
+                    <dt>Odds before the final</dt>
+                    <dd>{{ pct(v.champion_final_eve_pct) }}</dd>
+                    <dd class="tile-note">championship probability</dd>
                   </div>
-                </div>
+                </dl>
               }
               @if (r.metrics; as m) {
-                <h2 class="bracket-section-title">Final grades</h2>
-                <div class="metric-grid">
-                  <div class="metric-card">
-                    <span class="metric-label">Matches graded</span>
-                    <span class="metric-value">{{ m.n_matches }}</span>
+                <h2 class="wc-h2">Final grades</h2>
+                <dl class="tile-grid">
+                  <div class="tile">
+                    <dt>Matches graded</dt>
+                    <dd>{{ m.n_matches }}</dd>
                   </div>
-                  <div class="metric-card">
-                    <span class="metric-label">Accuracy</span>
-                    <span class="metric-value"
-                      >{{ (m.model.accuracy ?? 0) * 100 | number: '1.1-1' }}%</span
-                    >
-                    <span class="metric-baseline"
-                      >Elo baseline {{ (m.baseline.accuracy ?? 0) * 100 | number: '1.1-1' }}%</span
-                    >
+                  <div class="tile">
+                    <dt>Accuracy</dt>
+                    <dd>{{ (m.model.accuracy ?? 0) * 100 | number: '1.1-1' }}%</dd>
+                    <dd class="tile-note">
+                      Elo baseline {{ (m.baseline.accuracy ?? 0) * 100 | number: '1.1-1' }}%
+                    </dd>
                   </div>
-                  <div class="metric-card">
-                    <span class="metric-label">Brier score</span>
-                    <span class="metric-value">{{ m.model.brier | number: '1.3-3' }}</span>
-                    <span class="metric-baseline"
-                      >Elo baseline {{ m.baseline.brier | number: '1.3-3' }}</span
-                    >
+                  <div class="tile">
+                    <dt>Brier score</dt>
+                    <dd>{{ m.model.brier | number: '1.3-3' }}</dd>
+                    <dd class="tile-note">
+                      Elo baseline {{ m.baseline.brier | number: '1.3-3' }}, lower is better
+                    </dd>
                   </div>
                   @if (r.confident_calls; as cc) {
-                    <div class="metric-card">
-                      <span class="metric-label">High-confidence calls</span>
-                      <span class="metric-value">{{ cc.correct }} / {{ cc.n }}</span>
-                      <span class="metric-baseline">correct at 70%+ confidence</span>
+                    <div class="tile">
+                      <dt>High-confidence calls</dt>
+                      <dd>{{ cc.correct }} of {{ cc.n }}</dd>
+                      <dd class="tile-note">correct at 70%+ confidence</dd>
                     </div>
                   }
-                </div>
+                </dl>
               }
               @if (r.biggest_upsets?.length) {
-                <h2 class="bracket-section-title">Biggest upsets</h2>
-                <p class="panel-sub">Results the model gave the least chance of happening.</p>
+                <h2 class="wc-h2">Biggest upsets</h2>
+                <p class="panel-intro">Results the model gave the least chance of happening.</p>
                 <div
-                  class="stage-table-wrap"
+                  class="table-scroll"
                   role="region"
                   aria-label="Biggest upsets, scrolls sideways"
                   tabindex="0"
                 >
-                  <table class="leaderboard receipts-table">
+                  <table class="data-table">
                     <thead>
                       <tr>
-                        <th>Date</th>
-                        <th>Match</th>
-                        <th>Score</th>
-                        <th>Stage</th>
-                        <th>Model gave it</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Match</th>
+                        <th scope="col" class="num">Score</th>
+                        <th scope="col">Stage</th>
+                        <th scope="col" class="num">Model gave it</th>
                       </tr>
                     </thead>
                     <tbody>
                       @for (u of r.biggest_upsets; track $index) {
                         <tr>
-                          <td>{{ u.date | date: 'MMM d' }}</td>
-                          <td class="team-col">{{ u.home }} vs {{ u.away }}</td>
-                          <td>{{ u.score[0] }}-{{ u.score[1] }}</td>
+                          <td class="num-date">{{ u.date | date: 'MMM d' }}</td>
+                          <td class="strong">{{ u.home }} vs {{ u.away }}</td>
+                          <td class="num">{{ u.score[0] }}-{{ u.score[1] }}</td>
                           <td>{{ u.stage === 'group' ? 'Group' : 'Knockout' }}</td>
-                          <td class="probs-cell">{{ u.model_gave_pct | number: '1.1-1' }}%</td>
+                          <td class="num">{{ pct(u.model_gave_pct) }}</td>
                         </tr>
                       }
                     </tbody>
@@ -221,32 +210,37 @@
                 </div>
               }
               @if (r.biggest_swings?.length) {
-                <h2 class="bracket-section-title">Biggest daily swings</h2>
-                <p class="panel-sub">Largest one-day moves in championship odds.</p>
+                <h2 class="wc-h2">Biggest daily swings</h2>
+                <p class="panel-intro">Largest one-day moves in championship odds.</p>
                 <div
-                  class="stage-table-wrap"
+                  class="table-scroll"
                   role="region"
                   aria-label="Biggest daily swings, scrolls sideways"
                   tabindex="0"
                 >
-                  <table class="leaderboard receipts-table">
+                  <table class="data-table">
                     <thead>
                       <tr>
-                        <th>Date</th>
-                        <th>Team</th>
-                        <th>Move</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Team</th>
+                        <th scope="col" class="num">From</th>
+                        <th scope="col" class="num">To</th>
+                        <th scope="col" class="num">Change</th>
                       </tr>
                     </thead>
                     <tbody>
                       @for (s of r.biggest_swings; track $index) {
                         <tr>
-                          <td>{{ s.date | date: 'MMM d' }}</td>
-                          <td class="team-col">{{ s.team }}</td>
-                          <td class="probs-cell">
-                            {{ s.from_pct | number: '1.1-1' }}% to {{ s.to_pct | number: '1.1-1' }}%
-                            <span [class.delta-up]="s.delta > 0" [class.delta-down]="s.delta < 0">
-                              ({{ s.delta > 0 ? '+' : '' }}{{ s.delta | number: '1.1-1' }})
-                            </span>
+                          <td class="num-date">{{ s.date | date: 'MMM d' }}</td>
+                          <td class="strong">{{ s.team }}</td>
+                          <td class="num">{{ pct(s.from_pct) }}</td>
+                          <td class="num">{{ pct(s.to_pct) }}</td>
+                          <td
+                            class="num"
+                            [class.delta-up]="s.delta > 0"
+                            [class.delta-down]="s.delta < 0"
+                          >
+                            {{ s.delta > 0 ? '+' : '' }}{{ s.delta | number: '1.1-1' }}
                           </td>
                         </tr>
                       }
@@ -263,628 +257,191 @@
           <ng-container [ngTemplateOutlet]="standings" />
         </mat-tab>
       }
+
       <!-- Bracket -->
       <mat-tab label="Bracket">
         <section class="panel">
-          <div class="panel-header">
-            <p class="panel-sub">
-              @if (retro?.complete) {
-                The completed bracket: every result from the group stage to the final is locked in.
-              }
-              @if (!retro?.complete) {
-                Most-probable path through the tournament. Played matches feed locked results into
-                every downstream prediction.
-              }
-              @if (!isLatestDate) {
-                Showing the bracket as of {{ selectedDate | date: 'mediumDate' }}.
-              }
-            </p>
-            @if (lockedCountForDate > 0) {
-              <div class="context-strip">
-                <mat-icon>lock</mat-icon>
-                <span
-                  >{{ lockedCountForDate }} match{{
-                    lockedCountForDate !== 1 ? 'es' : ''
-                  }}
-                  locked</span
-                >
-                @if (lockedMatchesForDate.length > 0) {
-                  <button
-                    type="button"
-                    class="toggle-matches-btn"
-                    aria-controls="played-matches"
-                    [attr.aria-expanded]="showLockedMatches"
-                    (click)="showLockedMatches = !showLockedMatches"
-                  >
-                    {{
-                      showLockedMatches
-                        ? 'Hide matches'
-                        : 'Show all ' + lockedMatchesForDate.length + ' matches'
-                    }}
-                    <mat-icon>{{ showLockedMatches ? 'expand_less' : 'expand_more' }}</mat-icon>
-                  </button>
-                }
-              </div>
+          <p class="panel-intro">
+            @if (retro?.complete) {
+              The completed bracket: every result from the group stage to the final is locked in.
+            } @else {
+              Most-probable path through the tournament. Played matches feed locked results into
+              every downstream prediction.
             }
-          </div>
+            @if (!isLatestDate) {
+              Showing the bracket as of {{ selectedDate | date: 'mediumDate' }}.
+            }
+          </p>
+          @if (lockedMatchesForDate.length > 0) {
+            <div class="context-strip">
+              <span
+                >{{ lockedCountForDate }} match{{ lockedCountForDate !== 1 ? 'es' : '' }} locked
+                in</span
+              >
+              <button
+                type="button"
+                class="btn-secondary btn-md disclosure"
+                aria-controls="played-matches"
+                [attr.aria-expanded]="showLockedMatches"
+                (click)="showLockedMatches = !showLockedMatches"
+              >
+                {{
+                  showLockedMatches
+                    ? 'Hide matches'
+                    : 'Show all ' + lockedMatchesForDate.length + ' matches'
+                }}
+                <ng-container *ngTemplateOutlet="chevron" />
+              </button>
+            </div>
+          }
           @if (showLockedMatches && lockedMatchesForDate.length > 0) {
             <div id="played-matches" class="played-list">
               <h2 class="visually-hidden">Played matches</h2>
-              <!-- Group Stage -->
-              @if (groupStageRounds.length > 0) {
-                <div class="played-section">
-                  <h3 class="section-header">Group stage</h3>
-                  @for (rg of groupStageRounds; track trackByRound($index, rg)) {
-                    <div class="round-group">
-                      <div class="played-round-header">
-                        <span class="round-badge group-badge">{{ rg.round }}</span>
-                        <span class="round-match-count"
+              @for (
+                section of [
+                  { title: 'Group stage', rounds: groupStageRounds },
+                  { title: 'Knockout rounds', rounds: knockoutRounds }
+                ];
+                track section.title
+              ) {
+                @if (section.rounds.length > 0) {
+                  <h3 class="played-heading">{{ section.title }}</h3>
+                  @for (rg of section.rounds; track trackByRound($index, rg)) {
+                    <div class="played-round">
+                      <p class="played-round-title">
+                        {{ rg.round }}
+                        <span
                           >{{ rg.match_count }} match{{ rg.match_count !== 1 ? 'es' : '' }}</span
                         >
-                      </div>
+                      </p>
                       @for (dg of rg.dateGroups; track trackByDateGroup($index, dg)) {
-                        <div class="day-block">
-                          <div class="day-label">{{ dg.date | date: 'mediumDate' }}</div>
-                          <div class="matches-list">
-                            @for (m of dg.matches; track trackByMatch($index, m)) {
-                              <div class="match-card">
-                                <div class="match-scoreline">
-                                  <span class="ms-team">{{ m.home_team }}</span>
-                                  <span class="ms-score"
-                                    >{{ m.home_score }} - {{ m.away_score }}</span
-                                  >
-                                  <span class="ms-team ms-team-away">{{ m.away_team }}</span>
-                                </div>
-                              </div>
-                            }
-                          </div>
-                        </div>
+                        <p class="played-day">{{ dg.date | date: 'mediumDate' }}</p>
+                        <ul class="played-matches">
+                          @for (m of dg.matches; track trackByMatch($index, m)) {
+                            <li class="score-row">
+                              <span
+                                class="score-team"
+                                [class.score-winner]="winnerOf(m) === 'home'"
+                                >{{ m.home_team }}</span
+                              >
+                              <span class="score">{{ m.home_score }}-{{ m.away_score }}</span>
+                              <span
+                                class="score-team score-away"
+                                [class.score-winner]="winnerOf(m) === 'away'"
+                                >{{ m.away_team }}</span
+                              >
+                              @if (m.went_to_penalties && m.penalty_winner) {
+                                <span class="score-note"
+                                  >{{ m.penalty_winner }} won on penalties</span
+                                >
+                              }
+                            </li>
+                          }
+                        </ul>
                       }
                     </div>
                   }
-                </div>
-              }
-              <!-- Knockout Rounds -->
-              @if (knockoutRounds.length > 0) {
-                <div class="played-section">
-                  <h3 class="section-header">Knockout rounds</h3>
-                  @for (rg of knockoutRounds; track trackByRound($index, rg)) {
-                    <div class="round-group">
-                      <div class="played-round-header">
-                        <span class="round-badge ko-badge">{{ rg.round }}</span>
-                        <span class="round-match-count"
-                          >{{ rg.match_count }} match{{ rg.match_count !== 1 ? 'es' : '' }}</span
-                        >
-                      </div>
-                      @for (dg of rg.dateGroups; track trackByDateGroup($index, dg)) {
-                        <div class="day-block">
-                          <div class="day-label">{{ dg.date | date: 'mediumDate' }}</div>
-                          <div class="matches-list">
-                            @for (m of dg.matches; track trackByMatch($index, m)) {
-                              <div class="match-card">
-                                <div class="match-scoreline">
-                                  <span
-                                    class="ms-team"
-                                    [class.ms-winner]="
-                                      m.penalty_winner === m.home_team ||
-                                      (!m.went_to_penalties && m.home_score > m.away_score)
-                                    "
-                                  >
-                                    {{ m.home_team }}
-                                  </span>
-                                  <span class="ms-score"
-                                    >{{ m.home_score }} - {{ m.away_score }}</span
-                                  >
-                                  <span
-                                    class="ms-team ms-team-away"
-                                    [class.ms-winner]="
-                                      m.penalty_winner === m.away_team ||
-                                      (!m.went_to_penalties && m.away_score > m.home_score)
-                                    "
-                                  >
-                                    {{ m.away_team }}
-                                  </span>
-                                </div>
-                                @if (m.went_to_penalties) {
-                                  <div class="penalty-row">
-                                    <span class="penalty-badge">A.E.T.</span>
-                                    @if (m.penalty_winner) {
-                                      <span class="penalty-winner"
-                                        >{{ m.penalty_winner }} win on penalties</span
-                                      >
-                                    }
-                                  </div>
-                                }
-                              </div>
-                            }
-                          </div>
-                        </div>
-                      }
-                    </div>
-                  }
-                </div>
-              }
-              @if (groupStageRounds.length === 0 && knockoutRounds.length === 0) {
-                <p class="empty-msg">No matches locked in yet.</p>
+                }
               }
             </div>
           }
           @if (bracketLoading) {
-            <div class="bracket-loading-overlay">
-              <mat-spinner diameter="28"></mat-spinner>
+            <div class="state-block">
+              <mat-spinner diameter="24"></mat-spinner>
               <span>Loading snapshot...</span>
             </div>
           }
-          <ng-template #matchExtras let-d="d" let-round="round">
-            @if (d) {
-              <div class="match-score-note">
-                @if (!d.played) {
-                  <span>Pred {{ d.predicted_score[0] }}-{{ d.predicted_score[1] }}</span>
-                }
-                @if (
-                  !d.played &&
-                  round !== 'Group' &&
-                  d.predicted_winner &&
-                  d.predicted_score[0] === d.predicted_score[1]
-                ) {
-                  <span>pens: {{ d.predicted_winner }}</span>
-                }
-                @if (d.went_to_penalties && d.winner) {
-                  <span>pen: {{ d.winner }}</span>
-                }
-                @if (d.top_factors?.length) {
-                  <button type="button" class="factors-btn" (click)="toggleFactors(round, d.teams)">
-                    {{ isFactorOpen(round, d.teams) ? 'Hide why' : 'Why?' }}
-                  </button>
-                }
-              </div>
-            }
-            @if (d && d.top_factors && isFactorOpen(round, d.teams)) {
-              <div class="factors-panel">
-                @if (d.played) {
-                  <span class="factors-note">Model's pre-match read</span>
-                }
-                @for (f of d.top_factors; track $index) {
-                  <div class="factor">
-                    <span class="factor-label">{{ f.label }}</span>
-                    <span class="factor-value">{{ formatFactorValue(f.feature, f.value) }}</span>
-                    <span
-                      class="factor-favors"
-                      [class.pos]="f.impact > 0"
-                      [class.neg]="f.impact < 0"
-                    >
-                      {{ f.favors ? 'favors ' + f.favors : 'even' }}
-                    </span>
-                  </div>
-                }
-              </div>
-            }
-          </ng-template>
-          <h2 class="bracket-section-title">Knockout bracket</h2>
-          <div class="bracket-scroll">
-            @if (bracketHalves && bracket) {
-              <div class="bracket">
-                <!-- LEFT HALF -->
-                <div class="round round-r32">
-                  <div class="round-label">Round of 32</div>
-                  @for (m of bracketHalves.left.r32; track trackByPair(i, m); let i = $index) {
-                    <div class="match">
-                      <div class="team" [class.team-winner]="advancers.r32.has(m[0])">
-                        <span class="team-name">{{ m[0] }}</span>
-                        @if (bracketHalves.left.r32Details[i]?.played) {
-                          <span class="team-score">{{
-                            bracketHalves.left.r32Details[i]!.actual_score![0]
-                          }}</span>
-                        }
-                      </div>
-                      <div class="team" [class.team-winner]="advancers.r32.has(m[1])">
-                        <span class="team-name">{{ m[1] }}</span>
-                        @if (bracketHalves.left.r32Details[i]?.played) {
-                          <span class="team-score">{{
-                            bracketHalves.left.r32Details[i]!.actual_score![1]
-                          }}</span>
-                        }
-                      </div>
-                      <ng-container
-                        *ngTemplateOutlet="
-                          matchExtras;
-                          context: { d: bracketHalves.left.r32Details[i], round: 'R32' }
-                        "
-                      ></ng-container>
-                    </div>
-                  }
-                </div>
-                <div class="round round-r16">
-                  <div class="round-label">Round of 16</div>
-                  @for (m of bracketHalves.left.r16; track trackByPair(i, m); let i = $index) {
-                    <div class="match">
-                      <div class="team" [class.team-winner]="advancers.r16.has(m[0])">
-                        <span class="team-name">{{ m[0] }}</span>
-                        @if (bracketHalves.left.r16Details[i]?.played) {
-                          <span class="team-score">{{
-                            bracketHalves.left.r16Details[i]!.actual_score![0]
-                          }}</span>
-                        }
-                      </div>
-                      <div class="team" [class.team-winner]="advancers.r16.has(m[1])">
-                        <span class="team-name">{{ m[1] }}</span>
-                        @if (bracketHalves.left.r16Details[i]?.played) {
-                          <span class="team-score">{{
-                            bracketHalves.left.r16Details[i]!.actual_score![1]
-                          }}</span>
-                        }
-                      </div>
-                      <ng-container
-                        *ngTemplateOutlet="
-                          matchExtras;
-                          context: { d: bracketHalves.left.r16Details[i], round: 'R16' }
-                        "
-                      ></ng-container>
-                    </div>
-                  }
-                </div>
-                <div class="round round-qf">
-                  <div class="round-label">Quarter-final</div>
-                  @for (m of bracketHalves.left.qf; track trackByPair(i, m); let i = $index) {
-                    <div class="match">
-                      <div class="team" [class.team-winner]="advancers.qf.has(m[0])">
-                        <span class="team-name">{{ m[0] }}</span>
-                        @if (bracketHalves.left.qfDetails[i]?.played) {
-                          <span class="team-score">{{
-                            bracketHalves.left.qfDetails[i]!.actual_score![0]
-                          }}</span>
-                        }
-                      </div>
-                      <div class="team" [class.team-winner]="advancers.qf.has(m[1])">
-                        <span class="team-name">{{ m[1] }}</span>
-                        @if (bracketHalves.left.qfDetails[i]?.played) {
-                          <span class="team-score">{{
-                            bracketHalves.left.qfDetails[i]!.actual_score![1]
-                          }}</span>
-                        }
-                      </div>
-                      <ng-container
-                        *ngTemplateOutlet="
-                          matchExtras;
-                          context: { d: bracketHalves.left.qfDetails[i], round: 'QF' }
-                        "
-                      ></ng-container>
-                    </div>
-                  }
-                </div>
-                <div class="round round-sf">
-                  <div class="round-label">Semi-final</div>
-                  @for (m of bracketHalves.left.sf; track trackByPair(i, m); let i = $index) {
-                    <div class="match">
-                      <div class="team" [class.team-winner]="advancers.sf.has(m[0])">
-                        <span class="team-name">{{ m[0] }}</span>
-                        @if (bracketHalves.left.sfDetails[i]?.played) {
-                          <span class="team-score">{{
-                            bracketHalves.left.sfDetails[i]!.actual_score![0]
-                          }}</span>
-                        }
-                      </div>
-                      <div class="team" [class.team-winner]="advancers.sf.has(m[1])">
-                        <span class="team-name">{{ m[1] }}</span>
-                        @if (bracketHalves.left.sfDetails[i]?.played) {
-                          <span class="team-score">{{
-                            bracketHalves.left.sfDetails[i]!.actual_score![1]
-                          }}</span>
-                        }
-                      </div>
-                      <ng-container
-                        *ngTemplateOutlet="
-                          matchExtras;
-                          context: { d: bracketHalves.left.sfDetails[i], round: 'SF' }
-                        "
-                      ></ng-container>
-                    </div>
-                  }
-                </div>
-                <!-- CENTER: FINAL + CHAMPION -->
-                <div class="round round-final">
-                  <div class="round-label">Final</div>
-                  <div class="match match-final">
-                    <div
-                      class="team"
-                      [class.team-winner]="bracket.final_pair[0] === bracket.champion"
-                    >
-                      <span class="team-name">{{ bracket.final_pair[0] }}</span>
-                      @if (finalDetail?.played) {
-                        <span class="team-score">{{ finalDetail!.actual_score![0] }}</span>
-                      }
-                    </div>
-                    <div
-                      class="team"
-                      [class.team-winner]="bracket.final_pair[1] === bracket.champion"
-                    >
-                      <span class="team-name">{{ bracket.final_pair[1] }}</span>
-                      @if (finalDetail?.played) {
-                        <span class="team-score">{{ finalDetail!.actual_score![1] }}</span>
-                      }
-                    </div>
-                    <ng-container
-                      *ngTemplateOutlet="matchExtras; context: { d: finalDetail, round: 'Final' }"
-                    ></ng-container>
-                  </div>
-                  <div class="champ-pill">
-                    <mat-icon class="trophy">emoji_events</mat-icon>
-                    <div>
-                      <span class="champ-label">{{
-                        finalDetail?.played ? 'Champion' : 'Predicted Champion'
-                      }}</span>
-                      <span class="champ-name">{{ bracket.champion }}</span>
-                    </div>
-                  </div>
-                  @if (bronzeDetail; as bd) {
-                    <div class="round-label bronze-label">Third place</div>
-                    <div class="match match-bronze">
-                      <div
-                        class="team"
-                        [class.team-winner]="
-                          (bd.played ? bd.winner : bd.predicted_winner) === bd.teams[0]
-                        "
-                      >
-                        <span class="team-name">{{ bd.teams[0] }}</span>
-                        @if (bd.played) {
-                          <span class="team-score">{{ bd.actual_score![0] }}</span>
-                        }
-                      </div>
-                      <div
-                        class="team"
-                        [class.team-winner]="
-                          (bd.played ? bd.winner : bd.predicted_winner) === bd.teams[1]
-                        "
-                      >
-                        <span class="team-name">{{ bd.teams[1] }}</span>
-                        @if (bd.played) {
-                          <span class="team-score">{{ bd.actual_score![1] }}</span>
-                        }
-                      </div>
-                      <ng-container
-                        *ngTemplateOutlet="matchExtras; context: { d: bd, round: 'Bronze' }"
-                      ></ng-container>
-                    </div>
-                  }
-                </div>
-                <!-- RIGHT HALF (mirrored) -->
-                <div class="round round-sf">
-                  <div class="round-label">Semi-final</div>
-                  @for (m of bracketHalves.right.sf; track trackByPair(i, m); let i = $index) {
-                    <div class="match">
-                      <div class="team" [class.team-winner]="advancers.sf.has(m[0])">
-                        <span class="team-name">{{ m[0] }}</span>
-                        @if (bracketHalves.right.sfDetails[i]?.played) {
-                          <span class="team-score">{{
-                            bracketHalves.right.sfDetails[i]!.actual_score![0]
-                          }}</span>
-                        }
-                      </div>
-                      <div class="team" [class.team-winner]="advancers.sf.has(m[1])">
-                        <span class="team-name">{{ m[1] }}</span>
-                        @if (bracketHalves.right.sfDetails[i]?.played) {
-                          <span class="team-score">{{
-                            bracketHalves.right.sfDetails[i]!.actual_score![1]
-                          }}</span>
-                        }
-                      </div>
-                      <ng-container
-                        *ngTemplateOutlet="
-                          matchExtras;
-                          context: { d: bracketHalves.right.sfDetails[i], round: 'SF' }
-                        "
-                      ></ng-container>
-                    </div>
-                  }
-                </div>
-                <div class="round round-qf">
-                  <div class="round-label">Quarter-final</div>
-                  @for (m of bracketHalves.right.qf; track trackByPair(i, m); let i = $index) {
-                    <div class="match">
-                      <div class="team" [class.team-winner]="advancers.qf.has(m[0])">
-                        <span class="team-name">{{ m[0] }}</span>
-                        @if (bracketHalves.right.qfDetails[i]?.played) {
-                          <span class="team-score">{{
-                            bracketHalves.right.qfDetails[i]!.actual_score![0]
-                          }}</span>
-                        }
-                      </div>
-                      <div class="team" [class.team-winner]="advancers.qf.has(m[1])">
-                        <span class="team-name">{{ m[1] }}</span>
-                        @if (bracketHalves.right.qfDetails[i]?.played) {
-                          <span class="team-score">{{
-                            bracketHalves.right.qfDetails[i]!.actual_score![1]
-                          }}</span>
-                        }
-                      </div>
-                      <ng-container
-                        *ngTemplateOutlet="
-                          matchExtras;
-                          context: { d: bracketHalves.right.qfDetails[i], round: 'QF' }
-                        "
-                      ></ng-container>
-                    </div>
-                  }
-                </div>
-                <div class="round round-r16">
-                  <div class="round-label">Round of 16</div>
-                  @for (m of bracketHalves.right.r16; track trackByPair(i, m); let i = $index) {
-                    <div class="match">
-                      <div class="team" [class.team-winner]="advancers.r16.has(m[0])">
-                        <span class="team-name">{{ m[0] }}</span>
-                        @if (bracketHalves.right.r16Details[i]?.played) {
-                          <span class="team-score">{{
-                            bracketHalves.right.r16Details[i]!.actual_score![0]
-                          }}</span>
-                        }
-                      </div>
-                      <div class="team" [class.team-winner]="advancers.r16.has(m[1])">
-                        <span class="team-name">{{ m[1] }}</span>
-                        @if (bracketHalves.right.r16Details[i]?.played) {
-                          <span class="team-score">{{
-                            bracketHalves.right.r16Details[i]!.actual_score![1]
-                          }}</span>
-                        }
-                      </div>
-                      <ng-container
-                        *ngTemplateOutlet="
-                          matchExtras;
-                          context: { d: bracketHalves.right.r16Details[i], round: 'R16' }
-                        "
-                      ></ng-container>
-                    </div>
-                  }
-                </div>
-                <div class="round round-r32">
-                  <div class="round-label">Round of 32</div>
-                  @for (m of bracketHalves.right.r32; track trackByPair(i, m); let i = $index) {
-                    <div class="match">
-                      <div class="team" [class.team-winner]="advancers.r32.has(m[0])">
-                        <span class="team-name">{{ m[0] }}</span>
-                        @if (bracketHalves.right.r32Details[i]?.played) {
-                          <span class="team-score">{{
-                            bracketHalves.right.r32Details[i]!.actual_score![0]
-                          }}</span>
-                        }
-                      </div>
-                      <div class="team" [class.team-winner]="advancers.r32.has(m[1])">
-                        <span class="team-name">{{ m[1] }}</span>
-                        @if (bracketHalves.right.r32Details[i]?.played) {
-                          <span class="team-score">{{
-                            bracketHalves.right.r32Details[i]!.actual_score![1]
-                          }}</span>
-                        }
-                      </div>
-                      <ng-container
-                        *ngTemplateOutlet="
-                          matchExtras;
-                          context: { d: bracketHalves.right.r32Details[i], round: 'R32' }
-                        "
-                      ></ng-container>
-                    </div>
-                  }
-                </div>
-              </div>
-            }
-          </div>
-          <h2 class="bracket-section-title">Group winners</h2>
           @if (bracket) {
-            <div class="groups-grid">
-              @for (g of groupKeys; track trackByGroup($index, g)) {
-                <div class="group-card">
-                  <span class="group-label">Group {{ g }}</span>
-                  <ol class="group-list">
-                    <li>{{ bracket!.group_winners[g][0] }}</li>
-                    <li>{{ bracket!.group_winners[g][1] }}</li>
-                  </ol>
-                </div>
-              }
-            </div>
-          }
-          <h2 class="bracket-section-title">Best 8 third-placed teams</h2>
-          @if (bracket) {
-            <div class="thirds-row">
-              @for (t of bracket.best_thirds; track $index) {
-                <span class="third-chip">{{ t }}</span>
-              }
-            </div>
+            <app-wc-bracket
+              [bracket]="bracket"
+              [favorite]="favoritePick"
+              [round]="bracketRound"
+              (roundChange)="onRoundChange($event)"
+            />
           }
         </section>
       </mat-tab>
-      <!-- History -->
+
+      <!-- Odds over time -->
       <mat-tab>
         <ng-template mat-tab-label>
           <span class="label-long">Odds over time</span><span class="label-short">Odds</span>
         </ng-template>
         <section class="panel">
-          <div class="history-controls">
-            <div class="stage-select-row">
-              <label class="stage-select-label" for="stage-select">Stage</label>
-              <select
-                id="stage-select"
-                class="stage-select"
-                [(ngModel)]="selectedHistoryStage"
-                (change)="onHistoryStageChange()"
-              >
-                @for (opt of stageOptions; track $index) {
-                  <option [value]="opt.value">
-                    {{ opt.label }}
-                  </option>
-                }
-              </select>
-            </div>
-            <p class="panel-sub">
-              {{ STAGE_LABELS[selectedHistoryStage] }} probability over time for the top teams. Each
-              point is one daily prediction run; played matches accrue from left to right as they
-              are locked in.
-            </p>
+          <div class="field">
+            <label for="stage-select">Stage</label>
+            <select
+              id="stage-select"
+              class="select"
+              [(ngModel)]="selectedHistoryStage"
+              (change)="onHistoryStageChange()"
+            >
+              @for (opt of stageOptions; track opt.value) {
+                <option [value]="opt.value">{{ opt.label }}</option>
+              }
+            </select>
           </div>
+          <p class="panel-intro">
+            {{ STAGE_LABELS[selectedHistoryStage] }} probability over time for the six teams ahead
+            at the end. Each point is one daily prediction run; played matches accrue from left to
+            right as they are locked in.
+          </p>
           <div class="chart-wrapper">
             <canvas #historyCanvas role="img" [attr.aria-label]="historySummary"></canvas>
           </div>
           <ng-container
             *ngTemplateOutlet="chartTable; context: { $implicit: historyTable, label: 'Date' }"
-          ></ng-container>
+          />
         </section>
       </mat-tab>
-      <!-- Model performance -->
+
+      <!-- Model grades -->
       @if (analyticsUnlocked) {
         <mat-tab>
           <ng-template mat-tab-label>
             <span class="label-long">Model grades</span><span class="label-short">Grades</span>
           </ng-template>
           <section class="panel">
-            <div class="panel-header">
-              <p class="panel-sub">
-                Every played match graded against the prediction the model made before kickoff. Team
-                stats are rebuilt per match date, so no result leaks into its own prediction.
-                Knockout matches are scored on the 90-minute result.
-              </p>
-            </div>
+            <p class="panel-intro">
+              Every played match graded against the prediction the model made before kickoff. Team
+              stats are rebuilt per match date, so no result leaks into its own prediction. Knockout
+              matches are scored on the 90-minute result.
+            </p>
             @if (!reportCard || reportCard.n_matches === 0) {
-              <div class="state-block">
-                <mat-icon>hourglass_empty</mat-icon>
-                <span>No graded matches yet for this snapshot.</span>
-              </div>
+              <div class="state-block">No graded matches yet for this snapshot.</div>
             }
             @if (reportCard && reportCard.n_matches > 0) {
-              <div class="metric-grid">
-                <div class="metric-card">
-                  <span class="metric-label">Matches graded</span>
-                  <span class="metric-value">{{ reportCard.n_matches }}</span>
+              <dl class="tile-grid">
+                <div class="tile">
+                  <dt>Matches graded</dt>
+                  <dd>{{ reportCard.n_matches }}</dd>
                 </div>
-                <div class="metric-card">
-                  <span class="metric-label">Accuracy</span>
-                  <span class="metric-value"
-                    >{{ (reportCard.model.accuracy ?? 0) * 100 | number: '1.1-1' }}%</span
-                  >
-                  <span class="metric-baseline"
-                    >Elo baseline
-                    {{ (reportCard.baseline.accuracy ?? 0) * 100 | number: '1.1-1' }}%</span
-                  >
+                <div class="tile">
+                  <dt>Accuracy</dt>
+                  <dd>{{ (reportCard.model.accuracy ?? 0) * 100 | number: '1.1-1' }}%</dd>
+                  <dd class="tile-note">
+                    Elo baseline {{ (reportCard.baseline.accuracy ?? 0) * 100 | number: '1.1-1' }}%
+                  </dd>
                 </div>
-                <div class="metric-card">
-                  <span class="metric-label">Brier score</span>
-                  <span class="metric-value">{{ reportCard.model.brier | number: '1.3-3' }}</span>
-                  <span class="metric-baseline"
-                    >Elo baseline {{ reportCard.baseline.brier | number: '1.3-3' }}</span
-                  >
+                <div class="tile">
+                  <dt>Brier score</dt>
+                  <dd>{{ reportCard.model.brier | number: '1.3-3' }}</dd>
+                  <dd class="tile-note">
+                    Elo baseline {{ reportCard.baseline.brier | number: '1.3-3' }}, lower is better
+                  </dd>
                 </div>
-                <div class="metric-card">
-                  <span class="metric-label">Log-loss</span>
-                  <span class="metric-value">{{
-                    reportCard.model.log_loss | number: '1.3-3'
-                  }}</span>
-                  <span class="metric-baseline"
-                    >Elo baseline {{ reportCard.baseline.log_loss | number: '1.3-3' }}</span
-                  >
+                <div class="tile">
+                  <dt>Log loss</dt>
+                  <dd>{{ reportCard.model.log_loss | number: '1.3-3' }}</dd>
+                  <dd class="tile-note">
+                    Elo baseline {{ reportCard.baseline.log_loss | number: '1.3-3' }}, lower is
+                    better
+                  </dd>
                 </div>
-              </div>
-              <p class="metric-footnote">
-                Brier score and log-loss are error measures: lower beats the baseline.
-              </p>
-              <h2 class="bracket-section-title">Calibration</h2>
-              <p class="panel-sub">
+              </dl>
+
+              <h2 class="wc-h2">Calibration</h2>
+              <p class="panel-intro">
                 When the model gave its favorite a given win probability, how often did that
                 favorite actually win? A well-calibrated model tracks the dashed line.
               </p>
@@ -893,86 +450,104 @@
               </div>
               <ng-container
                 *ngTemplateOutlet="chartTable; context: { $implicit: calibTable, label: 'Bin' }"
-              ></ng-container>
-              <h2 class="bracket-section-title">By stage</h2>
+              />
+
+              <h2 class="wc-h2">By stage</h2>
               <div
-                class="stage-table-wrap"
+                class="table-scroll"
                 role="region"
                 aria-label="Results by stage, scrolls sideways"
                 tabindex="0"
               >
-                <table class="leaderboard stage-table">
+                <table class="data-table">
                   <thead>
                     <tr>
-                      <th>Stage</th>
-                      <th>Matches</th>
-                      <th>Accuracy</th>
-                      <th>Brier</th>
-                      <th>Log-loss</th>
+                      <th scope="col">Stage</th>
+                      <th scope="col" class="num">Matches</th>
+                      <th scope="col" class="num">Accuracy</th>
+                      <th scope="col" class="num">Brier</th>
+                      <th scope="col" class="num">Log loss</th>
                     </tr>
                   </thead>
                   <tbody>
                     @for (stage of reportCard.by_stage | keyvalue; track stage.key) {
                       <tr>
-                        <td class="team-col">
+                        <td class="strong">
                           {{ stage.key === 'group' ? 'Group stage' : 'Knockout' }}
                         </td>
-                        <td>{{ stage.value.n }}</td>
-                        <td>{{ (stage.value.accuracy ?? 0) * 100 | number: '1.1-1' }}%</td>
-                        <td>{{ stage.value.brier | number: '1.3-3' }}</td>
-                        <td>{{ stage.value.log_loss | number: '1.3-3' }}</td>
+                        <td class="num">{{ stage.value.n }}</td>
+                        <td class="num">
+                          {{ (stage.value.accuracy ?? 0) * 100 | number: '1.1-1' }}%
+                        </td>
+                        <td class="num">{{ stage.value.brier | number: '1.3-3' }}</td>
+                        <td class="num">{{ stage.value.log_loss | number: '1.3-3' }}</td>
                       </tr>
                     }
                   </tbody>
                 </table>
               </div>
-              <h2 class="bracket-section-title">
-                Match receipts
+
+              <div class="heading-row">
+                <h2 class="wc-h2">Match receipts</h2>
                 <button
                   type="button"
-                  class="toggle-matches-btn"
+                  class="btn-secondary btn-md disclosure"
+                  aria-controls="receipts"
                   [attr.aria-expanded]="showReceipts"
                   (click)="showReceipts = !showReceipts"
                 >
-                  {{ showReceipts ? 'Hide' : 'Show' }} all {{ reportCard.matches.length }}
-                  <mat-icon>{{ showReceipts ? 'expand_less' : 'expand_more' }}</mat-icon>
+                  {{ showReceipts ? 'Hide' : 'Show all' }} {{ reportCard.matches.length }} matches
+                  <ng-container *ngTemplateOutlet="chevron" />
                 </button>
-              </h2>
+              </div>
               @if (showReceipts) {
                 <div
-                  class="stage-table-wrap"
+                  id="receipts"
+                  class="table-scroll"
                   role="region"
                   aria-label="Match receipts, scrolls sideways"
                   tabindex="0"
                 >
-                  <table class="leaderboard receipts-table">
+                  <table class="data-table">
                     <thead>
                       <tr>
-                        <th>Date</th>
-                        <th>Match</th>
-                        <th>Score</th>
-                        <th>P(home/draw/away)</th>
-                        <th>Called it</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Match</th>
+                        <th scope="col" class="num">Score</th>
+                        <th scope="col" class="num">Home / draw / away</th>
+                        <th scope="col">Called it</th>
                       </tr>
                     </thead>
                     <tbody>
                       @for (m of reportCard.matches; track $index) {
                         <tr>
-                          <td>{{ m.date | date: 'MMM d' }}</td>
-                          <td class="team-col">{{ m.home }} vs {{ m.away }}</td>
-                          <td>{{ m.score[0] }}-{{ m.score[1] }}</td>
-                          <td class="probs-cell">
+                          <td class="num-date">{{ m.date | date: 'MMM d' }}</td>
+                          <td class="strong">{{ m.home }} vs {{ m.away }}</td>
+                          <td class="num">{{ m.score[0] }}-{{ m.score[1] }}</td>
+                          <td class="num">
                             {{ m.probs[0] * 100 | number: '1.0-0' }} /
                             {{ m.probs[1] * 100 | number: '1.0-0' }} /
-                            {{ m.probs[2] * 100 | number: '1.0-0' }}
+                            {{ m.probs[2] * 100 | number: '1.0-0' }}%
                           </td>
-                          <td>
-                            <mat-icon
-                              class="receipt-icon"
-                              [class.hit]="m.correct"
-                              [class.miss]="!m.correct"
-                              >{{ m.correct ? 'check_circle' : 'cancel' }}</mat-icon
-                            >
+                          <td [class.delta-up]="m.correct" [class.delta-down]="!m.correct">
+                            <span class="called">
+                              <svg
+                                viewBox="0 0 24 24"
+                                width="16"
+                                height="16"
+                                aria-hidden="true"
+                                focusable="false"
+                              >
+                                @if (m.correct) {
+                                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                                } @else {
+                                  <path
+                                    d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                                  />
+                                }
+                              </svg>
+                              {{ m.correct ? 'Yes' : 'No' }}
+                            </span>
                           </td>
                         </tr>
                       }
@@ -984,66 +559,70 @@
           </section>
         </mat-tab>
       }
+
       <!-- What-if: only for snapshots taken before the tournament finished -->
       @if (!retro?.complete && analyticsUnlocked && scenarioViews.length > 0) {
         <mat-tab label="What-if">
           <section class="panel">
-            <div class="panel-header">
-              <p class="panel-sub">
-                Conditional championship odds for upcoming matches, aggregated from the same
-                simulations behind the leaderboard. Pick a winner to see how the trophy race shifts;
-                the delta compares against the current unconditional odds.
-              </p>
-            </div>
-            @if (!scenarios || scenarios.matches.length === 0) {
-              <div class="state-block">
-                <mat-icon>hourglass_empty</mat-icon>
-                <span>No upcoming matches to explore in this snapshot.</span>
-              </div>
-            }
-            @if (scenarioViews.length > 0) {
-              <div class="scenario-grid">
-                @for (v of scenarioViews; track $index; let i = $index) {
-                  <div class="scenario-card">
-                    <div class="scenario-header">
-                      <span class="scenario-round">{{ v.round }}</span>
-                      <span class="scenario-title">{{ v.teams[0] }} vs {{ v.teams[1] }}</span>
-                    </div>
-                    <div class="scenario-toggle">
-                      @for (t of v.teams; track $index; let ti = $index) {
-                        <button
-                          class="scenario-side"
-                          [class.active]="v.pick === t"
-                          (click)="pickSide(i, t)"
-                        >
-                          {{ t }} wins
-                          <span class="side-pct">{{ v.pWin[ti] | number: '1.0-0' }}%</span>
-                        </button>
-                      }
-                    </div>
-                    <table class="scenario-table">
-                      <tbody>
-                        @for (row of v.rows; track $index; let r = $index) {
-                          <tr>
-                            <td class="rank-col">{{ r + 1 }}</td>
-                            <td class="team-col">{{ row.team }}</td>
-                            <td class="pct-col">{{ row.winner_pct | number: '1.1-1' }}%</td>
-                            <td class="delta-col">
-                              <span
-                                [class.delta-up]="row.delta > 0.05"
-                                [class.delta-down]="row.delta < -0.05"
-                              >
-                                {{ row.delta > 0 ? '+' : '' }}{{ row.delta | number: '1.1-1' }}
-                              </span>
-                            </td>
-                          </tr>
-                        }
-                      </tbody>
-                    </table>
+            <p class="panel-intro">
+              Conditional championship odds for upcoming matches, aggregated from the same
+              simulations behind the standings. Pick a winner to see how the trophy race shifts; the
+              change compares against the current odds.
+            </p>
+            <ul class="scenario-grid">
+              @for (v of scenarioViews; track $index; let i = $index) {
+                <li class="scenario-card">
+                  <p class="scenario-round">{{ v.round }}</p>
+                  <h2 class="scenario-title">{{ v.teams[0] }} vs {{ v.teams[1] }}</h2>
+                  <div class="scenario-sides" role="group" aria-label="Pick the winner">
+                    @for (t of v.teams; track t; let ti = $index) {
+                      <button
+                        type="button"
+                        class="toggle-chip"
+                        [attr.aria-pressed]="v.pick === t"
+                        (click)="pickSide(i, t)"
+                      >
+                        {{ t }} wins
+                        <span class="side-pct">{{ pct(v.pWin[ti]) }}</span>
+                      </button>
+                    }
                   </div>
-                }
-              </div>
-            }
+                  <table class="data-table scenario-table">
+                    <caption class="visually-hidden">
+                      Championship odds if
+                      {{
+                        v.pick
+                      }}
+                      wins
+                    </caption>
+                    <thead>
+                      <tr>
+                        <th scope="col" class="num">#</th>
+                        <th scope="col">Team</th>
+                        <th scope="col" class="num">Winner</th>
+                        <th scope="col" class="num">Change</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @for (row of v.rows; track row.team; let r = $index) {
+                        <tr>
+                          <td class="num">{{ r + 1 }}</td>
+                          <td class="strong">{{ row.team }}</td>
+                          <td class="num">{{ pct(row.winner_pct) }}</td>
+                          <td
+                            class="num"
+                            [class.delta-up]="row.delta > 0.05"
+                            [class.delta-down]="row.delta < -0.05"
+                          >
+                            {{ row.delta > 0 ? '+' : '' }}{{ row.delta | number: '1.1-1' }}
+                          </td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </li>
+              }
+            </ul>
           </section>
         </mat-tab>
       }
@@ -1052,113 +631,79 @@
     <!-- Standings table, shared by the Wrap-up and Standings tabs -->
     <ng-template #standings>
       <section class="panel" aria-labelledby="standings-title">
-        <div class="panel-header">
-          <h2 id="standings-title" class="bracket-section-title">
-            {{ retro?.complete ? 'Final standings' : 'Standings' }}
-          </h2>
-          <p class="panel-sub">
-            @if (retro?.complete) {
-              How far each team got: 100% means it reached that stage.
-            } @else {
-              Probability of reaching each tournament stage, sorted by championship odds.
-            }
-            @if (!isLatestDate) {
-              Showing the model's state as of
-              {{ selectedDate | date: 'mediumDate' }}.
-            }
-          </p>
-          @if (lockedCountForDate > 0) {
-            <div class="context-strip">
-              <mat-icon>lock</mat-icon>
-              <span
-                >{{ lockedCountForDate }} match{{ lockedCountForDate !== 1 ? 'es' : '' }} locked
-                into this prediction</span
-              >
-            </div>
+        <h2 id="standings-title" class="wc-h2">
+          {{ retro?.complete ? 'Final standings' : 'Standings' }}
+        </h2>
+        <p class="panel-intro">
+          @if (retro?.complete) {
+            How far each team got: 100% means it reached that stage.
+          } @else {
+            Probability of reaching each tournament stage, sorted by championship odds.
           }
-        </div>
-        <div class="leaderboard-wrap">
-          <table class="leaderboard">
+          @if (!isLatestDate) {
+            Showing the model's state as of {{ selectedDate | date: 'mediumDate' }}, with
+            {{ lockedCountForDate }} match{{ lockedCountForDate !== 1 ? 'es' : '' }} locked in.
+          }
+        </p>
+        <div
+          class="table-scroll standings-scroll"
+          role="region"
+          [attr.aria-label]="
+            (retro?.complete ? 'Final standings' : 'Standings') + ', scrolls sideways'
+          "
+          tabindex="0"
+        >
+          <table class="data-table standings-table">
             <thead>
               <tr>
-                <th class="rank-col">#</th>
-                <th class="team-col sortable" [attr.aria-sort]="ariaSort('team')">
-                  <button type="button" class="sort-btn th-label" (click)="sortBy('team')">
-                    Team <mat-icon class="sort-icon">{{ sortIcon('team') }}</mat-icon>
-                  </button>
-                </th>
-                <th class="sortable" [attr.aria-sort]="ariaSort('winner_pct')">
-                  <button type="button" class="sort-btn th-label" (click)="sortBy('winner_pct')">
-                    Winner <mat-icon class="sort-icon">{{ sortIcon('winner_pct') }}</mat-icon>
-                  </button>
-                </th>
-                @if (!isLatestDate) {
-                  <th class="delta-col sortable" [attr.aria-sort]="ariaSort('delta')">
-                    <button type="button" class="sort-btn th-label" (click)="sortBy('delta')">
-                      &#916; <mat-icon class="sort-icon">{{ sortIcon('delta') }}</mat-icon>
-                    </button>
-                  </th>
+                <th scope="col" class="num rank-col">#</th>
+                @for (col of standingsColumns; track col.key) {
+                  @if (col.key !== 'delta' || !isLatestDate) {
+                    <th
+                      scope="col"
+                      class="sortable"
+                      [class.num]="col.key !== 'team'"
+                      [class.team-col]="col.key === 'team'"
+                      [attr.aria-sort]="ariaSort(col.key)"
+                    >
+                      <button type="button" class="sort-btn" (click)="sortBy(col.key)">
+                        {{ col.label }}
+                        <ng-container
+                          *ngTemplateOutlet="sortArrow; context: { $implicit: sortIcon(col.key) }"
+                        />
+                      </button>
+                    </th>
+                  }
                 }
-                <th class="sortable" [attr.aria-sort]="ariaSort('final_pct')">
-                  <button type="button" class="sort-btn th-label" (click)="sortBy('final_pct')">
-                    Final <mat-icon class="sort-icon">{{ sortIcon('final_pct') }}</mat-icon>
-                  </button>
-                </th>
-                <th class="sortable" [attr.aria-sort]="ariaSort('sf_pct')">
-                  <button type="button" class="sort-btn th-label" (click)="sortBy('sf_pct')">
-                    Semi <mat-icon class="sort-icon">{{ sortIcon('sf_pct') }}</mat-icon>
-                  </button>
-                </th>
-                <th class="sortable" [attr.aria-sort]="ariaSort('qf_pct')">
-                  <button type="button" class="sort-btn th-label" (click)="sortBy('qf_pct')">
-                    QF <mat-icon class="sort-icon">{{ sortIcon('qf_pct') }}</mat-icon>
-                  </button>
-                </th>
-                <th class="sortable" [attr.aria-sort]="ariaSort('r16_pct')">
-                  <button type="button" class="sort-btn th-label" (click)="sortBy('r16_pct')">
-                    R16 <mat-icon class="sort-icon">{{ sortIcon('r16_pct') }}</mat-icon>
-                  </button>
-                </th>
-                <th class="sortable" [attr.aria-sort]="ariaSort('r32_pct')">
-                  <button type="button" class="sort-btn th-label" (click)="sortBy('r32_pct')">
-                    R32 <mat-icon class="sort-icon">{{ sortIcon('r32_pct') }}</mat-icon>
-                  </button>
-                </th>
-                <th class="elo-col sortable" [attr.aria-sort]="ariaSort('elo')">
-                  <button type="button" class="sort-btn th-label" (click)="sortBy('elo')">
-                    Elo <mat-icon class="sort-icon">{{ sortIcon('elo') }}</mat-icon>
-                  </button>
-                </th>
               </tr>
             </thead>
             <tbody id="standings-rows">
               @for (row of visibleStandings; track trackByTeam(i, row); let i = $index) {
                 <tr>
-                  <td class="rank-col">{{ i + 1 }}</td>
+                  <td class="num rank-col">{{ i + 1 }}</td>
                   <td class="team-col">{{ row.team }}</td>
-                  <td class="pct-cell pct-winner">
-                    <span class="bar" [style.width.%]="row.winner_pct * 5"></span>
-                    <span class="pct-text">{{ row.winner_pct | number: '1.2-2' }}%</span>
+                  <td class="num winner-cell">
+                    <span class="bar" [style.width.%]="row.winner_pct"></span>
+                    <span class="bar-text">{{ pct(row.winner_pct) }}</span>
                   </td>
                   @if (!isLatestDate) {
-                    <td class="delta-col">
+                    <td
+                      class="num"
+                      [class.delta-up]="(deltaMap.get(row.team) ?? 0) > 0"
+                      [class.delta-down]="(deltaMap.get(row.team) ?? 0) < 0"
+                    >
                       @if (deltaMap.has(row.team)) {
-                        <span
-                          [class.delta-up]="(deltaMap.get(row.team) ?? 0) > 0"
-                          [class.delta-down]="(deltaMap.get(row.team) ?? 0) < 0"
-                        >
-                          {{ (deltaMap.get(row.team) ?? 0) > 0 ? '+' : ''
-                          }}{{ deltaMap.get(row.team) | number: '1.1-1' }}
-                        </span>
+                        {{ (deltaMap.get(row.team) ?? 0) > 0 ? '+' : ''
+                        }}{{ deltaMap.get(row.team) | number: '1.1-1' }}
                       }
                     </td>
                   }
-                  <td>{{ row.final_pct | number: '1.1-1' }}%</td>
-                  <td>{{ row.sf_pct | number: '1.1-1' }}%</td>
-                  <td>{{ row.qf_pct | number: '1.1-1' }}%</td>
-                  <td>{{ row.r16_pct | number: '1.1-1' }}%</td>
-                  <td>{{ row.r32_pct | number: '1.1-1' }}%</td>
-                  <td class="elo-col">{{ row.elo | number: '1.0-0' }}</td>
+                  <td class="num">{{ pct(row.final_pct) }}</td>
+                  <td class="num">{{ pct(row.sf_pct) }}</td>
+                  <td class="num">{{ pct(row.qf_pct) }}</td>
+                  <td class="num">{{ pct(row.r16_pct) }}</td>
+                  <td class="num">{{ pct(row.r32_pct) }}</td>
+                  <td class="num">{{ row.elo | number: '1.0-0' }}</td>
                 </tr>
               }
             </tbody>
@@ -1167,7 +712,7 @@
         @if (displayedLeaderboard.length > standingsPreview) {
           <button
             type="button"
-            class="toggle-matches-btn show-all-btn"
+            class="btn-secondary btn-md disclosure show-all-btn"
             aria-controls="standings-rows"
             [attr.aria-expanded]="showAllTeams"
             (click)="showAllTeams = !showAllTeams"
@@ -1177,6 +722,7 @@
                 ? 'Show the top ' + standingsPreview
                 : 'Show all ' + displayedLeaderboard.length + ' teams'
             }}
+            <ng-container *ngTemplateOutlet="chevron" />
           </button>
         }
       </section>
@@ -1184,13 +730,42 @@
   }
 </div>
 
+<!-- Small icons -->
+<ng-template #chevron>
+  <svg
+    class="chevron"
+    viewBox="0 0 24 24"
+    width="18"
+    height="18"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z" />
+  </svg>
+</ng-template>
+
+<ng-template #sortArrow let-icon>
+  <svg
+    class="sort-icon"
+    [class.active]="icon !== 'unfold_more'"
+    [class.asc]="icon === 'arrow_upward'"
+    viewBox="0 0 24 24"
+    width="16"
+    height="16"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <path d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z" />
+  </svg>
+</ng-template>
+
 <!-- A chart's data as a table, collapsed under the chart. -->
 <ng-template #chartTable let-table let-label="label">
   @if (table) {
     <details class="chart-table">
       <summary>View as table</summary>
-      <div class="chart-table-scroll" role="region" [attr.aria-label]="table.caption" tabindex="0">
-        <table class="leaderboard">
+      <div class="table-scroll" role="region" [attr.aria-label]="table.caption" tabindex="0">
+        <table class="data-table">
           <caption class="visually-hidden">
             {{
               table.caption
@@ -1200,7 +775,7 @@
             <tr>
               <th scope="col">{{ label }}</th>
               @for (c of table.columns; track $index) {
-                <th scope="col">{{ c }}</th>
+                <th scope="col" class="num">{{ c }}</th>
               }
             </tr>
           </thead>
@@ -1209,7 +784,7 @@
               <tr>
                 <th scope="row">{{ row.label }}</th>
                 @for (v of row.values; track $index) {
-                  <td>{{ v === null ? '-' : (v | number: '1.0-1') }}</td>
+                  <td class="num">{{ v === null ? '-' : (v | number: '1.0-1') }}</td>
                 }
               </tr>
             }

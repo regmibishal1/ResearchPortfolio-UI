@@ -1,0 +1,170 @@
+<!-- One match: both teams, the score once played, and the model's read -->
+<ng-template #match let-s>
+  <div class="match" [class.match-played]="s.detail?.played">
+    @for (team of s.teams; track $index; let t = $index) {
+      <div class="team" [class.team-winner]="team === s.winner">
+        <span class="team-name" [title]="team">{{ team }}</span>
+        @if (team === s.winner) {
+          <span class="visually-hidden"> ({{ winnerNote(s) }})</span>
+        }
+        @if (s.detail?.played) {
+          <span class="team-score">{{ s.detail.actual_score[t] }}</span>
+        }
+      </div>
+    }
+    @if (s.detail; as d) {
+      <div class="match-note">
+        @if (!d.played) {
+          <span>Predicted {{ d.predicted_score[0] }}-{{ d.predicted_score[1] }}</span>
+          @if (d.predicted_winner && d.predicted_score[0] === d.predicted_score[1]) {
+            <span>{{ d.predicted_winner }} on penalties</span>
+          }
+        }
+        @if (d.played && d.went_to_penalties && d.winner) {
+          <span>{{ d.winner }} won on penalties</span>
+        }
+        @if (d.top_factors?.length) {
+          <button
+            type="button"
+            class="why-btn"
+            [attr.aria-expanded]="isFactorOpen(s)"
+            (click)="toggleFactors(s)"
+          >
+            {{ isFactorOpen(s) ? 'Hide why' : 'Why?' }}
+          </button>
+        }
+      </div>
+      @if (d.top_factors && isFactorOpen(s)) {
+        <div class="factors">
+          @if (d.played) {
+            <span class="factors-note">The model's read before the match</span>
+          }
+          @for (f of d.top_factors; track f.feature) {
+            <div class="factor">
+              <span class="factor-label">{{ f.label }}</span>
+              <span class="factor-value">{{ formatFactorValue(f.feature, f.value) }}</span>
+              <span class="factor-favors">{{ f.favors ? 'favors ' + f.favors : 'even' }}</span>
+            </div>
+          }
+        </div>
+      }
+    }
+  </div>
+</ng-template>
+
+<!-- The champion, and once the final is played, how the model saw it at kickoff -->
+<ng-template #champion>
+  <div class="champion">
+    <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+      <path
+        d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"
+      />
+    </svg>
+    <div>
+      <span class="champion-label">{{
+        final?.detail?.played ? 'Champion' : 'Predicted champion'
+      }}</span>
+      <span class="champion-name">{{ bracket.champion }}</span>
+      @if (final?.detail?.played && favorite) {
+        <span class="champion-pick"
+          >Model's pick before kickoff: {{ favorite.team }} ({{ favorite.pct.toFixed(1) }}%)</span
+        >
+      }
+    </div>
+  </div>
+</ng-template>
+
+<!-- The final, the champion and the third-place match -->
+<ng-template #finalBlock>
+  @if (final) {
+    <ng-container *ngTemplateOutlet="match; context: { $implicit: final }" />
+  }
+  <ng-container *ngTemplateOutlet="champion" />
+  @if (bronze) {
+    <div class="round-label bronze-label">Third place</div>
+    <ng-container *ngTemplateOutlet="match; context: { $implicit: bronze }" />
+  }
+</ng-template>
+
+<h2 class="section-title">Knockout bracket</h2>
+
+<!-- Wide screens: both halves meet at the final -->
+<div class="bracket-wide">
+  @for (col of left; track $index) {
+    <div class="bracket-col">
+      <div class="round-label">{{ col.label }}</div>
+      <div class="col-slots">
+        @for (s of col.slots; track s.key) {
+          <ng-container *ngTemplateOutlet="match; context: { $implicit: s }" />
+        }
+      </div>
+    </div>
+  }
+  <div class="bracket-col bracket-center">
+    <div class="round-label">Final</div>
+    <div class="col-slots center-slots">
+      <ng-container *ngTemplateOutlet="finalBlock" />
+    </div>
+  </div>
+  @for (col of right; track $index) {
+    <div class="bracket-col">
+      <div class="round-label">{{ col.label }}</div>
+      <div class="col-slots">
+        @for (s of col.slots; track s.key) {
+          <ng-container *ngTemplateOutlet="match; context: { $implicit: s }" />
+        }
+      </div>
+    </div>
+  }
+</div>
+
+<!-- Narrower screens: one round at a time -->
+<div class="bracket-narrow">
+  <div class="round-picker" role="group" aria-label="Round">
+    @for (r of rounds; track r.key) {
+      <button
+        type="button"
+        class="toggle-chip"
+        [attr.aria-pressed]="round === r.key"
+        (click)="selectRound(r.key)"
+      >
+        {{ r.short }}
+        @if (r.short !== r.label) {
+          <span class="visually-hidden">({{ r.label }})</span>
+        }
+      </button>
+    }
+  </div>
+  <h3 class="round-title">{{ roundLabel }}</h3>
+  <div class="round-slots">
+    @if (round === 'final') {
+      <div class="final-stack">
+        <ng-container *ngTemplateOutlet="finalBlock" />
+      </div>
+    } @else {
+      @for (s of byRound[round]; track s.key) {
+        <ng-container *ngTemplateOutlet="match; context: { $implicit: s }" />
+      }
+    }
+  </div>
+</div>
+
+<h2 class="section-title">Group winners</h2>
+<ul class="groups-grid">
+  @for (g of groupKeys; track g) {
+    <li class="group-card">
+      <span class="group-label">Group {{ g }}</span>
+      <ol class="group-list">
+        <li>{{ bracket.group_winners[g][0] }}</li>
+        <li>{{ bracket.group_winners[g][1] }}</li>
+      </ol>
+    </li>
+  }
+</ul>
+
+<h2 class="section-title">Best 8 third-placed teams</h2>
+<ul class="chip-list">
+  @for (t of bracket.best_thirds; track t) {
+    <li class="chip">{{ t }}</li>
+  }
+</ul>
