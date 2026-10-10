@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router'
 
 import { NavbarComponent } from './navbar.component'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http'
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent
@@ -13,7 +13,10 @@ describe('NavbarComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [NavbarComponent, RouterModule.forRoot([]), BrowserAnimationsModule],
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+      providers: [
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+      ],
     }).compileComponents()
 
     fixture = TestBed.createComponent(NavbarComponent)

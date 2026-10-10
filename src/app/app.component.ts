@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core'
 import { ViewportScroller } from '@angular/common'
 import { RouterOutlet } from '@angular/router'
 import { NavbarComponent } from './shared/navbar/navbar.component'
@@ -7,6 +7,7 @@ import { NavbarComponent } from './shared/navbar/navbar.component'
   selector: 'app-root',
   imports: [RouterOutlet, NavbarComponent],
   templateUrl: './app.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {

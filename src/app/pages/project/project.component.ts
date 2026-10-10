@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, ChangeDetectionStrategy } from '@angular/core'
 
 import { RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
@@ -9,6 +9,7 @@ import { PROJECTS, Project } from '../../data/projects'
   selector: 'app-project',
   imports: [RouterModule, MatIconModule],
   templateUrl: './project.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './project.component.scss',
 })
 export class ProjectComponent {

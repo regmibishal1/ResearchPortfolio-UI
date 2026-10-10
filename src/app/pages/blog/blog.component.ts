@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, ChangeDetectionStrategy } from '@angular/core'
 
 import { RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
@@ -9,6 +9,7 @@ import { POSTS, BlogPost } from '../../data/blog'
   selector: 'app-blog',
   imports: [RouterModule, MatIconModule],
   templateUrl: './blog.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './blog.component.scss',
 })
 export class BlogComponent {

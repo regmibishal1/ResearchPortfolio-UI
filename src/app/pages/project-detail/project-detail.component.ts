@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { ActivatedRoute, RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
@@ -23,6 +23,7 @@ import { ZoomableImageComponent } from '../../shared/zoomable-image/zoomable-ima
     ZoomableImageComponent,
   ],
   templateUrl: './project-detail.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './project-detail.component.scss',
 })
 export class ProjectDetailComponent implements OnInit {

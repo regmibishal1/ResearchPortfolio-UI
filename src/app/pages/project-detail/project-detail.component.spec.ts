@@ -3,7 +3,7 @@ import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/route
 import { provideHttpClientTesting } from '@angular/common/http/testing'
 
 import { ProjectDetailComponent } from './project-detail.component'
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http'
 
 function render(id: string) {
   TestBed.configureTestingModule({
@@ -11,7 +11,7 @@ function render(id: string) {
     providers: [
       provideRouter([]),
       { provide: ActivatedRoute, useValue: { snapshot: { paramMap: convertToParamMap({ id }) } } },
-      provideHttpClient(withInterceptorsFromDi()),
+      provideHttpClient(withXhr(), withInterceptorsFromDi()),
       provideHttpClientTesting(),
     ],
   })

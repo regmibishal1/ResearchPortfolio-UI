@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, ChangeDetectionStrategy } from '@angular/core'
 
 import { MatIconModule } from '@angular/material/icon'
 
@@ -24,6 +24,7 @@ type TabId = 'saliency' | 'confusion' | 'training'
   selector: 'app-mri-explorer',
   imports: [MatIconModule],
   templateUrl: './mri-explorer.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './mri-explorer.component.scss',
 })
 export class MriExplorerComponent {

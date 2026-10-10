@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core'
 
 import { ActivatedRoute, RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
@@ -11,6 +11,7 @@ import { ZoomableImageComponent } from '../../shared/zoomable-image/zoomable-ima
   selector: 'app-blog-post',
   imports: [PageNotFoundComponent, RouterModule, MatIconModule, ZoomableImageComponent],
   templateUrl: './blog-post.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './blog-post.component.scss',
 })
 export class BlogPostComponent implements OnInit {

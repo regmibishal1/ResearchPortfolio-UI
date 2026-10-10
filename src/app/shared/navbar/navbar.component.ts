@@ -7,6 +7,7 @@ import {
   PLATFORM_ID,
   ViewChild,
   inject,
+  ChangeDetectionStrategy,
 } from '@angular/core'
 import { isPlatformBrowser } from '@angular/common'
 import { MatIconModule } from '@angular/material/icon'
@@ -22,6 +23,7 @@ import { Subscription, filter } from 'rxjs'
   selector: 'app-navbar',
   imports: [MatToolbarModule, MatButtonModule, MatIconModule, RouterModule, FooterComponent],
   templateUrl: './navbar.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './navbar.component.scss',
 })
 export class NavbarComponent implements OnInit, OnDestroy {

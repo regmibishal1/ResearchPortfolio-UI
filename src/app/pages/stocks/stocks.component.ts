@@ -1,4 +1,11 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core'
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core'
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
@@ -69,6 +76,7 @@ const STOCK_TEXT_COLUMNS: ReadonlySet<StockSortKey> = new Set(['ticker', 'sector
     DecimalPipe,
   ],
   templateUrl: './stocks.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './stocks.component.scss',
 })
 export class StocksComponent implements OnInit, OnDestroy {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core'
 
 import { FormsModule } from '@angular/forms'
 import { Router } from '@angular/router'
@@ -13,6 +13,7 @@ import { AuthService } from '../auth/auth.service'
   selector: 'app-profile',
   imports: [FormsModule, MatIconModule, MatProgressSpinnerModule],
   templateUrl: './profile.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './profile.component.scss',
 })
 export class ProfileComponent implements OnInit {

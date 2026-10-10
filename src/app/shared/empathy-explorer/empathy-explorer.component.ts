@@ -7,6 +7,7 @@ import {
   NgZone,
   PLATFORM_ID,
   inject,
+  ChangeDetectionStrategy,
 } from '@angular/core'
 import { CommonModule, isPlatformBrowser } from '@angular/common'
 import { MatIconModule } from '@angular/material/icon'
@@ -68,6 +69,7 @@ const CLASSIFICATION_CURVE = [
   selector: 'app-empathy-explorer',
   imports: [CommonModule, MatIconModule],
   templateUrl: './empathy-explorer.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './empathy-explorer.component.scss',
 })
 export class EmpathyExplorerComponent implements AfterViewInit, OnDestroy {

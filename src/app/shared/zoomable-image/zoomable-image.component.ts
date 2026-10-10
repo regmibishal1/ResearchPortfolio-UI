@@ -1,4 +1,11 @@
-import { Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core'
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  Input,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core'
 
 import { A11yModule } from '@angular/cdk/a11y'
 import { MatIconModule } from '@angular/material/icon'
@@ -17,6 +24,7 @@ const PAN_STEP = 120
   selector: 'app-zoomable-image',
   imports: [MatIconModule, A11yModule],
   templateUrl: './zoomable-image.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './zoomable-image.component.scss',
 })
 export class ZoomableImageComponent {

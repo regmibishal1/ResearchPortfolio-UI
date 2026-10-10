@@ -7,6 +7,7 @@ import {
   NgZone,
   PLATFORM_ID,
   inject,
+  ChangeDetectionStrategy,
 } from '@angular/core'
 import { isPlatformBrowser } from '@angular/common'
 import { FormsModule } from '@angular/forms'
@@ -77,6 +78,7 @@ const DISTRIBUTIONS: Record<Distribution, DistributionConfig> = {
     MatChipsModule,
   ],
   templateUrl: './stats-explorer.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./stats-explorer.component.scss'],
 })
 export class StatsExplorerComponent implements AfterViewInit, OnDestroy {

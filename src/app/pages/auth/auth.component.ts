@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core'
+import { Component, ElementRef, ViewChild, ChangeDetectionStrategy } from '@angular/core'
 
 import { Router } from '@angular/router'
 import { AuthService, RegisterModel, LoginModel } from './auth.service'
@@ -16,6 +16,7 @@ type Mode = 'login' | 'register'
   selector: 'app-auth',
   imports: [FormsModule, MatProgressBarModule, MatIconModule],
   templateUrl: './auth.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './auth.component.scss',
 })
 export class AuthComponent {
