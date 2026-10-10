@@ -1,3 +1,5 @@
+@use 'breakpoints' as bp;
+
 /* ===== Design System: CSS Custom Properties ===== */
 // Components use these tokens rather than raw values.
 :root {
@@ -92,7 +94,7 @@
   --transition-smooth: var(--dur-base) var(--ease);
 }
 
-@media (max-width: 599.98px) {
+@include bp.down(bp.$sm) {
   :root {
     --fs-h1: 32px;
     --fs-h2: 24px;
@@ -295,6 +297,29 @@ a:hover {
 }
 
 /* ===== Utility Classes ===== */
+// Page width wrappers: most pages use .container, long-form reading uses
+// .container-prose and data-heavy pages .container-wide.
+.container,
+.container-prose,
+.container-wide {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--space-5);
+
+  @include bp.down(bp.$sm) {
+    padding-inline: var(--space-4);
+  }
+}
+
+.container-prose {
+  max-width: var(--container-prose);
+}
+
+.container-wide {
+  max-width: var(--container-wide);
+}
+
 // Solid card surface. Only the toolbar keeps a blurred, see-through
 // background.
 .surface {

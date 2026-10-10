@@ -55,6 +55,36 @@ describe('NavbarComponent', () => {
     expect(document.activeElement).toBe(button)
   })
 
+  it('lists the work first and ends with a contact link to the About page', () => {
+    const el: HTMLElement = fixture.nativeElement
+    const desktop = [...el.querySelectorAll<HTMLAnchorElement>('.desktop-nav a')]
+    expect(desktop.map((a) => a.textContent!.trim())).toEqual([
+      'Projects',
+      'Blog',
+      'About',
+      'Contact',
+    ])
+    expect(desktop[3].getAttribute('href')).toBe('/about#contact')
+
+    const mobile = [...el.querySelectorAll<HTMLAnchorElement>('#mobile-nav a')]
+    expect(mobile.map((a) => a.textContent!.trim())).toEqual([
+      'Projects',
+      'Blog',
+      'About',
+      'Contact',
+    ])
+  })
+
+  it('offers sign out in the mobile menu when signed in', () => {
+    component.isAuthenticated = true
+    fixture.detectChanges()
+    const el: HTMLElement = fixture.nativeElement
+    const signOut = [...el.querySelectorAll<HTMLButtonElement>('#mobile-nav button')].find(
+      (b) => b.textContent!.trim() === 'Sign out'
+    )
+    expect(signOut).toBeDefined()
+  })
+
   it('keeps the brand link inside the banner landmark', () => {
     const el: HTMLElement = fixture.nativeElement
     expect(el.querySelector('[role="banner"] .brand-link')).not.toBeNull()

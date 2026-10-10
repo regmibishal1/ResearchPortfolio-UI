@@ -30,6 +30,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService)
   private _snackBar = inject(MatSnackBar)
 
+  // The logo links home, so the nav starts with the work.
+  readonly navLinks = [
+    { label: 'Projects', path: '/project' },
+    { label: 'Blog', path: '/blog' },
+    { label: 'About', path: '/about' },
+  ]
+
   isAuthenticated = false
   menuOpen = false
 
@@ -96,6 +103,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   onLogout() {
+    this.closeMenu()
     this.authService.logout().subscribe({
       next: () => {
         this.openSnackBar('Signed out.')

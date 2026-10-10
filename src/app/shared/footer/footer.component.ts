@@ -1,20 +1,28 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core'
+import { DatePipe } from '@angular/common'
 
-import { MatIconModule } from '@angular/material/icon'
+// Set by scripts/build-app.mjs on production builds; absent in dev and tests.
+declare const BUILD_DATE: string | undefined
 
 @Component({
   selector: 'app-footer',
-  imports: [MatIconModule],
+  imports: [DatePipe],
   templateUrl: './footer.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './footer.component.scss',
 })
 export class FooterComponent {
   currentYear = new Date().getFullYear()
+  buildDate: string | null = typeof BUILD_DATE === 'undefined' ? null : BUILD_DATE
 
   socialLinks = [
-    { name: 'GitHub', url: 'https://github.com/regmibishal1/', icon: 'code' },
-    { name: 'LinkedIn', url: 'https://www.linkedin.com/in/bishalregmi/', icon: 'work' },
-    { name: 'Email', url: 'mailto:contact@bishalregmi.com', icon: 'email' },
+    { name: 'GitHub', url: 'https://github.com/regmibishal1/', icon: 'github', external: true },
+    {
+      name: 'LinkedIn',
+      url: 'https://www.linkedin.com/in/bishalregmi/',
+      icon: 'linkedin',
+      external: true,
+    },
+    { name: 'Email', url: 'mailto:contact@bishalregmi.com', icon: 'email', external: false },
   ]
 }
