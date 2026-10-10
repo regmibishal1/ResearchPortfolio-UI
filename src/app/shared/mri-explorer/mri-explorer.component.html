@@ -1,11 +1,10 @@
 <div class="mri-explorer surface">
-  <!-- Model selector -->
-  <div class="model-selector" role="group" aria-label="Model">
-    @for (model of models; track $index) {
+  <!-- Model picker: one row that scrolls sideways on small screens -->
+  <div #picker class="model-picker" role="group" aria-label="Model">
+    @for (model of models; track model.id) {
       <button
         type="button"
-        class="model-chip"
-        [class.model-chip-active]="model.id === selectedModel.id"
+        class="toggle-chip"
         [attr.aria-pressed]="model.id === selectedModel.id"
         (click)="selectModel(model)"
       >
@@ -16,26 +15,30 @@
 
   <!-- Selected model summary -->
   <div class="model-summary">
-    <div class="summary-stats">
+    <dl class="summary-stats">
       <div class="summary-stat">
-        <span class="stat-value">{{ selectedModel.accuracy }}%</span>
-        <span class="stat-label">Test Accuracy</span>
+        <dt>Test accuracy</dt>
+        <dd>{{ selectedModel.accuracy | number: '1.2-2' }}%</dd>
       </div>
       <div class="summary-stat">
-        <span class="stat-value">{{ selectedModel.testLoss }}</span>
-        <span class="stat-label">Test Loss</span>
+        <dt>Balanced accuracy</dt>
+        <dd>{{ selectedModel.balancedAccuracy | number: '1.2-2' }}%</dd>
       </div>
       <div class="summary-stat">
-        <span class="stat-value">{{ selectedModel.layers }}</span>
-        <span class="stat-label">Layers</span>
+        <dt>Test loss</dt>
+        <dd>{{ selectedModel.testLoss }}</dd>
       </div>
-    </div>
+      <div class="summary-stat">
+        <dt>Layers</dt>
+        <dd>{{ selectedModel.layers }}</dd>
+      </div>
+    </dl>
     <p class="model-note">{{ selectedModel.note }}</p>
   </div>
 
   <!-- Tabs -->
   <div class="tab-bar" role="tablist" aria-label="Figures">
-    @for (tab of tabs; track $index; let i = $index) {
+    @for (tab of tabs; track tab.id; let i = $index) {
       <button
         type="button"
         class="tab-btn"
@@ -44,12 +47,10 @@
         [attr.aria-selected]="tab.id === activeTab"
         [attr.aria-controls]="'mri-panel-' + tab.id"
         [tabIndex]="tab.id === activeTab ? 0 : -1"
-        [class.tab-btn-active]="tab.id === activeTab"
         (click)="selectTab(tab.id)"
         (keydown)="onTabKeydown($event, i)"
       >
-        <mat-icon>{{ tab.icon }}</mat-icon>
-        <span>{{ tab.label }}</span>
+        {{ tab.label }}
       </button>
     }
   </div>
@@ -64,17 +65,15 @@
     >
       <p class="panel-caption">
         Class-averaged saliency maps showing which brain regions {{ selectedModel.label }} attends
-        to when predicting each dementia stage.
+        to when predicting each dementia stage. Select a map to enlarge it.
       </p>
       <div class="saliency-grid">
-        @for (cls of saliencyClasses; track $index) {
+        @for (cls of saliencyClasses; track cls.id) {
           <figure class="saliency-figure">
-            <img
+            <app-zoomable-image
               [src]="saliencyImage(cls.id)"
               [alt]="selectedModel.label + ' saliency map for ' + cls.label"
-              width="481"
-              height="504"
-              loading="lazy"
+              [caption]="selectedModel.label + ', ' + cls.label"
             />
             <figcaption>{{ cls.label }}</figcaption>
           </figure>

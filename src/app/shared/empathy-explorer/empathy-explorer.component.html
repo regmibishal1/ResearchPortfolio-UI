@@ -1,9 +1,6 @@
 <div class="empathy-explorer surface">
   <!-- Regression results -->
-  <h3 class="explorer-heading">
-    <mat-icon>table_chart</mat-icon>
-    Regression Results: Text-Only vs Multimodal
-  </h3>
+  <h3 class="explorer-heading">Regression results: text-only vs multimodal</h3>
   <p class="explorer-caption">
     Adding demographic and conversational features nudged the Pearson correlation (the shared task's
     metric) above the text-only baseline on every target, but the error metrics rose with it, a
@@ -13,41 +10,45 @@
   @for (table of regressionTables; track $index) {
     <div class="table-wrap">
       <h4 class="table-title">{{ table.target }}</h4>
-      <table class="results-table">
-        <thead>
-          <tr>
-            <th>Method</th>
-            <th>MSE</th>
-            <th>RMSE</th>
-            <th>MAE</th>
-            <th>Pearson r</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (row of table.rows; track $index) {
-            <tr [class.baseline-row]="row.baseline">
-              <td>
-                {{ row.method }}
-                @if (row.baseline) {
-                  <span class="baseline-tag">baseline</span>
-                }
-              </td>
-              <td>{{ row.mse }}</td>
-              <td>{{ row.rmse }}</td>
-              <td>{{ row.mae }}</td>
-              <td class="pearson-cell">{{ row.pearson }}</td>
+      <div
+        class="table-scroll"
+        role="region"
+        [attr.aria-label]="table.target + ' results, scrolls sideways'"
+        tabindex="0"
+      >
+        <table class="data-table results-table">
+          <thead>
+            <tr>
+              <th scope="col">Method</th>
+              <th scope="col" class="num">Pearson r</th>
+              <th scope="col" class="num">MSE</th>
+              <th scope="col" class="num">RMSE</th>
+              <th scope="col" class="num">MAE</th>
             </tr>
-          }
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            @for (row of table.rows; track $index) {
+              <tr [class.baseline-row]="row.baseline">
+                <td>
+                  {{ row.method }}
+                  @if (row.baseline) {
+                    <span class="baseline-tag">baseline</span>
+                  }
+                </td>
+                <td class="num pearson-cell">{{ row.pearson }}</td>
+                <td class="num">{{ row.mse }}</td>
+                <td class="num">{{ row.rmse }}</td>
+                <td class="num">{{ row.mae }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
     </div>
   }
 
   <!-- Training curves -->
-  <h3 class="explorer-heading curve-heading">
-    <mat-icon>show_chart</mat-icon>
-    Emotion Classification: Training Run
-  </h3>
+  <h3 class="explorer-heading curve-heading">Emotion classification: training run</h3>
   <p class="explorer-caption">
     Per-epoch evaluation metrics for the multimodal emotion classifier. The loss gap at epoch 8 is
     real: that eval step returned NaN on the unstable local GPU setup noted in the report.
@@ -58,25 +59,25 @@
   <details class="chart-table">
     <summary>View as table</summary>
     <div class="chart-table-scroll" role="region" aria-label="Training run by epoch" tabindex="0">
-      <table class="results-table">
+      <table class="data-table results-table">
         <caption class="visually-hidden">
           Evaluation metrics by epoch
         </caption>
         <thead>
           <tr>
             <th scope="col">Epoch</th>
-            <th scope="col">Accuracy</th>
-            <th scope="col">Macro F1</th>
-            <th scope="col">Loss</th>
+            <th scope="col" class="num">Accuracy</th>
+            <th scope="col" class="num">Macro F1</th>
+            <th scope="col" class="num">Loss</th>
           </tr>
         </thead>
         <tbody>
           @for (r of curve; track $index) {
             <tr>
               <th scope="row">{{ r.epoch }}</th>
-              <td>{{ r.acc | number: '1.3-3' }}</td>
-              <td>{{ r.macroF1 | number: '1.3-3' }}</td>
-              <td>{{ r.loss === null ? '-' : (r.loss | number: '1.3-3') }}</td>
+              <td class="num">{{ r.acc | number: '1.3-3' }}</td>
+              <td class="num">{{ r.macroF1 | number: '1.3-3' }}</td>
+              <td class="num">{{ r.loss === null ? '-' : (r.loss | number: '1.3-3') }}</td>
             </tr>
           }
         </tbody>

@@ -2,9 +2,12 @@
   display: block;
 }
 
+// Both take the host's corner radius, so a parent can round the image
+// without clipping the focus ring.
 .zoomable-trigger {
   display: block;
   width: 100%;
+  border-radius: inherit;
   padding: 0;
   border: 0;
   background: none;
@@ -15,6 +18,7 @@
   display: block;
   width: 100%;
   height: auto;
+  border-radius: inherit;
   cursor: zoom-in;
   transition: filter 0.15s ease;
 }
