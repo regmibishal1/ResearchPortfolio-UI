@@ -342,6 +342,100 @@ a:hover {
   line-height: var(--lh-micro);
 }
 
+// A pressable filter or picker option. The selected one also shows a check
+// icon, so the state does not rely on colour.
+.toggle-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--border-control);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-text);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+
+  &:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  &[aria-pressed='true'] {
+    border-color: var(--accent-gold);
+    background: var(--accent-gold-dim);
+    color: var(--text-primary);
+  }
+
+  svg {
+    fill: currentColor;
+  }
+}
+
+// Data tables: quiet header, 44px rows, light zebra striping, numbers in
+// fixed-width digits.
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+
+  th {
+    padding: var(--space-2) var(--space-3);
+    border-bottom: 1px solid var(--border-control);
+    color: var(--text-secondary);
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  td {
+    height: 44px;
+    padding: var(--space-2) var(--space-3);
+    border-bottom: 1px solid var(--border-subtle);
+    vertical-align: middle;
+  }
+
+  tbody tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  // Sort arrow: dim until the column is sorted, flipped for ascending.
+  .sort-icon {
+    fill: currentColor;
+    opacity: 0.35;
+    vertical-align: middle;
+    transition: transform var(--transition-fast);
+
+    &.active {
+      opacity: 1;
+    }
+
+    &.asc {
+      transform: rotate(180deg);
+    }
+  }
+
+  .sort-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-height: 32px;
+  }
+}
+
 // Small uppercase label above a heading, e.g. "Latest work".
 .eyebrow {
   margin: 0;

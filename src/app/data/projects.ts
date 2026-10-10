@@ -9,6 +9,12 @@ export interface RepoLink {
   url: string
 }
 
+/**
+ * Product: something built to be used. Research: a study with a question
+ * and a write-up. Coursework: class notebooks and exercises.
+ */
+export type ProjectType = 'product' | 'research' | 'coursework'
+
 export interface Project {
   /** URL slug, used as the :id param in /project/:id */
   id: string
@@ -19,6 +25,8 @@ export interface Project {
   description: string
   tags: string[]
   category: string
+  /** Which group the project sits in on the Projects page filter. */
+  type: ProjectType
   /** When the work happened, e.g. "Fall 2022" or "2023-present". Shown on cards and the detail page. */
   period?: string
   /**
@@ -91,6 +99,7 @@ const PROJECT_DEFINITIONS: Project[] = [
       "A fundamentals-analytics study that asks whether the earnings surprise disclosed in a 10-Q or 10-K predicts how a stock drifts over the following quarter, the classic post-earnings-announcement drift, rebuilt from free public data. It pulls the SEC EDGAR companyfacts XBRL API for 154 large caps across all 11 sectors, keys every value to its filing date so no feature uses information the market did not yet have, and builds Standardized Unexpected Earnings with a seasonal random walk (no paid analyst estimates). Returns are measured excess of each stock's own sector ETF, evaluation is walk-forward with transaction costs, and a calibrated XGBoost model is benchmarked against honest baselines. Each snapshot is versioned in Postgres and served through the same ingest-and-read pattern as the World Cup engine.",
     tags: ['Python', 'FastAPI', 'PostgreSQL', 'Angular', 'XGBoost', 'Chart.js'],
     category: 'Machine Learning',
+    type: 'research',
     period: '2026',
     icon: 'query_stats',
     image: 'assets/projects/edgar-signals.webp',
@@ -124,6 +133,7 @@ const PROJECT_DEFINITIONS: Project[] = [
       'End-to-end machine-learning system that forecasts the 2026 FIFA World Cup. Trained a calibrated XGBoost classifier on ~12,000 international matches since 2014 with positional FIFA-rating features, Elo ratings dating back to 1872, rolling form, and tournament-weighted sample weights. Probabilities are isotonically calibrated and fed into a Monte Carlo simulator that runs 2 million tournaments, bridging classification probabilities to score distributions via a Poisson xG solver. The pipeline ran daily throughout the tournament: every completed match was locked into every subsequent simulation, sharpening predictions as the bracket unfolded. Each daily snapshot is versioned in Postgres, so the UI shows how the predictions evolved, and a post-tournament wrap-up grades the model against what actually happened.',
     tags: ['Python', 'XGBoost', 'FastAPI', 'PostgreSQL', 'Angular', 'Chart.js'],
     category: 'Machine Learning',
+    type: 'product',
     period: '2026',
     icon: 'sports_soccer',
     image: 'assets/projects/world-cup-prediction.webp',
@@ -156,6 +166,7 @@ const PROJECT_DEFINITIONS: Project[] = [
       'Full-stack civic web app that helps Maryland residents prepare for the 2026 primary election. Enter your address to instantly see your congressional and state legislative districts, current representatives, every candidate on your ballot, and relevant legislation, all in one place. Features "Civvy", an AI chat assistant powered by a RAG pipeline (BGE-M3 embeddings + pgvector) that answers plain-English questions about Maryland bills. Data is ingested from 5+ government sources including the Maryland General Assembly API, OpenStates, Census Geocoder, and the MD State Board of Elections.',
     tags: ['Next.js', 'FastAPI', 'PostgreSQL', 'pgvector', 'AI/RAG', 'Cloudflare'],
     category: 'Full Stack',
+    type: 'product',
     period: '2026',
     icon: 'how_to_vote',
     image: 'assets/projects/showupmd.webp',
@@ -182,6 +193,7 @@ const PROJECT_DEFINITIONS: Project[] = [
       'The platform serving the site you are on. An Angular frontend on Cloudflare Pages talks to a Java Spring Boot authentication API and a Python FastAPI model server, both running in Docker on home hardware behind a Cloudflare Tunnel, so nothing needs a cloud bill. Includes structured request-scoped logging with real-IP detection and a dark-themed UI built with Angular Material.',
     tags: ['Angular', 'Java Spring Boot', 'Python FastAPI', 'PostgreSQL'],
     category: 'Full Stack',
+    type: 'product',
     period: '2023-present',
     icon: 'language',
     image: 'assets/projects/research-portfolio.webp',
@@ -210,6 +222,7 @@ const PROJECT_DEFINITIONS: Project[] = [
       'When you export a Google Photos library with Takeout, the photos arrive stripped of their metadata: capture dates and GPS coordinates are dumped into separate JSON sidecar files with famously inconsistent naming. Takeout Organizer matches each photo to its sidecar, writes the metadata back into the file itself with ExifTool, and rebuilds a clean date-organized library. A perceptual-hash de-duplication pass catches the same photo across re-compressions, which solves the overlap between a Takeout export and downloaded shared albums, and keeps the best copy of each. Every operation is copy-based and collision-safe: source files are never modified or deleted, which a dedicated source-integrity test enforces. Runs headless as a CLI or with a desktop GUI, resumes interrupted sessions, and has been exercised on a multi-terabyte library.',
     tags: ['Python', 'ExifTool', 'Pillow', 'CLI', 'GitHub Actions'],
     category: 'Tools',
+    type: 'product',
     period: '2026',
     icon: 'photo_library',
     image: 'assets/projects/takeout-organizer.webp',
@@ -239,6 +252,7 @@ const PROJECT_DEFINITIONS: Project[] = [
       "Investigated the efficacy of various ResNet architectures for early Alzheimer's Disease classification utilizing constrained MRI datasets. Demonstrated the stability and clinical potential of pre-trained convolutional neural networks, specifically ResNet-50, and used saliency maps to interpret predictive performance and highlight the brain regions each model attends to. Completed as the final project for a graduate deep learning course (UMD DATA 612), with the full write-up available below.",
     tags: ['Python', 'PyTorch', 'CNN', 'ResNet'],
     category: 'Machine Learning',
+    type: 'research',
     period: 'Summer 2023',
     coursework: 'Graduate coursework, UMD (DATA 612)',
     icon: 'psychology',
@@ -271,6 +285,7 @@ const PROJECT_DEFINITIONS: Project[] = [
       "Built multimodal transformer models for the WASSA 2023 Shared Task, predicting empathy, emotional intensity, and emotional polarity in conversational reactions to news articles. The architecture combines transformer text embeddings with non-textual features (demographics, conversation context) through several fusion strategies: concatenation, MLP-on-categorical, gating, and attention. The naive multimodal fusion consistently edged out the text-only baseline on Pearson correlation, the shared task's metric, while the error metrics revealed the trade-offs of simple feature combination, an honest negative result the report analyzes in depth. Completed as the final project for a graduate NLP course (UMD DATA 641); the full report is available below.",
     tags: ['Python', 'NLP', 'Transformers', 'HuggingFace'],
     category: 'Machine Learning',
+    type: 'research',
     period: 'Spring 2023',
     coursework: 'Graduate coursework, UMD (DATA 641)',
     icon: 'forum',
@@ -303,6 +318,7 @@ const PROJECT_DEFINITIONS: Project[] = [
       'My graduate capstone (UMD DATA 698, Research Methods and Study Designs) produced a complete formal study design for a question the autism community actually has: which awareness events improve public sentiment toward autism, and which do not? The design pairs autism-related tweets collected around past awareness events with event timelines and CDC ADDM prevalence data, and specifies the full pipeline: preprocessing, sentiment scoring, a human-labeled validation set to check the sentiment model before trusting it, and the comparative analysis across events. It goes beyond the modeling to the parts research proposals usually skip: an ethics, legal, and privacy assessment of social media data, a communication plan for autism organizations and researchers, and a costed resource plan (two data scientists, two data labelers, a graphic designer, and a manager). An earlier course proposal for a Dask + NLTK processing pipeline grew into this design. The study was designed end to end but deliberately not executed.',
     tags: ['Python', 'Dask', 'NLTK', 'Scikit-Learn', 'Research Design'],
     category: 'Data Science',
+    type: 'research',
     period: 'Summer 2022',
     coursework: 'Graduate capstone, UMD (DATA 698)',
     icon: 'bar_chart',
@@ -331,6 +347,7 @@ const PROJECT_DEFINITIONS: Project[] = [
       'Final project for a graduate machine learning course (UMD DATA 603) asking what factors drive the success of SpaceX launches and booster recoveries. Using the launch data SpaceX publishes through its API (204 launches, with rocket, payload, core, and landing details), the project trains and grid-search-tunes four classifiers: decision tree, k-nearest neighbors, support vector machine, and random forest. Landing prediction worked: the random forest reached an f1 of 0.95 on successes and 0.86 on failures, and its feature importances made physical sense (whether a landing was attempted, payload mass, flight number of the core, landing legs, core reuse). Launch-failure prediction did not work, and the report says so: only four launches in the dataset carried a payload that failed, and no amount of tuning fixes four positive examples.',
     tags: ['Python', 'scikit-learn', 'Pandas', 'GridSearchCV'],
     category: 'Machine Learning',
+    type: 'research',
     period: 'Fall 2022',
     coursework: 'Graduate coursework, UMD (DATA 603)',
     icon: 'rocket_launch',
@@ -359,6 +376,7 @@ const PROJECT_DEFINITIONS: Project[] = [
       'Final project for a graduate data representation course (UMD DATA 604), built entirely in MATLAB: a controlled comparison of what representation you hand a classifier. Grayscale CIFAR10 images are fed to a k-nearest-neighbors classifier four ways: raw pixels, principal component analysis, kernel PCA, and t-SNE embeddings, with the k and training-size choices tuned first on the raw baseline. PCA finished with the best global accuracy (31.7%), kernel PCA just behind (31.6%), t-SNE at 25.8%, and raw pixels last. The per-class picture was messier: t-SNE won five of the ten classes outright while losing the average, because PCA never had the lowest lows. A companion midterm applied the same PCA-plus-kNN machinery to Fashion MNIST.',
     tags: ['MATLAB', 'PCA', 'Kernel PCA', 't-SNE', 'kNN'],
     category: 'Data Science',
+    type: 'research',
     period: 'Spring 2023',
     coursework: 'Graduate coursework, UMD (DATA 604)',
     icon: 'scatter_plot',
@@ -387,6 +405,7 @@ const PROJECT_DEFINITIONS: Project[] = [
       'My first real data science project, built with two classmates in an introductory graduate course (UMD DATA 602). The team worked directly against the NOAA Climate Data API, first mapping its stations, datasets, and data-category endpoints to find stations with long, usable records, then pulling decades of daily temperature and precipitation data for the Baltimore-Washington region. The analysis looks for climate-change signals in average, maximum, and minimum temperature trends and in snowfall specifically, and finishes with a decision-tree model of snowfall that only became workable after reframing the target from snowfall amount to a binary snow or no-snow day. Most of the project, honestly, was learning to get real data into a usable state.',
     tags: ['Python', 'Pandas', 'NOAA API', 'Jupyter'],
     category: 'Data Science',
+    type: 'research',
     period: 'Fall 2021',
     coursework: 'Graduate coursework, UMD (DATA 602)',
     icon: 'ac_unit',
@@ -414,6 +433,7 @@ const PROJECT_DEFINITIONS: Project[] = [
       'The working notebooks from a graduate machine learning course (UMD DATA 603), kept because they are where the fundamentals actually sank in. The series walks through Bayesian classifiers from their decision-theory notation, binary and multiclass logistic regression with confusion matrices, precision, recall, and ROC analysis, decision-tree exercises, and regression on housing data. The largest notebook applies PCA to the Labeled Faces in the Wild dataset, building eigenfaces, projecting the faces into the reduced basis, and classifying with kNN, which is the assignment that made dimensionality reduction concrete rather than abstract. These notebooks are coursework, not products, and that is the point: they are the reps that the later projects stand on.',
     tags: ['Python', 'scikit-learn', 'NumPy', 'Jupyter'],
     category: 'Machine Learning',
+    type: 'coursework',
     period: 'Fall 2022',
     coursework: 'Graduate coursework, UMD (DATA 603)',
     icon: 'functions',
@@ -441,6 +461,7 @@ const PROJECT_DEFINITIONS: Project[] = [
       'Notebooks from a graduate computational statistics course (UMD DATA 606) covering how random sampling actually works. The core notebook builds up from probability mass and density functions to inverse-transform sampling, then rejection sampling with an explicit envelope function, deriving and plotting each step. The homework applies Markov chain Monte Carlo to posterior estimation, running multiple chains and comparing their traces and densities to check convergence by eye. This is the probabilistic footing under the later calibrated-model work: isotonic calibration and Brier scores in the World Cup and EDGAR projects trace straight back to these exercises.',
     tags: ['Python', 'NumPy', 'Matplotlib', 'Bayesian Statistics'],
     category: 'Data Science',
+    type: 'coursework',
     period: 'Spring 2022',
     coursework: 'Graduate coursework, UMD (DATA 606)',
     icon: 'casino',
@@ -468,6 +489,7 @@ const PROJECT_DEFINITIONS: Project[] = [
       'A working notebook from a graduate big data systems course (UMD DATA 605) that was less about the model and entirely about the plumbing. It stands up a local Dask cluster with explicit worker, thread, and memory limits, wraps the connection handling in helper functions, and then, unusually for a notebook, unit-tests those helpers with unittest right between the cells. Tesla price history and fundamentals load through dask.dataframe with lazy evaluation and type conversion, mirroring the same flow discussed for Spark, and a small decision tree at the end closes the train-test loop. The model itself trained on five rows of fundamentals data, which was never the point.',
     tags: ['Python', 'Dask', 'Spark', 'unittest'],
     category: 'Data Science',
+    type: 'coursework',
     period: 'Spring 2022',
     coursework: 'Graduate coursework, UMD (DATA 605)',
     icon: 'hub',
@@ -495,6 +517,7 @@ const PROJECT_DEFINITIONS: Project[] = [
       'The PyTorch homework notebooks from a graduate deep learning course (UMD DATA 612), the direct on-ramp to the Alzheimer MRI final project. The MNIST notebooks build the training loop from scratch (data loaders, network definition, optimization, evaluation) and then reload the trained network to visualize its learned embeddings with t-SNE, where the ten digits separate into clean, nearly disjoint clusters. The feature-extraction homework freezes a pretrained ResNet50, upsamples CIFAR10 images to fit it, harvests penultimate-layer features for train and test sets, and shows via t-SNE how much structure a network trained on ImageNet already imposes on images it has never seen.',
     tags: ['Python', 'PyTorch', 'ResNet', 't-SNE'],
     category: 'Machine Learning',
+    type: 'coursework',
     period: 'Summer 2023',
     coursework: 'Graduate coursework, UMD (DATA 612)',
     icon: 'device_hub',
@@ -522,6 +545,7 @@ const PROJECT_DEFINITIONS: Project[] = [
       "The earliest notebooks of the graduate program (UMD DATA 602, first semester), kept unpolished on purpose. The first analyzes a survey of the cohort's interests: reading the CSV, handling missing values, joining tables, and growing a decision tree over interest columns that, in hindsight, mostly memorized 35 classmates. The second pulls Boston Celtics box scores and hits real-world data cleaning immediately, non-breaking space characters hiding in both the values and the column names, before fitting a win-loss decision tree on a season of games and reading it against basketball intuition. Neither is a project so much as a record of first contact with pandas, scikit-learn, and messy data.",
     tags: ['Python', 'Pandas', 'scikit-learn', 'Jupyter'],
     category: 'Data Science',
+    type: 'coursework',
     period: 'Fall 2021',
     coursework: 'Graduate coursework, UMD (DATA 602)',
     icon: 'school',
@@ -577,6 +601,18 @@ const STATUS_TEXT: Record<NonNullable<Project['status']>, string> = {
   'in-progress': 'In progress',
   research: 'Research',
   proposal: 'Research proposal',
+}
+
+export const TYPE_LABEL: Record<ProjectType, string> = {
+  product: 'Product',
+  research: 'Research',
+  coursework: 'Coursework',
+}
+
+/** The first year in a period like "Fall 2022" or "2023-present". */
+export function projectYear(project: Project): number | null {
+  const match = project.period?.match(/\d{4}/)
+  return match ? Number(match[0]) : null
 }
 
 /** Badge text for a project's status, or null when it has none. */

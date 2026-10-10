@@ -1,122 +1,139 @@
-<div class="projects-page">
+<div class="projects-page container">
   <!-- ===== Header ===== -->
-  <section class="projects-header">
-    <h1 class="page-title">My Projects</h1>
-    <p class="page-subtitle animate-in animate-in-delay-1">
-      Live products, ML research, and the graduate coursework behind them, newest first
+  <header class="projects-header">
+    <h1 class="page-title">Projects</h1>
+    <p class="page-intro">
+      Live products, ML research, and the graduate coursework behind them, newest first.
     </p>
-  </section>
+    <p class="page-count">{{ summary }}</p>
+  </header>
 
-  <!-- ===== Filters ===== -->
-  <section
-    class="filter-section animate-in animate-in-delay-2"
-    role="group"
-    aria-label="Filter projects by category"
-  >
-    @for (category of categories; track $index) {
+  <!-- ===== Type filter ===== -->
+  <div class="filter-group" role="group" aria-label="Filter by type">
+    @for (option of filters; track option.value) {
       <button
         type="button"
-        class="filter-btn"
-        [class.active]="activeFilter === category"
-        [attr.aria-pressed]="activeFilter === category"
-        (click)="setFilter(category)"
+        class="toggle-chip"
+        [attr.aria-pressed]="filter === option.value"
+        (click)="setFilter(option.value)"
       >
-        {{ category }}
+        @if (filter === option.value) {
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+          </svg>
+        }
+        {{ option.label }}
+        <span class="toggle-count">{{ option.count }}</span
+        ><span class="visually-hidden"> projects</span>
       </button>
     }
-  </section>
+  </div>
 
-  <!-- ===== Projects Grid ===== -->
-  <section class="projects-grid-section" aria-labelledby="projects-list-heading">
-    <h2 id="projects-list-heading" class="visually-hidden">
-      {{ activeFilter === 'All' ? 'All projects' : activeFilter + ' projects' }}
-    </h2>
-    <div class="projects-grid">
-      @for (project of filteredProjects; track project.id) {
-        <article class="project-card surface animate-in">
-          @if (project.image) {
-            <div class="card-thumb">
-              <img [src]="project.image" alt="" loading="lazy" />
-            </div>
-          }
-          <div class="card-header">
-            <span class="card-icon">
-              @if (project.logo) {
-                <img [src]="project.logo" [alt]="project.title + ' logo'" class="card-logo" />
-              }
-              @if (!project.logo) {
-                <mat-icon class="card-mat-icon">{{ project.icon }}</mat-icon>
-              }
-            </span>
-            <span class="card-badges">
-              @if (project.period) {
-                <span class="card-period" [attr.title]="project.coursework || null">
-                  @if (project.coursework) {
-                    <mat-icon class="card-school-icon">school</mat-icon>
+  <!-- ===== Featured ===== -->
+  @if (featured.length) {
+    <section class="projects-section" aria-labelledby="featured-title">
+      <h2 id="featured-title" class="section-title">Featured</h2>
+      <ul class="featured-grid">
+        @for (project of featured; track project.id) {
+          <li class="animate-in"><app-work-card [project]="project" /></li>
+        }
+      </ul>
+    </section>
+  }
+
+  <!-- ===== Archive ===== -->
+  @if (archive.length) {
+    <section class="projects-section" aria-labelledby="archive-title">
+      <h2 id="archive-title" class="section-title">Archive</h2>
+      <table class="data-table archive-table">
+        <caption class="visually-hidden">
+          Other projects, sortable by year and title
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col" class="col-year sortable" [attr.aria-sort]="ariaSort('year')">
+              <button type="button" class="sort-btn" (click)="sortBy('year')">
+                Year
+                <svg
+                  class="sort-icon"
+                  [class.active]="sortKey === 'year'"
+                  [class.asc]="sortKey === 'year' && sortDir === 'asc'"
+                  viewBox="0 0 24 24"
+                  width="16"
+                  height="16"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z" />
+                </svg>
+              </button>
+            </th>
+            <th scope="col" class="col-title sortable" [attr.aria-sort]="ariaSort('title')">
+              <button type="button" class="sort-btn" (click)="sortBy('title')">
+                Title
+                <svg
+                  class="sort-icon"
+                  [class.active]="sortKey === 'title'"
+                  [class.asc]="sortKey === 'title' && sortDir === 'asc'"
+                  viewBox="0 0 24 24"
+                  width="16"
+                  height="16"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z" />
+                </svg>
+              </button>
+            </th>
+            <th scope="col" class="col-type">Type</th>
+            <th scope="col" class="col-tags">Built with</th>
+            <th scope="col" class="col-links">Links</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (project of archive; track project.id) {
+            <tr>
+              <td class="col-year">{{ yearOf(project) }}</td>
+              <td class="col-title">
+                <a [routerLink]="['/project', project.id]">{{ project.title }}</a>
+              </td>
+              <td class="col-type">{{ typeLabel[project.type] }}</td>
+              <td class="col-tags">
+                <ul class="chip-list">
+                  @for (tag of project.tags.slice(0, 4); track tag) {
+                    <li class="chip">{{ tag }}</li>
                   }
-                  {{ project.period }}
-                </span>
-              }
-              <span class="card-category">{{ project.category }}</span>
-            </span>
-          </div>
-          <h3 class="card-title">
-            <!-- The title is the card's one link; its ::after covers the whole card. -->
-            <a class="card-title-link" [routerLink]="['/project', project.id]">{{
-              project.title
-            }}</a>
-          </h3>
-          <p class="card-description">{{ project.shortDescription }}</p>
-          <div class="card-tags">
-            @for (tag of project.tags; track $index) {
-              <span class="card-tag">{{ tag }}</span>
-            }
-          </div>
-          <div class="card-actions">
-            @if (project.github && (!project.repoLinks || project.repoLinks.length === 0)) {
-              <a
-                [href]="project.github"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="card-link"
-              >
-                <mat-icon>code</mat-icon>
-                <span>Source</span>
-              </a>
-            }
-            @if (project.repoLinks && project.repoLinks.length > 0) {
-              <a
-                [href]="project.repoLinks[0].url"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="card-link"
-              >
-                <mat-icon>code</mat-icon>
-                <span>Source</span>
-              </a>
-            }
-            @if (project.demo) {
-              <a
-                [href]="project.demo"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="card-link card-link-primary"
-              >
-                <mat-icon>open_in_new</mat-icon>
-                <span>Demo</span>
-              </a>
-            }
-          </div>
-        </article>
-      }
-    </div>
+                </ul>
+              </td>
+              <td class="col-links">
+                @if (codeLink(project); as code) {
+                  <a [href]="code" target="_blank" rel="noopener noreferrer"
+                    >Code<span class="visually-hidden"> for {{ project.title }}</span></a
+                  >
+                }
+                @if (project.paper) {
+                  <a [href]="project.paper" target="_blank" rel="noopener noreferrer"
+                    >Report<span class="visually-hidden"> for {{ project.title }}</span></a
+                  >
+                }
+                @if (!codeLink(project) && !project.paper) {
+                  <span class="visually-hidden">None</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </section>
+  }
 
-    <!-- Empty state -->
-    @if (filteredProjects.length === 0) {
-      <div class="empty-state">
-        <mat-icon>search_off</mat-icon>
-        <p>No projects match this filter.</p>
-      </div>
-    }
-  </section>
+  <!-- ===== Empty state ===== -->
+  @if (!featured.length && !archive.length) {
+    <div class="empty-state">
+      <p>No projects match these filters.</p>
+      <button type="button" class="btn-secondary btn-md" (click)="setFilter('all')">
+        Clear filters
+      </button>
+    </div>
+  }
 </div>
