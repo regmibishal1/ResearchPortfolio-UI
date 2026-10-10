@@ -1,3 +1,5 @@
+@use 'breakpoints' as bp;
+
 // Surfaces and text follow the site design tokens so this page reads as
 // part of the portfolio, not a separate app. The data accents below stay
 // distinct: they carry meaning in the charts and tables.
@@ -246,10 +248,18 @@ h1 {
     }
     .mat-mdc-tab .mdc-tab__text-label {
       color: $muted;
+      font-size: 15px;
       font-weight: 500;
     }
     .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
-      color: $accent;
+      color: var(--text-primary);
+    }
+    // Four short labels fit a phone without scroll arrows.
+    @include bp.down(bp.$sm) {
+      .mat-mdc-tab {
+        min-width: 0;
+        padding: 0 12px;
+      }
     }
     .mdc-tab-indicator__content--underline {
       border-color: $accent !important;
@@ -1408,5 +1418,27 @@ h1 {
   tbody th {
     text-align: left;
     font-weight: 500;
+  }
+}
+
+// "Show all 48 teams" under the standings, and the match list the
+// bracket's "Show all matches" opens.
+.show-all-btn,
+.played-list {
+  margin-top: var(--space-4);
+}
+
+// Tabs with a long name use a shorter one on phones.
+.label-short {
+  display: none;
+}
+
+@include bp.down(bp.$sm) {
+  .label-long {
+    display: none;
+  }
+
+  .label-short {
+    display: inline;
   }
 }

@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing'
+import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router'
 import { WorldCupComponent } from './world-cup.component'
 import { SeoService } from '../../services/seo.service'
 import { TeamRow, WorldCupService } from '../../services/world-cup.service'
@@ -11,6 +12,8 @@ function makeComponent(): WorldCupComponent {
     providers: [
       { provide: SeoService, useValue: { setPage: () => {} } },
       { provide: WorldCupService, useValue: {} },
+      provideRouter([]),
+      { provide: ActivatedRoute, useValue: { snapshot: { queryParamMap: convertToParamMap({}) } } },
     ],
   })
   return TestBed.runInInjectionContext(() => new WorldCupComponent())
@@ -85,5 +88,56 @@ describe('WorldCupComponent leaderboard sorting', () => {
 
     cmp.sortBy('delta')
     expect(cmp.displayedLeaderboard.map((r) => r.team)).toEqual(['Brazil', 'Canada', 'Argentina'])
+  })
+})
+
+describe('WorldCupComponent tabs', () => {
+  type Internals = {
+    retro: { complete: boolean } | null
+    latest: { run: { n_played_matches_locked: number } } | null
+    scenarioViews: unknown[]
+  }
+
+  function setup(complete: boolean, scenarios: number): WorldCupComponent {
+    const cmp = makeComponent()
+    const state = cmp as unknown as Internals
+    state.retro = { complete }
+    state.latest = { run: { n_played_matches_locked: complete ? 104 : 80 } }
+    state.scenarioViews = new Array(scenarios).fill({})
+    return cmp
+  }
+
+  it('shows four tabs once the tournament is complete, starting with the wrap-up', () => {
+    const cmp = setup(true, 2)
+    expect(cmp.tabs.map((t) => t.slug)).toEqual(['wrap-up', 'bracket', 'odds', 'grades'])
+  })
+
+  it('swaps in standings and the what-if view for snapshots before the final', () => {
+    const cmp = setup(false, 2)
+    expect(cmp.tabs.map((t) => t.slug)).toEqual([
+      'standings',
+      'bracket',
+      'odds',
+      'grades',
+      'what-if',
+    ])
+  })
+
+  it('opens the tab named in the URL and falls back to the first for any other', () => {
+    const cmp = setup(true, 0)
+    cmp.tabSlug = 'odds'
+    expect(cmp.selectedTabIndex).toBe(2)
+    cmp.tabSlug = 'what-if'
+    expect(cmp.selectedTabIndex).toBe(0)
+    cmp.tabSlug = 'nonsense'
+    expect(cmp.selectedTabIndex).toBe(0)
+  })
+
+  it('previews the top eight teams until all are asked for', () => {
+    const cmp = setup(true, 0)
+    cmp.displayedLeaderboard = Array.from({ length: 48 }, (_, i) => team(`T${i}`, 48 - i, 1500))
+    expect(cmp.visibleStandings.length).toBe(8)
+    cmp.showAllTeams = true
+    expect(cmp.visibleStandings.length).toBe(48)
   })
 })
