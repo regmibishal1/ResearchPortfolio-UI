@@ -180,7 +180,7 @@
     border-radius: var(--radius-sm);
     transition:
       background-color var(--transition-fast),
-      opacity var(--transition-fast);
+      color var(--transition-fast);
   }
 
   li + li {
@@ -211,20 +211,25 @@
   border-radius: var(--radius-sm);
   transition:
     background-color var(--transition-fast),
-    opacity var(--transition-fast);
+    color var(--transition-fast);
 }
 
-// While a skill is picked, matching work is marked and the rest steps back.
+// While a skill is picked, matching work is marked and the rest steps back
+// to the muted text color, which still reads at AA contrast.
 .filtering {
   .entry-points li,
-  .project {
-    opacity: 0.45;
+  .project :is(.entry-title a, .entry-text, .entry-tags, .entry-date) {
+    color: var(--text-muted);
   }
 
   .entry-points li.match,
   .project.match {
-    opacity: 1;
     background: var(--accent-gold-dim);
+  }
+
+  .entry-points li.match,
+  .project.match :is(.entry-title a, .entry-text) {
+    color: var(--text-primary);
   }
 
   .project.match {
@@ -299,8 +304,9 @@
   }
 
   .filtering .entry-points li,
-  .filtering .project {
-    opacity: 1;
+  .filtering .project,
+  .filtering .project :is(.entry-title a, .entry-text, .entry-tags, .entry-date) {
     background: none;
+    color: #000;
   }
 }
