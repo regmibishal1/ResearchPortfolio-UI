@@ -64,10 +64,12 @@
       <span class="champion-label">{{
         final?.detail?.played ? 'Champion' : 'Predicted champion'
       }}</span>
-      <span class="champion-name">{{ bracket.champion }}</span>
-      @if (final?.detail?.played && favorite) {
+      <span class="champion-name">{{ bracket().champion }}</span>
+      @if (final?.detail?.played && favorite()) {
         <span class="champion-pick"
-          >Model's pick before kickoff: {{ favorite.team }} ({{ favorite.pct.toFixed(1) }}%)</span
+          >Model's pick before kickoff: {{ favorite().team }} ({{
+            favorite().pct.toFixed(1)
+          }}%)</span
         >
       }
     </div>
@@ -125,7 +127,7 @@
       <button
         type="button"
         class="toggle-chip"
-        [attr.aria-pressed]="round === r.key"
+        [attr.aria-pressed]="round() === r.key"
         (click)="selectRound(r.key)"
       >
         {{ r.short }}
@@ -137,12 +139,12 @@
   </div>
   <h3 class="round-title">{{ roundLabel }}</h3>
   <div class="round-slots">
-    @if (round === 'final') {
+    @if (round() === 'final') {
       <div class="final-stack">
         <ng-container *ngTemplateOutlet="finalBlock" />
       </div>
     } @else {
-      @for (s of byRound[round]; track s.key) {
+      @for (s of byRound[round()]; track s.key) {
         <ng-container *ngTemplateOutlet="match; context: { $implicit: s }" />
       }
     }
@@ -155,8 +157,8 @@
     <li class="group-card">
       <span class="group-label">Group {{ g }}</span>
       <ol class="group-list">
-        <li>{{ bracket.group_winners[g][0] }}</li>
-        <li>{{ bracket.group_winners[g][1] }}</li>
+        <li>{{ bracket().group_winners[g][0] }}</li>
+        <li>{{ bracket().group_winners[g][1] }}</li>
       </ol>
     </li>
   }
@@ -164,7 +166,7 @@
 
 <h2 class="section-title">Best 8 third-placed teams</h2>
 <ul class="chip-list">
-  @for (t of bracket.best_thirds; track t) {
+  @for (t of bracket().best_thirds; track t) {
     <li class="chip">{{ t }}</li>
   }
 </ul>

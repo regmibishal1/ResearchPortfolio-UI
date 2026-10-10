@@ -4,8 +4,8 @@ import {
   ChangeDetectionStrategy,
   ElementRef,
   PLATFORM_ID,
-  ViewChild,
   inject,
+  viewChild,
 } from '@angular/core'
 import { DecimalPipe, isPlatformBrowser } from '@angular/common'
 
@@ -149,14 +149,14 @@ export class MriExplorerComponent implements AfterViewInit {
 
   private readonly assetBase = 'assets/research/mri'
 
-  @ViewChild('picker') picker?: ElementRef<HTMLElement>
+  readonly picker = viewChild<ElementRef<HTMLElement>>('picker')
   private isBrowser = isPlatformBrowser(inject(PLATFORM_ID))
 
   // On a narrow screen the model row scrolls sideways; start with the
   // selected model in view rather than cut off at the edge.
   ngAfterViewInit() {
     if (!this.isBrowser) return
-    const row = this.picker?.nativeElement
+    const row = this.picker()?.nativeElement
     const chip = row?.querySelector<HTMLElement>('[aria-pressed="true"]')
     if (!row || !chip || row.scrollWidth <= row.clientWidth) return
     row.scrollLeft = chip.offsetLeft - (row.clientWidth - chip.offsetWidth) / 2

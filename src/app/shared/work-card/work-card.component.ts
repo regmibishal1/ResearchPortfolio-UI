@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, input } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { Project } from '../../data/projects'
 import { StatusBadgeComponent } from '../status-badge/status-badge.component'
@@ -18,6 +18,6 @@ import { projectSrcset } from '../project-srcset'
   styleUrl: './work-card.component.scss',
 })
 export class WorkCardComponent {
-  @Input({ required: true }) project!: Project
+  readonly project = input.required<Project>()
   readonly srcset = projectSrcset
 }

@@ -3,10 +3,11 @@ import {
   ElementRef,
   OnDestroy,
   OnInit,
-  ViewChild,
   ChangeDetectionStrategy,
   inject,
   ChangeDetectorRef,
+  viewChild,
+  afterRenderEffect,
 } from '@angular/core'
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common'
 import { RouterModule } from '@angular/router'
@@ -85,17 +86,10 @@ export class StocksComponent implements OnInit, OnDestroy {
   private stocks = inject(StocksService)
   private cdr = inject(ChangeDetectorRef)
 
-  // The canvas only enters the DOM once the loading gate flips, which happens
-  // in the same change-detection pass that delivers the data. Rendering from
-  // a ViewChild setter draws the chart exactly when the element exists,
-  // instead of racing change detection from the subscribe callback.
-  private trackCanvas?: ElementRef<HTMLCanvasElement>
-
-  @ViewChild('trackCanvas')
-  set trackCanvasRef(ref: ElementRef<HTMLCanvasElement> | undefined) {
-    this.trackCanvas = ref
-    if (ref) this.renderTrackChart()
-  }
+  // The canvas only enters the DOM once the loading gate flips. Drawing from
+  // an effect on the query draws the chart once the element exists, instead
+  // of racing change detection from the subscribe callback.
+  private readonly trackCanvas = viewChild<ElementRef<HTMLCanvasElement>>('trackCanvas')
 
   loading = true
   error: string | null = null
@@ -120,6 +114,10 @@ export class StocksComponent implements OnInit, OnDestroy {
   private chart: Chart | null = null
 
   constructor() {
+    afterRenderEffect(() => {
+      if (this.trackCanvas()) this.renderTrackChart()
+    })
+
     const title = inject(Title)
     const meta = inject(Meta)
 
@@ -266,8 +264,9 @@ export class StocksComponent implements OnInit, OnDestroy {
 
   private renderTrackChart(): void {
     const points = this.trackRecord?.points ?? []
-    if (!points.length || !this.trackCanvas) return
-    const ctx = this.trackCanvas.nativeElement.getContext('2d')
+    const canvas = this.trackCanvas()
+    if (!points.length || !canvas) return
+    const ctx = canvas.nativeElement.getContext('2d')
     if (!ctx) return
 
     const labels = points.map((p) => p.period_label)

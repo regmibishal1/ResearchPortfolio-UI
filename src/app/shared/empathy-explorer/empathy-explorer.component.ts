@@ -1,12 +1,12 @@
 import {
   Component,
   ElementRef,
-  ViewChild,
   AfterViewInit,
   OnDestroy,
   PLATFORM_ID,
   inject,
   ChangeDetectionStrategy,
+  viewChild,
 } from '@angular/core'
 import { CommonModule, isPlatformBrowser } from '@angular/common'
 import {
@@ -72,7 +72,7 @@ const CLASSIFICATION_CURVE = [
 })
 export class EmpathyExplorerComponent implements AfterViewInit, OnDestroy {
   private platformId = inject(PLATFORM_ID)
-  @ViewChild('curveCanvas') curveCanvas!: ElementRef<HTMLCanvasElement>
+  readonly curveCanvas = viewChild.required<ElementRef<HTMLCanvasElement>>('curveCanvas')
 
   readonly curve = CLASSIFICATION_CURVE
   readonly curveSummary =
@@ -147,7 +147,7 @@ export class EmpathyExplorerComponent implements AfterViewInit, OnDestroy {
     const textColor = styles.getPropertyValue('--text-secondary').trim() || '#a0a0b8'
     const gridColor = 'rgba(255, 255, 255, 0.06)'
 
-    this.chart = new Chart(this.curveCanvas.nativeElement, {
+    this.chart = new Chart(this.curveCanvas().nativeElement, {
       type: 'line',
       data: {
         labels: CLASSIFICATION_CURVE.map((r) => `Epoch ${r.epoch}`),

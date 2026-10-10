@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output,
-} from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnChanges, input, model } from '@angular/core'
 import { NgTemplateOutlet } from '@angular/common'
 import { BracketResponse, MatchDetail } from '../../../services/world-cup.service'
 
@@ -46,11 +39,14 @@ export const BRACKET_ROUNDS: { key: BracketRound; short: string; label: string }
   styleUrl: './wc-bracket.component.scss',
 })
 export class WcBracketComponent implements OnChanges {
-  @Input({ required: true }) bracket!: BracketResponse
+  readonly bracket = input.required<BracketResponse>()
   /** The model's favorite before kickoff, shown under the champion once the final is played. */
-  @Input() favorite: { team: string; pct: number } | null = null
-  @Input() round: BracketRound = 'final'
-  @Output() roundChange = new EventEmitter<BracketRound>()
+  readonly favorite = input<{
+    team: string
+    pct: number
+  } | null>(null)
+  /** Two-way: the parent keeps it in the URL. */
+  readonly round = model<BracketRound>('final')
 
   readonly rounds = BRACKET_ROUNDS
 
@@ -64,16 +60,15 @@ export class WcBracketComponent implements OnChanges {
   private openFactors = new Set<string>()
 
   ngOnChanges(): void {
-    this.build(this.bracket)
+    this.build(this.bracket())
   }
 
   get roundLabel(): string {
-    return this.rounds.find((r) => r.key === this.round)?.label ?? ''
+    return this.rounds.find((r) => r.key === this.round())?.label ?? ''
   }
 
   selectRound(round: BracketRound): void {
-    this.round = round
-    this.roundChange.emit(round)
+    this.round.set(round)
   }
 
   /** Screen reader text for the team marked as going through. */

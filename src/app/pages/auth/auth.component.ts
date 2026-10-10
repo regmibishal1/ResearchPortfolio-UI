@@ -4,10 +4,10 @@ import {
   ElementRef,
   Injector,
   PLATFORM_ID,
-  ViewChild,
   ChangeDetectionStrategy,
   afterNextRender,
   inject,
+  viewChild,
 } from '@angular/core'
 import { isPlatformBrowser } from '@angular/common'
 import { ActivatedRoute, Router } from '@angular/router'
@@ -60,7 +60,7 @@ export class AuthComponent {
   forgotSent = false
   readonly minPasswordLength = MIN_PASSWORD_LENGTH
 
-  @ViewChild('errorSummary') errorSummary?: ElementRef<HTMLElement>
+  readonly errorSummary = viewChild<ElementRef<HTMLElement>>('errorSummary')
 
   private cdr = inject(ChangeDetectorRef)
   private injector = inject(Injector)
@@ -189,6 +189,6 @@ export class AuthComponent {
   }
 
   private focusSummary() {
-    afterNextRender(() => this.errorSummary?.nativeElement.focus(), { injector: this.injector })
+    afterNextRender(() => this.errorSummary()?.nativeElement.focus(), { injector: this.injector })
   }
 }

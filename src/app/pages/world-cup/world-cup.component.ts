@@ -3,10 +3,10 @@ import {
   ElementRef,
   OnDestroy,
   OnInit,
-  ViewChild,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   inject,
+  viewChild,
 } from '@angular/core'
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common'
 import { ActivatedRoute, Router, RouterModule } from '@angular/router'
@@ -169,8 +169,8 @@ export class WorldCupComponent implements OnInit, OnDestroy {
   private cdr = inject(ChangeDetectorRef)
   private route = inject(ActivatedRoute)
 
-  @ViewChild('historyCanvas') historyCanvas?: ElementRef<HTMLCanvasElement>
-  @ViewChild('calibCanvas') calibCanvas?: ElementRef<HTMLCanvasElement>
+  readonly historyCanvas = viewChild<ElementRef<HTMLCanvasElement>>('historyCanvas')
+  readonly calibCanvas = viewChild<ElementRef<HTMLCanvasElement>>('calibCanvas')
 
   loading = true
   error: string | null = null
@@ -846,9 +846,10 @@ export class WorldCupComponent implements OnInit, OnDestroy {
 
   private renderHistoryChart(): void {
     const history = this.stageHistories[this.selectedHistoryStage]
-    if (!history || !this.historyCanvas) return
+    const canvas = this.historyCanvas()
+    if (!history || !canvas) return
 
-    const ctx = this.historyCanvas.nativeElement.getContext('2d')
+    const ctx = canvas.nativeElement.getContext('2d')
     if (!ctx) return
 
     const dateSet = new Set<string>()
@@ -928,13 +929,14 @@ export class WorldCupComponent implements OnInit, OnDestroy {
 
   private renderCalibrationChart(): void {
     const bins = this.reportCard?.calibration
-    if (!bins?.length || !this.calibCanvas) {
+    const canvas = this.calibCanvas()
+    if (!bins?.length || !canvas) {
       this.calibChart?.destroy()
       this.calibChart = null
       return
     }
 
-    const ctx = this.calibCanvas.nativeElement.getContext('2d')
+    const ctx = canvas.nativeElement.getContext('2d')
     if (!ctx) return
 
     const labels = bins.map((b) => `${Math.round(b.lo * 100)}-${Math.round(b.hi * 100)}%`)

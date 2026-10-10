@@ -5,10 +5,10 @@ import {
   OnDestroy,
   OnInit,
   PLATFORM_ID,
-  ViewChild,
   inject,
   signal,
   ChangeDetectionStrategy,
+  viewChild,
 } from '@angular/core'
 import { toSignal } from '@angular/core/rxjs-interop'
 import { isPlatformBrowser } from '@angular/common'
@@ -49,8 +49,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
   readonly isAuthenticated = toSignal(this.authService.getAuthStatus(), { initialValue: false })
   readonly menuOpen = signal(false)
 
-  @ViewChild('main', { static: true }) main!: ElementRef<HTMLElement>
-  @ViewChild('menuButton', { read: ElementRef }) menuButton?: ElementRef<HTMLElement>
+  readonly main = viewChild.required<ElementRef<HTMLElement>>('main')
+  readonly menuButton = viewChild<unknown, ElementRef<HTMLElement>>('menuButton', {
+    read: ElementRef,
+  })
 
   private subscriptions = new Subscription()
   private isBrowser = isPlatformBrowser(inject(PLATFORM_ID))
@@ -72,7 +74,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   closeMenu(returnFocus = false) {
     if (!this.menuOpen()) return
     this.menuOpen.set(false)
-    if (returnFocus) this.menuButton?.nativeElement.focus()
+    if (returnFocus) this.menuButton()?.nativeElement.focus()
   }
 
   @HostListener('document:keydown.escape')
@@ -84,7 +86,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   // home, so the skip link moves focus itself.
   skipToMain(event: Event) {
     event.preventDefault()
-    this.main.nativeElement.focus()
+    this.main().nativeElement.focus()
   }
 
   // After moving to another page, put focus on its heading so keyboard and
@@ -98,7 +100,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.lastPath = cleanPath
     if (!this.isBrowser || isFirst || !changed || fragment) return
     setTimeout(() => {
-      const main = this.main.nativeElement
+      const main = this.main().nativeElement
       const heading = main.querySelector<HTMLElement>('h1')
       const target = heading ?? main
       if (heading && !heading.hasAttribute('tabindex')) heading.setAttribute('tabindex', '-1')

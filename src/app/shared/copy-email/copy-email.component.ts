@@ -2,9 +2,9 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  Input,
   OnDestroy,
   inject,
+  input,
 } from '@angular/core'
 import { CONTACT } from '../../data/resume'
 
@@ -19,7 +19,7 @@ import { CONTACT } from '../../data/resume'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CopyEmailComponent implements OnDestroy {
-  @Input() email = CONTACT.email
+  readonly email = input(CONTACT.email)
 
   private cdr = inject(ChangeDetectorRef)
   copied = false
@@ -28,12 +28,12 @@ export class CopyEmailComponent implements OnDestroy {
 
   async copy(): Promise<void> {
     try {
-      await navigator.clipboard.writeText(this.email)
+      await navigator.clipboard.writeText(this.email())
       this.copied = true
       this.message = 'Email address copied'
     } catch {
       this.copied = false
-      this.message = `Copy failed; the address is ${this.email}`
+      this.message = `Copy failed; the address is ${this.email()}`
     }
     this.cdr.markForCheck()
     clearTimeout(this.timer)
