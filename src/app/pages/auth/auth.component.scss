@@ -1,78 +1,77 @@
+@use 'breakpoints' as bp;
+
 .auth-page {
-  min-height: 100vh;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  overflow: hidden;
+  min-height: calc(100vh - 64px);
+  padding: var(--space-7) var(--space-4);
 }
 
 .auth-progress {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
   z-index: 100;
+  width: 100%;
 }
 
 .auth-container {
-  position: relative;
-  z-index: 10;
   width: 100%;
-  max-width: 480px;
-  padding: 2rem;
+  max-width: 400px;
 }
 
 .auth-card {
-  padding: 3rem;
-  border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+
+  @include bp.down(bp.$sm) {
+    padding: var(--space-5);
+  }
 }
 
 .auth-title {
-  font-family: 'Outfit', sans-serif;
-  color: var(--text-primary);
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-  font-weight: 700;
+  margin: 0 0 var(--space-2);
+  font-size: var(--fs-h2);
+  line-height: var(--lh-h2);
 }
 
 .auth-subtitle {
+  margin: 0 0 var(--space-5);
   color: var(--text-secondary);
-  font-size: 1rem;
-  margin-bottom: 2rem;
 }
 
 .auth-form {
-  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: var(--space-5);
+  width: 100%;
 }
 
 .input-row {
   display: flex;
-  gap: 1rem;
-  width: 100%;
+  gap: var(--space-4);
 
   .field {
     flex: 1;
+  }
+
+  @include bp.down(bp.$sm) {
+    flex-direction: column;
+    gap: var(--space-5);
   }
 }
 
 .field {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  text-align: left;
+  gap: var(--space-2);
 
   label {
-    font-size: 0.875rem;
-    font-weight: 600;
     color: var(--text-primary);
+    font-size: var(--fs-small);
+    font-weight: 600;
   }
 }
 
@@ -81,32 +80,72 @@
   align-items: center;
   gap: 6px;
   margin: 0;
-  font-size: 0.875rem;
   color: var(--color-negative);
-}
-
-.input-group.invalid {
-  border-color: var(--color-negative);
+  font-size: var(--fs-small);
 }
 
 // Announced on submit; also receives focus so keyboard users land on it.
 .error-summary {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  width: 100%;
-  margin-bottom: 1.5rem;
-  padding: 12px 14px;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+  padding: var(--space-3) var(--space-4);
   border: 1px solid var(--color-negative);
   border-radius: var(--radius-md);
   background: rgba(248, 113, 113, 0.08);
   color: var(--text-primary);
-  font-size: 0.95rem;
-  text-align: left;
+  font-size: var(--fs-small);
 
-  mat-icon {
-    flex-shrink: 0;
+  app-icon {
     color: var(--color-negative);
+  }
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1px solid var(--border-control);
+  border-radius: var(--radius-md);
+  background: var(--bg-secondary);
+  transition: border-color var(--transition-fast);
+
+  &:focus-within {
+    border-color: var(--accent-gold);
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  &.invalid {
+    border-color: var(--color-negative);
+  }
+
+  .input-icon {
+    margin-right: var(--space-3);
+    color: var(--text-secondary);
+  }
+
+  input {
+    flex: 1;
+    width: 100%;
+    padding: var(--space-3) 0;
+    border: none;
+    background: transparent;
+    color: var(--text-primary);
+    font-family: var(--font-text);
+    // 16px keeps iOS from zooming in on focus.
+    font-size: var(--fs-body);
+
+    // The surrounding .input-group draws the focus ring.
+    &:focus {
+      outline: none;
+    }
+
+    &::placeholder {
+      color: var(--text-muted);
+    }
   }
 }
 
@@ -126,94 +165,36 @@
 
   &:hover,
   &[aria-pressed='true'] {
-    color: var(--accent-gold);
+    color: var(--text-primary);
   }
+}
+
+.auth-submit {
+  width: 100%;
+  margin-top: var(--space-2);
+}
+
+.auth-toggle-text {
+  margin: var(--space-6) 0 0;
+  color: var(--text-secondary);
+  font-size: var(--fs-small);
 }
 
 .link-button {
   padding: 0;
   border: none;
   background: none;
+  color: var(--accent-gold);
   font: inherit;
   font-weight: 600;
-  color: var(--accent-gold);
   text-decoration: underline;
   text-underline-offset: 3px;
   cursor: pointer;
-
-  &:hover {
-    color: var(--accent-gold-hover);
-  }
 }
 
-.input-group {
-  position: relative;
-  display: flex;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--border-control);
-  border-radius: var(--radius-md);
-  min-height: 48px;
-  padding: 0 0.875rem;
-  transition: all 0.3s ease;
-
-  &:focus-within {
-    outline: 2px solid var(--focus-ring);
-    outline-offset: 2px;
-    border-color: var(--accent-gold);
-    background: rgba(255, 255, 255, 0.05);
-    box-shadow: 0 0 0 2px rgba(239, 199, 94, 0.2);
-  }
-
-  .input-icon {
-    color: var(--text-muted);
-    margin-right: 0.75rem;
-    font-size: 1.25rem;
-    width: 1.25rem;
-    height: 1.25rem;
-  }
-
-  input {
-    flex: 1;
-    background: transparent;
-    border: none;
-    color: var(--text-primary);
-    font-family: 'Inter', sans-serif;
-    font-size: 1rem;
-    padding: 0.75rem 0;
-    width: 100%;
-
-    // The surrounding .input-group draws the focus ring.
-    &:focus {
-      outline: none;
-    }
-
-    &::placeholder {
-      color: var(--text-muted);
-    }
-  }
-}
-
-.auth-submit {
-  width: 100%;
-  min-height: 48px;
-  justify-content: center;
-  padding: 0 1rem;
-  font-size: 1rem;
-  margin-top: 0.5rem;
-  border-radius: var(--radius-md);
-}
-
-.auth-toggle-text {
-  margin-top: 2rem;
-  color: var(--text-secondary);
-  font-size: 0.95rem;
-}
-
-/* Form transition animations */
+// Switching between sign-in and create-account fades the form in.
 .form-section {
-  width: 100%;
-  animation: fadeUp var(--dur-base) var(--ease) forwards;
+  animation: fadeUp var(--dur-base) var(--ease) both;
 }
 
 @keyframes fadeUp {
@@ -221,19 +202,9 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-@media (max-width: 768px) {
-  .auth-card {
-    padding: 2rem;
-  }
-
-  .input-row {
-    flex-direction: column;
-    gap: 1.5rem;
   }
 }

@@ -9,7 +9,6 @@ import {
 } from '@angular/core'
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common'
 import { RouterModule } from '@angular/router'
-import { MatIconModule } from '@angular/material/icon'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { Title, Meta } from '@angular/platform-browser'
 import {
@@ -35,6 +34,7 @@ import {
   StocksService,
   TrackRecordResponse,
 } from '../../services/stocks.service'
+import { IconComponent, IconName } from '../../shared/icon/icon.component'
 
 Chart.register(
   BarController,
@@ -69,9 +69,9 @@ const STOCK_TEXT_COLUMNS: ReadonlySet<StockSortKey> = new Set(['ticker', 'sector
 @Component({
   selector: 'app-stocks',
   imports: [
+    IconComponent,
     CommonModule,
     RouterModule,
-    MatIconModule,
     MatProgressSpinnerModule,
     DatePipe,
     DecimalPipe,
@@ -177,7 +177,7 @@ export class StocksComponent implements OnInit, OnDestroy {
     }
   }
 
-  sortIcon(key: StockSortKey): string {
+  sortIcon(key: StockSortKey): IconName {
     if (this.sortKey !== key) return 'unfold_more'
     return this.sortAsc ? 'arrow_upward' : 'arrow_downward'
   }

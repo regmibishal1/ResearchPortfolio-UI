@@ -1,22 +1,12 @@
-<div class="not-found-page">
-  <div class="not-found-bg">
-    <div class="gradient-orb orb-1"></div>
-    <div class="gradient-orb orb-2"></div>
-  </div>
-
-  <div class="not-found-content">
-    <h1 class="error-code animate-in">
-      <span class="digit">4</span>
-      <span class="digit zero">0</span>
-      <span class="digit">4</span>
-    </h1>
-    <h2 class="error-title animate-in animate-in-delay-1">Page Not Found</h2>
-    <p class="error-message animate-in animate-in-delay-2">
-      The page you're looking for doesn't exist or has been moved.
-    </p>
-    <a class="btn-home animate-in animate-in-delay-3" [routerLink]="['']">
-      <mat-icon>home</mat-icon>
-      Back to Home
-    </a>
-  </div>
+<div class="not-found container">
+  <p class="eyebrow">Error 404</p>
+  <h1 class="not-found-title">Page not found</h1>
+  <p class="not-found-message">
+    That page doesn't exist. It may have moved, or the link may be wrong.
+  </p>
+  <ul class="not-found-links">
+    <li><a class="btn-primary btn-md" [routerLink]="['/project']">See the projects</a></li>
+    <li><a class="btn-secondary btn-md" [routerLink]="['/blog']">Read the blog</a></li>
+    <li><a class="btn-secondary btn-md" [routerLink]="['']">Go to the home page</a></li>
+  </ul>
 </div>

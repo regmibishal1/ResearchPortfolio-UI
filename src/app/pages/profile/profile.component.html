@@ -25,7 +25,7 @@
           <!-- Account details (read-only) -->
           <div class="card surface">
             <h2 class="card-title">
-              <mat-icon>person_outline</mat-icon>
+              <app-icon name="person_outline" />
               Account Details
             </h2>
             <div class="detail-row">
@@ -46,7 +46,7 @@
             </div>
             <div class="card-footer">
               <button class="btn-danger" (click)="onLogout()">
-                <mat-icon>logout</mat-icon>
+                <app-icon name="logout" />
                 Sign out
               </button>
             </div>
@@ -54,7 +54,7 @@
           <!-- Change password -->
           <div class="card surface">
             <h2 class="card-title">
-              <mat-icon>lock_outline</mat-icon>
+              <app-icon name="lock_outline" />
               Change Password
             </h2>
             <form (ngSubmit)="onChangePassword()" #pwForm="ngForm" novalidate>
@@ -76,7 +76,7 @@
                     (click)="showCurrentPassword = !showCurrentPassword"
                     [attr.aria-label]="showCurrentPassword ? 'Hide password' : 'Show password'"
                   >
-                    <mat-icon>{{ showCurrentPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                    <app-icon [name]="showCurrentPassword ? 'visibility_off' : 'visibility'" />
                   </button>
                 </div>
               </div>
@@ -99,7 +99,7 @@
                     (click)="showNewPassword = !showNewPassword"
                     [attr.aria-label]="showNewPassword ? 'Hide password' : 'Show password'"
                   >
-                    <mat-icon>{{ showNewPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                    <app-icon [name]="showNewPassword ? 'visibility_off' : 'visibility'" />
                   </button>
                 </div>
               </div>
@@ -121,7 +121,7 @@
                     (click)="showConfirmPassword = !showConfirmPassword"
                     [attr.aria-label]="showConfirmPassword ? 'Hide password' : 'Show password'"
                   >
-                    <mat-icon>{{ showConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                    <app-icon [name]="showConfirmPassword ? 'visibility_off' : 'visibility'" />
                   </button>
                 </div>
               </div>
@@ -130,9 +130,7 @@
                 class="btn-primary"
                 [disabled]="changingPassword || !pwForm.valid"
               >
-                <mat-icon>{{
-                  changingPassword ? 'hourglass_empty' : 'check_circle_outline'
-                }}</mat-icon>
+                <app-icon [name]="changingPassword ? 'hourglass_empty' : 'check_circle_outline'" />
                 {{ changingPassword ? 'Updating...' : 'Update Password' }}
               </button>
             </form>

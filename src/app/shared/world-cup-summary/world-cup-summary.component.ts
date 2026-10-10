@@ -1,9 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core'
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common'
 import { RouterModule } from '@angular/router'
-import { MatIconModule } from '@angular/material/icon'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { LatestResponse, WorldCupService } from '../../services/world-cup.service'
+import { IconComponent } from '../icon/icon.component'
 
 /**
  * Compact "final snapshot" card embedded on the World Cup project detail page.
@@ -13,9 +13,9 @@ import { LatestResponse, WorldCupService } from '../../services/world-cup.servic
 @Component({
   selector: 'app-world-cup-summary',
   imports: [
+    IconComponent,
     CommonModule,
     RouterModule,
-    MatIconModule,
     MatProgressSpinnerModule,
     DatePipe,
     DecimalPipe,

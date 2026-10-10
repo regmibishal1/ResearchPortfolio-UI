@@ -1,0 +1,276 @@
+@use 'breakpoints' as bp;
+
+:host {
+  display: block;
+}
+
+.section-title {
+  margin: var(--space-7) 0 var(--space-4);
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  line-height: var(--lh-h3);
+
+  &:first-of-type {
+    margin-top: var(--space-5);
+  }
+}
+
+.round-label {
+  margin-bottom: var(--space-2);
+  color: var(--text-secondary);
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  text-align: center;
+}
+
+// ===== Match card =====
+.match {
+  padding: var(--space-2);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--bg-secondary);
+  font-size: var(--fs-micro);
+}
+
+.team {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 2px 0 2px var(--space-2);
+  border-left: 3px solid transparent;
+  color: var(--text-secondary);
+
+  .match-played & {
+    color: var(--text-secondary);
+  }
+}
+
+// The team that went through: bold, white and marked in gold, with a
+// hidden "(advanced)" for screen readers so it is not marked by color alone.
+.team-winner {
+  border-left-color: var(--accent-gold);
+  color: var(--text-primary);
+  font-weight: 700;
+
+  .match-played & {
+    color: var(--text-primary);
+  }
+}
+
+.team-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.team-score {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.match-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px var(--space-2);
+  margin-top: var(--space-1);
+  padding-left: calc(var(--space-2) + 3px);
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.why-btn {
+  min-height: 24px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent-gold);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.factors {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: var(--space-2);
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.03);
+  font-size: 12px;
+}
+
+.factors-note {
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.factor {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-2);
+}
+
+.factor-label {
+  color: var(--text-primary);
+}
+
+.factor-value,
+.factor-favors {
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+// ===== Champion =====
+.champion {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: var(--space-3) 0;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--accent-gold);
+  color: var(--bg-primary);
+
+  svg {
+    flex: none;
+    fill: currentColor;
+  }
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+}
+
+.champion-label {
+  font-size: var(--fs-micro);
+  font-weight: 600;
+}
+
+.champion-name {
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: 700;
+}
+
+.champion-pick {
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.bronze-label {
+  margin-top: var(--space-2);
+}
+
+// ===== Wide: both halves, nine columns =====
+.bracket-wide {
+  display: none;
+
+  @include bp.up(bp.$lg) {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(0, 1.25fr) repeat(4, minmax(0, 1fr));
+    gap: var(--space-2);
+  }
+}
+
+.bracket-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+// Matches spread out so each round sits between the two it comes from.
+.col-slots {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: var(--space-2);
+}
+
+.center-slots {
+  justify-content: center;
+  gap: 0;
+}
+
+// ===== Narrower: one round at a time =====
+.bracket-narrow {
+  @include bp.up(bp.$lg) {
+    display: none;
+  }
+}
+
+.round-picker {
+  display: flex;
+  gap: var(--space-2);
+  margin: 0 calc(-1 * var(--space-1)) var(--space-4);
+  padding: var(--space-1);
+  overflow-x: auto;
+
+  .toggle-chip {
+    flex: none;
+  }
+}
+
+.round-title {
+  margin: 0 0 var(--space-3);
+  color: var(--text-primary);
+  font-size: var(--fs-body);
+  font-weight: 600;
+}
+
+.round-slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--space-3);
+  align-items: start;
+
+  .match {
+    font-size: var(--fs-small);
+  }
+}
+
+.final-stack {
+  grid-column: 1 / -1;
+  max-width: 420px;
+}
+
+// ===== Group winners and best thirds =====
+.groups-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.group-card {
+  padding: var(--space-3);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--bg-secondary);
+}
+
+.group-label {
+  color: var(--text-secondary);
+  font-size: var(--fs-micro);
+  font-weight: 600;
+}
+
+.group-list {
+  margin: var(--space-1) 0 0;
+  padding-left: 1.25em;
+  color: var(--text-primary);
+  font-size: var(--fs-small);
+  line-height: var(--lh-small);
+}

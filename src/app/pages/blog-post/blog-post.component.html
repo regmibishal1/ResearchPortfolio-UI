@@ -1,43 +1,116 @@
 @if (post) {
-  <article class="post-page">
-    <nav class="breadcrumb">
-      <a [routerLink]="['/blog']" class="back-link">
-        <mat-icon>arrow_back</mat-icon>
-        <span>All Posts</span>
-      </a>
+  <div class="post-page container" [class.has-toc]="toc.length > 0">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <ol>
+        <li><a [routerLink]="['/blog']">Blog</a></li>
+        <li aria-current="page">{{ post.title }}</li>
+      </ol>
     </nav>
-    <header class="post-hero">
-      <span class="post-date">{{ formatDate(post.date) }}</span>
-      <h1 class="post-title">{{ post.title }}</h1>
-      <div class="post-tags">
-        @for (tag of post.tags; track $index) {
-          <span class="tag">{{ tag }}</span>
+
+    <div class="post-layout">
+      <article class="post">
+        <header class="post-header">
+          <h1 class="post-title">{{ post.title }}</h1>
+          <div class="byline">
+            <img class="avatar" src="assets/profile-pic.jpg" alt="" width="32" height="32" />
+            <p class="byline-text">
+              <span>By Bishal Regmi</span>
+              <time class="meta-item" [attr.datetime]="post.date">{{
+                post.date | date: 'MMM d, y'
+              }}</time>
+              <span class="meta-item">{{ minutes }} min read</span>
+              @if (post.updated) {
+                <span class="meta-item"
+                  >Updated
+                  <time [attr.datetime]="post.updated">{{ post.updated | date: 'MMM d, y' }}</time>
+                </span>
+              }
+            </p>
+          </div>
+          <ul class="chip-list" aria-label="Tags">
+            @for (tag of post.tags; track tag) {
+              <li class="chip">{{ tag }}</li>
+            }
+          </ul>
+        </header>
+
+        @if (toc.length) {
+          <details class="toc-inline">
+            <summary>On this page</summary>
+            <ol>
+              @for (h of toc; track h.id) {
+                <li>
+                  <a [routerLink]="['/blog', post.slug]" [fragment]="h.id">{{ h.text }}</a>
+                </li>
+              }
+            </ol>
+          </details>
         }
-      </div>
-    </header>
-    <div class="post-body">
-      @for (block of post.body; track $index) {
-        @switch (block.kind) {
-          @case ('h2') {
-            <h2 class="body-h2">{{ block.text }}</h2>
+
+        <div class="post-body">
+          @for (block of post.body; track $index) {
+            @switch (block.kind) {
+              @case ('h2') {
+                <h2 [id]="headingId(block.text ?? '')">{{ block.text }}</h2>
+              }
+              @case ('p') {
+                <p>{{ block.text }}</p>
+              }
+              @case ('figure') {
+                <figure class="body-figure">
+                  <app-zoomable-image
+                    [src]="block.src!"
+                    [alt]="block.alt || ''"
+                    [caption]="block.caption"
+                  />
+                  <figcaption>{{ block.caption }}</figcaption>
+                </figure>
+              }
+            }
           }
-          @case ('p') {
-            <p class="body-p">{{ block.text }}</p>
+        </div>
+
+        <footer class="post-footer">
+          <p class="reply">Thoughts or corrections? <a [href]="replyHref">Reply by email</a></p>
+
+          @if (related) {
+            <h2 class="footer-heading">The project behind this post</h2>
+            <app-work-card [project]="related" />
           }
-          @case ('figure') {
-            <figure class="body-figure">
-              <app-zoomable-image
-                [src]="block.src!"
-                [alt]="block.alt || ''"
-                [caption]="block.caption"
-              />
-              <figcaption>{{ block.caption }}</figcaption>
-            </figure>
+
+          @if (newer || older) {
+            <nav class="pager" aria-label="More posts">
+              @if (newer) {
+                <a class="pager-link" [routerLink]="['/blog', newer.slug]">
+                  <span class="pager-label">Newer post</span>
+                  <span class="pager-title">{{ newer.title }}</span>
+                </a>
+              }
+              @if (older) {
+                <a class="pager-link pager-older" [routerLink]="['/blog', older.slug]">
+                  <span class="pager-label">Older post</span>
+                  <span class="pager-title">{{ older.title }}</span>
+                </a>
+              }
+            </nav>
           }
-        }
+        </footer>
+      </article>
+
+      @if (toc.length) {
+        <nav class="toc-rail" aria-label="On this page">
+          <p class="toc-title">On this page</p>
+          <ol>
+            @for (h of toc; track h.id) {
+              <li>
+                <a [routerLink]="['/blog', post.slug]" [fragment]="h.id">{{ h.text }}</a>
+              </li>
+            }
+          </ol>
+        </nav>
       }
     </div>
-  </article>
+  </div>
 }
 
 @if (!post) {

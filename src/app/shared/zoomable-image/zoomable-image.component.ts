@@ -8,7 +8,7 @@ import {
 } from '@angular/core'
 
 import { A11yModule } from '@angular/cdk/a11y'
-import { MatIconModule } from '@angular/material/icon'
+import { IconComponent } from '../icon/icon.component'
 
 const PAN_STEP = 120
 
@@ -22,7 +22,7 @@ const PAN_STEP = 120
  */
 @Component({
   selector: 'app-zoomable-image',
-  imports: [MatIconModule, A11yModule],
+  imports: [IconComponent, A11yModule],
   templateUrl: './zoomable-image.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './zoomable-image.component.scss',

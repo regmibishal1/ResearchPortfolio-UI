@@ -11,10 +11,10 @@ import {
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common'
 import { ActivatedRoute, Router, RouterModule } from '@angular/router'
 import { FormsModule } from '@angular/forms'
-import { MatIconModule } from '@angular/material/icon'
 import { MatTabsModule } from '@angular/material/tabs'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { SeoService } from '../../services/seo.service'
+import { BRACKET_ROUNDS, BracketRound, WcBracketComponent } from './wc-bracket/wc-bracket.component'
 import {
   Chart,
   LineController,
@@ -33,7 +33,6 @@ import {
   HistoryResponse,
   HistoryStage,
   LatestResponse,
-  MatchDetail,
   PlayedMatch,
   PlayedMatchesResponse,
   ReportCard,
@@ -57,18 +56,34 @@ Chart.register(
   Tooltip
 )
 
-const PALETTE = [
-  '#f0c040',
-  '#4ade80',
-  '#f9e2af',
-  '#fab387',
-  '#f87171',
-  '#cba6f7',
-  '#94e2d5',
-  '#f5c2e7',
-  '#74c7ec',
-  '#eba0ac',
-]
+// Six colors that stay apart under the common color-vision deficiencies
+// (adapted from Okabe-Ito, lightened for the dark background). Each line is
+// also labelled with its team at its end, so color is never the only key.
+const PALETTE = ['#f0c040', '#56b4e9', '#ff7a45', '#2ec4a0', '#e58fc7', '#e4e4ec']
+
+// Draws each team's name at the end of its line.
+const lineEndLabels = {
+  id: 'lineEndLabels',
+  afterDatasetsDraw(chart: Chart) {
+    const { ctx } = chart
+    ctx.save()
+    ctx.font = '600 12px Inter, sans-serif'
+    ctx.textBaseline = 'middle'
+    chart.data.datasets.forEach((ds, i) => {
+      const values = ds.data as (number | null)[]
+      let end = values.length - 1
+      while (end >= 0 && values[end] === null) end--
+      const last = chart.getDatasetMeta(i).data[end]
+      if (!last) return
+      ctx.fillStyle = String(ds.borderColor)
+      ctx.fillText(String(ds.label), last.x + 8, last.y)
+    })
+    ctx.restore()
+  },
+}
+
+/** Matches in the 2026 tournament: 72 in the groups, 32 in the knockouts. */
+const TOTAL_MATCHES = 104
 
 const STAGE_LABELS: Record<HistoryStage, string> = {
   winner: 'Championship',
@@ -137,11 +152,11 @@ export interface ChartTable {
     CommonModule,
     RouterModule,
     FormsModule,
-    MatIconModule,
     MatTabsModule,
     MatProgressSpinnerModule,
     DatePipe,
     DecimalPipe,
+    WcBracketComponent,
   ],
   templateUrl: './world-cup.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -167,44 +182,11 @@ export class WorldCupComponent implements OnInit, OnDestroy {
   private latestBracket: BracketResponse | null = null
   private stageHistories: Partial<Record<HistoryStage, HistoryResponse>> = {}
 
-  groupKeys: string[] = []
   groupStageRounds: RoundGroup[] = []
   knockoutRounds: RoundGroup[] = []
 
-  bracketHalves: {
-    left: {
-      r32: string[][]
-      r16: string[][]
-      qf: string[][]
-      sf: string[][]
-      r32Details: MatchDetail[]
-      r16Details: MatchDetail[]
-      qfDetails: MatchDetail[]
-      sfDetails: MatchDetail[]
-    }
-    right: {
-      r32: string[][]
-      r16: string[][]
-      qf: string[][]
-      sf: string[][]
-      r32Details: MatchDetail[]
-      r16Details: MatchDetail[]
-      qfDetails: MatchDetail[]
-      sfDetails: MatchDetail[]
-    }
-  } | null = null
-
-  finalDetail: MatchDetail | null = null
-  bronzeDetail: MatchDetail | null = null
-
-  advancers: { r32: Set<string>; r16: Set<string>; qf: Set<string>; sf: Set<string> } = {
-    r32: new Set(),
-    r16: new Set(),
-    qf: new Set(),
-    sf: new Set(),
-  }
-
-  openFactors = new Set<string>()
+  /** Which round the bracket shows on narrower screens (?round=). */
+  bracketRound: BracketRound = 'final'
 
   reportCard: ReportCard | null = null
   scenarios: Scenarios | null = null
@@ -348,14 +330,7 @@ export class WorldCupComponent implements OnInit, OnDestroy {
         this.stageHistories = histories
 
         this.buildHistoryIndex(histories)
-
-        this.groupKeys = Object.keys(bracket.group_winners).sort()
         this.enrichedMatches = this.enrichPlayedMatches(played, bracket)
-
-        this.bracketHalves = this.computeBracketHalves(bracket)
-        this.advancers = this.computeAdvancers(bracket)
-        this.finalDetail = bracket.match_details?.['Final']?.[0] ?? null
-        this.bronzeDetail = bracket.match_details?.['Bronze']?.[0] ?? null
 
         if (this.availableDates.length > 0) {
           this.selectedDate = this.availableDates[0]
@@ -364,6 +339,8 @@ export class WorldCupComponent implements OnInit, OnDestroy {
         const date = query.get('date')
         if (date && this.availableDates.includes(date)) this.selectedDate = date
         this.tabSlug = query.get('tab') ?? this.tabSlug
+        const round = query.get('round') as BracketRound | null
+        if (round && BRACKET_ROUNDS.some((r) => r.key === round)) this.bracketRound = round
         this.rebuildDisplayedLeaderboard()
         this.rebuildLockedMatchesForDate()
 
@@ -415,11 +392,6 @@ export class WorldCupComponent implements OnInit, OnDestroy {
     if (this.isLatestDate) {
       if (this.latestBracket) {
         this.bracket = this.latestBracket
-        this.bracketHalves = this.computeBracketHalves(this.latestBracket)
-        this.advancers = this.computeAdvancers(this.latestBracket)
-        this.finalDetail = this.latestBracket.match_details?.['Final']?.[0] ?? null
-        this.bronzeDetail = this.latestBracket.match_details?.['Bronze']?.[0] ?? null
-        this.groupKeys = Object.keys(this.latestBracket.group_winners).sort()
       }
       this.applyAnalytics(this.latestReportCard, this.latestScenarios, this.latestRetro)
     } else {
@@ -441,11 +413,6 @@ export class WorldCupComponent implements OnInit, OnDestroy {
     this.wc.getBracket({ as_of_date: this.selectedDate }).subscribe({
       next: (b) => {
         this.bracket = b
-        this.bracketHalves = this.computeBracketHalves(b)
-        this.advancers = this.computeAdvancers(b)
-        this.finalDetail = b.match_details?.['Final']?.[0] ?? null
-        this.bronzeDetail = b.match_details?.['Bronze']?.[0] ?? null
-        this.groupKeys = Object.keys(b.group_winners).sort()
         this.bracketLoading = false
       },
       error: () => {
@@ -712,51 +679,16 @@ export class WorldCupComponent implements OnInit, OnDestroy {
     this.availableDates = [...dateSet].sort().reverse()
     this.dateOptions = this.availableDates.map((d) => {
       const locked = this.dateLockMap.get(d) ?? 0
-      return { value: d, label: `${d}  ·  ${locked} match${locked !== 1 ? 'es' : ''} locked` }
+      const day = new Date(`${d}T00:00:00`).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      })
+      return { value: d, label: `${day}, ${locked} of ${TOTAL_MATCHES} played` }
     })
   }
 
   // Bracket helpers
-
-  private computeBracketHalves(b: BracketResponse) {
-    const md = b.match_details ?? {}
-    const r32d = md['R32'] ?? []
-    const r16d = md['R16'] ?? []
-    const qfd = md['QF'] ?? []
-    const sfd = md['SF'] ?? []
-    return {
-      left: {
-        r32: b.r32.slice(0, 8),
-        r16: b.r16.slice(0, 4),
-        qf: b.qf.slice(0, 2),
-        sf: b.sf.slice(0, 1),
-        r32Details: r32d.slice(0, 8),
-        r16Details: r16d.slice(0, 4),
-        qfDetails: qfd.slice(0, 2),
-        sfDetails: sfd.slice(0, 1),
-      },
-      right: {
-        r32: b.r32.slice(8),
-        r16: b.r16.slice(4),
-        qf: b.qf.slice(2),
-        sf: b.sf.slice(1),
-        r32Details: r32d.slice(8),
-        r16Details: r16d.slice(4),
-        qfDetails: qfd.slice(2),
-        sfDetails: sfd.slice(1),
-      },
-    }
-  }
-
-  private computeAdvancers(b: BracketResponse) {
-    const flat = (pairs: string[][]) => new Set(pairs.flat())
-    return {
-      r32: flat(b.r16),
-      r16: flat(b.qf),
-      qf: flat(b.sf),
-      sf: new Set(b.final_pair),
-    }
-  }
 
   // trackBy
 
@@ -764,31 +696,6 @@ export class WorldCupComponent implements OnInit, OnDestroy {
   trackByRound = (_: number, rg: RoundGroup) => rg.round
   trackByDateGroup = (_: number, dg: DateGroup) => dg.date
   trackByMatch = (_: number, m: EnrichedMatch) => `${m.match_date}-${m.home_team}-${m.away_team}`
-  trackByPair = (i: number, pair: string[]) => `${i}-${pair[0]}-${pair[1]}`
-  trackByGroup = (_: number, g: string) => g
-
-  factorKey(round: string, teams: string[]): string {
-    return `${round}::${teams.join('|')}`
-  }
-
-  isFactorOpen(round: string, teams: string[]): boolean {
-    return this.openFactors.has(this.factorKey(round, teams))
-  }
-
-  toggleFactors(round: string, teams: string[]): void {
-    const key = this.factorKey(round, teams)
-    if (this.openFactors.has(key)) this.openFactors.delete(key)
-    else this.openFactors.add(key)
-  }
-
-  formatFactorValue(feature: string, value: number): string {
-    if (feature === 'is_neutral') return value >= 0.5 ? 'neutral site' : 'host advantage'
-    const sign = value > 0 ? '+' : ''
-    if (feature === 'form_diff') return `${sign}${(value * 100).toFixed(0)}%`
-    if (feature === 'goals_form_diff') return `${sign}${value.toFixed(2)}`
-    if (Math.abs(value) >= 10) return `${sign}${value.toFixed(0)}`
-    return `${sign}${value.toFixed(1)}`
-  }
 
   // What-if scenarios
   //
@@ -841,6 +748,50 @@ export class WorldCupComponent implements OnInit, OnDestroy {
     }, 250)
   }
 
+  /** Standings columns in order; the change column shows for earlier snapshots only. */
+  readonly standingsColumns: { key: WcSortKey; label: string }[] = [
+    { key: 'team', label: 'Team' },
+    { key: 'winner_pct', label: 'Winner' },
+    { key: 'delta', label: 'Change' },
+    { key: 'final_pct', label: 'Final' },
+    { key: 'sf_pct', label: 'Semi' },
+    { key: 'qf_pct', label: 'QF' },
+    { key: 'r16_pct', label: 'R16' },
+    { key: 'r32_pct', label: 'R32' },
+    { key: 'elo', label: 'Elo' },
+  ]
+
+  /** A percentage to one decimal, with "<0.1%" for odds too small to show. */
+  pct(value: number | null | undefined): string {
+    if (value === null || value === undefined) return '-'
+    if (value > 0 && value < 0.05) return '<0.1%'
+    return `${value.toFixed(1)}%`
+  }
+
+  /** Which side won a played match, counting a penalty shootout. */
+  winnerOf(m: EnrichedMatch): 'home' | 'away' | null {
+    if (m.went_to_penalties) {
+      if (m.penalty_winner === m.home_team) return 'home'
+      if (m.penalty_winner === m.away_team) return 'away'
+      return null
+    }
+    if (m.home_score === m.away_score) return null
+    return m.home_score > m.away_score ? 'home' : 'away'
+  }
+
+  /** The model's favorite before kickoff, shown with the champion. */
+  get favoritePick(): { team: string; pct: number } | null {
+    const v = this.retro?.verdict
+    return v?.pre_tournament_favorite && v.pre_tournament_favorite_pct != null
+      ? { team: v.pre_tournament_favorite, pct: v.pre_tournament_favorite_pct }
+      : null
+  }
+
+  onRoundChange(round: BracketRound): void {
+    this.bracketRound = round
+    this.writeUrl()
+  }
+
   // Only what differs from the default view goes in the URL.
   private writeUrl(): void {
     this.router.navigate([], {
@@ -848,6 +799,7 @@ export class WorldCupComponent implements OnInit, OnDestroy {
       queryParams: {
         tab: this.selectedTabIndex === 0 ? null : this.tabs[this.selectedTabIndex].slug,
         date: this.isLatestDate ? null : this.selectedDate,
+        round: this.bracketRound === 'final' ? null : this.bracketRound,
       },
       queryParamsHandling: 'merge',
       replaceUrl: true,
@@ -885,15 +837,20 @@ export class WorldCupComponent implements OnInit, OnDestroy {
     for (const s of history.series) for (const p of s.points) dateSet.add(p.as_of_date)
     const labels = [...dateSet].sort()
 
-    const datasets = history.series.map((s, i) => {
+    const lastOf = (points: { as_of_date: string; value: number }[]) =>
+      [...points].sort((x, y) => x.as_of_date.localeCompare(y.as_of_date)).at(-1)?.value ?? 0
+    const series = [...history.series]
+      .sort((x, y) => lastOf(y.points) - lastOf(x.points))
+      .slice(0, PALETTE.length)
+    const datasets = series.map((s, i) => {
       const map = new Map(s.points.map((p) => [p.as_of_date, p.value]))
       return {
         label: s.team,
         data: labels.map((d) => map.get(d) ?? null),
-        borderColor: PALETTE[i % PALETTE.length],
-        backgroundColor: PALETTE[i % PALETTE.length],
+        borderColor: PALETTE[i],
+        backgroundColor: PALETTE[i],
         borderWidth: 2,
-        pointRadius: 3,
+        pointRadius: 2,
         tension: 0.2,
         spanGaps: true,
       }
@@ -904,7 +861,7 @@ export class WorldCupComponent implements OnInit, OnDestroy {
     const leader = datasets[lastValues.indexOf(Math.max(...lastValues))]
     this.historySummary =
       `Line chart of ${stageLabel} probability for ${datasets.length} teams across ` +
-      `${labels.length} daily snapshots, ${labels[0]} to ${labels[labels.length - 1]}. ` +
+      `${labels.length} snapshots, ${labels[0]} to ${labels[labels.length - 1]}. ` +
       (leader ? `${leader.label} ends highest at ${Math.max(...lastValues).toFixed(1)}%.` : '')
     this.historyTable = {
       caption: `${stageLabel} probability (%) by snapshot date`,
@@ -919,17 +876,17 @@ export class WorldCupComponent implements OnInit, OnDestroy {
       this.chart = new Chart(ctx, {
         type: 'line',
         data: { labels, datasets },
+        plugins: [lineEndLabels],
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          // Room on the right for the team names at the line ends.
+          layout: { padding: { right: 96 } },
           plugins: {
-            legend: {
-              position: 'bottom',
-              labels: { color: '#f0f0f5', boxWidth: 12, font: { size: 11 } },
-            },
+            legend: { display: false },
             tooltip: {
               callbacks: {
-                label: (c) => ` ${c.dataset.label}: ${(c.raw as number)?.toFixed(2) ?? '-'}%`,
+                label: (c) => ` ${c.dataset.label}: ${this.pct(c.raw as number)}`,
               },
             },
           },
@@ -1000,10 +957,10 @@ export class WorldCupComponent implements OnInit, OnDestroy {
             {
               label: 'Predicted (perfect calibration)',
               data: bins.map((b) => b.predicted * 100),
-              borderColor: 'rgba(166, 173, 200, 0.6)',
-              backgroundColor: 'rgba(166, 173, 200, 0.6)',
+              borderColor: '#a0a0b8',
+              backgroundColor: '#a0a0b8',
               borderWidth: 2,
-              borderDash: [6, 4],
+              borderDash: [4, 4],
               pointRadius: 3,
               tension: 0.15,
             },
@@ -1030,14 +987,14 @@ export class WorldCupComponent implements OnInit, OnDestroy {
             x: {
               ticks: { color: '#a0a0b8' },
               grid: { color: 'rgba(255,255,255,0.05)' },
-              title: { display: true, text: 'Model confidence in favorite', color: '#a0a0b8' },
+              title: { display: true, text: 'Predicted probability', color: '#a0a0b8' },
             },
             y: {
               min: 0,
               max: 100,
               ticks: { color: '#a0a0b8', callback: (v) => `${v}%` },
               grid: { color: 'rgba(255,255,255,0.05)' },
-              title: { display: true, text: 'How often the favorite won', color: '#a0a0b8' },
+              title: { display: true, text: 'Observed frequency', color: '#a0a0b8' },
             },
           },
         },
