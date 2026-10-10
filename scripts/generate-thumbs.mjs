@@ -1,7 +1,8 @@
 // Writes smaller copies of each project screenshot (400 and 800 px wide) to
 // src/assets/projects/thumbs, so cards can offer them through srcset and a
-// phone does not download a 1280 px image to show it 340 px wide. Run it
-// after adding or replacing a screenshot, then commit the results:
+// phone does not download a 1280 px image to show it 340 px wide. Also writes
+// the 64 px byline avatar for blog posts from the profile photo. Run it after
+// adding or replacing a screenshot, then commit the results:
 //   node scripts/generate-thumbs.mjs
 import { existsSync, mkdirSync, readdirSync, statSync } from 'node:fs'
 import { basename, join, resolve } from 'node:path'
@@ -23,5 +24,11 @@ for (const file of readdirSync(SOURCE).filter((f) => f.endsWith('.webp'))) {
     await sharp(source).resize({ width: target }).webp({ quality: 78 }).toFile(out)
     written++
   }
+}
+const photo = resolve(root, 'src/assets/profile-pic.jpg')
+const avatar = resolve(root, 'src/assets/profile-pic-64.webp')
+if (!existsSync(avatar) || statSync(avatar).mtimeMs < statSync(photo).mtimeMs) {
+  await sharp(photo).resize({ width: 64 }).webp({ quality: 80 }).toFile(avatar)
+  written++
 }
 console.log(`generate-thumbs: ${written} written`)
