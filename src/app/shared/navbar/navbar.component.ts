@@ -113,13 +113,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   onLogout() {
     this.closeMenu()
+    // The local session ends even if the server cannot be reached.
     this.authService.logout().subscribe({
-      next: () => {
-        this.openSnackBar('Signed out.')
-      },
-      error: (error: Error) => {
-        this.openSnackBar(error.message)
-      },
+      next: () => this.openSnackBar('Signed out.'),
+      error: () => this.openSnackBar('Signed out.'),
     })
   }
 

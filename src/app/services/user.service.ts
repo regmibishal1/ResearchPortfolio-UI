@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { Observable } from 'rxjs'
 import { environment } from '../../environments/environment'
+import { AuthResponse } from '../pages/auth/auth.service'
 
 /**
  * Returned by GET /api/v1/user.
@@ -35,8 +36,11 @@ export class UserService {
     return this.http.get<UserProfile>(this.apiUrl)
   }
 
-  /** Changes the authenticated user's own password. Requires the current password. */
-  changePassword(request: ChangePasswordRequest): Observable<void> {
-    return this.http.patch<void>(this.apiUrl, request)
+  /**
+   * Changes the authenticated user's own password. Requires the current
+   * password. Every session ends; the response is a new pair for this device.
+   */
+  changePassword(request: ChangePasswordRequest): Observable<AuthResponse> {
+    return this.http.patch<AuthResponse>(this.apiUrl, request)
   }
 }

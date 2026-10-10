@@ -5,18 +5,21 @@ import { map, take } from 'rxjs/operators'
 
 /**
  * Prevents navigation to authenticated routes unless a valid session token
- * exists in AuthService. Redirects unauthenticated users to /login.
+ * exists in AuthService. Redirects unauthenticated users to /login, which
+ * brings them back here after signing in.
  *
  * Note: This is a client-side convenience guard only. Actual enforcement
  * happens at the API layer; every /user request requires a valid Bearer
  * token and the server returns the requesting user's data only.
  */
-export const authGuard: CanActivateFn = () => {
+export const authGuard: CanActivateFn = (_route, state) => {
   const authService = inject(AuthService)
   const router = inject(Router)
 
   return authService.getAuthStatus().pipe(
     take(1),
-    map((isAuth) => (isAuth ? true : router.createUrlTree(['/login'])))
+    map((isAuth) =>
+      isAuth ? true : router.createUrlTree(['/login'], { queryParams: { next: state.url } })
+    )
   )
 }

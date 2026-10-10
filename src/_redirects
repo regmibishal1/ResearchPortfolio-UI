@@ -2,4 +2,5 @@
 /login     /404   200
 /register  /404   200
 /profile   /404   200
+/reset     /404   200
 /stocks    /404   200
