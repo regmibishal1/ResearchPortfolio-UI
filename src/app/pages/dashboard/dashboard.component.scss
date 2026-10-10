@@ -238,13 +238,13 @@ $toolbar-height: 64px;
   flex-direction: column;
   align-items: center;
   gap: 8px;
+  z-index: 1;
 
   // Short viewports do not have a spare strip below the hero content;
   // the fold is obvious there anyway.
   @media (max-height: 760px) {
     display: none;
   }
-  z-index: 1;
 
   span {
     font-size: 0.75rem;

@@ -60,7 +60,6 @@ const STOCK_TEXT_COLUMNS: ReadonlySet<StockSortKey> = new Set(['ticker', 'sector
 
 @Component({
   selector: 'app-stocks',
-  standalone: true,
   imports: [
     CommonModule,
     RouterModule,

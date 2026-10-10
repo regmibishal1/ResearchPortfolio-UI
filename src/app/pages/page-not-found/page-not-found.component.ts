@@ -6,7 +6,6 @@ import { SeoService } from '../../services/seo.service'
 
 @Component({
   selector: 'app-page-not-found',
-  standalone: true,
   imports: [CommonModule, RouterModule, MatIconModule],
   templateUrl: './page-not-found.component.html',
   styleUrl: './page-not-found.component.scss',

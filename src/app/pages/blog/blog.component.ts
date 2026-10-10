@@ -7,7 +7,6 @@ import { POSTS, BlogPost } from '../../data/blog'
 
 @Component({
   selector: 'app-blog',
-  standalone: true,
   imports: [CommonModule, RouterModule, MatIconModule],
   templateUrl: './blog.component.html',
   styleUrl: './blog.component.scss',

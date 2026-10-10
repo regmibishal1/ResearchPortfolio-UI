@@ -14,7 +14,6 @@ type Mode = 'login' | 'register'
 
 @Component({
   selector: 'app-auth',
-  standalone: true,
   imports: [CommonModule, FormsModule, MatProgressBarModule, MatIconModule],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.scss',

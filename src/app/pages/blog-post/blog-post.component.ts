@@ -9,7 +9,6 @@ import { ZoomableImageComponent } from '../../shared/zoomable-image/zoomable-ima
 
 @Component({
   selector: 'app-blog-post',
-  standalone: true,
   imports: [
     PageNotFoundComponent,
     CommonModule,

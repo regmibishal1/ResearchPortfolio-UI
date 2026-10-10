@@ -15,7 +15,6 @@ const PAN_STEP = 120
  */
 @Component({
   selector: 'app-zoomable-image',
-  standalone: true,
   imports: [CommonModule, MatIconModule, A11yModule],
   templateUrl: './zoomable-image.component.html',
   styleUrl: './zoomable-image.component.scss',

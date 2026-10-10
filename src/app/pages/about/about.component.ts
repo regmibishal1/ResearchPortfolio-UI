@@ -28,7 +28,6 @@ interface Stat {
 
 @Component({
   selector: 'app-about',
-  standalone: true,
   imports: [CommonModule, MatIconModule],
   templateUrl: './about.component.html',
   styleUrl: './about.component.scss',
