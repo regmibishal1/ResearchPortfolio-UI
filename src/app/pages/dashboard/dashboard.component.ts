@@ -8,6 +8,7 @@ import { experienceLabel } from '../../data/experience'
 import { SUMMARY } from '../../data/resume'
 import { NOW, NowNote } from '../../data/now'
 import { WorkCardComponent } from '../../shared/work-card/work-card.component'
+import { projectSrcset } from '../../shared/project-srcset'
 
 @Component({
   selector: 'app-dashboard',
@@ -35,6 +36,7 @@ export class DashboardComponent {
 
   /** The project Home leads with; the section is skipped if none is flagged. */
   readonly spotlight = SPOTLIGHT
+  readonly srcset = projectSrcset
 
   /** Featured work other than the spotlight, newest first. */
   readonly selectedWork: Project[] = PROJECTS.filter((p) => p.featured && !p.spotlight).slice(0, 4)

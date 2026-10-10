@@ -27,7 +27,7 @@
               "src/favicon.ico",
               "src/assets",
               {
-                "glob": "inter-latin{,-ext}-wght-normal.woff2",
+                "glob": "inter-latin-ext-wght-normal.woff2",
                 "input": "node_modules/@fontsource-variable/inter/files",
                 "output": "assets/fonts"
               },

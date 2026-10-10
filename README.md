@@ -42,6 +42,10 @@ npx lhci autorun           # Lighthouse on Home, a case study and a post
 
 Dev values are hardcoded in `src/environments/environment.ts`. Production values are injected at CF Pages build time via the env vars below.
 
+## Monthly rebuild
+
+`.github/workflows/monthly-rebuild.yml` asks Cloudflare Pages to rebuild on the 1st of each month, so build-time values (years of experience, the footer year, "Last updated") never go stale. It needs a deploy hook (Pages > researchportfolio-ui > Settings > Builds > Deploy hooks, branch `main`) saved as the `CF_PAGES_DEPLOY_HOOK` repository secret; without the secret it does nothing. It can also be run by hand from the Actions tab.
+
 ## Cloudflare Pages build settings
 
 | Setting          | Value                                |

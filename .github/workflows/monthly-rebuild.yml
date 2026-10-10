@@ -1,0 +1,28 @@
+name: Monthly rebuild
+
+# Prerendering bakes some values into the HTML at build time (years of
+# experience, the footer year, "Last updated"). Rebuilding once a month keeps
+# them current even when nothing is merged. Uses a Cloudflare Pages deploy
+# hook stored as the CF_PAGES_DEPLOY_HOOK repository secret; without it the
+# job does nothing.
+on:
+  schedule:
+    - cron: "0 6 1 * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ask Cloudflare Pages to rebuild the site
+        env:
+          DEPLOY_HOOK: ${{ secrets.CF_PAGES_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$DEPLOY_HOOK" ]; then
+            echo "CF_PAGES_DEPLOY_HOOK is not set; nothing to do."
+            exit 0
+          fi
+          curl -fsS -X POST "$DEPLOY_HOOK" > /dev/null
+          echo "Rebuild requested."

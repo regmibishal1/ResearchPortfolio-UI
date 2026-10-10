@@ -33,6 +33,7 @@ import {
   HistoryResponse,
   HistoryStage,
   LatestResponse,
+  MetricSummary,
   PlayedMatch,
   PlayedMatchesResponse,
   ReportCard,
@@ -768,6 +769,16 @@ export class WorldCupComponent implements OnInit, OnDestroy {
     if (value === null || value === undefined) return '-'
     if (value > 0 && value < 0.05) return '<0.1%'
     return `${value.toFixed(1)}%`
+  }
+
+  /**
+   * Accuracy as a percentage, from the count of correct calls. The API rounds
+   * accuracy to four places, so 69 of 104 (66.346%) arrives as 0.6635 and would
+   * round up a second time to 66.4%.
+   */
+  accuracyPct(m: MetricSummary): number {
+    if (m.accuracy === null || !m.n) return 0
+    return (Math.round(m.accuracy * m.n) / m.n) * 100
   }
 
   /** Which side won a played match, counting a penalty shootout. */

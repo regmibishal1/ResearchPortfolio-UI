@@ -38,7 +38,7 @@ describe('DashboardComponent', () => {
     const links = [...spotlight.querySelectorAll<HTMLAnchorElement>('.spotlight-actions a')]
     expect(links.map((a) => a.textContent!.trim())).toEqual([
       'Read the case study',
-      'Open live site',
+      'Open live site (opens in a new tab)',
     ])
     expect(links[0].getAttribute('href')).toBe('/project/showupmd')
     expect(links[1].getAttribute('href')).toBe('https://showupmd.org')

@@ -1,7 +1,15 @@
 <article class="work-card">
   @if (project.image) {
     <div class="work-media">
-      <img [src]="project.image" alt="" width="640" height="360" loading="lazy" />
+      <img
+        [src]="project.image"
+        [attr.srcset]="srcset(project.image)"
+        sizes="(min-width: 900px) 560px, calc(100vw - 32px)"
+        alt=""
+        width="640"
+        height="360"
+        loading="lazy"
+      />
     </div>
   }
   <div class="work-body">

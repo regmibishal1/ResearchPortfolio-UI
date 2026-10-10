@@ -13,6 +13,7 @@
 		"lint:styles": "stylelint \"src/**/*.scss\" && node scripts/check-css-vars.mjs",
 		"check:pages": "node scripts/check-pages.mjs",
 		"check:a11y": "node scripts/check-a11y.mjs",
+		"api:types": "openapi-typescript src/app/api/fastapi-openapi.json -o src/app/api/fastapi-schema.ts",
 		"prepare": "husky || true",
 		"pretty": "prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json}\""
 	},
@@ -58,13 +59,16 @@
 		"karma-jasmine": "~5.1.0",
 		"karma-jasmine-html-reporter": "~2.1.0",
 		"lint-staged": "^15.2.2",
+		"openapi-typescript": "7.13.0",
 		"pagefind": "1.5.2",
 		"pdfkit": "0.20.2",
 		"playwright": "1.63.0",
 		"postcss-scss": "4.0.9",
 		"prettier": "^3.2.5",
+		"sharp": "0.35.4",
 		"stylelint": "17.15.0",
 		"stylelint-declaration-strict-value": "1.12.1",
+		"subset-font": "2.9.0",
 		"typescript": "~6.0.3",
 		"typescript-eslint": "8.71.1"
 	}

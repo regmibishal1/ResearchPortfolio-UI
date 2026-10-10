@@ -7,24 +7,6 @@ import { ToastService } from '../../shared/toast/toast.service'
 import { catchError, finalize, map, shareReplay, tap } from 'rxjs/operators'
 import { environment } from '../../../environments/environment'
 
-/** Seconds since the epoch at which a JWT expires, or null if it cannot be read. */
-export function tokenExpiry(token: string): number | null {
-  try {
-    const part = token.split('.')[1]
-    const payload = JSON.parse(atob(part.replace(/-/g, '+').replace(/_/g, '/')))
-    return typeof payload.exp === 'number' ? payload.exp : null
-  } catch {
-    return null
-  }
-}
-
-/** True when the token is missing, unreadable, or expires within the next 30 seconds. */
-export function isExpired(token: string | null, now = Date.now()): boolean {
-  if (!token) return true
-  const exp = tokenExpiry(token)
-  return exp === null || exp * 1000 < now + 30_000
-}
-
 /**
  * Where to go after signing in: only a same-site path, so a crafted
  * ?next= link cannot send someone to another site.
@@ -33,6 +15,9 @@ export function safeNext(next: string | null | undefined): string {
   if (!next || !next.startsWith('/') || next.startsWith('//') || next.includes('\\')) return '/'
   return next
 }
+
+/** A non-secret flag: this browser had a session, so try the refresh cookie on load. */
+const SESSION_HINT = 'signed_in'
 
 @Injectable({
   providedIn: 'root',
@@ -43,8 +28,8 @@ export class AuthService {
   private toasts = inject(ToastService)
 
   private isAuthenticated = new BehaviorSubject<boolean>(false)
+  /** The access token lives only in memory; the refresh token is an HttpOnly cookie. */
   private authToken = new BehaviorSubject<string>('')
-  private refreshToken = new BehaviorSubject<string>('')
   private apiURL: string = environment.apiBaseUrl + '/auth'
   /** One refresh at a time: parallel 401s all wait on the same request. */
   private refreshing: Observable<string> | null = null
@@ -53,20 +38,20 @@ export class AuthService {
     this.checkInitialAuth()
   }
 
-  // Tokens live in browser storage; prerendering always renders signed out.
-  // A session counts as live while its refresh token is; an expired access
-  // token is renewed on the first request that needs it.
+  // Prerendering always renders signed out. In the browser, a page load has
+  // no access token yet; if this browser was signed in, the refresh cookie
+  // (which scripts cannot read) gets a new one, and if that fails the
+  // session is over.
   private checkInitialAuth() {
     if (!isPlatformBrowser(inject(PLATFORM_ID))) return
-    const storedToken = localStorage.getItem('access_token')
-    const storedRefresh = localStorage.getItem('refresh_token')
-    if (!storedToken || isExpired(storedRefresh)) {
-      this.clearSession()
-      return
-    }
-    this.authToken.next(storedToken)
-    this.refreshToken.next(storedRefresh || '')
+    // Tokens were kept in localStorage before they moved to a cookie.
+    localStorage.removeItem('access_token')
+    localStorage.removeItem('refresh_token')
+    if (!localStorage.getItem(SESSION_HINT)) return
     this.isAuthenticated.next(true)
+    // Started once this constructor returns: the request goes through the
+    // auth interceptor, which injects this service.
+    queueMicrotask(() => this.refresh().subscribe({ error: () => this.clearSession() }))
   }
 
   getAuthStatus(): Observable<boolean> {
@@ -81,23 +66,21 @@ export class AuthService {
     return this.authToken.value
   }
 
-  hasRefreshToken(): boolean {
-    return !!this.refreshToken.value
+  /** True while this browser has a session the refresh cookie may renew. */
+  hasSession(): boolean {
+    return this.isAuthenticated.value
   }
 
   setSession(response: AuthResponse) {
-    localStorage.setItem('access_token', response.access_token)
-    localStorage.setItem('refresh_token', response.refresh_token)
+    // Only a flag, never a token: it tells the next page load to try the cookie.
+    localStorage.setItem(SESSION_HINT, '1')
     this.authToken.next(response.access_token)
-    this.refreshToken.next(response.refresh_token)
     this.isAuthenticated.next(true)
   }
 
   private clearSession() {
-    localStorage.removeItem('access_token')
-    localStorage.removeItem('refresh_token')
+    localStorage.removeItem(SESSION_HINT)
     this.authToken.next('')
-    this.refreshToken.next('')
     this.isAuthenticated.next(false)
   }
 
@@ -116,22 +99,18 @@ export class AuthService {
   }
 
   /**
-   * Swaps the refresh token for a new pair and returns the new access token.
-   * The server retires the old refresh token, so concurrent callers share one
+   * Swaps the refresh cookie for a new access token (and a new cookie). The
+   * server retires the old refresh token, so concurrent callers share one
    * request instead of each spending it.
    */
   refresh(): Observable<string> {
     if (!this.refreshing) {
-      this.refreshing = this.http
-        .post<AuthResponse>(`${this.apiURL}/refresh-token`, null, {
-          headers: { Authorization: 'Bearer ' + this.refreshToken.value },
-        })
-        .pipe(
-          tap((response) => this.setSession(response)),
-          map((response) => response.access_token),
-          finalize(() => (this.refreshing = null)),
-          shareReplay(1)
-        )
+      this.refreshing = this.http.post<AuthResponse>(`${this.apiURL}/refresh-token`, null).pipe(
+        tap((response) => this.setSession(response)),
+        map((response) => response.access_token),
+        finalize(() => (this.refreshing = null)),
+        shareReplay(1)
+      )
     }
     return this.refreshing
   }
@@ -153,6 +132,13 @@ export class AuthService {
       finalize(() => this.clearSession()),
       catchError(this.handleError)
     )
+  }
+
+  /** Asks for a reset link by email; the answer is the same whether or not the address has an account. */
+  forgotPassword(email: string) {
+    return this.http
+      .post<void>(`${this.apiURL}/forgot-password`, { email })
+      .pipe(catchError(this.handleError))
   }
 
   resetPassword(token: string, newPassword: string) {
@@ -181,13 +167,12 @@ export class AuthService {
   }
 }
 
+/** The refresh token is not in the body; it arrives as an HttpOnly cookie. */
 export class AuthResponse {
   access_token: string
-  refresh_token: string
 
   constructor() {
     this.access_token = ''
-    this.refresh_token = ''
   }
 }
 
