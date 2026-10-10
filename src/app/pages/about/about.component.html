@@ -8,7 +8,7 @@
 
     <!-- Quick stats strip -->
     <div class="stats-strip animate-in animate-in-delay-2">
-      @for (stat of stats; track stat) {
+      @for (stat of stats; track $index) {
         <div class="stat-item">
           @if (stat.value) {
             <span class="stat-value">{{ stat.value }}</span>
@@ -43,7 +43,7 @@
     <p class="section-subtitle">Tools and technologies I work with</p>
 
     <div class="skills-categories">
-      @for (category of skillCategories; track category; let i = $index) {
+      @for (category of skillCategories; track $index; let i = $index) {
         <div
           class="skill-category glass"
           [class.highlight-category]="!!category.highlight"
@@ -62,7 +62,7 @@
             </div>
           }
           <div class="category-skills">
-            @for (skill of category.skills; track skill) {
+            @for (skill of category.skills; track $index) {
               <span class="skill-badge">{{ skill }}</span>
             }
           </div>
@@ -77,7 +77,7 @@
     <p class="section-subtitle">Verified credentials</p>
 
     <div class="certs-grid">
-      @for (cert of certifications; track cert) {
+      @for (cert of certifications; track $index) {
         <div class="cert-card glass">
           <mat-icon class="cert-icon" [style.color]="cert.color">{{ cert.icon }}</mat-icon>
           <div class="cert-info">
@@ -96,7 +96,7 @@
     <p class="section-subtitle">Where I have worked and what I built there</p>
 
     <div class="timeline">
-      @for (item of experience; track item; let i = $index) {
+      @for (item of experience; track $index; let i = $index) {
         <div class="timeline-item" [style.animation-delay]="i * 0.15 + 's'">
           <div class="timeline-marker">
             <mat-icon>{{ item.icon }}</mat-icon>
@@ -110,7 +110,7 @@
               <span class="timeline-date">{{ item.date }}</span>
             </div>
             <ul class="timeline-details">
-              @for (detail of item.description; track detail) {
+              @for (detail of item.description; track $index) {
                 <li>{{ detail }}</li>
               }
             </ul>
@@ -126,7 +126,7 @@
     <p class="section-subtitle">Academic background</p>
 
     <div class="timeline">
-      @for (item of education; track item; let i = $index) {
+      @for (item of education; track $index; let i = $index) {
         <div class="timeline-item" [style.animation-delay]="i * 0.15 + 's'">
           <div class="timeline-marker">
             <mat-icon>{{ item.icon }}</mat-icon>
@@ -140,7 +140,7 @@
               <span class="timeline-date">{{ item.date }}</span>
             </div>
             <ul class="timeline-details">
-              @for (detail of item.description; track detail) {
+              @for (detail of item.description; track $index) {
                 <li>{{ detail }}</li>
               }
             </ul>
@@ -156,7 +156,7 @@
     <p class="section-subtitle">What excites me in tech</p>
 
     <div class="interests-grid">
-      @for (interest of interests; track interest; let i = $index) {
+      @for (interest of interests; track $index; let i = $index) {
         <div class="interest-card" [style.animation-delay]="i * 0.08 + 's'">
           <mat-icon class="interest-icon">{{ interest.icon }}</mat-icon>
           <span class="interest-name">{{ interest.name }}</span>
@@ -171,7 +171,7 @@
       <h2 class="contact-title">Let's <span class="gold-text">Connect</span></h2>
       <p class="contact-subtitle">Open to new opportunities and interesting problems</p>
       <div class="contact-links">
-        @for (link of contactLinks; track link) {
+        @for (link of contactLinks; track $index) {
           <a [href]="link.url" target="_blank" rel="noopener noreferrer" class="contact-btn">
             <mat-icon>{{ link.icon }}</mat-icon>
             {{ link.label }}

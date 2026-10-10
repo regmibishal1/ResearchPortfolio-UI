@@ -47,7 +47,7 @@
       <div class="hero-actions">
         <!-- Multiple repo links (e.g. Research Portfolio) -->
         @if (project.repoLinks && project.repoLinks.length > 0) {
-          @for (repo of project.repoLinks; track repo) {
+          @for (repo of project.repoLinks; track $index) {
             <a
               [href]="repo.url"
               target="_blank"
@@ -166,7 +166,7 @@
             Key Highlights
           </h2>
           <ul class="highlights-list">
-            @for (highlight of project.highlights; track highlight) {
+            @for (highlight of project.highlights; track $index) {
               <li class="highlight-item">
                 <mat-icon class="check-icon">check_circle_outline</mat-icon>
                 <span>{{ highlight }}</span>
@@ -183,7 +183,7 @@
             Lessons Learned &amp; Limitations
           </h2>
           <ul class="lessons-list">
-            @for (lesson of project.lessons; track lesson) {
+            @for (lesson of project.lessons; track $index) {
               <li class="lesson-item">
                 <mat-icon class="lesson-icon">arrow_right</mat-icon>
                 <span>{{ lesson }}</span>
@@ -199,7 +199,7 @@
           Tech Stack
         </h2>
         <div class="tech-tags">
-          @for (tag of project.tags; track tag) {
+          @for (tag of project.tags; track $index) {
             <span class="tech-tag">{{ tag }}</span>
           }
         </div>

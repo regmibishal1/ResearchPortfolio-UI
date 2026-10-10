@@ -10,13 +10,13 @@
       <span class="post-date">{{ formatDate(post.date) }}</span>
       <h1 class="post-title">{{ post.title }}</h1>
       <div class="post-tags">
-        @for (tag of post.tags; track tag) {
+        @for (tag of post.tags; track $index) {
           <span class="tag">{{ tag }}</span>
         }
       </div>
     </header>
     <div class="post-body">
-      @for (block of post.body; track block) {
+      @for (block of post.body; track $index) {
         @switch (block.kind) {
           @case ('h2') {
             <h2 class="body-h2">{{ block.text }}</h2>

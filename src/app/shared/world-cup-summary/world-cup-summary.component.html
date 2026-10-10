@@ -35,7 +35,7 @@
       <span>{{ d.run.n_played_matches_locked }} matches locked</span>
     </div>
     <ol class="top-list">
-      @for (row of d.leaderboard; track row; let i = $index) {
+      @for (row of d.leaderboard; track row.team; let i = $index) {
         <li>
           <span class="pos">{{ i + 1 }}</span>
           <span class="team">{{ row.team }}</span>

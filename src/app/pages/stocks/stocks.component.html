@@ -63,7 +63,7 @@
   @if (!loading && !error && latest) {
     <!-- Headline metrics -->
     <section class="metric-grid">
-      @for (card of metricCards; track card) {
+      @for (card of metricCards; track $index) {
         <div class="metric-card">
           <span class="metric-label">{{ card.label }}</span>
           <span class="metric-value">{{ card.value }}</span>
@@ -80,7 +80,7 @@
         </p>
       </div>
       <div class="heatmap">
-        @for (s of sectors; track s) {
+        @for (s of sectors; track $index) {
           <button
             type="button"
             class="heat-cell"
@@ -153,7 +153,7 @@
               </tr>
             </thead>
             <tbody>
-              @for (c of visibleCompanies; track c) {
+              @for (c of visibleCompanies; track c.ticker) {
                 <tr
                   class="signal-row"
                   [class.active]="selectedTicker === c.ticker"
@@ -230,7 +230,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    @for (p of d.history; track p) {
+                    @for (p of d.history; track $index) {
                       <tr>
                         <td>{{ p.as_of_date | date: 'mediumDate' }}</td>
                         <td class="num">{{ p.sue !== null ? (p.sue | number: '1.2-2') : '-' }}</td>

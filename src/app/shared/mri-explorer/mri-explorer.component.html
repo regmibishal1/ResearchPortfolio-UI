@@ -1,7 +1,7 @@
 <div class="mri-explorer glass">
   <!-- Model selector -->
   <div class="model-selector" role="group" aria-label="Model">
-    @for (model of models; track model) {
+    @for (model of models; track $index) {
       <button
         type="button"
         class="model-chip"
@@ -35,7 +35,7 @@
 
   <!-- Tabs -->
   <div class="tab-bar" role="tablist" aria-label="Figures">
-    @for (tab of tabs; track tab; let i = $index) {
+    @for (tab of tabs; track $index; let i = $index) {
       <button
         type="button"
         class="tab-btn"
@@ -67,7 +67,7 @@
         to when predicting each dementia stage.
       </p>
       <div class="saliency-grid">
-        @for (cls of saliencyClasses; track cls) {
+        @for (cls of saliencyClasses; track $index) {
           <figure class="saliency-figure">
             <img
               [src]="saliencyImage(cls.id)"
