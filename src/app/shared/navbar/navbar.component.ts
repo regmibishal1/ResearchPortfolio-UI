@@ -20,7 +20,6 @@ import { Subscription, filter } from 'rxjs'
 
 @Component({
   selector: 'app-navbar',
-  standalone: true,
   imports: [
     CommonModule,
     MatToolbarModule,

@@ -67,7 +67,6 @@ const DISTRIBUTIONS: Record<Distribution, DistributionConfig> = {
 
 @Component({
   selector: 'app-stats-explorer',
-  standalone: true,
   imports: [
     CommonModule,
     FormsModule,

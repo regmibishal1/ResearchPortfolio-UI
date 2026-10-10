@@ -1,7 +1,8 @@
 // Custom Theming for Angular Material: Dark theme with gold accents
 @use '@angular/material' as mat;
 
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 
 // Dark palette overrides
 $dark-primary: mat.m2-define-palette(mat.$m2-amber-palette, 600, 400, 800);

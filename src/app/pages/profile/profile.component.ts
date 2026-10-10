@@ -11,7 +11,6 @@ import { AuthService } from '../auth/auth.service'
 
 @Component({
   selector: 'app-profile',
-  standalone: true,
   imports: [CommonModule, FormsModule, MatIconModule, MatProgressSpinnerModule],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',

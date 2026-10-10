@@ -10,7 +10,6 @@ import { experienceLabel } from '../../data/experience'
 
 @Component({
   selector: 'app-dashboard',
-  standalone: true,
   imports: [CommonModule, RouterModule, MatIconModule, StatsExplorerComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',

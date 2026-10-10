@@ -66,7 +66,6 @@ const CLASSIFICATION_CURVE = [
 
 @Component({
   selector: 'app-empathy-explorer',
-  standalone: true,
   imports: [CommonModule, MatIconModule],
   templateUrl: './empathy-explorer.component.html',
   styleUrl: './empathy-explorer.component.scss',

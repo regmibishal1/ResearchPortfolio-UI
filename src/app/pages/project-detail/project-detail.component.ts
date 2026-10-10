@@ -12,7 +12,6 @@ import { ZoomableImageComponent } from '../../shared/zoomable-image/zoomable-ima
 
 @Component({
   selector: 'app-project-detail',
-  standalone: true,
   imports: [
     PageNotFoundComponent,
     CommonModule,
