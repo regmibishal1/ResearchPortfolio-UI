@@ -3,10 +3,11 @@ import { DatePipe } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { SeoService } from '../../services/seo.service'
 import { POSTS, BlogPost, readingMinutes } from '../../data/blog'
+import { IconComponent } from '../../shared/icon/icon.component'
 
 @Component({
   selector: 'app-blog',
-  imports: [RouterModule, DatePipe],
+  imports: [RouterModule, DatePipe, IconComponent],
   templateUrl: './blog.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './blog.component.scss',

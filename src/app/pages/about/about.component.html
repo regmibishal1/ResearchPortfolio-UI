@@ -71,6 +71,34 @@
     </section>
   }
 
+  <!-- ===== Papers ===== -->
+  <section class="about-section" id="papers" aria-labelledby="papers-title">
+    <h2 id="papers-title" class="section-title">Papers and reports</h2>
+    <p class="section-intro">Graduate write-ups, each with a case study on this site</p>
+    <ul class="papers">
+      @for (project of papers; track project.id) {
+        <li class="paper surface">
+          <app-icon name="description" class="paper-icon" />
+          <div class="paper-text">
+            <h3 class="paper-title">
+              <a [href]="project.paper.url" target="_blank" rel="noopener noreferrer">{{
+                project.paper.title
+              }}</a>
+            </h3>
+            <p class="paper-meta" data-pagefind-ignore>
+              <span>{{ project.coursework }}</span>
+              <time [attr.datetime]="project.paper.date">{{ project.period }}</time>
+              <span>PDF, {{ fileSize(project.paper.bytes) }}</span>
+            </p>
+            <a class="paper-case" [routerLink]="['/project', project.id]"
+              >Case study<span class="visually-hidden">: {{ project.title }}</span></a
+            >
+          </div>
+        </li>
+      }
+    </ul>
+  </section>
+
   <!-- ===== Skills ===== -->
   <section class="about-section" id="skills" aria-labelledby="skills-title">
     <h2 id="skills-title" class="section-title">Skills and technologies</h2>
@@ -132,6 +160,7 @@
             </a>
           </li>
         }
+        <li><app-copy-email /></li>
       </ul>
     </div>
   </section>

@@ -80,6 +80,43 @@
   line-height: var(--lh-body);
 }
 
+// ===== Model card =====
+.model-card {
+  margin: 0;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  background: var(--bg-card);
+
+  > div {
+    display: grid;
+    grid-template-columns: 9rem 1fr;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+
+    @include bp.down(bp.$sm) {
+      grid-template-columns: 1fr;
+      gap: var(--space-1);
+    }
+  }
+
+  > div + div {
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  dt {
+    color: var(--text-secondary);
+    font-size: var(--fs-small);
+    font-weight: 600;
+  }
+
+  dd {
+    margin: 0;
+    color: var(--text-body);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+  }
+}
+
 // ===== Results =====
 .result-tiles {
   display: grid;

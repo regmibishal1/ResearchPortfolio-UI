@@ -1,0 +1,127 @@
+<div class="resume-page container" data-pagefind-meta="title:R&eacute;sum&eacute;">
+  <!-- ===== Header ===== -->
+  <header class="resume-header">
+    <div>
+      <h1 class="resume-name">{{ contact.name }}</h1>
+      <p class="resume-role">{{ contact.role }}</p>
+      <ul class="contact-line" aria-label="Contact">
+        <li>{{ contact.location }}</li>
+        <li>
+          <a [href]="'mailto:' + contact.email">{{ contact.email }}</a>
+        </li>
+        <li>
+          <a [href]="contact.linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </li>
+        <li>
+          <a [href]="contact.github" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </li>
+      </ul>
+    </div>
+    <div class="resume-actions">
+      <a class="btn-primary btn-md" [href]="pdf" download>
+        <app-icon name="download" />
+        Download PDF
+      </a>
+      <app-copy-email />
+    </div>
+  </header>
+
+  <p class="resume-summary">{{ summary }}</p>
+
+  <!-- ===== Skill filter ===== -->
+  <section class="skill-filter" aria-labelledby="filter-title">
+    <h2 id="filter-title" class="filter-title">Highlight a skill</h2>
+    <p class="filter-intro">Pick a skill to see where it shows up in the work below.</p>
+    <div class="filter-chips" role="group" aria-labelledby="filter-title">
+      @for (skill of filterSkills; track skill) {
+        <button
+          type="button"
+          class="toggle-chip"
+          [attr.aria-pressed]="selected === skill"
+          (click)="toggle(skill)"
+        >
+          {{ skill }}
+        </button>
+      }
+    </div>
+    <p class="filter-status" aria-live="polite">{{ status }}</p>
+  </section>
+
+  <div class="resume-body" [class.filtering]="!!selected">
+    <!-- ===== Experience ===== -->
+    <section class="resume-section" aria-labelledby="experience-title">
+      <h2 id="experience-title" class="resume-h2">Experience</h2>
+      @for (job of experience; track job.title) {
+        <article class="entry">
+          <div class="entry-head">
+            <h3 class="entry-title">
+              {{ job.title }}<span class="entry-org">, {{ job.subtitle }}</span>
+            </h3>
+            <span class="entry-date">{{ job.date }}</span>
+          </div>
+          <ul class="entry-points">
+            @for (point of job.description; track $index) {
+              <li [class.match]="bulletMatches(point)">{{ point }}</li>
+            }
+          </ul>
+        </article>
+      }
+    </section>
+
+    <!-- ===== Projects ===== -->
+    <section class="resume-section" aria-labelledby="projects-title">
+      <h2 id="projects-title" class="resume-h2">Selected projects</h2>
+      @for (project of projects; track project.id) {
+        <article class="entry project" [class.match]="projectMatches(project)">
+          <div class="entry-head">
+            <h3 class="entry-title">
+              <a [routerLink]="['/project', project.id]">{{ project.title }}</a>
+            </h3>
+            <span class="entry-date">{{ project.period }}</span>
+          </div>
+          <p class="entry-text">{{ project.outcome ?? project.shortDescription }}</p>
+          <p class="entry-tags">{{ project.tags.join(', ') }}</p>
+        </article>
+      }
+    </section>
+
+    <!-- ===== Education ===== -->
+    <section class="resume-section" aria-labelledby="education-title">
+      <h2 id="education-title" class="resume-h2">Education</h2>
+      @for (school of education; track school.title) {
+        <article class="entry">
+          <div class="entry-head">
+            <h3 class="entry-title">
+              {{ school.title }}<span class="entry-org">, {{ school.subtitle }}</span>
+            </h3>
+            <span class="entry-date">{{ school.date }}</span>
+          </div>
+          <p class="entry-text">{{ school.description.join(', ') }}</p>
+        </article>
+      }
+    </section>
+
+    <!-- ===== Skills ===== -->
+    <section class="resume-section" aria-labelledby="skills-title">
+      <h2 id="skills-title" class="resume-h2">Skills</h2>
+      <dl class="skills">
+        @for (category of skillCategories; track category.name) {
+          <div class="skill-row">
+            <dt>{{ category.name }}</dt>
+            <dd>{{ category.skills.join(', ') }}</dd>
+          </div>
+        }
+      </dl>
+    </section>
+
+    <!-- ===== Certifications ===== -->
+    <section class="resume-section" aria-labelledby="certs-title">
+      <h2 id="certs-title" class="resume-h2">Certifications</h2>
+      <ul class="certs">
+        @for (cert of certifications; track cert.name) {
+          <li>{{ cert.name }}, {{ cert.issuer }}</li>
+        }
+      </ul>
+    </section>
+  </div>
+</div>

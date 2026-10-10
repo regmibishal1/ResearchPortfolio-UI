@@ -2,8 +2,8 @@ import { Component, ChangeDetectionStrategy, inject } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { ActivatedRoute, RouterModule } from '@angular/router'
 import { PageNotFoundComponent } from '../page-not-found/page-not-found.component'
-import { SeoService, PERSON_ID, SITE_URL } from '../../services/seo.service'
-import { PROJECTS, Project, TYPE_LABEL, statusText } from '../../data/projects'
+import { SeoService, PERSON_ID, SITE_URL, paperSchema } from '../../services/seo.service'
+import { PROJECTS, Project, TYPE_LABEL, fileSize, statusText } from '../../data/projects'
 import { WorldCupSummaryComponent } from '../../shared/world-cup-summary/world-cup-summary.component'
 import { MriExplorerComponent } from '../../shared/mri-explorer/mri-explorer.component'
 import { EmpathyExplorerComponent } from '../../shared/empathy-explorer/empathy-explorer.component'
@@ -30,6 +30,7 @@ export class ProjectDetailComponent {
 
   readonly typeLabel = TYPE_LABEL
   readonly statusLabel = statusText
+  readonly fileSize = fileSize
 
   project: Project | null = null
   /** Neighbors in the Projects list order, for the links at the foot of the page. */
@@ -66,7 +67,12 @@ export class ProjectDetailComponent {
         { name: 'Projects', path: '/project' },
         { name: this.project.title, path },
       ],
-      schema: [projectSchema(this.project, path)],
+      schema: [
+        projectSchema(this.project, path),
+        ...(this.project.paper
+          ? [paperSchema({ ...this.project, paper: this.project.paper })]
+          : []),
+      ],
     })
   }
 }

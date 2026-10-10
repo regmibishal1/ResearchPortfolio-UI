@@ -15,6 +15,28 @@ export interface RepoLink {
  */
 export type ProjectType = 'product' | 'research' | 'coursework'
 
+/** A report or paper PDF under assets/papers. */
+export interface Paper {
+  url: string
+  /** As printed on the report's cover. */
+  title: string
+  /** The date on the cover, ISO. */
+  date: string
+  /** File size, so links can say how big the download is (checked by projects.spec.ts). */
+  bytes: number
+}
+
+/** What a model was trained on, how it was judged, and where it falls short. */
+export interface ModelCard {
+  data: string
+  model: string
+  metric: string
+  result: string
+  limits: string
+  /** When the model last ran, e.g. the final forecast or the report date. */
+  lastRun: string
+}
+
 export interface Project {
   /** URL slug, used as the :id param in /project/:id */
   id: string
@@ -43,8 +65,8 @@ export interface Project {
   repoLinks?: RepoLink[]
   /** Live demo / site URL */
   demo?: string
-  /** Path to a report or paper PDF under assets/papers, linked from the detail page */
-  paper?: string
+  /** The written report, listed on About and linked from the detail page and cards. */
+  paper?: Paper
   /** Screenshot shown as the card thumbnail and on the detail page */
   image?: string
   /** Architecture diagram rendered in its own section on the detail page */
@@ -67,6 +89,8 @@ export interface Project {
   results?: { value: string; label: string }[]
   /** The caveat that belongs next to those numbers. */
   resultsNote?: string
+  /** A short model card for ML projects, from the project's own report and results. */
+  modelCard?: ModelCard
   /** Shown in Featured and in Home's selected work. */
   featured?: boolean
   /**
@@ -167,6 +191,18 @@ const PROJECT_DEFINITIONS: Project[] = [
     ],
     resultsNote:
       'The model edged the Elo baseline on accuracy and log loss and tied it on Brier score.',
+    modelCard: {
+      data: 'About 12,000 international matches since 2014, with Elo ratings going back to 1872, positional FIFA squad ratings, and rolling form.',
+      model:
+        'XGBoost win/draw/loss classifier with isotonic calibration, feeding a Poisson scoreline solver and 2 million Monte Carlo runs of the tournament per snapshot.',
+      metric:
+        'Accuracy, log loss and Brier score on all 104 matches, against an Elo-only baseline.',
+      result:
+        '67.3% of results called (Elo 66.3%), log loss 0.868 (Elo 0.871), Brier score 0.510 (Elo 0.510).',
+      limits:
+        'The edge over plain Elo is small, and 104 matches is a small sample to grade a forecaster on.',
+      lastRun: 'Final snapshot on July 19, 2026, the day of the final.',
+    },
     featured: true,
   },
   {
@@ -269,7 +305,13 @@ const PROJECT_DEFINITIONS: Project[] = [
     coursework: 'Graduate coursework, UMD (DATA 612)',
     icon: 'psychology',
     image: 'assets/projects/mri-classification.webp',
-    paper: 'assets/papers/alzheimer-mri-resnet.pdf',
+    paper: {
+      url: 'assets/papers/alzheimer-mri-resnet.pdf',
+      title:
+        "Classification of Magnetic Resonance Imaging (MRI) Images for Stages of Alzheimer's Disease Using Transfer Learning",
+      date: '2023-08-14',
+      bytes: 7877382,
+    },
     status: 'research',
     liveEmbed: 'mri-explorer',
     highlights: [
@@ -293,6 +335,16 @@ const PROJECT_DEFINITIONS: Project[] = [
     ],
     resultsNote:
       'Small, imbalanced public dataset (15 of the 1,280 test scans are Moderate); not a clinical result.',
+    modelCard: {
+      data: 'Public Hugging Face Alzheimer MRI dataset: 5,120 training and 1,280 test scans across four dementia stages, heavily imbalanced.',
+      model:
+        'ResNet-50 pre-trained on ImageNet and fine-tuned for 30 epochs, the best of five ResNet depths (18 to 152).',
+      metric: 'Test accuracy, with balanced accuracy to account for the class imbalance.',
+      result: '99.06% test accuracy and 97.22% balanced accuracy.',
+      limits:
+        'Only 15 Moderate scans in the test set, unknown label provenance, and checkpoints picked on test loss; a feasibility study, not a clinical result.',
+      lastRun: 'Summer 2023 (report dated August 14, 2023).',
+    },
     featured: true,
   },
   {
@@ -309,7 +361,12 @@ const PROJECT_DEFINITIONS: Project[] = [
     coursework: 'Graduate coursework, UMD (DATA 641)',
     icon: 'forum',
     image: 'assets/projects/empathy-emotion.webp',
-    paper: 'assets/papers/empathy-emotion-wassa.pdf',
+    paper: {
+      url: 'assets/papers/empathy-emotion-wassa.pdf',
+      title: 'WASSA 2023 Shared Task, Track 1: Empathy and Emotion Prediction in Conversations',
+      date: '2023-05-15',
+      bytes: 882737,
+    },
     status: 'research',
     liveEmbed: 'empathy-explorer',
     highlights: [
@@ -333,6 +390,17 @@ const PROJECT_DEFINITIONS: Project[] = [
     ],
     resultsNote:
       'The gains over the text-only baseline are small, under 0.004 on each target, and the error metrics rose with them.',
+    modelCard: {
+      data: 'WASSA 2023 Track 1 conversations about news articles: 8,776 training and 2,400 development speech turns, each scored for empathy, emotional intensity and polarity.',
+      model:
+        'RoBERTa-base text embeddings concatenated with conversation and speaker features (Multimodal Toolkit), one regression model per target.',
+      metric: 'Pearson correlation, the shared task metric, with MSE, RMSE and MAE alongside.',
+      result:
+        'Pearson r of 0.687 for empathy, 0.757 for intensity and 0.768 for polarity, each just above the text-only model.',
+      limits:
+        'Gains under 0.004 while the error metrics rose, no fusion method won on every target, and some metadata columns risk leakage.',
+      lastRun: 'Spring 2023 (report dated May 15, 2023).',
+    },
     featured: true,
   },
   {
@@ -348,7 +416,12 @@ const PROJECT_DEFINITIONS: Project[] = [
     period: 'Summer 2022',
     coursework: 'Graduate capstone, UMD (DATA 698)',
     icon: 'bar_chart',
-    paper: 'assets/papers/autism-sentiment-study-design.pdf',
+    paper: {
+      url: 'assets/papers/autism-sentiment-study-design.pdf',
+      title: 'Case Study Design: Autism Tweet Sentiment Analysis',
+      date: '2022-08-18',
+      bytes: 208500,
+    },
     status: 'proposal',
     highlights: [
       'Complete 15-page study design carried through the capstone process: business case, synopsis, staged specification drafts, peer review, and final submission',
@@ -378,7 +451,12 @@ const PROJECT_DEFINITIONS: Project[] = [
     coursework: 'Graduate coursework, UMD (DATA 603)',
     icon: 'rocket_launch',
     image: 'assets/projects/spacex-launch-landing.webp',
-    paper: 'assets/papers/spacex-launch-landing.pdf',
+    paper: {
+      url: 'assets/papers/spacex-launch-landing.pdf',
+      title: 'SpaceX Launch and Landing Data Analysis',
+      date: '2022-12-19',
+      bytes: 418551,
+    },
     status: 'research',
     highlights: [
       'Four classifier families (decision tree, kNN, SVM, random forest) tuned with grid-search cross-validation on a common pipeline',
@@ -407,7 +485,12 @@ const PROJECT_DEFINITIONS: Project[] = [
     coursework: 'Graduate coursework, UMD (DATA 604)',
     icon: 'scatter_plot',
     image: 'assets/projects/cifar10-representations.webp',
-    paper: 'assets/papers/cifar10-representations-knn.pdf',
+    paper: {
+      url: 'assets/papers/cifar10-representations-knn.pdf',
+      title: 'Analysis of Grayscale CIFAR10 Dataset Using Different Data Representations and kNN',
+      date: '2023-05-08',
+      bytes: 1464279,
+    },
     status: 'research',
     highlights: [
       'Same classifier, four representations: raw pixels, PCA, kernel PCA, and t-SNE, compared on both per-class and global accuracy',
@@ -645,4 +728,15 @@ export function projectYear(project: Project): number | null {
 export function statusText(project: Project): string | null {
   if (!project.status) return null
   return project.statusLabel ?? STATUS_TEXT[project.status]
+}
+
+/** Projects that come with a written report, newest report first. */
+export const PAPERS: (Project & { paper: Paper })[] = PROJECTS.filter(
+  (p): p is Project & { paper: Paper } => !!p.paper
+).sort((a, b) => b.paper.date.localeCompare(a.paper.date))
+
+/** A download size as people read it, e.g. "7.5 MB" or "204 KB". */
+export function fileSize(bytes: number): string {
+  const mb = bytes / (1024 * 1024)
+  return mb >= 1 ? `${mb.toFixed(1)} MB` : `${Math.round(bytes / 1024)} KB`
 }

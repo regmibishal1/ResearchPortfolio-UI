@@ -77,10 +77,10 @@
           @if (project.paper) {
             <a
               class="btn-secondary btn-md"
-              [href]="project.paper"
+              [href]="project.paper.url"
               target="_blank"
               rel="noopener noreferrer"
-              >Read the report (PDF)</a
+              >Read the report (PDF, {{ fileSize(project.paper.bytes) }})</a
             >
           }
           @for (repo of project.repoLinks ?? []; track repo.url) {
@@ -146,6 +146,39 @@
               <li>{{ highlight }}</li>
             }
           </ul>
+        </section>
+      }
+
+      <!-- ===== Model card ===== -->
+      @if (project.modelCard; as card) {
+        <section class="detail-section" aria-labelledby="model-card-title">
+          <h2 id="model-card-title" class="section-heading">Model card</h2>
+          <dl class="model-card">
+            <div>
+              <dt>Data</dt>
+              <dd>{{ card.data }}</dd>
+            </div>
+            <div>
+              <dt>Model</dt>
+              <dd>{{ card.model }}</dd>
+            </div>
+            <div>
+              <dt>Metric</dt>
+              <dd>{{ card.metric }}</dd>
+            </div>
+            <div>
+              <dt>Result</dt>
+              <dd>{{ card.result }}</dd>
+            </div>
+            <div>
+              <dt>Known limits</dt>
+              <dd>{{ card.limits }}</dd>
+            </div>
+            <div>
+              <dt>Last run</dt>
+              <dd>{{ card.lastRun }}</dd>
+            </div>
+          </dl>
         </section>
       }
     </div>

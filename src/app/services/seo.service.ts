@@ -1,6 +1,7 @@
 import { Injectable, inject, DOCUMENT } from '@angular/core'
 
 import { Meta, Title } from '@angular/platform-browser'
+import type { Paper, Project } from '../data/projects'
 
 export const SITE_URL = 'https://bishalregmi.com'
 export const PERSON_ID = `${SITE_URL}/#person`
@@ -114,5 +115,21 @@ function breadcrumbList(trail: Breadcrumb[]): Record<string, unknown> {
       name: crumb.name,
       item: SITE_URL + crumb.path,
     })),
+  }
+}
+
+/** A project's written report as a schema.org ScholarlyArticle. */
+export function paperSchema(project: Project & { paper: Paper }): Record<string, unknown> {
+  return {
+    '@type': 'ScholarlyArticle',
+    headline: project.paper.title,
+    datePublished: project.paper.date,
+    url: `${SITE_URL}/${project.paper.url}`,
+    encodingFormat: 'application/pdf',
+    author: { '@id': PERSON_ID },
+    sourceOrganization: {
+      '@type': 'CollegeOrUniversity',
+      name: 'University of Maryland, College Park',
+    },
   }
 }

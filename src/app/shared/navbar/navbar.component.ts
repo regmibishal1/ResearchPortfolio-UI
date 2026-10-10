@@ -18,10 +18,18 @@ import { AuthService } from '../../pages/auth/auth.service'
 import { FooterComponent } from '../footer/footer.component'
 import { Subscription, filter } from 'rxjs'
 import { IconComponent } from '../icon/icon.component'
+import { SiteSearchComponent } from '../site-search/site-search.component'
 
 @Component({
   selector: 'app-navbar',
-  imports: [IconComponent, MatToolbarModule, MatButtonModule, RouterModule, FooterComponent],
+  imports: [
+    IconComponent,
+    MatToolbarModule,
+    MatButtonModule,
+    RouterModule,
+    FooterComponent,
+    SiteSearchComponent,
+  ],
   templateUrl: './navbar.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './navbar.component.scss',
@@ -35,6 +43,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     { label: 'Projects', path: '/project' },
     { label: 'Blog', path: '/blog' },
     { label: 'About', path: '/about' },
+    { label: 'R\u00e9sum\u00e9', path: '/resume' },
   ]
 
   isAuthenticated = false

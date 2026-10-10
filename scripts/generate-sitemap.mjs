@@ -2,21 +2,11 @@
 // data so neither can drift from what the site actually publishes. Runs
 // before every build; hidden projects are excluded because PROJECTS already
 // filters them. Every sitemap URL is prerendered to static HTML.
-import { readFileSync, writeFileSync } from 'node:fs'
-import { dirname, resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
-import ts from 'typescript'
+import { writeFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+import { loadData, root } from './lib/load-data.mjs'
 
 const SITE = 'https://bishalregmi.com'
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-
-async function loadData(relPath) {
-  const source = readFileSync(resolve(root, relPath), 'utf8')
-  const { outputText } = ts.transpileModule(source, {
-    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
-  })
-  return import('data:text/javascript;base64,' + Buffer.from(outputText).toString('base64'))
-}
 
 const { PROJECTS } = await loadData('src/app/data/projects.ts')
 const { POSTS } = await loadData('src/app/data/blog.ts')
@@ -28,6 +18,7 @@ const latestPost = POSTS.map((p) => p.date)
 const urls = [
   { path: '/' },
   { path: '/about' },
+  { path: '/resume' },
   { path: '/project' },
   ...PROJECTS.map((p) => ({ path: `/project/${p.id}` })),
   { path: '/world-cup' },

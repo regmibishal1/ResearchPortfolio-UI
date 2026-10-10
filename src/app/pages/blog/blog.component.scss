@@ -28,6 +28,27 @@
   line-height: var(--lh-body);
 }
 
+.feed-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  color: var(--text-primary);
+  font-size: var(--fs-small);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+
+  &:hover {
+    color: var(--accent-gold);
+  }
+
+  app-icon {
+    width: 16px;
+    height: 16px;
+    color: var(--accent-gold);
+  }
+}
+
 .post-list {
   display: flex;
   flex-direction: column;

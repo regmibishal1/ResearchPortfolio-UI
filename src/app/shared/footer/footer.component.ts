@@ -35,5 +35,11 @@ export class FooterComponent {
       icon: 'email' as const,
       external: false,
     },
+    {
+      name: 'RSS',
+      url: '/feed.xml',
+      icon: 'rss_feed' as const,
+      external: false,
+    },
   ]
 }

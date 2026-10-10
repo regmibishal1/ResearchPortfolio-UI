@@ -1,0 +1,312 @@
+@use 'breakpoints' as bp;
+
+.resume-page {
+  max-width: 880px;
+  padding-top: var(--space-8);
+  padding-bottom: var(--space-9);
+
+  @include bp.down(bp.$sm) {
+    padding-top: var(--space-7);
+    padding-bottom: var(--space-7);
+  }
+}
+
+// ===== Header =====
+.resume-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-5);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.resume-name {
+  margin: 0;
+  font-size: var(--fs-h1);
+  line-height: var(--lh-h1);
+}
+
+.resume-role {
+  margin: var(--space-1) 0 var(--space-3);
+  color: var(--accent-gold);
+  font-size: var(--fs-lead);
+  font-weight: 600;
+}
+
+.contact-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--text-secondary);
+  font-size: var(--fs-small);
+
+  li + li::before {
+    content: '\00B7' / '';
+    margin-right: var(--space-2);
+  }
+
+  a {
+    color: var(--text-primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+.resume-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+
+  app-icon {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.resume-summary {
+  max-width: 70ch;
+  margin: var(--space-5) 0 0;
+  color: var(--text-body);
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
+}
+
+// ===== Skill filter =====
+.skill-filter {
+  margin-top: var(--space-6);
+  padding: var(--space-5);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+
+  @include bp.down(bp.$sm) {
+    padding: var(--space-4);
+  }
+}
+
+.filter-title {
+  margin: 0;
+  font-size: var(--fs-body);
+  font-weight: 600;
+}
+
+.filter-intro {
+  margin: var(--space-1) 0 var(--space-3);
+  color: var(--text-secondary);
+  font-size: var(--fs-small);
+}
+
+.filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.filter-status {
+  min-height: 1.5em;
+  margin: var(--space-3) 0 0;
+  color: var(--text-primary);
+  font-size: var(--fs-small);
+}
+
+// ===== Body =====
+.resume-section {
+  margin-top: var(--space-7);
+}
+
+.resume-h2 {
+  margin: 0 0 var(--space-4);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: var(--fs-h3);
+  font-weight: 600;
+}
+
+.entry + .entry {
+  margin-top: var(--space-5);
+}
+
+.entry-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-4);
+}
+
+.entry-title {
+  margin: 0;
+  font-size: var(--fs-body);
+  font-weight: 600;
+
+  a {
+    color: var(--text-primary);
+    text-decoration: underline;
+    text-decoration-color: var(--border-control);
+    text-underline-offset: 3px;
+
+    &:hover {
+      color: var(--accent-gold);
+    }
+  }
+}
+
+.entry-org {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.entry-date {
+  color: var(--text-secondary);
+  font-size: var(--fs-small);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.entry-points {
+  margin: var(--space-2) 0 0;
+  padding-left: 1.25em;
+  color: var(--text-body);
+  font-size: var(--fs-small);
+  line-height: var(--lh-body);
+
+  li {
+    padding: 2px var(--space-2);
+    border-radius: var(--radius-sm);
+    transition:
+      background-color var(--transition-fast),
+      color var(--transition-fast);
+  }
+
+  li + li {
+    margin-top: var(--space-1);
+  }
+
+  li::marker {
+    color: var(--accent-gold);
+  }
+}
+
+.entry-text {
+  margin: var(--space-1) 0 0;
+  color: var(--text-body);
+  font-size: var(--fs-small);
+  line-height: var(--lh-body);
+}
+
+.entry-tags {
+  margin: var(--space-1) 0 0;
+  color: var(--text-secondary);
+  font-size: var(--fs-micro);
+}
+
+.project {
+  padding: var(--space-2) var(--space-3);
+  border-left: 3px solid transparent;
+  border-radius: var(--radius-sm);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+// While a skill is picked, matching work is marked and the rest steps back
+// to the muted text color, which still reads at AA contrast.
+.filtering {
+  .entry-points li,
+  .project :is(.entry-title a, .entry-text, .entry-tags, .entry-date) {
+    color: var(--text-muted);
+  }
+
+  .entry-points li.match,
+  .project.match {
+    background: var(--accent-gold-dim);
+  }
+
+  .entry-points li.match,
+  .project.match :is(.entry-title a, .entry-text) {
+    color: var(--text-primary);
+  }
+
+  .project.match {
+    border-left-color: var(--accent-gold);
+  }
+}
+
+.skills {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.skill-row {
+  display: grid;
+  grid-template-columns: 14rem 1fr;
+  gap: var(--space-3);
+  font-size: var(--fs-small);
+  line-height: var(--lh-small);
+
+  dt {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  dd {
+    margin: 0;
+    color: var(--text-body);
+  }
+
+  @include bp.down(bp.$sm) {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
+.certs {
+  margin: 0;
+  padding-left: 1.25em;
+  color: var(--text-body);
+  font-size: var(--fs-small);
+}
+
+// ===== Print: a plain one-column resume =====
+@media print {
+  .resume-page {
+    padding: 0;
+    color: #000;
+  }
+
+  .resume-actions,
+  .skill-filter {
+    display: none;
+  }
+
+  .resume-role,
+  .entry-title a,
+  .contact-line a {
+    color: #000;
+  }
+
+  .resume-name,
+  .resume-h2,
+  .entry-title,
+  .resume-summary,
+  .entry-points,
+  .entry-text,
+  .skill-row dt,
+  .skill-row dd,
+  .certs {
+    color: #000;
+  }
+
+  .filtering .entry-points li,
+  .filtering .project,
+  .filtering .project :is(.entry-title a, .entry-text, .entry-tags, .entry-date) {
+    background: none;
+    color: #000;
+  }
+}

@@ -7,14 +7,20 @@
     </a>
     <h1 class="hero-name">Bishal Regmi</h1>
     <p class="hero-role animate-in animate-in-delay-1">Software Engineer & Data Scientist</p>
-    <p class="hero-intro animate-in animate-in-delay-2">
-      Building scalable applications and extracting insights from data. Focused on full-stack
-      development, machine learning, and distributed systems.
-    </p>
+    <p class="hero-intro animate-in animate-in-delay-2">{{ summary }}</p>
     <div class="hero-actions animate-in animate-in-delay-3">
       <a class="btn-primary" [routerLink]="['/project']">See my projects</a>
-      <a class="btn-secondary" [routerLink]="['/about']">About me</a>
+      <a class="btn-secondary" [routerLink]="['/resume']">R&eacute;sum&eacute;</a>
     </div>
+    @if (now; as note) {
+      <p class="hero-now">
+        <span class="now-label">Now</span>
+        <span>{{ note.text }}</span>
+        <time class="now-date" [attr.datetime]="note.updated"
+          >Updated {{ note.updated | date: 'MMM y' }}</time
+        >
+      </p>
+    }
   </div>
 </section>
 

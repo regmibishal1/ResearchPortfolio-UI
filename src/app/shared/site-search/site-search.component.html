@@ -1,0 +1,53 @@
+<button
+  type="button"
+  class="search-btn"
+  aria-label="Search the site"
+  aria-keyshortcuts="/"
+  title="Search (/)"
+  (click)="open()"
+>
+  <app-icon name="search" />
+</button>
+
+<dialog #dialog class="search-dialog" aria-labelledby="search-title">
+  <div class="search-panel">
+    <div class="search-head">
+      <h2 id="search-title" class="visually-hidden">Search the site</h2>
+      <app-icon name="search" class="search-field-icon" />
+      <input
+        #input
+        type="search"
+        class="search-input"
+        placeholder="Search projects, posts and papers"
+        aria-label="Search the site"
+        aria-controls="search-results"
+        autocomplete="off"
+        spellcheck="false"
+        [value]="query"
+        (input)="onInput(input.value)"
+      />
+      <button type="button" class="search-close" aria-label="Close search" (click)="close()">
+        <app-icon name="close" />
+      </button>
+    </div>
+
+    <p class="search-status" role="status">{{ status }}</p>
+
+    <ul id="search-results" class="search-results">
+      @for (result of results; track result.url) {
+        <li>
+          <a
+            class="search-result"
+            [href]="result.url"
+            [attr.target]="isFile(result.url) ? '_blank' : null"
+            [attr.rel]="isFile(result.url) ? 'noopener' : null"
+            (click)="follow($event, result.url)"
+          >
+            <span class="result-title">{{ result.title }}</span>
+            <span class="result-excerpt" [innerHTML]="result.excerpt"></span>
+          </a>
+        </li>
+      }
+    </ul>
+  </div>
+</dialog>

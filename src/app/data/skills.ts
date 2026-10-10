@@ -1,11 +1,10 @@
 /**
- * Central skills data for the About page's categorized skills list.
+ * Skills by category, shown on the About page, the /resume page and in the
+ * resume PDF.
  */
 
 export interface SkillCategory {
   name: string
-  /** Material icon shown next to the category heading */
-  icon: string
   skills: string[]
   /** Optional badge rendered above the skills (e.g. a certification) */
   highlight?: string
@@ -14,7 +13,6 @@ export interface SkillCategory {
 export const SKILL_CATEGORIES: SkillCategory[] = [
   {
     name: 'Languages',
-    icon: 'code',
     skills: [
       'C#',
       'Python',
@@ -31,7 +29,6 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
   },
   {
     name: 'Frameworks & Libraries',
-    icon: 'library_books',
     skills: [
       '.NET 8',
       'ASP.NET Core',
@@ -61,7 +58,6 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
   },
   {
     name: 'Cloud & DevOps',
-    icon: 'cloud',
     skills: [
       'AWS',
       'Azure',
@@ -74,6 +70,7 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
       'SNS',
       'SQS',
       'API Gateway',
+      'IAM',
       'Athena',
       'Docker',
       'Kubernetes',
@@ -85,13 +82,50 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
     highlight: 'AWS Solutions Architect Certified',
   },
   {
-    name: 'Databases',
-    icon: 'storage',
-    skills: ['PostgreSQL', 'MySQL', 'MongoDB', 'SQLite', 'Redis', 'SQL Server'],
+    name: 'Databases & Data Platforms',
+    skills: [
+      'PostgreSQL',
+      'MySQL',
+      'MongoDB',
+      'SQLite',
+      'Redis',
+      'SQL Server',
+      'Vector Databases',
+      'Databricks',
+      'Spark',
+      'Delta Lake',
+      'MLflow',
+    ],
+  },
+  {
+    name: 'Machine Learning & Data Science',
+    skills: [
+      'Statistics',
+      'Hypothesis Testing',
+      'Classification',
+      'Regression',
+      'Time Series Forecasting',
+      'Clustering',
+      'Segmentation',
+      'Deep Learning',
+      'Model Deployment',
+      'MLOps',
+    ],
+  },
+  {
+    name: 'AI & Generative AI',
+    skills: [
+      'Generative AI APIs',
+      'OpenAI',
+      'LangChain',
+      'LLM Fine-Tuning',
+      'RAG Pipelines',
+      'Prompt Engineering',
+      'Embedding Models',
+    ],
   },
   {
     name: 'Testing & Monitoring',
-    icon: 'monitor_heart',
     skills: ['xUnit', 'FsCheck', 'Jest', 'PyTest', 'Splunk', 'Prometheus', 'Grafana'],
   },
 ]
