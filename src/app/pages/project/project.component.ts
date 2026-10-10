@@ -1,6 +1,6 @@
 import { Component } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { Router, RouterModule } from '@angular/router'
+import { RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
 import { SeoService } from '../../services/seo.service'
 import { PROJECTS, Project } from '../../data/projects'
@@ -19,10 +19,7 @@ export class ProjectComponent {
 
   projects: Project[] = PROJECTS
 
-  constructor(
-    private router: Router,
-    seo: SeoService
-  ) {
+  constructor(seo: SeoService) {
     seo.setPage({
       title: 'Projects | Bishal Regmi',
       path: '/project',
@@ -40,9 +37,5 @@ export class ProjectComponent {
 
   setFilter(category: string) {
     this.activeFilter = category
-  }
-
-  goToProject(id: string) {
-    this.router.navigate(['/project', id])
   }
 }

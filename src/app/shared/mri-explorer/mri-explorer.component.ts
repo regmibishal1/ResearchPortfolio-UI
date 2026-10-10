@@ -98,6 +98,22 @@ export class MriExplorerComponent {
     this.activeTab = tab
   }
 
+  // Arrow keys, Home and End move between tabs, as in a native tab list.
+  onTabKeydown(event: KeyboardEvent, index: number) {
+    const last = this.tabs.length - 1
+    const next: Record<string, number> = {
+      ArrowRight: index === last ? 0 : index + 1,
+      ArrowLeft: index === 0 ? last : index - 1,
+      Home: 0,
+      End: last,
+    }
+    if (!(event.key in next)) return
+    event.preventDefault()
+    const tab = this.tabs[next[event.key]]
+    this.selectTab(tab.id)
+    setTimeout(() => document.getElementById('mri-tab-' + tab.id)?.focus())
+  }
+
   saliencyImage(classId: string): string {
     return `${this.assetBase}/${this.selectedModel.id}-saliency-${classId}.png`
   }

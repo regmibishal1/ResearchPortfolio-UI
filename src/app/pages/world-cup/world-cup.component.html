@@ -53,8 +53,13 @@
     <div class="snapshot-bar" *ngIf="availableDates.length > 1">
       <div class="snapshot-left">
         <mat-icon class="snapshot-icon">history</mat-icon>
-        <span class="snapshot-label">Snapshot</span>
-        <select class="date-select" [(ngModel)]="selectedDate" (change)="onDateChange()">
+        <label class="snapshot-label" for="snapshot-date">Snapshot</label>
+        <select
+          id="snapshot-date"
+          class="date-select"
+          [(ngModel)]="selectedDate"
+          (change)="onDateChange()"
+        >
           <option *ngFor="let opt of dateOptions" [value]="opt.value">{{ opt.label }}</option>
         </select>
       </div>
@@ -95,89 +100,54 @@
               <thead>
                 <tr>
                   <th class="rank-col">#</th>
-                  <th
-                    class="team-col sortable"
-                    [attr.aria-sort]="ariaSort('team')"
-                    (click)="sortBy('team')"
-                  >
-                    <span class="th-label"
-                      >Team <mat-icon class="sort-icon">{{ sortIcon('team') }}</mat-icon></span
-                    >
+                  <th class="team-col sortable" [attr.aria-sort]="ariaSort('team')">
+                    <button type="button" class="sort-btn th-label" (click)="sortBy('team')">
+                      Team <mat-icon class="sort-icon">{{ sortIcon('team') }}</mat-icon>
+                    </button>
                   </th>
-                  <th
-                    class="sortable"
-                    [attr.aria-sort]="ariaSort('winner_pct')"
-                    (click)="sortBy('winner_pct')"
-                  >
-                    <span class="th-label"
-                      >Winner
-                      <mat-icon class="sort-icon">{{ sortIcon('winner_pct') }}</mat-icon></span
-                    >
+                  <th class="sortable" [attr.aria-sort]="ariaSort('winner_pct')">
+                    <button type="button" class="sort-btn th-label" (click)="sortBy('winner_pct')">
+                      Winner <mat-icon class="sort-icon">{{ sortIcon('winner_pct') }}</mat-icon>
+                    </button>
                   </th>
                   <th
                     *ngIf="!isLatestDate"
                     class="delta-col sortable"
                     [attr.aria-sort]="ariaSort('delta')"
-                    (click)="sortBy('delta')"
                   >
-                    <span class="th-label"
-                      >&#916; <mat-icon class="sort-icon">{{ sortIcon('delta') }}</mat-icon></span
-                    >
+                    <button type="button" class="sort-btn th-label" (click)="sortBy('delta')">
+                      &#916; <mat-icon class="sort-icon">{{ sortIcon('delta') }}</mat-icon>
+                    </button>
                   </th>
-                  <th
-                    class="sortable"
-                    [attr.aria-sort]="ariaSort('final_pct')"
-                    (click)="sortBy('final_pct')"
-                  >
-                    <span class="th-label"
-                      >Final
-                      <mat-icon class="sort-icon">{{ sortIcon('final_pct') }}</mat-icon></span
-                    >
+                  <th class="sortable" [attr.aria-sort]="ariaSort('final_pct')">
+                    <button type="button" class="sort-btn th-label" (click)="sortBy('final_pct')">
+                      Final <mat-icon class="sort-icon">{{ sortIcon('final_pct') }}</mat-icon>
+                    </button>
                   </th>
-                  <th
-                    class="sortable"
-                    [attr.aria-sort]="ariaSort('sf_pct')"
-                    (click)="sortBy('sf_pct')"
-                  >
-                    <span class="th-label"
-                      >Semi <mat-icon class="sort-icon">{{ sortIcon('sf_pct') }}</mat-icon></span
-                    >
+                  <th class="sortable" [attr.aria-sort]="ariaSort('sf_pct')">
+                    <button type="button" class="sort-btn th-label" (click)="sortBy('sf_pct')">
+                      Semi <mat-icon class="sort-icon">{{ sortIcon('sf_pct') }}</mat-icon>
+                    </button>
                   </th>
-                  <th
-                    class="sortable"
-                    [attr.aria-sort]="ariaSort('qf_pct')"
-                    (click)="sortBy('qf_pct')"
-                  >
-                    <span class="th-label"
-                      >QF <mat-icon class="sort-icon">{{ sortIcon('qf_pct') }}</mat-icon></span
-                    >
+                  <th class="sortable" [attr.aria-sort]="ariaSort('qf_pct')">
+                    <button type="button" class="sort-btn th-label" (click)="sortBy('qf_pct')">
+                      QF <mat-icon class="sort-icon">{{ sortIcon('qf_pct') }}</mat-icon>
+                    </button>
                   </th>
-                  <th
-                    class="sortable"
-                    [attr.aria-sort]="ariaSort('r16_pct')"
-                    (click)="sortBy('r16_pct')"
-                  >
-                    <span class="th-label"
-                      >R16 <mat-icon class="sort-icon">{{ sortIcon('r16_pct') }}</mat-icon></span
-                    >
+                  <th class="sortable" [attr.aria-sort]="ariaSort('r16_pct')">
+                    <button type="button" class="sort-btn th-label" (click)="sortBy('r16_pct')">
+                      R16 <mat-icon class="sort-icon">{{ sortIcon('r16_pct') }}</mat-icon>
+                    </button>
                   </th>
-                  <th
-                    class="sortable"
-                    [attr.aria-sort]="ariaSort('r32_pct')"
-                    (click)="sortBy('r32_pct')"
-                  >
-                    <span class="th-label"
-                      >R32 <mat-icon class="sort-icon">{{ sortIcon('r32_pct') }}</mat-icon></span
-                    >
+                  <th class="sortable" [attr.aria-sort]="ariaSort('r32_pct')">
+                    <button type="button" class="sort-btn th-label" (click)="sortBy('r32_pct')">
+                      R32 <mat-icon class="sort-icon">{{ sortIcon('r32_pct') }}</mat-icon>
+                    </button>
                   </th>
-                  <th
-                    class="elo-col sortable"
-                    [attr.aria-sort]="ariaSort('elo')"
-                    (click)="sortBy('elo')"
-                  >
-                    <span class="th-label"
-                      >Elo <mat-icon class="sort-icon">{{ sortIcon('elo') }}</mat-icon></span
-                    >
+                  <th class="elo-col sortable" [attr.aria-sort]="ariaSort('elo')">
+                    <button type="button" class="sort-btn th-label" (click)="sortBy('elo')">
+                      Elo <mat-icon class="sort-icon">{{ sortIcon('elo') }}</mat-icon>
+                    </button>
                   </th>
                 </tr>
               </thead>
@@ -238,11 +208,17 @@
                 locked</span
               >
               <button
+                type="button"
                 class="toggle-matches-btn"
                 *ngIf="lockedMatchesForDate.length > 0"
+                [attr.aria-expanded]="showLockedMatches"
                 (click)="showLockedMatches = !showLockedMatches"
               >
-                {{ showLockedMatches ? 'Hide' : 'Show' }} matches
+                {{
+                  showLockedMatches
+                    ? 'Hide matches'
+                    : 'Show all ' + lockedMatchesForDate.length + ' matches'
+                }}
                 <mat-icon>{{ showLockedMatches ? 'expand_less' : 'expand_more' }}</mat-icon>
               </button>
               <span
@@ -719,7 +695,12 @@
 
             <h3 class="bracket-section-title">
               Match receipts
-              <button class="toggle-matches-btn" (click)="showReceipts = !showReceipts">
+              <button
+                type="button"
+                class="toggle-matches-btn"
+                [attr.aria-expanded]="showReceipts"
+                (click)="showReceipts = !showReceipts"
+              >
                 {{ showReceipts ? 'Hide' : 'Show' }} all {{ reportCard.matches.length }}
                 <mat-icon>{{ showReceipts ? 'expand_less' : 'expand_more' }}</mat-icon>
               </button>

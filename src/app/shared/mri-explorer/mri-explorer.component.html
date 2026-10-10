@@ -1,10 +1,12 @@
 <div class="mri-explorer glass">
   <!-- Model selector -->
-  <div class="model-selector">
+  <div class="model-selector" role="group" aria-label="Model">
     <button
+      type="button"
       *ngFor="let model of models"
       class="model-chip"
       [class.model-chip-active]="model.id === selectedModel.id"
+      [attr.aria-pressed]="model.id === selectedModel.id"
       (click)="selectModel(model)"
     >
       {{ model.label }}
@@ -31,12 +33,19 @@
   </div>
 
   <!-- Tabs -->
-  <div class="tab-bar">
+  <div class="tab-bar" role="tablist" aria-label="Figures">
     <button
-      *ngFor="let tab of tabs"
+      type="button"
+      *ngFor="let tab of tabs; let i = index"
       class="tab-btn"
+      role="tab"
+      [id]="'mri-tab-' + tab.id"
+      [attr.aria-selected]="tab.id === activeTab"
+      [attr.aria-controls]="'mri-panel-' + tab.id"
+      [tabIndex]="tab.id === activeTab ? 0 : -1"
       [class.tab-btn-active]="tab.id === activeTab"
       (click)="selectTab(tab.id)"
+      (keydown)="onTabKeydown($event, i)"
     >
       <mat-icon>{{ tab.icon }}</mat-icon>
       <span>{{ tab.label }}</span>
@@ -44,7 +53,13 @@
   </div>
 
   <!-- Saliency maps -->
-  <div class="tab-panel" *ngIf="activeTab === 'saliency'">
+  <div
+    class="tab-panel"
+    *ngIf="activeTab === 'saliency'"
+    role="tabpanel"
+    id="mri-panel-saliency"
+    aria-labelledby="mri-tab-saliency"
+  >
     <p class="panel-caption">
       Class-averaged saliency maps showing which brain regions {{ selectedModel.label }} attends to
       when predicting each dementia stage.
@@ -54,6 +69,8 @@
         <img
           [src]="saliencyImage(cls.id)"
           [alt]="selectedModel.label + ' saliency map for ' + cls.label"
+          width="481"
+          height="504"
           loading="lazy"
         />
         <figcaption>{{ cls.label }}</figcaption>
@@ -62,7 +79,13 @@
   </div>
 
   <!-- Confusion matrix -->
-  <div class="tab-panel" *ngIf="activeTab === 'confusion'">
+  <div
+    class="tab-panel"
+    *ngIf="activeTab === 'confusion'"
+    role="tabpanel"
+    id="mri-panel-confusion"
+    aria-labelledby="mri-tab-confusion"
+  >
     <p class="panel-caption">
       Test-set confusion matrix for {{ selectedModel.label }} across the four dementia classes.
     </p>
@@ -70,12 +93,20 @@
       class="panel-image"
       [src]="confusionImage"
       [alt]="selectedModel.label + ' confusion matrix'"
+      width="785"
+      height="624"
       loading="lazy"
     />
   </div>
 
   <!-- Training curves -->
-  <div class="tab-panel" *ngIf="activeTab === 'training'">
+  <div
+    class="tab-panel"
+    *ngIf="activeTab === 'training'"
+    role="tabpanel"
+    id="mri-panel-training"
+    aria-labelledby="mri-tab-training"
+  >
     <p class="panel-caption">
       Train and test loss/accuracy for {{ selectedModel.label }} over 30 epochs.
     </p>
@@ -83,6 +114,8 @@
       class="panel-image"
       [src]="trainingImage"
       [alt]="selectedModel.label + ' training curves'"
+      width="1189"
+      height="490"
       loading="lazy"
     />
   </div>
