@@ -17,10 +17,11 @@ describe('PROJECTS ordering', () => {
 
   it('is sorted newest first by period', () => {
     // Pivots across every period represented in the data, newest to oldest:
-    // 2026, 2023-present, Summer 2023, Spring 2023, Fall 2022, Summer 2022,
+    // 2026, 2025-present, 2023-present, Summer 2023, Spring 2023, Fall 2022, Summer 2022,
     // Spring 2022, Fall 2021.
     const newestToOldest = [
       'world-cup-prediction',
+      'multisource-downloader',
       'research-portfolio',
       'mri-classification',
       'empathy-emotion',
