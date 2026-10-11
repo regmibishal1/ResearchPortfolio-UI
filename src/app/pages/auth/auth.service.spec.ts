@@ -3,7 +3,8 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { provideHttpClient, withInterceptors, withXhr } from '@angular/common/http'
 import { provideRouter } from '@angular/router'
 import { firstValueFrom } from 'rxjs'
-import { AuthService, safeNext } from './auth.service'
+import { AuthService, safeNext, tokenRole } from './auth.service'
+import { fakeJwt } from '../../testing/fake-jwt'
 import { authInterceptor } from '../../auth.interceptor'
 import { environment } from '../../../environments/environment'
 
@@ -32,6 +33,23 @@ describe('AuthService', () => {
     expect(safeNext('https://evil.example')).toBe('/')
     expect(safeNext('/\\evil.example')).toBe('/')
     expect(safeNext(null)).toBe('/')
+  })
+
+  it('reads the role from an access token, and nothing from a broken one', () => {
+    expect(tokenRole(fakeJwt({ role: 'ADMIN', sub: 'me' }))).toBe('ADMIN')
+    expect(tokenRole(fakeJwt({ sub: 'me' }))).toBeNull()
+    expect(tokenRole('not-a-token')).toBeNull()
+  })
+
+  it('knows the role while signed in and forgets it on sign-out', () => {
+    const service = create()
+    service.setSession({ access_token: fakeJwt({ role: 'ADMIN' }) })
+    expect(service.role()).toBe('ADMIN')
+    service.logout().subscribe({ error: () => {} })
+    TestBed.inject(HttpTestingController)
+      .expectOne(`${environment.apiBaseUrl}/auth/logout`)
+      .flush(null, { status: 204, statusText: 'No Content' })
+    expect(service.role()).toBeNull()
   })
 
   it('keeps no token in browser storage, only a flag that a session exists', () => {
