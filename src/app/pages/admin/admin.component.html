@@ -1,0 +1,499 @@
+<section class="admin-page">
+  <div class="container">
+    <h1 class="page-title">Admin</h1>
+    <p class="page-lead">Accounts, API health and the data behind the site.</p>
+
+    <div class="tab-bar" role="tablist" aria-label="Admin sections">
+      @for (tab of tabs; track tab.id; let i = $index) {
+        <button
+          type="button"
+          class="tab-btn"
+          role="tab"
+          [id]="'admin-tab-' + tab.id"
+          [attr.aria-selected]="tab.id === activeTab()"
+          [attr.aria-controls]="'admin-panel-' + tab.id"
+          [tabIndex]="tab.id === activeTab() ? 0 : -1"
+          (click)="open(tab.id)"
+          (keydown)="onTabKeydown($event, i)"
+        >
+          {{ tab.label }}
+        </button>
+      }
+    </div>
+
+    <!-- Accounts -->
+    @if (activeTab() === 'accounts') {
+      <div
+        class="tab-panel"
+        role="tabpanel"
+        id="admin-panel-accounts"
+        aria-labelledby="admin-tab-accounts"
+      >
+        <div class="panel-head">
+          <h2 class="panel-title">Users</h2>
+          <button type="button" class="btn-secondary btn-md" (click)="refresh('accounts')">
+            Refresh
+          </button>
+        </div>
+        <ng-container
+          *ngTemplateOutlet="status; context: { $implicit: users, empty: 'No accounts yet.' }"
+        />
+        @if (users.data(); as list) {
+          @if (list.length) {
+            <div class="table-scroll" role="region" aria-label="Users" tabindex="0">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Username</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Role</th>
+                    <th scope="col" class="num">Open sessions</th>
+                    <th scope="col">Password reset</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (user of list; track user.username) {
+                    <tr>
+                      <td class="strong">{{ user.username }}</td>
+                      <td>{{ user.firstname }} {{ user.lastname }}</td>
+                      <td>{{ user.email }}</td>
+                      <td>{{ user.role }}</td>
+                      <td class="num">{{ user.openSessions }}</td>
+                      <td>
+                        @if (resetLinks()[user.username]; as link) {
+                          <div class="reset-link">
+                            <input
+                              class="link-field"
+                              type="text"
+                              readonly
+                              [value]="link.url"
+                              [attr.aria-label]="'Reset link for ' + user.username"
+                            />
+                            <button
+                              type="button"
+                              class="btn-secondary btn-md"
+                              (click)="copy(link.url)"
+                            >
+                              Copy
+                            </button>
+                            <span class="hint">Until {{ link.expiresAt | date: 'shortTime' }}</span>
+                          </div>
+                        } @else {
+                          <button
+                            type="button"
+                            class="btn-secondary btn-md"
+                            (click)="createResetLink(user.username)"
+                          >
+                            Create link<span class="visually-hidden"> for {{ user.username }}</span>
+                          </button>
+                        }
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        }
+
+        <h2 class="panel-title">Allowed to register</h2>
+        <p class="panel-caption">
+          Registration only accepts these addresses, and only while it is turned on.
+        </p>
+        <form class="inline-form" (ngSubmit)="addEmail()">
+          <label class="field-label" for="new-email">Email address</label>
+          <input
+            id="new-email"
+            name="newEmail"
+            class="text-field"
+            type="email"
+            autocomplete="off"
+            [ngModel]="newEmail()"
+            (ngModelChange)="newEmail.set($event)"
+          />
+          <button type="submit" class="btn-primary btn-md">Allow</button>
+        </form>
+        <ng-container
+          *ngTemplateOutlet="status; context: { $implicit: allowed, empty: 'No addresses yet.' }"
+        />
+        @if (allowed.data(); as list) {
+          @if (list.length) {
+            <ul class="plain-list">
+              @for (entry of list; track entry.email) {
+                <li>
+                  <span>{{ entry.email }}</span>
+                  <span class="hint">added {{ entry.addedAt | date: 'mediumDate' }}</span>
+                  <button
+                    type="button"
+                    class="btn-secondary btn-md"
+                    (click)="removeEmail(entry.email)"
+                  >
+                    Remove<span class="visually-hidden"> {{ entry.email }}</span>
+                  </button>
+                </li>
+              }
+            </ul>
+          }
+        }
+
+        <h2 class="panel-title">Registration attempts</h2>
+        <ng-container
+          *ngTemplateOutlet="
+            status;
+            context: { $implicit: attempts, empty: 'No recent registration attempts.' }
+          "
+        />
+        @if (attempts.data(); as list) {
+          @if (list.length) {
+            <div class="table-scroll" role="region" aria-label="Registration attempts" tabindex="0">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Address</th>
+                    <th scope="col" class="num">Attempts</th>
+                    <th scope="col">Last attempt</th>
+                    <th scope="col">Blocked until</th>
+                    <th scope="col"><span class="visually-hidden">Action</span></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (row of list; track row.ipAddress) {
+                    <tr>
+                      <td>{{ row.ipAddress }}</td>
+                      <td class="num">{{ row.attemptCount }}</td>
+                      <td>{{ row.lastAttempt | date: 'medium' }}</td>
+                      <td>{{ row.blockedUntil ? (row.blockedUntil | date: 'medium') : '-' }}</td>
+                      <td>
+                        <button
+                          type="button"
+                          class="btn-secondary btn-md"
+                          (click)="unblock(row.ipAddress)"
+                        >
+                          Clear<span class="visually-hidden"> {{ row.ipAddress }}</span>
+                        </button>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        }
+      </div>
+    }
+
+    <!-- API health -->
+    @if (activeTab() === 'health') {
+      <div
+        class="tab-panel"
+        role="tabpanel"
+        id="admin-panel-health"
+        aria-labelledby="admin-tab-health"
+      >
+        <div class="panel-head">
+          <h2 class="panel-title">Requests to api.bishalregmi.com</h2>
+          <button type="button" class="btn-secondary btn-md" (click)="refresh('health')">
+            Refresh
+          </button>
+        </div>
+        <ng-container *ngTemplateOutlet="status; context: { $implicit: health, empty: '' }" />
+        @if (health.data(); as h) {
+          <p class="panel-caption">
+            @if (h.counting_since) {
+              Counting since {{ h.counting_since * 1000 | date: 'medium' }} (the count starts again
+              when the API restarts). Requests Cloudflare answers from its cache never reach the
+              API.
+            } @else {
+              Nothing counted yet.
+            }
+          </p>
+          <dl class="tile-grid">
+            <div class="tile">
+              <dt>Last hour</dt>
+              <dd>{{ h.last_hour.ok + h.last_hour.redirects | number }} ok</dd>
+              <dd class="tile-note">
+                {{ h.last_hour.client_errors | number }} client errors,
+                {{ h.last_hour.server_errors | number }} server errors
+              </dd>
+            </div>
+            <div class="tile">
+              <dt>Last 24 hours</dt>
+              <dd>{{ h.last_day.ok + h.last_day.redirects | number }} ok</dd>
+              <dd class="tile-note">
+                {{ h.last_day.client_errors | number }} client errors,
+                {{ h.last_day.server_errors | number }} server errors
+              </dd>
+            </div>
+          </dl>
+
+          <h3 class="sub-title">Per hour</h3>
+          <div class="bars" role="img" [attr.aria-label]="hourlySummary()">
+            @for (hour of h.hourly; track hour.hour_start) {
+              <div
+                class="bar"
+                [class.has-errors]="hour.server_errors > 0"
+                [style.height.%]="barHeight(hour)"
+                [title]="
+                  (hour.hour_start * 1000 | date: 'shortTime') +
+                  ': ' +
+                  (hour.ok + hour.client_errors + hour.server_errors) +
+                  ' requests'
+                "
+              ></div>
+            }
+          </div>
+
+          <h3 class="sub-title">Busiest routes, last 24 hours</h3>
+          @if (h.busiest_routes.length) {
+            <div class="table-scroll" role="region" aria-label="Busiest routes" tabindex="0">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Route</th>
+                    <th scope="col" class="num">Requests</th>
+                    <th scope="col" class="num">Server errors</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (route of h.busiest_routes; track route.route) {
+                    <tr>
+                      <td class="mono">{{ route.route }}</td>
+                      <td class="num">{{ route.requests | number }}</td>
+                      <td class="num">{{ route.server_errors | number }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          } @else {
+            <p class="panel-caption">No requests in the last 24 hours.</p>
+          }
+
+          <h3 class="sub-title">Recent server errors</h3>
+          @if (h.recent_errors.length) {
+            <div class="table-scroll" role="region" aria-label="Recent server errors" tabindex="0">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th scope="col">When</th>
+                    <th scope="col">Request</th>
+                    <th scope="col" class="num">Status</th>
+                    <th scope="col" class="num">Time (ms)</th>
+                    <th scope="col">Request id</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (e of h.recent_errors; track e.request_id) {
+                    <tr>
+                      <td>{{ e.at * 1000 | date: 'medium' }}</td>
+                      <td class="mono">{{ e.method }} {{ e.route }}</td>
+                      <td class="num">{{ e.status }}</td>
+                      <td class="num">{{ e.ms | number: '1.0-1' }}</td>
+                      <td class="mono">{{ e.request_id }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          } @else {
+            <p class="panel-caption">No server errors recorded.</p>
+          }
+        }
+      </div>
+    }
+
+    <!-- Data runs -->
+    @if (activeTab() === 'runs') {
+      <div class="tab-panel" role="tabpanel" id="admin-panel-runs" aria-labelledby="admin-tab-runs">
+        <div class="panel-head">
+          <h2 class="panel-title">World Cup snapshots</h2>
+          <button type="button" class="btn-secondary btn-md" (click)="refresh('runs')">
+            Refresh
+          </button>
+        </div>
+        <ng-container *ngTemplateOutlet="status; context: { $implicit: worldCupRuns, empty: '' }" />
+        @if (worldCupRuns.data(); as data) {
+          <div class="table-scroll" role="region" aria-label="World Cup snapshots" tabindex="0">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th scope="col">As of</th>
+                  <th scope="col">Label</th>
+                  <th scope="col" class="num">Simulations</th>
+                  <th scope="col" class="num">Matches played</th>
+                  <th scope="col" class="num">Teams</th>
+                  <th scope="col">Ingested</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (run of data.runs; track run.id) {
+                  <tr>
+                    <td class="strong">{{ run.as_of_date }}</td>
+                    <td>{{ run.label ?? 'daily' }}</td>
+                    <td class="num">{{ run.n_simulations | number }}</td>
+                    <td class="num">{{ run.n_played_matches_locked }}</td>
+                    <td class="num">{{ run.teams }}</td>
+                    <td>{{ run.run_timestamp_utc | date: 'medium' }}</td>
+                  </tr>
+                } @empty {
+                  <tr>
+                    <td colspan="6">No snapshots.</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+
+        <h2 class="panel-title">Stocks snapshots</h2>
+        <ng-container *ngTemplateOutlet="status; context: { $implicit: stocksRuns, empty: '' }" />
+        @if (stocksRuns.data(); as data) {
+          <div class="table-scroll" role="region" aria-label="Stocks snapshots" tabindex="0">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th scope="col">As of</th>
+                  <th scope="col">Label</th>
+                  <th scope="col" class="num">Universe</th>
+                  <th scope="col" class="num">Events</th>
+                  <th scope="col" class="num">Companies</th>
+                  <th scope="col">Window</th>
+                  <th scope="col">Ingested</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (run of data.runs; track run.id) {
+                  <tr>
+                    <td class="strong">{{ run.as_of_date }}</td>
+                    <td>{{ run.label ?? 'daily' }}</td>
+                    <td class="num">{{ run.universe_size | number }}</td>
+                    <td class="num">{{ run.n_events | number }}</td>
+                    <td class="num">{{ run.companies | number }}</td>
+                    <td>{{ run.start_date }} to {{ run.end_date }}</td>
+                    <td>{{ run.run_timestamp_utc | date: 'medium' }}</td>
+                  </tr>
+                } @empty {
+                  <tr>
+                    <td colspan="7">No snapshots.</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Snapshot diff -->
+    @if (activeTab() === 'diff') {
+      <div class="tab-panel" role="tabpanel" id="admin-panel-diff" aria-labelledby="admin-tab-diff">
+        <h2 class="panel-title">How the World Cup odds moved</h2>
+        @if (worldCupRuns.data(); as data) {
+          <form class="inline-form" (ngSubmit)="compare()">
+            <label class="field-label" for="diff-before">From</label>
+            <select
+              id="diff-before"
+              name="before"
+              class="text-field"
+              [ngModel]="diffBefore()"
+              (ngModelChange)="diffBefore.set($event)"
+            >
+              @for (run of data.runs; track run.id) {
+                <option [ngValue]="run.id">{{ runLabel(run) }}</option>
+              }
+            </select>
+            <label class="field-label" for="diff-after">to</label>
+            <select
+              id="diff-after"
+              name="after"
+              class="text-field"
+              [ngModel]="diffAfter()"
+              (ngModelChange)="diffAfter.set($event)"
+            >
+              @for (run of data.runs; track run.id) {
+                <option [ngValue]="run.id">{{ runLabel(run) }}</option>
+              }
+            </select>
+            <button type="submit" class="btn-primary btn-md">Compare</button>
+          </form>
+        }
+        <ng-container *ngTemplateOutlet="status; context: { $implicit: diff, empty: '' }" />
+        @if (diff.data(); as d) {
+          <div class="table-scroll" role="region" aria-label="Changes by team" tabindex="0">
+            <table class="data-table">
+              <caption class="visually-hidden">
+                Championship and final odds on
+                {{
+                  runLabel(d.before)
+                }}
+                and
+                {{
+                  runLabel(d.after)
+                }}
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Team</th>
+                  <th scope="col" class="num">Winner before</th>
+                  <th scope="col" class="num">Winner after</th>
+                  <th scope="col" class="num">Change</th>
+                  <th scope="col" class="num">Final before</th>
+                  <th scope="col" class="num">Final after</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of d.teams; track row.team) {
+                  <tr>
+                    <td class="strong">{{ row.team }}</td>
+                    <td class="num">
+                      {{
+                        row.winner_before === null
+                          ? '-'
+                          : (row.winner_before | number: '1.1-1') + '%'
+                      }}
+                    </td>
+                    <td class="num">
+                      {{
+                        row.winner_after === null ? '-' : (row.winner_after | number: '1.1-1') + '%'
+                      }}
+                    </td>
+                    <td
+                      class="num"
+                      [class.up]="row.winner_change > 0"
+                      [class.down]="row.winner_change < 0"
+                    >
+                      {{ row.winner_change > 0 ? '+' : ''
+                      }}{{ row.winner_change | number: '1.1-1' }}
+                    </td>
+                    <td class="num">
+                      {{
+                        row.final_before === null ? '-' : (row.final_before | number: '1.1-1') + '%'
+                      }}
+                    </td>
+                    <td class="num">
+                      {{
+                        row.final_after === null ? '-' : (row.final_after | number: '1.1-1') + '%'
+                      }}
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</section>
+
+<!-- Loading and error line shared by every section. -->
+<ng-template #status let-section let-empty="empty">
+  @if (section.loading()) {
+    <p class="panel-caption" role="status">Loading...</p>
+  } @else if (section.error()) {
+    <p class="panel-error" role="alert">{{ section.error() }}</p>
+  } @else if (empty && section.data()?.length === 0) {
+    <p class="panel-caption">{{ empty }}</p>
+  }
+</ng-template>

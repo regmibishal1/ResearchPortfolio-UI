@@ -3,11 +3,12 @@ import {
   Component,
   OnInit,
   ChangeDetectionStrategy,
+  computed,
   inject,
 } from '@angular/core'
 
 import { FormsModule } from '@angular/forms'
-import { Router } from '@angular/router'
+import { Router, RouterLink } from '@angular/router'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { ToastService } from '../../shared/toast/toast.service'
 import { finalize } from 'rxjs/operators'
@@ -18,7 +19,7 @@ import { IconComponent } from '../../shared/icon/icon.component'
 
 @Component({
   selector: 'app-profile',
-  imports: [IconComponent, FormsModule, MatProgressSpinnerModule],
+  imports: [IconComponent, FormsModule, MatProgressSpinnerModule, RouterLink],
   templateUrl: './profile.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './profile.component.scss',
@@ -26,6 +27,8 @@ import { IconComponent } from '../../shared/icon/icon.component'
 export class ProfileComponent implements OnInit {
   private userService = inject(UserService)
   private authService = inject(AuthService)
+  /** Shows the link to the admin dashboard; the dashboard checks again. */
+  readonly isAdmin = computed(() => this.authService.role() === 'ADMIN')
   private toasts = inject(ToastService)
   private router = inject(Router)
 

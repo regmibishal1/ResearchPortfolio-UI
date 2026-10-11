@@ -8,6 +8,9 @@ export const environment = {
   // Set under: Pages > researchportfolio-ui > Settings > Environment Variables
   //   FASTAPI_API_KEY = <value of RP_FASTAPI_API_KEY from .env>
   apiKey: '%%FASTAPI_API_KEY%%',
+  // Cloudflare Turnstile site key (TURNSTILE_SITE_KEY in Pages env vars);
+  // empty turns the check off. The AuthAPI needs the matching secret.
+  turnstileSiteKey: '%%TURNSTILE_SITE_KEY%%',
   features: {
     // Accounts are by invitation; the sign-up form stays hidden while false.
     registration: false,

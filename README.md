@@ -62,15 +62,17 @@ sed -i "s|%%API_URL%%|$API_URL|g" src/environments/environment.prod.ts \
   && sed -i "s|%%MODEL_API_URL%%|$MODEL_API_URL|g" src/environments/environment.prod.ts \
   && sed -i "s|%%APP_URL%%|$APP_URL|g" src/environments/environment.prod.ts \
   && sed -i "s|%%FASTAPI_API_KEY%%|$FASTAPI_API_KEY|g" src/environments/environment.prod.ts \
+  && sed -i "s|%%TURNSTILE_SITE_KEY%%|$TURNSTILE_SITE_KEY|g" src/environments/environment.prod.ts \
   && npm run build
 ```
 
 **Environment variables (set in Cloudflare Pages dashboard):**
 
-| Variable          | Purpose                                                                   |
-| ----------------- | ------------------------------------------------------------------------- |
-| `API_URL`         | Auth API base URL                                                         |
-| `MODEL_API_URL`   | FastAPI model server base URL                                             |
-| `APP_URL`         | Public URL of this app                                                    |
-| `FASTAPI_API_KEY` | Backend API key; copy from server `.env` after running `bootstrap_env.sh` |
-| `NODE_VERSION`    | `22`                                                                      |
+| Variable             | Purpose                                                                                                                                                    |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `API_URL`            | Auth API base URL                                                                                                                                          |
+| `MODEL_API_URL`      | FastAPI model server base URL                                                                                                                              |
+| `APP_URL`            | Public URL of this app                                                                                                                                     |
+| `FASTAPI_API_KEY`    | Backend API key; copy from server `.env` after running `bootstrap_env.sh`                                                                                  |
+| `TURNSTILE_SITE_KEY` | Cloudflare Turnstile site key for the sign-in and forgot-password forms; empty turns the check off (the AuthAPI needs the matching `TURNSTILE_SECRET_KEY`) |
+| `NODE_VERSION`       | `22`                                                                                                                                                       |
