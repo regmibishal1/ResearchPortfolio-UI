@@ -46,6 +46,7 @@ describe('AdminComponent', () => {
       'allowEmail',
       'removeAllowedEmail',
       'unblock',
+      'deleteRun',
     ])
     manage.users.and.returnValue(
       of([
@@ -132,6 +133,44 @@ describe('AdminComponent', () => {
     await fixture.whenStable()
     fixture.detectChanges()
     expect(manage.worldCupDiff).toHaveBeenCalledWith(1, 2)
+  })
+
+  it('deletes a run only after it is confirmed, then reloads the list', async () => {
+    const run = {
+      id: 5,
+      as_of_date: '2026-07-04',
+      label: null,
+      n_simulations: 2000000,
+      n_played_matches_locked: 80,
+      run_timestamp_utc: '2026-07-04T12:00:00Z',
+      teams: 48,
+    }
+    manage.worldCupRuns.and.returnValue(of({ runs: [run] }))
+    manage.stocksRuns.and.returnValue(of({ runs: [] }))
+    manage.deleteRun.and.returnValue(of(undefined))
+    tab('Data runs').click()
+    await fixture.whenStable()
+    fixture.detectChanges()
+
+    const deleteButton = () =>
+      [...el.querySelectorAll<HTMLButtonElement>('[aria-label="World Cup snapshots"] button')].find(
+        (b) => b.textContent!.trim().startsWith('Delete')
+      )!
+    deleteButton().click()
+    fixture.detectChanges()
+    expect(manage.deleteRun).not.toHaveBeenCalled()
+    expect(el.querySelector('.confirm-text')!.textContent).toContain('Delete permanently?')
+
+    el.querySelector<HTMLButtonElement>('.confirm .btn-secondary')!.click()
+    fixture.detectChanges()
+    expect(el.querySelector('.confirm')).toBeNull()
+
+    deleteButton().click()
+    fixture.detectChanges()
+    el.querySelector<HTMLButtonElement>('.confirm .btn-danger')!.click()
+    fixture.detectChanges()
+    expect(manage.deleteRun).toHaveBeenCalledOnceWith('worldcup', 5)
+    expect(manage.worldCupRuns).toHaveBeenCalledTimes(2)
   })
 
   it('says plainly when the server refuses', async () => {

@@ -312,6 +312,10 @@
             Refresh
           </button>
         </div>
+        <p class="panel-caption">
+          Deleting a snapshot removes it and everything in it from the database for good; there is
+          no backup. The site's World Cup page reads a frozen export and does not change.
+        </p>
         <ng-container *ngTemplateOutlet="status; context: { $implicit: worldCupRuns, empty: '' }" />
         @if (worldCupRuns.data(); as data) {
           <div class="table-scroll" role="region" aria-label="World Cup snapshots" tabindex="0">
@@ -324,6 +328,7 @@
                   <th scope="col" class="num">Matches played</th>
                   <th scope="col" class="num">Teams</th>
                   <th scope="col">Ingested</th>
+                  <th scope="col"><span class="visually-hidden">Delete</span></th>
                 </tr>
               </thead>
               <tbody>
@@ -335,10 +340,15 @@
                     <td class="num">{{ run.n_played_matches_locked }}</td>
                     <td class="num">{{ run.teams }}</td>
                     <td>{{ run.run_timestamp_utc | date: 'medium' }}</td>
+                    <td>
+                      <ng-container
+                        *ngTemplateOutlet="deleteCell; context: { kind: 'worldcup', run: run }"
+                      />
+                    </td>
                   </tr>
                 } @empty {
                   <tr>
-                    <td colspan="6">No snapshots.</td>
+                    <td colspan="7">No snapshots.</td>
                   </tr>
                 }
               </tbody>
@@ -360,6 +370,7 @@
                   <th scope="col" class="num">Companies</th>
                   <th scope="col">Window</th>
                   <th scope="col">Ingested</th>
+                  <th scope="col"><span class="visually-hidden">Delete</span></th>
                 </tr>
               </thead>
               <tbody>
@@ -372,10 +383,15 @@
                     <td class="num">{{ run.companies | number }}</td>
                     <td>{{ run.start_date }} to {{ run.end_date }}</td>
                     <td>{{ run.run_timestamp_utc | date: 'medium' }}</td>
+                    <td>
+                      <ng-container
+                        *ngTemplateOutlet="deleteCell; context: { kind: 'stocks', run: run }"
+                      />
+                    </td>
                   </tr>
                 } @empty {
                   <tr>
-                    <td colspan="7">No snapshots.</td>
+                    <td colspan="8">No snapshots.</td>
                   </tr>
                 }
               </tbody>
@@ -495,5 +511,31 @@
     <p class="panel-error" role="alert">{{ section.error() }}</p>
   } @else if (empty && section.data()?.length === 0) {
     <p class="panel-caption">{{ empty }}</p>
+  }
+</ng-template>
+
+<!-- Delete, then confirm in place. -->
+<ng-template #deleteCell let-kind="kind" let-run="run">
+  @if (isConfirming(kind, run.id)) {
+    <div
+      class="confirm"
+      role="group"
+      [attr.aria-label]="'Delete the ' + run.as_of_date + ' snapshot?'"
+    >
+      <span class="confirm-text">Delete permanently?</span>
+      <button
+        type="button"
+        class="btn-danger btn-md"
+        [disabled]="deleting()"
+        (click)="deleteRun(kind, run)"
+      >
+        Delete<span class="visually-hidden"> the {{ run.as_of_date }} snapshot</span>
+      </button>
+      <button type="button" class="btn-secondary btn-md" (click)="cancelDelete()">Cancel</button>
+    </div>
+  } @else {
+    <button type="button" class="btn-secondary btn-md" (click)="askDelete(kind, run.id)">
+      Delete<span class="visually-hidden"> the {{ run.as_of_date }} snapshot</span>
+    </button>
   }
 </ng-template>
