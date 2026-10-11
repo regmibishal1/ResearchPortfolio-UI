@@ -27,7 +27,6 @@
 		"@angular/forms": "^22.2.2",
 		"@angular/material": "^22.2.2",
 		"@angular/platform-browser": "^22.2.2",
-		"@angular/platform-browser-dynamic": "^22.2.2",
 		"@angular/platform-server": "22.2.2",
 		"@angular/router": "^22.2.2",
 		"@angular/ssr": "22.2.2",
@@ -47,7 +46,6 @@
 		"@lhci/cli": "0.15.1",
 		"@types/jasmine": "~5.1.0",
 		"@types/node": "22.20.5",
-		"angular-cli-ghpages": "^2.0.0-beta.2",
 		"angular-eslint": "22.5.0",
 		"eslint": "10.12.0",
 		"eslint-config-prettier": "10.1.8",
@@ -71,5 +69,8 @@
 		"subset-font": "2.9.0",
 		"typescript": "~6.0.3",
 		"typescript-eslint": "8.71.1"
+	},
+	"resolutions": {
+		"tmp": "0.2.7"
 	}
 }
