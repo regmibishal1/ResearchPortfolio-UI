@@ -18,10 +18,13 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService)
   const router = inject(Router)
   const toAuthApi = req.url.startsWith(environment.apiBaseUrl)
+  // The FastAPI's admin dashboard routes take the same sign-in token.
+  const wantsBearer = toAuthApi || req.url.startsWith(environment.modelApiUrl + '/manage')
 
-  // JWT Bearer: only ever sent to the AuthAPI, never to another host.
+  // JWT Bearer: only ever sent to the AuthAPI and the FastAPI's /manage
+  // routes, never to another host.
   const withToken = (request: HttpRequest<unknown>, token: string) =>
-    toAuthApi && token && !req.headers.has('Authorization')
+    wantsBearer && token && !req.headers.has('Authorization')
       ? request.clone({ setHeaders: { Authorization: 'Bearer ' + token } })
       : request
 
@@ -50,7 +53,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   // Just after a page load the access token is still being renewed from the
   // cookie; wait for it instead of sending the request without one.
   const token = authService.getAuthTokenValue()
-  if (toAuthApi && !managesSession && !token && authService.hasSession()) {
+  if (wantsBearer && !managesSession && !token && authService.hasSession()) {
     return renewOrEnd().pipe(switchMap((fresh) => next(withToken(base, fresh))))
   }
 
@@ -59,7 +62,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       const expired =
         error instanceof HttpErrorResponse &&
         error.status === 401 &&
-        toAuthApi &&
+        wantsBearer &&
         !managesSession &&
         authService.hasSession()
       if (!expired) return throwError(() => error)

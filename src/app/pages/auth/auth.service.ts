@@ -1,4 +1,4 @@
-import { Injectable, PLATFORM_ID, inject } from '@angular/core'
+import { Injectable, PLATFORM_ID, inject, signal } from '@angular/core'
 import { isPlatformBrowser } from '@angular/common'
 import { BehaviorSubject, Observable, throwError } from 'rxjs'
 import { HttpClient, HttpErrorResponse } from '@angular/common/http'
@@ -14,6 +14,21 @@ import { environment } from '../../../environments/environment'
 export function safeNext(next: string | null | undefined): string {
   if (!next || !next.startsWith('/') || next.startsWith('//') || next.includes('\\')) return '/'
   return next
+}
+
+/**
+ * The role an access token carries ("USER" or "ADMIN"), or null when it
+ * cannot be read. Only decides what the site shows; the servers check the
+ * role themselves on every admin request.
+ */
+export function tokenRole(token: string): string | null {
+  try {
+    const part = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')
+    const role = JSON.parse(atob(part.padEnd(Math.ceil(part.length / 4) * 4, '='))).role
+    return typeof role === 'string' ? role : null
+  } catch {
+    return null
+  }
 }
 
 /** A non-secret flag: this browser had a session, so try the refresh cookie on load. */
@@ -33,6 +48,8 @@ export class AuthService {
   private apiURL: string = environment.apiBaseUrl + '/auth'
   /** One refresh at a time: parallel 401s all wait on the same request. */
   private refreshing: Observable<string> | null = null
+  /** The signed-in user's role, from the current access token. */
+  readonly role = signal<string | null>(null)
 
   constructor() {
     this.checkInitialAuth()
@@ -75,12 +92,14 @@ export class AuthService {
     // Only a flag, never a token: it tells the next page load to try the cookie.
     localStorage.setItem(SESSION_HINT, '1')
     this.authToken.next(response.access_token)
+    this.role.set(tokenRole(response.access_token))
     this.isAuthenticated.next(true)
   }
 
   private clearSession() {
     localStorage.removeItem(SESSION_HINT)
     this.authToken.next('')
+    this.role.set(null)
     this.isAuthenticated.next(false)
   }
 
@@ -135,9 +154,12 @@ export class AuthService {
   }
 
   /** Asks for a reset link by email; the answer is the same whether or not the address has an account. */
-  forgotPassword(email: string) {
+  forgotPassword(email: string, turnstileToken?: string) {
     return this.http
-      .post<void>(`${this.apiURL}/forgot-password`, { email })
+      .post<void>(
+        `${this.apiURL}/forgot-password`,
+        turnstileToken ? { email, turnstileToken } : { email }
+      )
       .pipe(catchError(this.handleError))
   }
 
@@ -195,6 +217,8 @@ export class RegisterModel {
 export class LoginModel {
   username: string
   password: string
+  /** Cloudflare Turnstile token, when the check is on. */
+  turnstileToken?: string
 
   constructor() {
     this.username = ''

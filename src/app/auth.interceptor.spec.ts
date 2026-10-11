@@ -6,13 +6,7 @@ import { provideRouter } from '@angular/router'
 import { authInterceptor } from './auth.interceptor'
 import { AuthService } from './pages/auth/auth.service'
 import { environment } from '../environments/environment'
-
-/** An unsigned JWT-shaped token; the UI only ever reads its payload. */
-function fakeJwt(claims: Record<string, unknown>): string {
-  const encode = (o: unknown) =>
-    btoa(JSON.stringify(o)).replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_')
-  return `${encode({ alg: 'HS256' })}.${encode(claims)}.sig`
-}
+import { fakeJwt } from './testing/fake-jwt'
 
 const inAnHour = () => Math.floor(Date.now() / 1000) + 3600
 
@@ -120,6 +114,28 @@ describe('authInterceptor', () => {
     expect(req.request.headers.get('Authorization')).toBe('Bearer ' + newAccess)
     req.flush({ username: 'me' })
     expect(body).toEqual({ username: 'me' })
+  })
+
+  it('sends the sign-in token to the FastAPI admin routes and no other FastAPI route', () => {
+    http.get(`${environment.modelApiUrl}/manage/health`).subscribe()
+    http.get(`${environment.modelApiUrl}/worldcup/latest`).subscribe()
+
+    const manage = httpMock.expectOne(`${environment.modelApiUrl}/manage/health`).request
+    expect(manage.headers.get('Authorization')).toBe('Bearer ' + access)
+    expect(manage.withCredentials).toBeFalse()
+    const open = httpMock.expectOne(`${environment.modelApiUrl}/worldcup/latest`).request
+    expect(open.headers.has('Authorization')).toBeFalse()
+  })
+
+  it('renews an expired token for the FastAPI admin routes too', () => {
+    http.get(`${environment.modelApiUrl}/manage/health`).subscribe()
+    httpMock
+      .expectOne(`${environment.modelApiUrl}/manage/health`)
+      .flush(null, { status: 401, statusText: 'Unauthorized' })
+    httpMock.expectOne(refreshUrl).flush({ access_token: newAccess })
+    const retry = httpMock.expectOne(`${environment.modelApiUrl}/manage/health`)
+    expect(retry.request.headers.get('Authorization')).toBe('Bearer ' + newAccess)
+    retry.flush({})
   })
 
   it('leaves a failed sign-in alone instead of trying to renew', () => {

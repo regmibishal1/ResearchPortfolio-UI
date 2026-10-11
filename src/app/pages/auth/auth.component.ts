@@ -18,6 +18,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar'
 import { finalize } from 'rxjs/operators'
 import { SeoService } from '../../services/seo.service'
 import { environment } from '../../../environments/environment'
+import { TurnstileComponent } from '../../shared/turnstile/turnstile.component'
 import { IconComponent } from '../../shared/icon/icon.component'
 
 type Mode = 'login' | 'register' | 'reset' | 'forgot'
@@ -26,7 +27,7 @@ const MIN_PASSWORD_LENGTH = 8
 
 @Component({
   selector: 'app-auth',
-  imports: [IconComponent, FormsModule, MatProgressBarModule],
+  imports: [IconComponent, FormsModule, MatProgressBarModule, TurnstileComponent],
   templateUrl: './auth.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './auth.component.scss',
@@ -68,7 +69,27 @@ export class AuthComponent {
   // whatever they changed.
   private settle = () => {
     this.isLoading = false
+    // A Turnstile token works once, so each attempt gets a fresh check.
+    this.turnstile()?.reset()
     this.cdr.markForCheck()
+  }
+
+  /** Cloudflare Turnstile; off when no site key is configured. */
+  readonly turnstileSiteKey = environment.turnstileSiteKey.startsWith('%%')
+    ? ''
+    : environment.turnstileSiteKey
+  private turnstileToken = ''
+  private readonly turnstile = viewChild(TurnstileComponent)
+
+  onTurnstile(token: string) {
+    this.turnstileToken = token
+  }
+
+  /** False, with the reason shown, while the Turnstile check is still unanswered. */
+  private passedCheck(): boolean {
+    if (!this.turnstileSiteKey || this.turnstileToken) return true
+    this.showError('Complete the security check first.')
+    return false
   }
 
   constructor() {
@@ -109,10 +130,10 @@ export class AuthComponent {
   }
 
   onLogin(form: NgForm) {
-    if (!this.validate(form)) return
+    if (!this.validate(form) || !this.passedCheck()) return
     this.isLoading = true
     this.authService
-      .login(this.loginObj)
+      .login({ ...this.loginObj, turnstileToken: this.turnstileToken || undefined })
       .pipe(finalize(this.settle))
       .subscribe({
         next: () => {
@@ -139,10 +160,10 @@ export class AuthComponent {
   }
 
   onForgot(form: NgForm) {
-    if (!this.validate(form)) return
+    if (!this.validate(form) || !this.passedCheck()) return
     this.isLoading = true
     this.authService
-      .forgotPassword(this.forgotEmail.trim())
+      .forgotPassword(this.forgotEmail.trim(), this.turnstileToken || undefined)
       .pipe(finalize(this.settle))
       .subscribe({
         next: () => (this.forgotSent = true),

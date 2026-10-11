@@ -21,6 +21,74 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/manage/health": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Health */
+        get: operations["health_manage_health_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/manage/stocks/runs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Stocks Runs */
+        get: operations["stocks_runs_manage_stocks_runs_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/manage/worldcup/diff": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Worldcup Diff */
+        get: operations["worldcup_diff_manage_worldcup_diff_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/manage/worldcup/runs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Worldcup Runs */
+        get: operations["worldcup_runs_manage_worldcup_runs_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/stats/sample": {
         parameters: {
             query?: never;
@@ -432,6 +500,19 @@ export interface components {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
         };
+        /** HealthResponse */
+        HealthResponse: {
+            /** Busiest Routes */
+            busiest_routes: components["schemas"]["RouteCounts"][];
+            /** Counting Since */
+            counting_since: number | null;
+            /** Hourly */
+            hourly: components["schemas"]["HourCounts"][];
+            last_day: components["schemas"]["StatusCounts"];
+            last_hour: components["schemas"]["StatusCounts"];
+            /** Recent Errors */
+            recent_errors: components["schemas"]["ServerError"][];
+        };
         /** HistogramBin */
         HistogramBin: {
             /** Bin End */
@@ -456,6 +537,17 @@ export interface components {
             n_played_matches_locked: number;
             /** Value */
             value: number;
+        };
+        /** HourCounts */
+        HourCounts: {
+            /** Client Errors */
+            client_errors: number;
+            /** Hour Start */
+            hour_start: number;
+            /** Ok */
+            ok: number;
+            /** Server Errors */
+            server_errors: number;
         };
         /** IngestBracket */
         IngestBracket: {
@@ -700,6 +792,15 @@ export interface components {
             /** Run Id */
             run_id: number;
         };
+        /** RouteCounts */
+        RouteCounts: {
+            /** Requests */
+            requests: number;
+            /** Route */
+            route: string;
+            /** Server Errors */
+            server_errors: number;
+        };
         /** SampleRequest */
         SampleRequest: {
             /**
@@ -767,6 +868,85 @@ export interface components {
             sector: string;
             /** Sector Name */
             sector_name: string;
+        };
+        /** ServerError */
+        ServerError: {
+            /** At */
+            at: number;
+            /** Method */
+            method: string;
+            /** Ms */
+            ms: number;
+            /** Request Id */
+            request_id: string;
+            /** Route */
+            route: string;
+            /** Status */
+            status: number;
+        };
+        /** StatusCounts */
+        StatusCounts: {
+            /** Client Errors */
+            client_errors: number;
+            /** Ok */
+            ok: number;
+            /** Redirects */
+            redirects: number;
+            /** Server Errors */
+            server_errors: number;
+        };
+        /** StocksRunRow */
+        StocksRunRow: {
+            /**
+             * As Of Date
+             * Format: date
+             */
+            as_of_date: string;
+            /** Companies */
+            companies: number;
+            /**
+             * End Date
+             * Format: date
+             */
+            end_date: string;
+            /** Id */
+            id: number;
+            /** Label */
+            label: string | null;
+            /** N Events */
+            n_events: number;
+            /**
+             * Run Timestamp Utc
+             * Format: date-time
+             */
+            run_timestamp_utc: string;
+            /**
+             * Start Date
+             * Format: date
+             */
+            start_date: string;
+            /** Universe Size */
+            universe_size: number;
+        };
+        /** StocksRunsResponse */
+        StocksRunsResponse: {
+            /** Runs */
+            runs: components["schemas"]["StocksRunRow"][];
+        };
+        /** TeamChange */
+        TeamChange: {
+            /** Final After */
+            final_after: number | null;
+            /** Final Before */
+            final_before: number | null;
+            /** Team */
+            team: string;
+            /** Winner After */
+            winner_after: number | null;
+            /** Winner Before */
+            winner_before: number | null;
+            /** Winner Change */
+            winner_change: number;
         };
         /** TeamRow */
         TeamRow: {
@@ -857,6 +1037,41 @@ export interface components {
             msg: string;
             /** Error Type */
             type: string;
+        };
+        /** WorldCupDiffResponse */
+        WorldCupDiffResponse: {
+            after: components["schemas"]["WorldCupRunRow"];
+            before: components["schemas"]["WorldCupRunRow"];
+            /** Teams */
+            teams: components["schemas"]["TeamChange"][];
+        };
+        /** WorldCupRunRow */
+        WorldCupRunRow: {
+            /**
+             * As Of Date
+             * Format: date
+             */
+            as_of_date: string;
+            /** Id */
+            id: number;
+            /** Label */
+            label: string | null;
+            /** N Played Matches Locked */
+            n_played_matches_locked: number;
+            /** N Simulations */
+            n_simulations: number;
+            /**
+             * Run Timestamp Utc
+             * Format: date-time
+             */
+            run_timestamp_utc: string;
+            /** Teams */
+            teams: number;
+        };
+        /** WorldCupRunsResponse */
+        WorldCupRunsResponse: {
+            /** Runs */
+            runs: components["schemas"]["WorldCupRunRow"][];
         };
         /** HistoryResponse */
         src__endpoints__stocks__HistoryResponse: {
@@ -1071,6 +1286,100 @@ export interface operations {
                 };
                 content: {
                     "application/json": unknown;
+                };
+            };
+        };
+    };
+    health_manage_health_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HealthResponse"];
+                };
+            };
+        };
+    };
+    stocks_runs_manage_stocks_runs_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StocksRunsResponse"];
+                };
+            };
+        };
+    };
+    worldcup_diff_manage_worldcup_diff_get: {
+        parameters: {
+            query: {
+                /** @description Run id of the earlier snapshot */
+                before: number;
+                /** @description Run id of the later snapshot */
+                after: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorldCupDiffResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    worldcup_runs_manage_worldcup_runs_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorldCupRunsResponse"];
                 };
             };
         };
