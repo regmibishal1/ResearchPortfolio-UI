@@ -74,6 +74,13 @@
                 <p class="field-error" id="login-password-error">Enter your password.</p>
               }
             </div>
+            @if (turnstileSiteKey) {
+              <app-turnstile
+                [siteKey]="turnstileSiteKey"
+                action="login"
+                (token)="onTurnstile($event)"
+              />
+            }
             <button type="submit" class="btn-primary auth-submit">Sign in</button>
           </form>
           @if (resetByEmail) {
@@ -282,6 +289,13 @@
                   />
                 </div>
               </div>
+              @if (turnstileSiteKey) {
+                <app-turnstile
+                  [siteKey]="turnstileSiteKey"
+                  action="forgot"
+                  (token)="onTurnstile($event)"
+                />
+              }
               <button type="submit" class="btn-primary auth-submit">Send the link</button>
             </form>
           }

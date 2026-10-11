@@ -5,6 +5,7 @@ import { Title } from '@angular/platform-browser'
 import { AuthComponent } from './auth.component'
 import { AuthResponse, AuthService } from './auth.service'
 import { ActivatedRoute, Router, provideRouter } from '@angular/router'
+import { NgForm } from '@angular/forms'
 import { of } from 'rxjs'
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http'
 
@@ -47,6 +48,32 @@ describe('AuthComponent', () => {
     expect(el.querySelector('label[for="login-password"]')?.textContent?.trim()).toBe('Password')
     expect(username.getAttribute('autocomplete')).toBe('username')
     expect(password.getAttribute('autocomplete')).toBe('current-password')
+  })
+
+  it('has no Turnstile check unless a site key is configured', () => {
+    expect(component.turnstileSiteKey).toBe('')
+    expect(el.querySelector('app-turnstile')).toBeNull()
+  })
+
+  it('waits for the Turnstile check, then sends its token with the sign-in', () => {
+    const login = spyOn(TestBed.inject(AuthService), 'login').and.returnValue(
+      of({ access_token: 'a' } as AuthResponse)
+    )
+    const form = { invalid: false } as NgForm
+    ;(component as unknown as { turnstileSiteKey: string }).turnstileSiteKey = 'site-key'
+    component.loginObj = { username: 'me', password: 'pw' }
+
+    component.onLogin(form)
+    expect(login).not.toHaveBeenCalled()
+    expect(component.formError).toBe('Complete the security check first.')
+
+    component.onTurnstile('cf-token')
+    component.onLogin(form)
+    expect(login).toHaveBeenCalledWith({
+      username: 'me',
+      password: 'pw',
+      turnstileToken: 'cf-token',
+    })
   })
 
   it('does not offer sign-up while accounts are invitation only', () => {
@@ -133,7 +160,7 @@ describe('AuthComponent forgot password', () => {
     el.querySelector<HTMLButtonElement>('.auth-submit')!.click()
     fixture.detectChanges()
     tick()
-    expect(forgot).toHaveBeenCalledWith('me@example.test')
+    expect(forgot).toHaveBeenCalledWith('me@example.test', undefined)
     expect(el.querySelector('[role="status"]')?.textContent).toContain(
       'If that address has an account'
     )
