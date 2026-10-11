@@ -95,6 +95,11 @@ export class ManageService {
     })
   }
 
+  /** Deletes a snapshot and everything in it. There is no undo. */
+  deleteRun(kind: 'worldcup' | 'stocks', id: number): Observable<void> {
+    return this.http.delete<void>(`${this.api}/${kind}/runs/${id}`)
+  }
+
   stocksRuns(): Observable<{ runs: StocksRunRow[] }> {
     return this.http.get<{ runs: StocksRunRow[] }>(`${this.api}/stocks/runs`)
   }

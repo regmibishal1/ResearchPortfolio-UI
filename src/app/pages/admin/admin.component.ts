@@ -18,6 +18,7 @@ import {
 import { ToastService } from '../../shared/toast/toast.service'
 
 type TabId = 'accounts' | 'health' | 'runs' | 'diff'
+type RunKind = 'worldcup' | 'stocks'
 
 /** One block of data on the page: null until loaded, with any error beside it. */
 class Section<T> {
@@ -201,6 +202,51 @@ export class AdminComponent {
     const total = hours.reduce((sum, h) => sum + h.ok + h.client_errors + h.server_errors, 0)
     const errors = hours.reduce((sum, h) => sum + h.server_errors, 0)
     return `Requests per hour over the last 24 hours: ${total} in all, ${errors} server errors.`
+  }
+
+  // Deleting runs
+
+  readonly confirming = signal<{ kind: RunKind; id: number } | null>(null)
+  readonly deleting = signal(false)
+
+  isConfirming(kind: RunKind, id: number): boolean {
+    const target = this.confirming()
+    return target?.kind === kind && target.id === id
+  }
+
+  askDelete(kind: RunKind, id: number): void {
+    this.confirming.set({ kind, id })
+  }
+
+  cancelDelete(): void {
+    this.confirming.set(null)
+  }
+
+  deleteRun(kind: RunKind, run: { id: number; as_of_date: string; label?: string | null }): void {
+    this.deleting.set(true)
+    this.manage.deleteRun(kind, run.id).subscribe({
+      next: () => {
+        this.deleting.set(false)
+        this.confirming.set(null)
+        const name = run.as_of_date + (run.label ? ` (${run.label})` : '')
+        this.toasts.show(`Deleted the ${name} snapshot.`)
+        if (kind === 'worldcup') {
+          // The diff may point at the run that just went away.
+          if (this.diffBefore() === run.id || this.diffAfter() === run.id) {
+            this.diffBefore.set(null)
+            this.diffAfter.set(null)
+            this.diff.data.set(null)
+          }
+          this.worldCupRuns.load(this.manage.worldCupRuns())
+        } else {
+          this.stocksRuns.load(this.manage.stocksRuns())
+        }
+      },
+      error: (err: unknown) => {
+        this.deleting.set(false)
+        this.toasts.show(describe(err), 6000)
+      },
+    })
   }
 
   // Snapshot diff
