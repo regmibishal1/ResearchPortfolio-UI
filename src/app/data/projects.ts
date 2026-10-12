@@ -302,6 +302,30 @@ const PROJECT_DEFINITIONS: Project[] = [
     ],
   },
   {
+    id: 'durpin',
+    title: 'Durpin',
+    shortDescription:
+      'A disposable camera app for one small group of friends: 27 shots a day, photos develop hours later, and only your friends ever see them.',
+    description:
+      "Durpin is a disposable camera for a small group of friends. You get 27 shots a day with no preview, no retakes and no zoom, and each shot develops between 20 minutes and 3 hours later, face down, ready to share with friends, keep private or toss. There are no likes or counts, no strangers and no ads: friends send a vibe instead, invites are a favor rather than a toll, and each friend's day is a single card so nobody gets buried. The design keeps what made similar apps last, a real wait before the reveal, and avoids what sank them, growth tricks and the cost of storing everyone's photos. The app is built with Expo and React Native in TypeScript and renders its film looks on the phone, and it talks to a fully self-hosted Supabase backend behind Cloudflare, where Postgres row-level security and server-side timers keep the rules honest. It is in private testing with a small group of friends.",
+    tags: ['React Native', 'Expo', 'TypeScript', 'Supabase', 'PostgreSQL'],
+    category: 'Mobile',
+    type: 'product',
+    period: '2026',
+    icon: 'photo_camera',
+    demo: 'https://durpin.us',
+    status: 'in-progress',
+    statusLabel: 'Private testing',
+    highlights: [
+      'The server decides when each shot develops and holds it until then, so nobody can peek early, not even with a modified app',
+      'Postgres row-level security on every table, with the daily shot limit and the develop timers enforced on the server rather than in the app',
+      'Four film stocks rendered on the phone with React Native Skia, plus a small native module (Kotlin and Swift) that gives short video clips the same look',
+      'Shared rolls that a group shoots together and that develop all at once, with comments, reactions and a vibe in place of likes',
+      'A journal that fills itself, with a monthly recap and a shot from a year ago today; photos can be exported and truly deleted',
+      'Fully self-hosted Supabase (Postgres, auth, realtime, storage) on home hardware, reached only through a Cloudflare Tunnel, with self-hosted error tracking, uptime checks and nightly encrypted backups',
+    ],
+  },
+  {
     id: 'takeout-organizer',
     title: 'Takeout Organizer',
     shortDescription:
