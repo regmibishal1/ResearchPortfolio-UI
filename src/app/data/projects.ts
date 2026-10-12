@@ -305,9 +305,9 @@ const PROJECT_DEFINITIONS: Project[] = [
     id: 'durpin',
     title: 'Durpin',
     shortDescription:
-      'A disposable camera app for one small group of friends: 27 shots a day, photos develop hours later, and only your friends ever see them.',
+      'A disposable camera app for one small group of friends: 27 shots a day, each one develops minutes later, and only your friends ever see them.',
     description:
-      "Durpin is a disposable camera for a small group of friends. You get 27 shots a day with no preview, no retakes and no zoom, and each shot develops between 20 minutes and 3 hours later, face down, ready to share with friends, keep private or toss. There are no likes or counts, no strangers and no ads: friends send a vibe instead, invites are a favor rather than a toll, and each friend's day is a single card so nobody gets buried. The design keeps what made similar apps last, a real wait before the reveal, and avoids what sank them, growth tricks and the cost of storing everyone's photos. The app is built with Expo and React Native in TypeScript and renders its film looks on the phone, and it talks to a fully self-hosted Supabase backend behind Cloudflare, where Postgres row-level security and server-side timers keep the rules honest. It is in private testing with a small group of friends.",
+      "Durpin is a disposable camera for a small group of friends. You get 27 shots a day with no preview, no retakes and no zoom, and each shot develops 5 to 20 minutes later, face down, ready to share with friends, keep private or toss. There are no likes or counts, no strangers and no ads: friends send a vibe instead, invites are a favor rather than a toll, and each friend's day is a single card so nobody gets buried. The design keeps what made similar apps last, a real wait before the reveal, and avoids what sank them, growth tricks and the cost of storing everyone's photos. The app is built with Expo and React Native in TypeScript and renders its film looks on the phone, and it talks to a fully self-hosted Supabase backend behind Cloudflare, where Postgres row-level security and server-side timers keep the rules honest. It is in private testing with a small group of friends.",
     tags: ['React Native', 'Expo', 'TypeScript', 'Supabase', 'PostgreSQL'],
     category: 'Mobile',
     type: 'product',
