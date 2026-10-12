@@ -76,6 +76,13 @@ describe('ProjectDetailComponent', () => {
     expect(headings(render('showupmd'))).not.toContain('Model card')
   })
 
+  it('describes an app icon as an icon, and screenshots as screenshots', () => {
+    const icon = render('durpin').querySelector('app-zoomable-image img')!
+    expect(icon.getAttribute('alt')).toBe('The Durpin app icon')
+    const shot = render('takeout-organizer').querySelector('app-zoomable-image img')!
+    expect(shot.getAttribute('alt')).toBe('Takeout Organizer screenshot')
+  })
+
   it('says how big the report download is', () => {
     const el = render('mri-classification')
     const report = [...el.querySelectorAll('.actions a')].find((a) =>
