@@ -141,7 +141,10 @@
     } @else if (project.image) {
       <section class="detail-section wide">
         <div class="screenshot">
-          <app-zoomable-image [src]="project.image" [alt]="project.title + ' screenshot'" />
+          <app-zoomable-image
+            [src]="project.image"
+            [alt]="project.imageAlt ?? project.title + ' screenshot'"
+          />
         </div>
       </section>
     }
