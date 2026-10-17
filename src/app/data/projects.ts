@@ -315,7 +315,7 @@ const PROJECT_DEFINITIONS: Project[] = [
     type: 'product',
     period: '2026',
     icon: 'photo_camera',
-    image: 'assets/projects/durpin.webp',
+    image: 'assets/projects/durpin-icon.webp',
     imageAlt: 'The Durpin app icon',
     demo: 'https://durpin.us',
     status: 'in-progress',
