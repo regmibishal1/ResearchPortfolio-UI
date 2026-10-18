@@ -6,13 +6,7 @@ import { provideRouter } from '@angular/router'
 import { authInterceptor } from './auth.interceptor'
 import { AuthService } from './pages/auth/auth.service'
 import { environment } from '../environments/environment'
-
-/** An unsigned JWT-shaped token; the UI only ever reads its payload. */
-function fakeJwt(claims: Record<string, unknown>): string {
-  const encode = (o: unknown) =>
-    btoa(JSON.stringify(o)).replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_')
-  return `${encode({ alg: 'HS256' })}.${encode(claims)}.sig`
-}
+import { fakeJwt } from './testing/fake-jwt'
 
 const inAnHour = () => Math.floor(Date.now() / 1000) + 3600
 
@@ -23,9 +17,7 @@ describe('authInterceptor', () => {
   const userUrl = `${environment.apiBaseUrl}/user`
   const refreshUrl = `${environment.apiBaseUrl}/auth/refresh-token`
   const access = fakeJwt({ typ: 'access', exp: inAnHour(), n: 1 })
-  const refresh = fakeJwt({ typ: 'refresh', exp: inAnHour(), n: 1 })
   const newAccess = fakeJwt({ typ: 'access', exp: inAnHour(), n: 2 })
-  const newRefresh = fakeJwt({ typ: 'refresh', exp: inAnHour(), n: 2 })
 
   beforeEach(() => {
     localStorage.clear()
@@ -39,7 +31,7 @@ describe('authInterceptor', () => {
     http = TestBed.inject(HttpClient)
     httpMock = TestBed.inject(HttpTestingController)
     auth = TestBed.inject(AuthService)
-    auth.setSession({ access_token: access, refresh_token: refresh })
+    auth.setSession({ access_token: access })
   })
 
   afterEach(() => {
@@ -62,20 +54,29 @@ describe('authInterceptor', () => {
     expect(other.headers.has('X-API-Key')).toBeFalse()
   })
 
+  it('sends credentials (the refresh cookie) to the AuthAPI and nowhere else', () => {
+    http.get(userUrl).subscribe()
+    http.get(`${environment.modelApiUrl}/health`).subscribe()
+    expect(httpMock.expectOne(userUrl).request.withCredentials).toBeTrue()
+    expect(
+      httpMock.expectOne(`${environment.modelApiUrl}/health`).request.withCredentials
+    ).toBeFalse()
+  })
+
   it('renews an expired access token once and replays the request', () => {
     let body: unknown
     http.get(userUrl).subscribe((b) => (body = b))
     httpMock.expectOne(userUrl).flush(null, { status: 401, statusText: 'Unauthorized' })
 
     const renew = httpMock.expectOne(refreshUrl)
-    expect(renew.request.headers.get('Authorization')).toBe('Bearer ' + refresh)
-    renew.flush({ access_token: newAccess, refresh_token: newRefresh })
+    expect(renew.request.withCredentials).toBeTrue()
+    renew.flush({ access_token: newAccess })
 
     const retry = httpMock.expectOne(userUrl)
     expect(retry.request.headers.get('Authorization')).toBe('Bearer ' + newAccess)
     retry.flush({ username: 'me' })
     expect(body).toEqual({ username: 'me' })
-    expect(localStorage.getItem('refresh_token')).toBe(newRefresh)
+    expect(auth.getAuthTokenValue()).toBe(newAccess)
   })
 
   it('shares one renewal between requests that fail together', () => {
@@ -84,9 +85,10 @@ describe('authInterceptor', () => {
     httpMock.expectOne(userUrl).flush(null, { status: 401, statusText: 'Unauthorized' })
     httpMock.expectOne(`${userUrl}/other`).flush(null, { status: 401, statusText: 'Unauthorized' })
 
-    httpMock.expectOne(refreshUrl).flush({ access_token: newAccess, refresh_token: newRefresh })
+    httpMock.expectOne(refreshUrl).flush({ access_token: newAccess })
     httpMock.expectOne(userUrl).flush({})
     httpMock.expectOne(`${userUrl}/other`).flush({})
+    expect(auth.getAuthTokenValue()).toBe(newAccess)
   })
 
   it('ends the session when it cannot be renewed', () => {
@@ -100,11 +102,48 @@ describe('authInterceptor', () => {
     expect(failed).toBeTrue()
   })
 
+  it('holds requests until the session is renewed after a page load', () => {
+    // A page load: this browser has a session, but no access token yet.
+    ;(auth as unknown as { authToken: { next(v: string): void } }).authToken.next('')
+    let body: unknown
+    http.get(userUrl).subscribe((b) => (body = b))
+    httpMock.expectNone(userUrl)
+
+    httpMock.expectOne(refreshUrl).flush({ access_token: newAccess })
+    const req = httpMock.expectOne(userUrl)
+    expect(req.request.headers.get('Authorization')).toBe('Bearer ' + newAccess)
+    req.flush({ username: 'me' })
+    expect(body).toEqual({ username: 'me' })
+  })
+
+  it('sends the sign-in token to the FastAPI admin routes and no other FastAPI route', () => {
+    http.get(`${environment.modelApiUrl}/manage/health`).subscribe()
+    http.get(`${environment.modelApiUrl}/worldcup/latest`).subscribe()
+
+    const manage = httpMock.expectOne(`${environment.modelApiUrl}/manage/health`).request
+    expect(manage.headers.get('Authorization')).toBe('Bearer ' + access)
+    expect(manage.withCredentials).toBeFalse()
+    const open = httpMock.expectOne(`${environment.modelApiUrl}/worldcup/latest`).request
+    expect(open.headers.has('Authorization')).toBeFalse()
+  })
+
+  it('renews an expired token for the FastAPI admin routes too', () => {
+    http.get(`${environment.modelApiUrl}/manage/health`).subscribe()
+    httpMock
+      .expectOne(`${environment.modelApiUrl}/manage/health`)
+      .flush(null, { status: 401, statusText: 'Unauthorized' })
+    httpMock.expectOne(refreshUrl).flush({ access_token: newAccess })
+    const retry = httpMock.expectOne(`${environment.modelApiUrl}/manage/health`)
+    expect(retry.request.headers.get('Authorization')).toBe('Bearer ' + newAccess)
+    retry.flush({})
+  })
+
   it('leaves a failed sign-in alone instead of trying to renew', () => {
     http.post(`${environment.apiBaseUrl}/auth/authenticate`, {}).subscribe({ error: () => {} })
     httpMock
       .expectOne(`${environment.apiBaseUrl}/auth/authenticate`)
       .flush(null, { status: 401, statusText: 'Unauthorized' })
     httpMock.expectNone(refreshUrl)
+    expect(auth.hasSession()).toBeTrue()
   })
 })

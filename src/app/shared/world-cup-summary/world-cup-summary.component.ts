@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core'
+import { Component, OnInit, ChangeDetectionStrategy, inject, signal } from '@angular/core'
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
@@ -21,26 +21,27 @@ import { IconComponent } from '../icon/icon.component'
     DecimalPipe,
   ],
   templateUrl: './world-cup-summary.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './world-cup-summary.component.scss',
 })
 export class WorldCupSummaryComponent implements OnInit {
   private wc = inject(WorldCupService)
 
-  loading = true
-  error: string | null = null
-  data: LatestResponse | null = null
+  readonly loading = signal(true)
+  readonly error = signal<string | null>(null)
+  readonly data = signal<LatestResponse | null>(null)
 
   ngOnInit(): void {
     this.wc.getLatest({ limit: 5 }).subscribe({
       next: (res) => {
-        this.data = res
-        this.loading = false
+        this.data.set(res)
+        this.loading.set(false)
       },
       error: (err) => {
-        this.loading = false
-        this.error =
+        this.loading.set(false)
+        this.error.set(
           err?.error?.detail ?? err?.message ?? 'Predictions are temporarily unavailable.'
+        )
       },
     })
   }

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing'
 
-import { MriExplorerComponent } from './mri-explorer.component'
+import { CLASS_TOTALS, MriExplorerComponent } from './mri-explorer.component'
 
 describe('MriExplorerComponent', () => {
   let fixture: ComponentFixture<MriExplorerComponent>
@@ -55,4 +55,24 @@ describe('MriExplorerComponent', () => {
     expect(tabs()[1].getAttribute('aria-selected')).toBe('true')
     expect(document.activeElement).toBe(tabs()[1])
   }))
+  it('keeps the per-class counts consistent with the published accuracy figures', () => {
+    const cmp = fixture.componentInstance
+    for (const m of cmp.models) {
+      const right = m.correct.reduce((a, b) => a + b, 0)
+      expect(((right / 1280) * 100).toFixed(2))
+        .withContext(m.label)
+        .toBe(m.accuracy.toFixed(2))
+      const recall = m.correct.map((c, i) => c / CLASS_TOTALS[i])
+      const balanced = (recall.reduce((a, b) => a + b, 0) / recall.length) * 100
+      expect(balanced.toFixed(2)).withContext(m.label).toBe(m.balancedAccuracy.toFixed(2))
+    }
+  })
+
+  it('describes each figure in its alt text, with the real counts', () => {
+    const cmp = fixture.componentInstance
+    expect(cmp.confusionAlt).toContain('Non-Demented 632 of 634')
+    expect(cmp.confusionAlt).toContain('Moderate 14 of 15')
+    expect(cmp.saliencyAlt(cmp.saliencyClasses[3])).toContain('grainier')
+    expect(cmp.trainingAlt).toContain('99%')
+  })
 })

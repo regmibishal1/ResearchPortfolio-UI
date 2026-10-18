@@ -11,8 +11,8 @@ describe('ZoomableImageComponent', () => {
     }).compileComponents()
     fixture = TestBed.createComponent(ZoomableImageComponent)
     component = fixture.componentInstance
-    component.src = 'assets/blog/bwi-trends.webp'
-    component.alt = 'chart'
+    fixture.componentRef.setInput('src', 'assets/blog/bwi-trends.webp')
+    fixture.componentRef.setInput('alt', 'chart')
     fixture.detectChanges()
   })
 

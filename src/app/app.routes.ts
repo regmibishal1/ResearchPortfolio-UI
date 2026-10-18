@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router'
+import { adminGuard } from './guards/admin.guard'
 import { authGuard } from './guards/auth.guard'
 
 // Every route is lazy-loaded so the initial bundle stays small; heavy
@@ -72,6 +73,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadComponent: () =>
       import('./pages/profile/profile.component').then((m) => m.ProfileComponent),
+  },
+  {
+    path: 'admin',
+    canActivate: [adminGuard],
+    loadComponent: () => import('./pages/admin/admin.component').then((m) => m.AdminComponent),
   },
   {
     path: '**',

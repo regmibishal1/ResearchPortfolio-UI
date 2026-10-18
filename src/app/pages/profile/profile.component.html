@@ -45,6 +45,9 @@
               <span class="detail-value">{{ profile.username }}</span>
             </div>
             <div class="card-footer">
+              @if (isAdmin()) {
+                <a class="btn-secondary btn-md" routerLink="/admin">Admin dashboard</a>
+              }
               <button class="btn-danger" (click)="onLogout()">
                 <app-icon name="logout" />
                 Sign out

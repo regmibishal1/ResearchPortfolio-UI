@@ -2,6 +2,8 @@
 
 Angular frontend for my personal research portfolio: prerendered static pages with hydration, a dark theme built on design tokens, Cloudflare Pages hosting.
 
+To report a security problem privately, see [SECURITY.md](SECURITY.md).
+
 ## Stack
 
 - Angular 22 (standalone components), prerendered at build time and hydrated in the browser
@@ -42,6 +44,10 @@ npx lhci autorun           # Lighthouse on Home, a case study and a post
 
 Dev values are hardcoded in `src/environments/environment.ts`. Production values are injected at CF Pages build time via the env vars below.
 
+## Monthly rebuild
+
+`.github/workflows/monthly-rebuild.yml` asks Cloudflare Pages to rebuild on the 1st of each month, so build-time values (years of experience, the footer year, "Last updated") never go stale. It needs a deploy hook (Pages > researchportfolio-ui > Settings > Builds > Deploy hooks, branch `main`) saved as the `CF_PAGES_DEPLOY_HOOK` repository secret; without the secret it does nothing. It can also be run by hand from the Actions tab.
+
 ## Cloudflare Pages build settings
 
 | Setting          | Value                                |
@@ -56,15 +62,17 @@ sed -i "s|%%API_URL%%|$API_URL|g" src/environments/environment.prod.ts \
   && sed -i "s|%%MODEL_API_URL%%|$MODEL_API_URL|g" src/environments/environment.prod.ts \
   && sed -i "s|%%APP_URL%%|$APP_URL|g" src/environments/environment.prod.ts \
   && sed -i "s|%%FASTAPI_API_KEY%%|$FASTAPI_API_KEY|g" src/environments/environment.prod.ts \
+  && sed -i "s|%%TURNSTILE_SITE_KEY%%|$TURNSTILE_SITE_KEY|g" src/environments/environment.prod.ts \
   && npm run build
 ```
 
 **Environment variables (set in Cloudflare Pages dashboard):**
 
-| Variable          | Purpose                                                                   |
-| ----------------- | ------------------------------------------------------------------------- |
-| `API_URL`         | Auth API base URL                                                         |
-| `MODEL_API_URL`   | FastAPI model server base URL                                             |
-| `APP_URL`         | Public URL of this app                                                    |
-| `FASTAPI_API_KEY` | Backend API key; copy from server `.env` after running `bootstrap_env.sh` |
-| `NODE_VERSION`    | `22`                                                                      |
+| Variable             | Purpose                                                                                                                                                    |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `API_URL`            | Auth API base URL                                                                                                                                          |
+| `MODEL_API_URL`      | FastAPI model server base URL                                                                                                                              |
+| `APP_URL`            | Public URL of this app                                                                                                                                     |
+| `FASTAPI_API_KEY`    | Backend API key; copy from server `.env` after running `bootstrap_env.sh`                                                                                  |
+| `TURNSTILE_SITE_KEY` | Cloudflare Turnstile site key for the sign-in and forgot-password forms; empty turns the check off (the AuthAPI needs the matching `TURNSTILE_SECRET_KEY`) |
+| `NODE_VERSION`       | `22`                                                                                                                                                       |

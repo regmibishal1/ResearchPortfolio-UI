@@ -40,10 +40,26 @@
                 tabindex="-1"
                 aria-hidden="true"
               >
-                <img [src]="project.image" alt="" width="1280" height="800" fetchpriority="high" />
+                <img
+                  [src]="project.image"
+                  [attr.srcset]="srcset(project.image)"
+                  sizes="(min-width: 900px) 640px, calc(100vw - 32px)"
+                  alt=""
+                  width="1280"
+                  height="800"
+                  fetchpriority="high"
+                />
               </a>
             } @else {
-              <img [src]="project.image" alt="" width="1280" height="800" fetchpriority="high" />
+              <img
+                [src]="project.image"
+                [attr.srcset]="srcset(project.image)"
+                sizes="(min-width: 900px) 640px, calc(100vw - 32px)"
+                alt=""
+                width="1280"
+                height="800"
+                fetchpriority="high"
+              />
             }
           </div>
         }
@@ -70,7 +86,9 @@
                   [href]="project.demo"
                   target="_blank"
                   rel="noopener noreferrer"
-                  >Open live site</a
+                  >Open live site<span class="visually-hidden" data-pagefind-ignore>
+                    (opens in a new tab)</span
+                  ></a
                 >
               } @else {
                 <a class="btn-secondary btn-md" [routerLink]="project.demo">Open live site</a>

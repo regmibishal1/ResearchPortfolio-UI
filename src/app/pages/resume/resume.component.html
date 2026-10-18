@@ -10,10 +10,18 @@
           <a [href]="'mailto:' + contact.email">{{ contact.email }}</a>
         </li>
         <li>
-          <a [href]="contact.linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a [href]="contact.linkedin" target="_blank" rel="noopener noreferrer"
+            >LinkedIn<span class="visually-hidden" data-pagefind-ignore>
+              (opens in a new tab)</span
+            ></a
+          >
         </li>
         <li>
-          <a [href]="contact.github" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a [href]="contact.github" target="_blank" rel="noopener noreferrer"
+            >GitHub<span class="visually-hidden" data-pagefind-ignore>
+              (opens in a new tab)</span
+            ></a
+          >
         </li>
       </ul>
     </div>

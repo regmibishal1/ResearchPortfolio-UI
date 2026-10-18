@@ -7,7 +7,7 @@ import { SeoService } from '../../services/seo.service'
   selector: 'app-page-not-found',
   imports: [RouterModule],
   templateUrl: './page-not-found.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './page-not-found.component.scss',
 })
 export class PageNotFoundComponent {

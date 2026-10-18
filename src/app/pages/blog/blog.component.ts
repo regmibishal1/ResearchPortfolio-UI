@@ -9,7 +9,7 @@ import { IconComponent } from '../../shared/icon/icon.component'
   selector: 'app-blog',
   imports: [RouterModule, DatePipe, IconComponent],
   templateUrl: './blog.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './blog.component.scss',
 })
 export class BlogComponent {

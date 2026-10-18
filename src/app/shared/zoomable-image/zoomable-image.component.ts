@@ -2,9 +2,9 @@ import {
   Component,
   ElementRef,
   HostListener,
-  Input,
-  ViewChild,
   ChangeDetectionStrategy,
+  input,
+  viewChild,
 } from '@angular/core'
 
 import { A11yModule } from '@angular/cdk/a11y'
@@ -25,24 +25,28 @@ const PAN_STEP = 120
   selector: 'app-zoomable-image',
   imports: [IconComponent, A11yModule],
   templateUrl: './zoomable-image.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './zoomable-image.component.scss',
 })
 export class ZoomableImageComponent {
-  @Input({ required: true }) src!: string
-  @Input() alt = ''
-  @Input() caption?: string
+  readonly src = input.required<string>()
+  readonly alt = input('')
+  readonly caption = input<string>()
+  /**
+   * The image's pixel size, from the generated size map, so the page holds
+   * its space before the lazy image loads. Null for an image not in the map.
+   */
 
   /**
    * The image's pixel size, from the generated size map, so the page holds
    * its space before the lazy image loads. Null for an image not in the map.
    */
   get size(): [number, number] | null {
-    return IMAGE_SIZES[this.src.replace(/^\//, '')] ?? null
+    return IMAGE_SIZES[this.src().replace(/^\//, '')] ?? null
   }
 
-  @ViewChild('stage') stage?: ElementRef<HTMLElement>
-  @ViewChild('trigger') trigger?: ElementRef<HTMLButtonElement>
+  readonly stage = viewChild<ElementRef<HTMLElement>>('stage')
+  readonly trigger = viewChild<ElementRef<HTMLButtonElement>>('trigger')
 
   isOpen = false
   zoomed = false
@@ -66,7 +70,7 @@ export class ZoomableImageComponent {
     this.zoomed = false
     this.dragging = false
     document.body.style.overflow = ''
-    this.trigger?.nativeElement.focus()
+    this.trigger()?.nativeElement.focus()
   }
 
   onBackdrop(event: MouseEvent): void {
@@ -78,7 +82,7 @@ export class ZoomableImageComponent {
   toggleZoom(): void {
     this.zoomed = !this.zoomed
     if (!this.zoomed) {
-      this.stage?.nativeElement.scrollTo({ left: 0, top: 0 })
+      this.stage()?.nativeElement.scrollTo({ left: 0, top: 0 })
     }
   }
 
@@ -92,7 +96,7 @@ export class ZoomableImageComponent {
   }
 
   pan(dx: number, dy: number): void {
-    this.stage?.nativeElement.scrollBy({ left: dx * PAN_STEP, top: dy * PAN_STEP })
+    this.stage()?.nativeElement.scrollBy({ left: dx * PAN_STEP, top: dy * PAN_STEP })
   }
 
   onKeydown(event: KeyboardEvent): void {
@@ -110,24 +114,26 @@ export class ZoomableImageComponent {
   }
 
   onDown(event: MouseEvent): void {
-    if (!this.zoomed || !this.stage) return
+    const stage = this.stage()?.nativeElement
+    if (!this.zoomed || !stage) return
     this.dragging = true
     this.moved = false
     this.startX = event.clientX
     this.startY = event.clientY
-    this.startLeft = this.stage.nativeElement.scrollLeft
-    this.startTop = this.stage.nativeElement.scrollTop
+    this.startLeft = stage.scrollLeft
+    this.startTop = stage.scrollTop
     event.preventDefault()
   }
 
   @HostListener('document:mousemove', ['$event'])
   onMove(event: MouseEvent): void {
-    if (!this.dragging || !this.stage) return
+    const stage = this.stage()?.nativeElement
+    if (!this.dragging || !stage) return
     const dx = event.clientX - this.startX
     const dy = event.clientY - this.startY
     if (Math.abs(dx) > 3 || Math.abs(dy) > 3) this.moved = true
-    this.stage.nativeElement.scrollLeft = this.startLeft - dx
-    this.stage.nativeElement.scrollTop = this.startTop - dy
+    stage.scrollLeft = this.startLeft - dx
+    stage.scrollTop = this.startTop - dy
   }
 
   @HostListener('document:mouseup')
