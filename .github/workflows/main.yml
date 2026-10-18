@@ -59,7 +59,7 @@ jobs:
           fi
 
       - name: Keep the build for the Lighthouse job
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: dist
           path: dist/research-portfolio-ui/browser
@@ -86,7 +86,7 @@ jobs:
         run: yarn install --immutable
 
       - name: Download the build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: dist
           path: dist/research-portfolio-ui/browser
@@ -96,8 +96,9 @@ jobs:
 
       - name: Keep the Lighthouse reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: lighthouse
           path: .lighthouseci
+          include-hidden-files: true
           retention-days: 14
