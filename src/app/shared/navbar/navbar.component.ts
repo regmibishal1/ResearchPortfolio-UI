@@ -5,10 +5,12 @@ import {
   OnDestroy,
   OnInit,
   PLATFORM_ID,
-  ViewChild,
   inject,
+  signal,
   ChangeDetectionStrategy,
+  viewChild,
 } from '@angular/core'
+import { toSignal } from '@angular/core/rxjs-interop'
 import { isPlatformBrowser } from '@angular/common'
 import { NavigationEnd, Router, RouterModule } from '@angular/router'
 import { AuthService } from '../../pages/auth/auth.service'
@@ -29,7 +31,7 @@ import { ToastService } from '../toast/toast.service'
     ToastOutletComponent,
   ],
   templateUrl: './navbar.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './navbar.component.scss',
 })
 export class NavbarComponent implements OnInit, OnDestroy {
@@ -44,11 +46,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
     { label: 'R\u00e9sum\u00e9', path: '/resume' },
   ]
 
-  isAuthenticated = false
-  menuOpen = false
+  readonly isAuthenticated = toSignal(this.authService.getAuthStatus(), { initialValue: false })
+  readonly menuOpen = signal(false)
 
-  @ViewChild('main', { static: true }) main!: ElementRef<HTMLElement>
-  @ViewChild('menuButton', { read: ElementRef }) menuButton?: ElementRef<HTMLElement>
+  readonly main = viewChild.required<ElementRef<HTMLElement>>('main')
+  readonly menuButton = viewChild<unknown, ElementRef<HTMLElement>>('menuButton', {
+    read: ElementRef,
+  })
 
   private subscriptions = new Subscription()
   private isBrowser = isPlatformBrowser(inject(PLATFORM_ID))
@@ -57,11 +61,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscriptions.add(
-      this.authService.getAuthStatus().subscribe((isAuth) => {
-        this.isAuthenticated = isAuth
-      })
-    )
-    this.subscriptions.add(
       this.router.events
         .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
         .subscribe((e) => this.onNavigationEnd(e.urlAfterRedirects))
@@ -69,13 +68,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   toggleMenu() {
-    this.menuOpen = !this.menuOpen
+    this.menuOpen.update((open) => !open)
   }
 
   closeMenu(returnFocus = false) {
-    if (!this.menuOpen) return
-    this.menuOpen = false
-    if (returnFocus) this.menuButton?.nativeElement.focus()
+    if (!this.menuOpen()) return
+    this.menuOpen.set(false)
+    if (returnFocus) this.menuButton()?.nativeElement.focus()
   }
 
   @HostListener('document:keydown.escape')
@@ -87,7 +86,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   // home, so the skip link moves focus itself.
   skipToMain(event: Event) {
     event.preventDefault()
-    this.main.nativeElement.focus()
+    this.main().nativeElement.focus()
   }
 
   // After moving to another page, put focus on its heading so keyboard and
@@ -101,7 +100,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.lastPath = cleanPath
     if (!this.isBrowser || isFirst || !changed || fragment) return
     setTimeout(() => {
-      const main = this.main.nativeElement
+      const main = this.main().nativeElement
       const heading = main.querySelector<HTMLElement>('h1')
       const target = heading ?? main
       if (heading && !heading.hasAttribute('tabindex')) heading.setAttribute('tabindex', '-1')

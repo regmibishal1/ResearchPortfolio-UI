@@ -1,3 +1,4 @@
+import { ChangeDetectorRef } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router'
 import { WorldCupComponent } from './world-cup.component'
@@ -12,6 +13,7 @@ function makeComponent(): WorldCupComponent {
     providers: [
       { provide: SeoService, useValue: { setPage: () => {} } },
       { provide: WorldCupService, useValue: {} },
+      { provide: ChangeDetectorRef, useValue: { markForCheck: () => {} } },
       provideRouter([]),
       { provide: ActivatedRoute, useValue: { snapshot: { queryParamMap: convertToParamMap({}) } } },
     ],
@@ -88,6 +90,15 @@ describe('WorldCupComponent leaderboard sorting', () => {
 
     cmp.sortBy('delta')
     expect(cmp.displayedLeaderboard.map((r) => r.team)).toEqual(['Brazil', 'Canada', 'Argentina'])
+  })
+})
+
+describe('WorldCupComponent accuracy', () => {
+  it('works from the count of correct calls, not the rounded rate', () => {
+    const cmp = makeComponent()
+    const pct = cmp.accuracyPct({ n: 104, accuracy: 0.6635, brier: null, log_loss: null })
+    expect(pct.toFixed(1)).toBe('66.3')
+    expect(cmp.accuracyPct({ n: 0, accuracy: null, brier: null, log_loss: null })).toBe(0)
   })
 })
 

@@ -6,8 +6,14 @@ export const environment = {
   // Sent as X-API-Key to both the AuthAPI and the FastAPI model server.
   // Must match RP_FASTAPI_API_KEY in your local .env (both services share the same key).
   apiKey: 'dev-api-key',
+  // Cloudflare Turnstile site key for the sign-in and forgot-password forms;
+  // empty turns the check off.
+  turnstileSiteKey: '',
   features: {
     // Accounts are by invitation; the sign-up form stays hidden while false.
     registration: false,
+    // "Forgot your password?" on the sign-in page. Turn on once the AuthAPI
+    // can send mail (RESEND_API_KEY set and the sending domain verified).
+    passwordResetEmail: false,
   },
 }

@@ -7,8 +7,8 @@ import {
   OnDestroy,
   OnInit,
   PLATFORM_ID,
-  ViewChild,
   inject,
+  viewChild,
 } from '@angular/core'
 import { isPlatformBrowser } from '@angular/common'
 import { Router } from '@angular/router'
@@ -43,11 +43,11 @@ const MAX_RESULTS = 8
   imports: [IconComponent],
   templateUrl: './site-search.component.html',
   styleUrl: './site-search.component.scss',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SiteSearchComponent implements OnInit, OnDestroy {
-  @ViewChild('dialog', { static: true }) dialog!: ElementRef<HTMLDialogElement>
-  @ViewChild('input', { static: true }) input!: ElementRef<HTMLInputElement>
+  readonly dialog = viewChild.required<ElementRef<HTMLDialogElement>>('dialog')
+  readonly input = viewChild.required<ElementRef<HTMLInputElement>>('input')
 
   private cdr = inject(ChangeDetectorRef)
   private router = inject(Router)
@@ -77,21 +77,21 @@ export class SiteSearchComponent implements OnInit, OnDestroy {
   }
 
   open(): void {
-    const dialog = this.dialog.nativeElement
+    const dialog = this.dialog().nativeElement
     if (!this.isBrowser || dialog.open) return
     dialog.showModal()
-    this.input.nativeElement.focus()
-    this.input.nativeElement.select()
+    this.input().nativeElement.focus()
+    this.input().nativeElement.select()
   }
 
   close(): void {
-    if (this.dialog.nativeElement.open) this.dialog.nativeElement.close()
+    if (this.dialog().nativeElement.open) this.dialog().nativeElement.close()
   }
 
   // A click on the backdrop lands on the dialog element itself and closes
   // it. Keyboard users get the same from Escape, which the dialog handles.
   ngOnInit(): void {
-    const dialog = this.dialog.nativeElement
+    const dialog = this.dialog().nativeElement
     dialog.addEventListener('click', (event) => {
       if (event.target === dialog) this.close()
     })

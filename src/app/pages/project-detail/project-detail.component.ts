@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject } from '@angular/core'
+import { ChangeDetectorRef, Component, ChangeDetectionStrategy, inject } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { ActivatedRoute, RouterModule } from '@angular/router'
 import { PageNotFoundComponent } from '../page-not-found/page-not-found.component'
@@ -22,11 +22,12 @@ import { StatusBadgeComponent } from '../../shared/status-badge/status-badge.com
     StatusBadgeComponent,
   ],
   templateUrl: './project-detail.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './project-detail.component.scss',
 })
 export class ProjectDetailComponent {
   private seo = inject(SeoService)
+  private cdr = inject(ChangeDetectorRef)
 
   readonly typeLabel = TYPE_LABEL
   readonly statusLabel = statusText
@@ -42,7 +43,10 @@ export class ProjectDetailComponent {
     // id, so it follows the parameter rather than reading it once.
     inject(ActivatedRoute)
       .paramMap.pipe(takeUntilDestroyed())
-      .subscribe((params) => this.show(params.get('id')))
+      .subscribe((params) => {
+        this.show(params.get('id'))
+        this.cdr.markForCheck()
+      })
   }
 
   isExternal(url: string): boolean {

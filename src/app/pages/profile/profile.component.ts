@@ -1,7 +1,14 @@
-import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core'
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  computed,
+  inject,
+} from '@angular/core'
 
 import { FormsModule } from '@angular/forms'
-import { Router } from '@angular/router'
+import { Router, RouterLink } from '@angular/router'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { ToastService } from '../../shared/toast/toast.service'
 import { finalize } from 'rxjs/operators'
@@ -12,14 +19,16 @@ import { IconComponent } from '../../shared/icon/icon.component'
 
 @Component({
   selector: 'app-profile',
-  imports: [IconComponent, FormsModule, MatProgressSpinnerModule],
+  imports: [IconComponent, FormsModule, MatProgressSpinnerModule, RouterLink],
   templateUrl: './profile.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './profile.component.scss',
 })
 export class ProfileComponent implements OnInit {
   private userService = inject(UserService)
   private authService = inject(AuthService)
+  /** Shows the link to the admin dashboard; the dashboard checks again. */
+  readonly isAdmin = computed(() => this.authService.role() === 'ADMIN')
   private toasts = inject(ToastService)
   private router = inject(Router)
 
@@ -36,6 +45,8 @@ export class ProfileComponent implements OnInit {
   showNewPassword = false
   showConfirmPassword = false
 
+  private cdr = inject(ChangeDetectorRef)
+
   constructor() {
     // Signed-in only; without its own title the tab kept the sign-in page's.
     inject(SeoService).setNoIndex('Profile | Bishal Regmi')
@@ -44,7 +55,12 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     this.userService
       .getProfile()
-      .pipe(finalize(() => (this.loadingProfile = false)))
+      .pipe(
+        finalize(() => {
+          this.loadingProfile = false
+          this.cdr.markForCheck()
+        })
+      )
       .subscribe({
         next: (profile) => (this.profile = profile),
         // An expired session is renewed, or ended, by the interceptor; this
@@ -78,7 +94,12 @@ export class ProfileComponent implements OnInit {
     this.changingPassword = true
     this.userService
       .changePassword(this.passwordForm)
-      .pipe(finalize(() => (this.changingPassword = false)))
+      .pipe(
+        finalize(() => {
+          this.changingPassword = false
+          this.cdr.markForCheck()
+        })
+      )
       .subscribe({
         next: (session) => {
           // Older API versions answer with an empty body and keep the session.

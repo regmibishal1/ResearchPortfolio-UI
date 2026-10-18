@@ -5,3 +5,5 @@ yarn.lock
 dist
 .husky/
 .vscode/
+src/app/api/fastapi-schema.ts
+src/app/api/fastapi-openapi.json

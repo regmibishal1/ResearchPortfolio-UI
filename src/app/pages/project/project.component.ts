@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject } from '@angular/core'
+import { ChangeDetectorRef, Component, ChangeDetectionStrategy, inject } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { ActivatedRoute, Router, RouterModule } from '@angular/router'
 import { SeoService } from '../../services/seo.service'
@@ -15,7 +15,7 @@ const FILTERS: TypeFilter[] = ['all', 'product', 'research', 'coursework']
   selector: 'app-project',
   imports: [RouterModule, WorkCardComponent],
   templateUrl: './project.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './project.component.scss',
 })
 export class ProjectComponent {
@@ -54,9 +54,11 @@ export class ProjectComponent {
     const years = PROJECTS.map(projectYear).filter((y): y is number => y !== null)
     this.summary = `${PROJECTS.length} projects, ${Math.min(...years)}-${Math.max(...years)}`
 
+    const cdr = inject(ChangeDetectorRef)
     this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe((params) => {
       const type = params.get('type') as TypeFilter | null
       this.filter = type && FILTERS.includes(type) ? type : 'all'
+      cdr.markForCheck()
     })
   }
 

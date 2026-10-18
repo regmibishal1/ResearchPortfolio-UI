@@ -74,6 +74,8 @@ export interface Project {
   paper?: Paper
   /** Screenshot shown as the card thumbnail and on the detail page */
   image?: string
+  /** Alt text for the image when it is not a screenshot, such as an app icon */
+  imageAlt?: string
   /** Architecture diagram rendered in its own section on the detail page */
   architecture?: string
   /** Bullet-point highlights shown on the detail page */
@@ -271,6 +273,64 @@ const PROJECT_DEFINITIONS: Project[] = [
     outcome:
       'Serves this whole site with no cloud bill: Cloudflare Pages up front, two APIs in Docker at home.',
     featured: true,
+  },
+  {
+    id: 'multisource-downloader',
+    title: 'Multisource Downloader',
+    shortDescription:
+      'Desktop app and command line that archive posts, videos and photos from eight platforms, recording where each file came from, when, and its SHA-256.',
+    description:
+      "I built this to help me archive historical events, especially Nepal's 2025 anti-corruption protests, which affected me personally to some extent. Give it a list of links from YouTube, X, Instagram, TikTok, Facebook, Reddit, Google Drive or Bluesky and it saves the posts, videos and photos exactly as each platform served them, with no re-encoding. Every run records where each file came from, when it was saved and its SHA-256, and links saved before are never downloaded twice. Verify files re-hashes a run and checks its custody log, and Export package writes a BagIt (RFC 8493) package that archives and lawyers can check with standard tools. It runs as a desktop window, with a simple view for one link at a time, or from the command line for long lists, with yt-dlp, gallery-dl and Instaloader doing the downloading. It ships as a Windows app on the Releases page and as a pip install for Windows, macOS and Linux.",
+    tags: ['Python', 'yt-dlp', 'Tkinter', 'BagIt', 'CLI'],
+    category: 'Tools',
+    type: 'product',
+    period: '2025-present',
+    icon: 'download',
+    github: 'https://github.com/regmibishal1/multisource_downloader',
+    status: 'live',
+    statusLabel: 'Released',
+    highlights: [
+      'Saves from YouTube, X, Instagram, TikTok, Facebook, Reddit, Google Drive and Bluesky, from any text that contains links: a chat export, an email, notes. Threads links are recognized but cannot be downloaded yet',
+      'Every run writes a manifest, SHA256SUMS and an append-only custody log, and links saved in an earlier run are recorded as already saved instead of downloaded again',
+      'Files are kept exactly as the platform served them: no repairs, no re-encoding, nothing embedded into the media',
+      'Verify files re-hashes a run and checks the custody log; Export package writes a BagIt (RFC 8493) package that any BagIt tool can check',
+      'Optional notes for each run (event, where, collected by), with a reminder to leave out names that could put people at risk; exported reports leave account names out by default',
+      'A weekly canary runs real downloads on every platform and opens an issue when one breaks',
+    ],
+    lessons: [
+      'Keeping the downloads working is the main ongoing job: the platforms change, and the downloaders have to follow',
+      "Most platforms' terms do not allow automated downloading, so the app is meant for public-interest evidence and your own content, and it shows each platform's terms before the first sign-in",
+      'Screen readers do not hear status changes in the window (a Tk 8.6 limit), so the command line is the fully accessible way to run it',
+    ],
+  },
+  {
+    id: 'durpin',
+    title: 'Durpin',
+    shortDescription:
+      'A disposable camera app for one small group of friends: 27 shots a day, each one comes back face down, and only your friends ever see the ones you share.',
+    description:
+      "Durpin is a disposable camera for a small group of friends. You get 27 shots a day with no preview, no retakes and no zoom. Each shot comes back face down in your Darkroom; turn it over to share it, keep it private, or toss it. There are no like counts, no strangers and no ads: friends send a heart or a vibe and nobody keeps score, comments stay between friends, and each friend's day is a single card that opens at the shots you have not seen yet. Invites are a favor rather than a toll: you hold five open invites at a time, and a slot frees up when one is used or expires after a week. The design keeps what made similar apps last, a reveal you cannot skip, and avoids what sank them, growth tricks and the cost of storing everyone's photos. The app is built with Expo and React Native in TypeScript, shoots through VisionCamera and renders its films on the phone, and it talks to a fully self-hosted Supabase backend behind Cloudflare, where Postgres row-level security and server-side checks keep the rules honest. Durpin is a work in progress: new test builds ship often, it is in private, invite-only testing with a small group of friends on Android and on iPhone through TestFlight, and it is not in the app stores.",
+    tags: ['React Native', 'Expo', 'TypeScript', 'Supabase', 'PostgreSQL'],
+    category: 'Mobile',
+    type: 'product',
+    period: '2026',
+    icon: 'photo_camera',
+    image: 'assets/projects/durpin-icon.webp',
+    imageAlt: 'The Durpin app icon',
+    demo: 'https://durpin.us',
+    status: 'in-progress',
+    statusLabel: 'Work in progress',
+    highlights: [
+      'The reveal is enforced on the server: shots on your own roll come back face down and friends only ever see the ones you share, so not even a modified app can peek',
+      'Rules enforced on the server and hardened after a self-audit: row-level security on every table, tested as a matrix of who can see what, privileged helper functions kept off the public API, rate limits at the gateway, and deletes that really remove the files',
+      'Four films, Sunday, Linen, Afterparty and Silver, built from generated 3D LUTs with a guard that keeps skin tones natural and applied the same way to photos (React Native Skia) and to video clips (native Kotlin and Swift); you can switch film any time during the day on the same 27 shots',
+      'A VisionCamera-based camera with an ultra-wide lens switch on the front and back where the phone has one, full-resolution photos, tall 9:16 clips of up to 8 seconds, flash in photo and clip modes, and the volume buttons as a shutter',
+      'Hearts with a "Liked by" list but no counts, comments with likes and one level of replies, a stories-style viewer that taps through every friend, an activity bell for likes, comments, replies, friend requests and joins, and push notifications',
+      'Finding friends without giving up an address book: checking your contacts is your choice, they are hashed on the phone and nothing about them is kept, anyone can turn off being found in Settings, and friends can also connect through a QR friend link or an @username search',
+      'Shared rolls that work as a live album for an event, where everyone on the roll sees each shot as it comes in and gets a note when the roll is done, plus a journal that fills itself, a monthly recap and a shot from a year ago today; photos can be exported and truly deleted',
+      'Never lose a shot: photos wait on the phone until they upload. Frequent test builds with a secret scan before every publish, source maps for readable crash reports, and an in-app update notice for sideloaded Android builds',
+      'Fully self-hosted Supabase (Postgres, auth, realtime, storage) on home hardware, reached only through a Cloudflare Tunnel and kept current through rehearsed, timed upgrades with a rollback plan, with self-hosted error tracking, uptime checks, a private members dashboard and nightly encrypted backups',
+    ],
   },
   {
     id: 'takeout-organizer',

@@ -1,3 +1,4 @@
+import { ChangeDetectorRef } from '@angular/core'
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 import { provideHttpClient, withXhr } from '@angular/common/http'
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing'
@@ -38,7 +39,7 @@ describe('DashboardComponent', () => {
     const links = [...spotlight.querySelectorAll<HTMLAnchorElement>('.spotlight-actions a')]
     expect(links.map((a) => a.textContent!.trim())).toEqual([
       'Read the case study',
-      'Open live site',
+      'Open live site (opens in a new tab)',
     ])
     expect(links[0].getAttribute('href')).toBe('/project/showupmd')
     expect(links[1].getAttribute('href')).toBe('https://showupmd.org')
@@ -68,6 +69,7 @@ describe('DashboardComponent', () => {
     expect(el.querySelector('.hero-now')).toBeNull()
 
     fixture.componentInstance.now = { text: 'Writing up the snow model.', updated: '2026-10-01' }
+    fixture.componentRef.injector.get(ChangeDetectorRef).markForCheck()
     fixture.detectChanges()
     const note = el.querySelector('.hero-now')!
     expect(note.textContent).toContain('Writing up the snow model.')

@@ -1,10 +1,13 @@
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
+  Injector,
   PLATFORM_ID,
-  ViewChild,
   ChangeDetectionStrategy,
+  afterNextRender,
   inject,
+  viewChild,
 } from '@angular/core'
 import { isPlatformBrowser } from '@angular/common'
 import { ActivatedRoute, Router } from '@angular/router'
@@ -15,17 +18,18 @@ import { MatProgressBarModule } from '@angular/material/progress-bar'
 import { finalize } from 'rxjs/operators'
 import { SeoService } from '../../services/seo.service'
 import { environment } from '../../../environments/environment'
+import { TurnstileComponent } from '../../shared/turnstile/turnstile.component'
 import { IconComponent } from '../../shared/icon/icon.component'
 
-type Mode = 'login' | 'register' | 'reset'
+type Mode = 'login' | 'register' | 'reset' | 'forgot'
 
 const MIN_PASSWORD_LENGTH = 8
 
 @Component({
   selector: 'app-auth',
-  imports: [IconComponent, FormsModule, MatProgressBarModule],
+  imports: [IconComponent, FormsModule, MatProgressBarModule, TurnstileComponent],
   templateUrl: './auth.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './auth.component.scss',
 })
 export class AuthComponent {
@@ -37,6 +41,8 @@ export class AuthComponent {
 
   /** Accounts are by invitation; sign-up only appears when this is switched on. */
   readonly registrationOpen = environment.features.registration
+  /** Reset links by email; off until the AuthAPI can send mail. */
+  resetByEmail = environment.features.passwordResetEmail
 
   mode: Mode = 'login'
   registerObj: RegisterModel = new RegisterModel()
@@ -51,9 +57,40 @@ export class AuthComponent {
   newPassword = ''
   confirmPassword = ''
   resetDone = false
+  forgotEmail = ''
+  forgotSent = false
   readonly minPasswordLength = MIN_PASSWORD_LENGTH
 
-  @ViewChild('errorSummary') errorSummary?: ElementRef<HTMLElement>
+  readonly errorSummary = viewChild<ElementRef<HTMLElement>>('errorSummary')
+
+  private cdr = inject(ChangeDetectorRef)
+  private injector = inject(Injector)
+  // Runs after each request's next/error handler, so one call re-renders
+  // whatever they changed.
+  private settle = () => {
+    this.isLoading = false
+    // A Turnstile token works once, so each attempt gets a fresh check.
+    this.turnstile()?.reset()
+    this.cdr.markForCheck()
+  }
+
+  /** Cloudflare Turnstile; off when no site key is configured. */
+  readonly turnstileSiteKey = environment.turnstileSiteKey.startsWith('%%')
+    ? ''
+    : environment.turnstileSiteKey
+  private turnstileToken = ''
+  private readonly turnstile = viewChild(TurnstileComponent)
+
+  onTurnstile(token: string) {
+    this.turnstileToken = token
+  }
+
+  /** False, with the reason shown, while the Turnstile check is still unanswered. */
+  private passedCheck(): boolean {
+    if (!this.turnstileSiteKey || this.turnstileToken) return true
+    this.showError('Complete the security check first.')
+    return false
+  }
 
   constructor() {
     // /login, /register and /reset share this component; pick the initial
@@ -81,21 +118,23 @@ export class AuthComponent {
     this.mode = mode
     this.submitted = false
     this.formError = ''
+    this.forgotSent = false
     this.showPassword = false
     const titles: Record<Mode, string> = {
       login: 'Sign in | Bishal Regmi',
       register: 'Create your account | Bishal Regmi',
       reset: 'Choose a new password | Bishal Regmi',
+      forgot: 'Reset your password | Bishal Regmi',
     }
     this.seo.setNoIndex(titles[mode])
   }
 
   onLogin(form: NgForm) {
-    if (!this.validate(form)) return
+    if (!this.validate(form) || !this.passedCheck()) return
     this.isLoading = true
     this.authService
-      .login(this.loginObj)
-      .pipe(finalize(() => (this.isLoading = false)))
+      .login({ ...this.loginObj, turnstileToken: this.turnstileToken || undefined })
+      .pipe(finalize(this.settle))
       .subscribe({
         next: () => {
           this.toasts.show('Signed in.')
@@ -110,12 +149,24 @@ export class AuthComponent {
     this.isLoading = true
     this.authService
       .register(this.registerObj)
-      .pipe(finalize(() => (this.isLoading = false)))
+      .pipe(finalize(this.settle))
       .subscribe({
         next: () => {
           this.toasts.show('Account created. You are signed in.')
           this.router.navigate(['/'])
         },
+        error: (error: Error) => this.showError(error.message),
+      })
+  }
+
+  onForgot(form: NgForm) {
+    if (!this.validate(form) || !this.passedCheck()) return
+    this.isLoading = true
+    this.authService
+      .forgotPassword(this.forgotEmail.trim(), this.turnstileToken || undefined)
+      .pipe(finalize(this.settle))
+      .subscribe({
+        next: () => (this.forgotSent = true),
         error: (error: Error) => this.showError(error.message),
       })
   }
@@ -129,7 +180,7 @@ export class AuthComponent {
     this.isLoading = true
     this.authService
       .resetPassword(this.resetToken, this.newPassword)
-      .pipe(finalize(() => (this.isLoading = false)))
+      .pipe(finalize(this.settle))
       .subscribe({
         next: () => {
           this.resetDone = true
@@ -159,6 +210,6 @@ export class AuthComponent {
   }
 
   private focusSummary() {
-    setTimeout(() => this.errorSummary?.nativeElement.focus())
+    afterNextRender(() => this.errorSummary()?.nativeElement.focus(), { injector: this.injector })
   }
 }

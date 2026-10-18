@@ -34,7 +34,7 @@ function mentions(text: string, skill: string): boolean {
   selector: 'app-resume',
   imports: [RouterModule, IconComponent, CopyEmailComponent],
   templateUrl: './resume.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './resume.component.scss',
 })
 export class ResumeComponent {

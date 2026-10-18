@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject } from '@angular/core'
+import { ChangeDetectorRef, Component, ChangeDetectionStrategy, inject } from '@angular/core'
 import { DatePipe } from '@angular/common'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { ActivatedRoute, RouterModule } from '@angular/router'
@@ -22,11 +22,12 @@ const TOC_MIN_SECTIONS = 4
     WorkCardComponent,
   ],
   templateUrl: './blog-post.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './blog-post.component.scss',
 })
 export class BlogPostComponent {
   private seo = inject(SeoService)
+  private cdr = inject(ChangeDetectorRef)
 
   readonly headingId = headingId
 
@@ -44,7 +45,10 @@ export class BlogPostComponent {
     // slug, so it follows the parameter rather than reading it once.
     inject(ActivatedRoute)
       .paramMap.pipe(takeUntilDestroyed())
-      .subscribe((params) => this.show(params.get('slug') ?? ''))
+      .subscribe((params) => {
+        this.show(params.get('slug') ?? '')
+        this.cdr.markForCheck()
+      })
   }
 
   private show(slug: string) {
