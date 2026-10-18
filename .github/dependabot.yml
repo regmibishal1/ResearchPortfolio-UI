@@ -16,6 +16,12 @@ updates:
       # Node types follow the Node major CI and Pages build with (22)
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
+      # Jasmine 7 makes its globals read-only, which breaks zone.js/testing;
+      # revisit when the specs move off karma and zone.js
+      - dependency-name: "jasmine-core"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/jasmine"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
