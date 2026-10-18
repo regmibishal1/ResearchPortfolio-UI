@@ -2,7 +2,9 @@
 //   - page weight: at most 150 KB raw and 25 KB gzipped, so a heavy
 //     component cannot creep back onto a page unnoticed;
 //   - meta description: present and at most 160 characters, since search
-//     results cut longer ones off.
+//     results cut longer ones off;
+//   - module preload links: root-relative, since Pages sends them as Early
+//     Hints headers that resolve against the page, not <base href>.
 // Run after `yarn build`.
 import { readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
@@ -44,6 +46,9 @@ for (const route of routes) {
   if (!description) problems.push(`${route}: no meta description`)
   else if (description.length > MAX_DESCRIPTION) {
     problems.push(`${route}: description is ${description.length} characters (limit 160)`)
+  }
+  if (/<link rel="modulepreload" href="(?!\/|https?:)/.test(html.toString())) {
+    problems.push(`${route}: module preload link is not root-relative`)
   }
 }
 
