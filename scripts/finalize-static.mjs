@@ -3,7 +3,8 @@
 // 1. Moves each prerendered route from <route>/index.html to <route>.html.
 //    Pages serves /about straight from about.html, while about/index.html
 //    would make it redirect /about to /about/, away from the canonical URL.
-// 2. Points any page whose link preview card is missing at the default card.
+// 2. Points any page whose link preview card is missing at the default card,
+//    and versions each card URL by its content.
 // 3. Writes 404.html, a client-only copy of the app shell. Pages serves it
 //    with a 404 status for any path that was not prerendered; the app still
 //    boots and routes normally there (login, profile, unknown URLs).
@@ -16,6 +17,7 @@ import {
   readdirSync,
   writeFileSync,
 } from 'node:fs'
+import { createHash } from 'node:crypto'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -37,6 +39,9 @@ for (const route of nested) {
 
 // A page whose preview card has not been rendered yet (a new project or
 // post) falls back to the site-wide card instead of a broken image link.
+// Each card URL gets a ?v= content hash: cards keep a stable file name and
+// are cached for a week, so a re-rendered card would otherwise stay stale at
+// the edge and in link previews until the cache ran out.
 //
 // Module preload links get a root-relative href. Pages turns them into
 // Early Hints headers, and a URL in a header resolves against the page
@@ -46,15 +51,25 @@ const SITE = 'https://bishalregmi.com'
 const DEFAULT_PREVIEW = `${SITE}/assets/og/home.jpg`
 const previewTag = /(<meta (?:property="og:image"|name="twitter:image") content=")([^"]+)(")/g
 const relativePreload = /(<link rel="modulepreload" href=")(?!\/|https?:)/g
+const versions = new Map()
+const versioned = (url) => {
+  const path = url.slice(SITE.length)
+  if (!versions.has(path)) {
+    const hash = createHash('sha256').update(readFileSync(join(browser, path)))
+    versions.set(path, hash.digest('hex').slice(0, 10))
+  }
+  return `${url}?v=${versions.get(path)}`
+}
 for (const route of routes) {
   const file = route === '/' ? join(browser, 'index.html') : join(browser, `${route}.html`)
   const page = readFileSync(file, 'utf8')
   let missing = ''
   const fixed = page
     .replace(previewTag, (tag, open, url, close) => {
-      if (!url.startsWith(SITE) || existsSync(join(browser, url.slice(SITE.length)))) return tag
+      if (!url.startsWith(SITE)) return tag
+      if (existsSync(join(browser, url.slice(SITE.length)))) return open + versioned(url) + close
       missing = url.slice(SITE.length)
-      return open + DEFAULT_PREVIEW + close
+      return open + versioned(DEFAULT_PREVIEW) + close
     })
     .replace(relativePreload, '$1/')
   if (missing) console.warn(`finalize-static: ${route} has no ${missing}, using the default card`)
