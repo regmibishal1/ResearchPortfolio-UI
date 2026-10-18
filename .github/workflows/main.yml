@@ -46,10 +46,10 @@ jobs:
         run: node scripts/check-pages.mjs
 
       - name: Install Chromium for the accessibility check
-        run: npx playwright install --with-deps chromium
+        run: yarn playwright:install --with-deps
 
       - name: Accessibility (axe) on every page at 1280 and 320 px
-        run: node scripts/check-a11y.mjs
+        run: yarn check:a11y
 
       - name: Check source punctuation is ASCII
         run: |
