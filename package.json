@@ -12,7 +12,8 @@
 		"lint": "ng lint && yarn run pretty",
 		"lint:styles": "stylelint \"src/**/*.scss\" && node scripts/check-css-vars.mjs",
 		"check:pages": "node scripts/check-pages.mjs",
-		"check:a11y": "node scripts/check-a11y.mjs",
+		"check:a11y": "PLAYWRIGHT_BROWSERS_PATH=0 node scripts/check-a11y.mjs",
+		"playwright:install": "PLAYWRIGHT_BROWSERS_PATH=0 playwright install chromium-headless-shell",
 		"api:types": "openapi-typescript src/app/api/fastapi-openapi.json -o src/app/api/fastapi-schema.ts",
 		"prepare": "husky || true",
 		"pretty": "prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json}\""

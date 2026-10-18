@@ -36,7 +36,7 @@ yarn ng lint               # TypeScript and template lint
 yarn lint:styles           # colors, font sizes and radii must be design tokens; every var(--x) must exist
 yarn build                 # fails over the bundle budgets (600 kB initial, 12 kB per component style)
 yarn check:pages           # every page under 150 KB raw / 25 KB gzipped, meta descriptions within 160 characters
-yarn check:a11y            # axe on every page at 1280 and 320 px (needs: npx playwright install chromium)
+yarn check:a11y            # axe on every page at 1280 and 320 px (needs: yarn playwright:install)
 npx lhci autorun           # Lighthouse on Home, a case study and a post
 ```
 
