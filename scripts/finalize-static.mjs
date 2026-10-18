@@ -37,22 +37,28 @@ for (const route of nested) {
 
 // A page whose preview card has not been rendered yet (a new project or
 // post) falls back to the site-wide card instead of a broken image link.
+//
+// Module preload links get a root-relative href. Pages turns them into
+// Early Hints headers, and a URL in a header resolves against the page
+// rather than <base href="/">, so /project/x would otherwise preload
+// /project/chunk-*.js and get a 404.
 const SITE = 'https://bishalregmi.com'
 const DEFAULT_PREVIEW = `${SITE}/assets/og/home.jpg`
 const previewTag = /(<meta (?:property="og:image"|name="twitter:image") content=")([^"]+)(")/g
+const relativePreload = /(<link rel="modulepreload" href=")(?!\/|https?:)/g
 for (const route of routes) {
   const file = route === '/' ? join(browser, 'index.html') : join(browser, `${route}.html`)
   const page = readFileSync(file, 'utf8')
   let missing = ''
-  const fixed = page.replace(previewTag, (tag, open, url, close) => {
-    if (!url.startsWith(SITE) || existsSync(join(browser, url.slice(SITE.length)))) return tag
-    missing = url.slice(SITE.length)
-    return open + DEFAULT_PREVIEW + close
-  })
-  if (missing) {
-    console.warn(`finalize-static: ${route} has no ${missing}, using the default card`)
-    writeFileSync(file, fixed)
-  }
+  const fixed = page
+    .replace(previewTag, (tag, open, url, close) => {
+      if (!url.startsWith(SITE) || existsSync(join(browser, url.slice(SITE.length)))) return tag
+      missing = url.slice(SITE.length)
+      return open + DEFAULT_PREVIEW + close
+    })
+    .replace(relativePreload, '$1/')
+  if (missing) console.warn(`finalize-static: ${route} has no ${missing}, using the default card`)
+  if (fixed !== page) writeFileSync(file, fixed)
 }
 
 const home = readFileSync(join(browser, 'index.html'), 'utf8')
