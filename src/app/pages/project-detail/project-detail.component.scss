@@ -202,6 +202,14 @@
   padding: var(--space-4);
 }
 
+// The card hugs its image, so a figure smaller than the page width sits in a
+// card of its own size instead of a wide, mostly empty one.
+.screenshot {
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
+}
+
 // ===== Lists =====
 .bullet-list {
   margin: 0;

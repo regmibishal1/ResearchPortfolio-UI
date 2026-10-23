@@ -1,19 +1,29 @@
-<button
-  #trigger
-  type="button"
-  class="zoomable-trigger"
-  [attr.aria-label]="'Enlarge image' + (alt() ? ': ' + alt() : '')"
-  (click)="open()"
->
+@if (enlargeable()) {
+  <button
+    #trigger
+    type="button"
+    class="zoomable-trigger"
+    [attr.aria-label]="'Enlarge image' + (alt() ? ': ' + alt() : '')"
+    (click)="open()"
+  >
+    <ng-container *ngTemplateOutlet="thumb" />
+  </button>
+} @else {
+  <ng-container *ngTemplateOutlet="thumb" />
+}
+
+<ng-template #thumb>
   <img
     class="zoomable-thumb"
+    [class.full-size]="!enlargeable()"
     [src]="src()"
     [alt]="alt()"
     [attr.width]="size?.[0]"
     [attr.height]="size?.[1]"
+    [style.max-width.px]="size?.[0]"
     loading="lazy"
   />
-</button>
+</ng-template>
 
 @if (isOpen) {
   <div
@@ -27,15 +37,17 @@
     (keydown)="onKeydown($event)"
   >
     <div class="lightbox-toolbar">
-      <button
-        type="button"
-        class="lightbox-btn"
-        [attr.aria-pressed]="zoomed"
-        (click)="toggleZoom()"
-      >
-        <app-icon [name]="zoomed ? 'zoom_out' : 'zoom_in'" />
-        <span>Zoom</span>
-      </button>
+      @if (canZoom()) {
+        <button
+          type="button"
+          class="lightbox-btn"
+          [attr.aria-pressed]="zoomed"
+          (click)="toggleZoom()"
+        >
+          <app-icon [name]="zoomed ? 'zoom_out' : 'zoom_in'" />
+          <span>Zoom</span>
+        </button>
+      }
       <button
         type="button"
         class="lightbox-btn lightbox-close"
@@ -52,17 +64,20 @@
       role="region"
       aria-label="Image"
       [class.zoomed]="zoomed"
+      [class.fits]="!canZoom()"
       [tabindex]="zoomed ? 0 : -1"
       (click)="onImageClick()"
       (keydown.enter)="toggleZoom()"
       (mousedown)="onDown($event)"
     >
       <img
+        #lightboxImg
         class="lightbox-img"
         [class.zoomed]="zoomed"
         [src]="src()"
         [alt]="alt()"
         draggable="false"
+        (load)="checkZoom(lightboxImg)"
       />
     </div>
     @if (zoomed) {
@@ -100,8 +115,12 @@
       <p class="lightbox-caption">{{ caption() }}</p>
     }
     <p class="lightbox-hint">
-      Use Zoom or select the image to enlarge it. Drag, swipe, use the arrow keys or the pan buttons
-      to move around. Press Escape to close.
+      @if (canZoom()) {
+        Use Zoom or select the image to enlarge it. Drag, swipe, use the arrow keys or the pan
+        buttons to move around. Press Escape to close.
+      } @else {
+        Press Escape or select outside the image to close.
+      }
     </p>
   </div>
 }
