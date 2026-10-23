@@ -20,6 +20,15 @@ describe('ZoomableImageComponent', () => {
     document.body.style.overflow = ''
   })
 
+  // What the lightbox image reports once it has loaded and been fit to the screen.
+  const scaledDown = {
+    naturalWidth: 1675,
+    naturalHeight: 900,
+    clientWidth: 1200,
+    clientHeight: 645,
+  }
+  const fullSize = { naturalWidth: 523, naturalHeight: 264, clientWidth: 523, clientHeight: 264 }
+
   it('creates', () => {
     expect(component).toBeTruthy()
   })
@@ -45,6 +54,7 @@ describe('ZoomableImageComponent', () => {
 
   it('toggles zoom and resets it on close', () => {
     component.open()
+    component.checkZoom(scaledDown)
     component.toggleZoom()
     expect(component.zoomed).toBe(true)
     component.close()
@@ -73,12 +83,49 @@ describe('ZoomableImageComponent', () => {
 
   it('pans the zoomed image with the arrow keys', () => {
     component.open()
+    component.checkZoom(scaledDown)
     component.toggleZoom()
     fixture.detectChanges()
     const panSpy = spyOn(component, 'pan')
     const event = new KeyboardEvent('keydown', { key: 'ArrowRight' })
     component.onKeydown(event)
     expect(panSpy).toHaveBeenCalledWith(1, 0)
+  })
+
+  it('stays a plain image when it already shows at full size', () => {
+    const el: HTMLElement = fixture.nativeElement
+    fixture.componentRef.setInput('src', 'assets/projects/spacex-landing-importance.webp')
+    el.style.width = '700px'
+    component.measure()
+    fixture.detectChanges()
+    expect(el.querySelector('button.zoomable-trigger')).toBeNull()
+    expect(el.querySelector('img.zoomable-thumb.full-size')).not.toBeNull()
+
+    el.style.width = '300px'
+    component.measure()
+    fixture.detectChanges()
+    expect(el.querySelector('button.zoomable-trigger')).not.toBeNull()
+  })
+
+  it('offers Zoom only when the lightbox had to shrink the image', () => {
+    const el: HTMLElement = fixture.nativeElement
+    const zoomButton = () =>
+      [...el.querySelectorAll<HTMLButtonElement>('.lightbox-btn')].find((b) =>
+        b.textContent!.includes('Zoom')
+      )
+    el.querySelector<HTMLButtonElement>('button.zoomable-trigger')!.click()
+    fixture.detectChanges()
+    expect(el.querySelector('.lightbox')).not.toBeNull()
+    component.checkZoom(fullSize)
+    fixture.detectChanges()
+    expect(zoomButton()).toBeUndefined()
+    component.toggleZoom()
+    expect(component.zoomed).toBeFalse()
+    expect(el.querySelector('.lightbox-hint')!.textContent).not.toContain('Zoom')
+
+    component.checkZoom(scaledDown)
+    fixture.detectChanges()
+    expect(zoomButton()).toBeDefined()
   })
 
   it('closes on Escape only when open', () => {

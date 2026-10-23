@@ -1,12 +1,17 @@
 import {
   Component,
+  DestroyRef,
   ElementRef,
   HostListener,
   ChangeDetectionStrategy,
+  afterNextRender,
+  inject,
   input,
+  signal,
   viewChild,
 } from '@angular/core'
 
+import { NgTemplateOutlet } from '@angular/common'
 import { A11yModule } from '@angular/cdk/a11y'
 import { IconComponent } from '../icon/icon.component'
 import { IMAGE_SIZES } from '../../data/image-sizes'
@@ -20,10 +25,14 @@ const PAN_STEP = 120
  * the pan buttons. The lightbox is a modal dialog: focus stays inside while it
  * is open and returns to the image when it closes. Escape, the close button or
  * a click on the backdrop closes it.
+ *
+ * Enlarging is only offered when there is more to see: an image already shown
+ * at its full size stays a plain image, and Zoom only appears when the
+ * lightbox itself had to scale the image down to fit the screen.
  */
 @Component({
   selector: 'app-zoomable-image',
-  imports: [IconComponent, A11yModule],
+  imports: [IconComponent, A11yModule, NgTemplateOutlet],
   templateUrl: './zoomable-image.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './zoomable-image.component.scss',
@@ -45,6 +54,37 @@ export class ZoomableImageComponent {
   readonly stage = viewChild<ElementRef<HTMLElement>>('stage')
   readonly trigger = viewChild<ElementRef<HTMLButtonElement>>('trigger')
 
+  /** False while the image has room to show at its full size on the page. */
+  readonly enlargeable = signal(true)
+  /** True when the lightbox shows the image smaller than it is. */
+  readonly canZoom = signal(false)
+
+  private host = inject<ElementRef<HTMLElement>>(ElementRef)
+
+  constructor() {
+    const destroyRef = inject(DestroyRef)
+    afterNextRender(() => {
+      const observer = new ResizeObserver(() => this.measure())
+      observer.observe(this.host.nativeElement)
+      destroyRef.onDestroy(() => observer.disconnect())
+    })
+  }
+
+  /** Compares the room the image has on the page with its own width. */
+  measure(): void {
+    const width = this.size?.[0]
+    if (width) this.enlargeable.set(this.host.nativeElement.clientWidth < width)
+  }
+
+  /** Runs once the lightbox image has loaded and been fit to the screen. */
+  checkZoom(
+    img: Pick<HTMLImageElement, 'naturalWidth' | 'naturalHeight' | 'clientWidth' | 'clientHeight'>
+  ): void {
+    this.canZoom.set(
+      img.naturalWidth > img.clientWidth + 1 || img.naturalHeight > img.clientHeight + 1
+    )
+  }
+
   isOpen = false
   zoomed = false
 
@@ -58,6 +98,7 @@ export class ZoomableImageComponent {
   open(): void {
     this.isOpen = true
     this.zoomed = false
+    this.canZoom.set(false)
     document.body.style.overflow = 'hidden'
   }
 
@@ -77,6 +118,7 @@ export class ZoomableImageComponent {
   }
 
   toggleZoom(): void {
+    if (!this.canZoom() && !this.zoomed) return
     this.zoomed = !this.zoomed
     if (!this.zoomed) {
       this.stage()?.nativeElement.scrollTo({ left: 0, top: 0 })

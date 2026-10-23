@@ -32,6 +32,11 @@
   filter: brightness(0.97);
 }
 
+// Already at full size, so there is nothing to enlarge.
+.zoomable-thumb.full-size {
+  cursor: auto;
+}
+
 .lightbox {
   position: fixed;
   inset: 0;
@@ -127,6 +132,10 @@
 
   &.zoomed:active {
     cursor: grabbing;
+  }
+
+  &.fits {
+    cursor: auto;
   }
 }
 
