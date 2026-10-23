@@ -32,14 +32,11 @@ export class ZoomableImageComponent {
   readonly src = input.required<string>()
   readonly alt = input('')
   readonly caption = input<string>()
-  /**
-   * The image's pixel size, from the generated size map, so the page holds
-   * its space before the lazy image loads. Null for an image not in the map.
-   */
 
   /**
    * The image's pixel size, from the generated size map, so the page holds
-   * its space before the lazy image loads. Null for an image not in the map.
+   * its space before the lazy image loads, and a small image is never shown
+   * wider than it is. Null for an image not in the map.
    */
   get size(): [number, number] | null {
     return IMAGE_SIZES[this.src().replace(/^\//, '')] ?? null

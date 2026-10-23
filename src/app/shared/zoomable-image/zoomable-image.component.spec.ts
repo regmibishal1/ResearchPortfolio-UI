@@ -24,6 +24,15 @@ describe('ZoomableImageComponent', () => {
     expect(component).toBeTruthy()
   })
 
+  it('is never shown wider than the image itself', () => {
+    fixture.componentRef.setInput('src', 'assets/projects/spacex-landing-importance.webp')
+    fixture.detectChanges()
+    const img = (fixture.nativeElement as HTMLElement).querySelector<HTMLImageElement>(
+      '.zoomable-thumb'
+    )!
+    expect(img.style.maxWidth).toBe('523px')
+  })
+
   it('opens and closes the lightbox, locking body scroll while open', () => {
     expect(component.isOpen).toBe(false)
     component.open()

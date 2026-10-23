@@ -16,10 +16,13 @@
   cursor: zoom-in;
 }
 
+// Fills the space up to the image's own width; a smaller image is centred
+// rather than stretched (and blurred).
 .zoomable-thumb {
   display: block;
   width: 100%;
   height: auto;
+  margin-inline: auto;
   border-radius: inherit;
   cursor: zoom-in;
   transition: filter 0.15s ease;
