@@ -527,7 +527,9 @@ const PROJECT_DEFINITIONS: Project[] = [
     period: 'Fall 2022',
     coursework: 'Graduate coursework, UMD (DATA 603)',
     icon: 'rocket_launch',
-    image: 'assets/projects/spacex-launch-landing.webp',
+    image: 'assets/projects/spacex-landing-importance.webp',
+    imageAlt:
+      'Bar chart of random forest feature importance for landing prediction: landing attempted, payload mass, flight number and landing legs rank highest',
     paper: {
       url: 'assets/papers/spacex-launch-landing.pdf',
       title: 'SpaceX Launch and Landing Data Analysis',
