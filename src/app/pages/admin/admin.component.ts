@@ -25,16 +25,23 @@ class Section<T> {
   readonly data = signal<T | null>(null)
   readonly error = signal('')
   readonly loading = signal(false)
+  /** Only the newest load may update the section; older answers are dropped. */
+  private latest = 0
 
   load(source: Observable<T>): void {
+    const id = ++this.latest
     this.loading.set(true)
     this.error.set('')
     source.subscribe({
       next: (value) => {
+        if (id !== this.latest) return
         this.data.set(value)
         this.loading.set(false)
       },
       error: (err: unknown) => {
+        if (id !== this.latest) return
+        // Old data under an error line would read as current.
+        this.data.set(null)
         this.error.set(describe(err))
         this.loading.set(false)
       },

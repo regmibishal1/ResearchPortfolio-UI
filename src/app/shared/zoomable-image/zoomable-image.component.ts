@@ -63,6 +63,11 @@ export class ZoomableImageComponent {
 
   constructor() {
     const destroyRef = inject(DestroyRef)
+    // Leaving the page (Back, or a search result) while the lightbox is open
+    // never calls close(), so let the page scroll again here.
+    destroyRef.onDestroy(() => {
+      if (this.isOpen) document.body.style.overflow = ''
+    })
     afterNextRender(() => {
       const observer = new ResizeObserver(() => this.measure())
       observer.observe(this.host.nativeElement)

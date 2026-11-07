@@ -109,7 +109,9 @@ export class StocksService {
   }
 
   getCompany(ticker: string): Observable<CompanyDetailResponse> {
-    return this.http.get<CompanyDetailResponse>(`${this.apiUrl}/company/${ticker}`)
+    return this.http.get<CompanyDetailResponse>(
+      `${this.apiUrl}/company/${encodeURIComponent(ticker)}`
+    )
   }
 
   getTrackRecord(opts: { as_of_date?: string } = {}): Observable<TrackRecordResponse> {

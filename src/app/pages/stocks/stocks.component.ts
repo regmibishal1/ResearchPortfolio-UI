@@ -58,12 +58,7 @@ interface MetricCard {
 
 /** Columns the company table can be sorted by. */
 export type StockSortKey =
-  | 'ticker'
-  | 'sector'
-  | 'sue'
-  | 'predicted_vol'
-  | 'exret_63'
-  | 'sue_quintile'
+  'ticker' | 'sector' | 'sue' | 'predicted_vol' | 'exret_63' | 'sue_quintile'
 
 /** Text columns read better ascending; metric columns lead with the top value. */
 const STOCK_TEXT_COLUMNS: ReadonlySet<StockSortKey> = new Set(['ticker', 'sector'])
@@ -209,6 +204,7 @@ export class StocksComponent implements OnInit, OnDestroy {
     if (this.selectedTicker === ticker) {
       this.selectedTicker = null
       this.companyDetail = null
+      this.companyLoading = false
       return
     }
     this.selectedTicker = ticker
@@ -218,6 +214,8 @@ export class StocksComponent implements OnInit, OnDestroy {
       .getCompany(ticker)
       .pipe(catchError(() => of(null as CompanyDetailResponse | null)))
       .subscribe((detail) => {
+        // A late answer for a company that is no longer picked is dropped.
+        if (this.selectedTicker !== ticker) return
         this.companyDetail = detail
         this.companyLoading = false
         this.cdr.markForCheck()

@@ -1,11 +1,17 @@
 import { ApplicationConfig, provideZonelessChangeDetection } from '@angular/core'
-import { provideRouter, withInMemoryScrolling, withPreloading } from '@angular/router'
+import {
+  provideRouter,
+  withInMemoryScrolling,
+  withNavigationErrorHandler,
+  withPreloading,
+} from '@angular/router'
 import { provideHttpClient, withInterceptors, withXhr } from '@angular/common/http'
 import { provideClientHydration, withNoIncrementalHydration } from '@angular/platform-browser'
 import { routes } from './app.routes'
 import { authInterceptor } from './auth.interceptor'
 import { prerenderInterceptor } from './prerender.interceptor'
 import { SelectivePreloadingStrategy } from './preload-strategy'
+import { reloadOnMissingChunk } from './navigation-error'
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,7 +23,8 @@ export const appConfig: ApplicationConfig = {
       withInMemoryScrolling({ scrollPositionRestoration: 'top', anchorScrolling: 'enabled' }),
       // Keep the initial bundle small, and fetch only the small, likely-next
       // pages in the background (see SelectivePreloadingStrategy).
-      withPreloading(SelectivePreloadingStrategy)
+      withPreloading(SelectivePreloadingStrategy),
+      withNavigationErrorHandler((error) => reloadOnMissingChunk(error))
     ),
     provideHttpClient(withXhr(), withInterceptors([prerenderInterceptor, authInterceptor])),
     provideClientHydration(withNoIncrementalHydration()),
