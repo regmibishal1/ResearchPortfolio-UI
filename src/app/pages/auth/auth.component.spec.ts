@@ -206,6 +206,12 @@ describe('AuthComponent on a reset link', () => {
     expect(el.textContent).toContain('This reset link is incomplete')
   })
 
+  it('says the link is incomplete when its token is mangled', async () => {
+    await open('#token=abc%zz')
+    expect(component.resetToken).toBe('')
+    expect(el.textContent).toContain('This reset link is incomplete')
+  })
+
   it('checks the two passwords match before sending anything', fakeAsync(async () => {
     await open('#token=abc123')
     const reset = spyOn(TestBed.inject(AuthService), 'resetPassword')

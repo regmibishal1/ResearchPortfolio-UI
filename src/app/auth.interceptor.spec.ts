@@ -7,6 +7,7 @@ import { authInterceptor } from './auth.interceptor'
 import { AuthService } from './pages/auth/auth.service'
 import { environment } from '../environments/environment'
 import { fakeJwt } from './testing/fake-jwt'
+import { unlockedRefresh } from './testing/refresh-lock'
 
 const inAnHour = () => Math.floor(Date.now() / 1000) + 3600
 
@@ -26,6 +27,7 @@ describe('authInterceptor', () => {
         provideRouter([]),
         provideHttpClient(withXhr(), withInterceptors([authInterceptor])),
         provideHttpClientTesting(),
+        unlockedRefresh,
       ],
     })
     http = TestBed.inject(HttpClient)
@@ -100,6 +102,18 @@ describe('authInterceptor', () => {
 
     expect(ended).toHaveBeenCalled()
     expect(failed).toBeTrue()
+  })
+
+  it('keeps the session when the sign-in service cannot be reached', () => {
+    const ended = spyOn(auth, 'endSession')
+    let failed = false
+    http.get(userUrl).subscribe({ error: () => (failed = true) })
+    httpMock.expectOne(userUrl).flush(null, { status: 401, statusText: 'Unauthorized' })
+    httpMock.expectOne(refreshUrl).flush(null, { status: 502, statusText: 'Bad Gateway' })
+
+    expect(ended).not.toHaveBeenCalled()
+    expect(failed).toBeTrue()
+    expect(auth.hasSession()).toBeTrue()
   })
 
   it('holds requests until the session is renewed after a page load', () => {

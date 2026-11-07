@@ -110,10 +110,21 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   onLogout() {
     this.closeMenu()
-    // The local session ends even if the server cannot be reached.
+    // The local session ends even if the server cannot be reached. Leave the
+    // page too, so signed-in content (profile details, admin data, reset
+    // links) does not stay on screen.
     this.authService.logout().subscribe({
-      next: () => this.toasts.show('Signed out.'),
-      error: () => this.toasts.show('Signed out.'),
+      next: () => {
+        this.toasts.show('Signed out.')
+        this.router.navigate(['/'])
+      },
+      error: () => {
+        this.toasts.show(
+          'Signed out on this device, but the sign-in service could not be reached.',
+          8000
+        )
+        this.router.navigate(['/'])
+      },
     })
   }
 

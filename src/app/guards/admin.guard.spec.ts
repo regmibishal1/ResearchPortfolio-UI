@@ -14,6 +14,7 @@ import { adminGuard } from './admin.guard'
 import { AuthService } from '../pages/auth/auth.service'
 import { environment } from '../../environments/environment'
 import { fakeJwt } from '../testing/fake-jwt'
+import { unlockedRefresh } from '../testing/refresh-lock'
 
 describe('adminGuard', () => {
   const state = { url: '/admin' } as RouterStateSnapshot
@@ -21,7 +22,12 @@ describe('adminGuard', () => {
   beforeEach(() => {
     localStorage.clear()
     TestBed.configureTestingModule({
-      providers: [provideRouter([]), provideHttpClient(withXhr()), provideHttpClientTesting()],
+      providers: [
+        provideRouter([]),
+        provideHttpClient(withXhr()),
+        provideHttpClientTesting(),
+        unlockedRefresh,
+      ],
     })
   })
 
