@@ -234,7 +234,7 @@ export class StocksComponent implements OnInit, OnDestroy {
 
   private buildMetricCards(latest: LatestResponse): MetricCard[] {
     const m = latest.run.metrics || {}
-    const fmt = (v: number | undefined, digits = 2, suffix = '') =>
+    const fmt = (v: number | null | undefined, digits = 2, suffix = '') =>
       v === undefined || v === null ? '-' : `${v.toFixed(digits)}${suffix}`
     return [
       {

@@ -12,7 +12,8 @@ export interface RunMeta {
   start_date: string
   end_date: string
   run_timestamp_utc: string
-  metrics: Record<string, number>
+  // A metric the evaluation could not compute comes back as null.
+  metrics: Record<string, number | null>
 }
 
 export interface SectorRow {
