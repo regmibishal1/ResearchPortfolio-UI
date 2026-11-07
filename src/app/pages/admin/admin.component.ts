@@ -152,10 +152,20 @@ export class AdminComponent {
 
   // Accounts
 
+  // Admin accounts are refused here (403 with the reason); their links come
+  // from the admin-token API only, so the table offers no button for them.
   createResetLink(username: string): void {
     this.manage.resetLink(username).subscribe({
       next: (link) => this.resetLinks.update((all) => ({ ...all, [username]: link })),
-      error: (err: unknown) => this.toasts.show(describe(err), 6000),
+      error: (err: unknown) => {
+        const reason = err instanceof HttpErrorResponse ? err.error?.message : undefined
+        this.toasts.show(
+          err instanceof HttpErrorResponse && err.status === 403 && typeof reason === 'string'
+            ? reason
+            : describe(err),
+          6000
+        )
+      },
     })
   }
 
