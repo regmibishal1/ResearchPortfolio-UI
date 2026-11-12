@@ -25,6 +25,15 @@ type Mode = 'login' | 'register' | 'reset' | 'forgot'
 
 const MIN_PASSWORD_LENGTH = 8
 
+/** A mangled link (a stray %) reads as no token, so the page says the link is incomplete. */
+function decodeToken(raw: string): string {
+  try {
+    return decodeURIComponent(raw)
+  } catch {
+    return ''
+  }
+}
+
 @Component({
   selector: 'app-auth',
   imports: [IconComponent, FormsModule, MatProgressBarModule, TurnstileComponent],
@@ -110,7 +119,7 @@ export class AuthComponent {
   private readResetToken() {
     if (!isPlatformBrowser(inject(PLATFORM_ID))) return
     const match = /(?:^#|&)token=([^&]+)/.exec(location.hash)
-    this.resetToken = match ? decodeURIComponent(match[1]) : ''
+    this.resetToken = match ? decodeToken(match[1]) : ''
     if (location.hash) history.replaceState(history.state, '', location.pathname + location.search)
   }
 

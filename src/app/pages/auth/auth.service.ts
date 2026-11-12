@@ -1,10 +1,10 @@
-import { Injectable, PLATFORM_ID, inject, signal } from '@angular/core'
+import { Injectable, InjectionToken, PLATFORM_ID, inject, signal } from '@angular/core'
 import { isPlatformBrowser } from '@angular/common'
-import { BehaviorSubject, Observable, throwError } from 'rxjs'
+import { BehaviorSubject, Observable, Subscription, throwError } from 'rxjs'
 import { HttpClient, HttpErrorResponse } from '@angular/common/http'
 import { Router } from '@angular/router'
 import { ToastService } from '../../shared/toast/toast.service'
-import { catchError, finalize, map, shareReplay, tap } from 'rxjs/operators'
+import { catchError, finalize, map, shareReplay, tap, timeout } from 'rxjs/operators'
 import { environment } from '../../../environments/environment'
 
 /**
@@ -31,8 +31,58 @@ export function tokenRole(token: string): string | null {
   }
 }
 
+/**
+ * True when the AuthAPI turned the session down (401 or 403). Anything else,
+ * such as no connection, a timeout or a 5xx while the server restarts, says
+ * nothing about the session, so the visitor stays signed in.
+ */
+export function sessionRejected(error: unknown): boolean {
+  return error instanceof HttpErrorResponse && (error.status === 401 || error.status === 403)
+}
+
 /** A non-secret flag: this browser had a session, so try the refresh cookie on load. */
 const SESSION_HINT = 'signed_in'
+
+/** A refresh that has not answered by then has failed. */
+const REFRESH_TIMEOUT_MS = 15000
+
+/** Runs one refresh at a time, across every tab of this site. */
+export type RefreshLock = <T>(work: () => Observable<T>) => Observable<T>
+
+/**
+ * Tabs share the refresh cookie, and the server retires it on use, so two
+ * tabs refreshing together would spend the same cookie twice. The Web Locks
+ * API queues them: the second tab waits, then sends the cookie the first one
+ * received. Browsers without it refresh unqueued.
+ */
+export const REFRESH_LOCK = new InjectionToken<RefreshLock>('REFRESH_LOCK', {
+  providedIn: 'root',
+  factory: () => webLock('auth-refresh'),
+})
+
+function webLock(name: string): RefreshLock {
+  return <T>(work: () => Observable<T>) =>
+    new Observable<T>((subscriber) => {
+      const locks = typeof navigator === 'undefined' ? undefined : navigator.locks
+      if (!locks) return work().subscribe(subscriber)
+      let inner: Subscription | undefined
+      let cancelled = false
+      locks
+        .request(
+          name,
+          () =>
+            new Promise<void>((release) => {
+              if (cancelled) return release()
+              inner = work().pipe(finalize(release)).subscribe(subscriber)
+            })
+        )
+        .catch((error: unknown) => subscriber.error(error))
+      return () => {
+        cancelled = true
+        inner?.unsubscribe()
+      }
+    })
+}
 
 @Injectable({
   providedIn: 'root',
@@ -41,6 +91,7 @@ export class AuthService {
   private http = inject(HttpClient)
   private router = inject(Router)
   private toasts = inject(ToastService)
+  private refreshLock = inject(REFRESH_LOCK)
 
   private isAuthenticated = new BehaviorSubject<boolean>(false)
   /** The access token lives only in memory; the refresh token is an HttpOnly cookie. */
@@ -68,7 +119,13 @@ export class AuthService {
     this.isAuthenticated.next(true)
     // Started once this constructor returns: the request goes through the
     // auth interceptor, which injects this service.
-    queueMicrotask(() => this.refresh().subscribe({ error: () => this.clearSession() }))
+    queueMicrotask(() =>
+      this.refresh().subscribe({
+        error: (error: unknown) => {
+          if (sessionRejected(error)) this.clearSession()
+        },
+      })
+    )
   }
 
   getAuthStatus(): Observable<boolean> {
@@ -120,12 +177,23 @@ export class AuthService {
   /**
    * Swaps the refresh cookie for a new access token (and a new cookie). The
    * server retires the old refresh token, so concurrent callers share one
-   * request instead of each spending it.
+   * request instead of each spending it, and other tabs wait their turn.
    */
   refresh(): Observable<string> {
     if (!this.refreshing) {
-      this.refreshing = this.http.post<AuthResponse>(`${this.apiURL}/refresh-token`, null).pipe(
-        tap((response) => this.setSession(response)),
+      this.refreshing = this.refreshLock(() =>
+        this.http
+          .post<AuthResponse>(`${this.apiURL}/refresh-token`, null)
+          .pipe(timeout(REFRESH_TIMEOUT_MS))
+      ).pipe(
+        tap({
+          next: (response) => this.setSession(response),
+          error: (error: unknown) => {
+            if (!sessionRejected(error)) {
+              this.toasts.show('Could not reach the sign-in service. Try again in a moment.', 6000)
+            }
+          },
+        }),
         map((response) => response.access_token),
         finalize(() => (this.refreshing = null)),
         shareReplay(1)

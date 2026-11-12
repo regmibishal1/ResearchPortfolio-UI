@@ -2,9 +2,10 @@ import { TestBed } from '@angular/core/testing'
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing'
 import { provideHttpClient, withInterceptors, withXhr } from '@angular/common/http'
 import { provideRouter } from '@angular/router'
-import { firstValueFrom } from 'rxjs'
-import { AuthService, safeNext, tokenRole } from './auth.service'
+import { Subject, TimeoutError, firstValueFrom, of } from 'rxjs'
+import { AuthService, REFRESH_LOCK, safeNext, tokenRole } from './auth.service'
 import { fakeJwt } from '../../testing/fake-jwt'
+import { unlockedRefresh } from '../../testing/refresh-lock'
 import { authInterceptor } from '../../auth.interceptor'
 import { environment } from '../../../environments/environment'
 
@@ -13,7 +14,12 @@ describe('AuthService', () => {
 
   function create(): AuthService {
     TestBed.configureTestingModule({
-      providers: [provideRouter([]), provideHttpClient(withXhr()), provideHttpClientTesting()],
+      providers: [
+        provideRouter([]),
+        provideHttpClient(withXhr()),
+        provideHttpClientTesting(),
+        unlockedRefresh,
+      ],
     })
     return TestBed.inject(AuthService)
   }
@@ -87,6 +93,17 @@ describe('AuthService', () => {
       expect(localStorage.getItem('signed_in')).toBeNull()
     })
 
+    it('stays signed in when the sign-in service cannot be reached', async () => {
+      localStorage.setItem('signed_in', '1')
+      const service = create()
+      await Promise.resolve()
+      TestBed.inject(HttpTestingController)
+        .expectOne(refreshUrl)
+        .flush(null, { status: 503, statusText: 'Service Unavailable' })
+      expect(signedIn(service)).toBeTrue()
+      expect(localStorage.getItem('signed_in')).toBe('1')
+    })
+
     it('renews through the real interceptor, which itself needs this service', async () => {
       localStorage.setItem('signed_in', '1')
       TestBed.configureTestingModule({
@@ -94,6 +111,7 @@ describe('AuthService', () => {
           provideRouter([]),
           provideHttpClient(withXhr(), withInterceptors([authInterceptor])),
           provideHttpClientTesting(),
+          unlockedRefresh,
         ],
       })
       const service = TestBed.inject(AuthService)
@@ -112,6 +130,43 @@ describe('AuthService', () => {
       expect(localStorage.getItem('access_token')).toBeNull()
       expect(localStorage.getItem('refresh_token')).toBeNull()
     })
+  })
+
+  it('gives up on a refresh that does not answer within 15 seconds', () => {
+    jasmine.clock().install()
+    try {
+      const service = create()
+      let failure: unknown
+      service.refresh().subscribe({ error: (e: unknown) => (failure = e) })
+      TestBed.inject(HttpTestingController).expectOne(refreshUrl)
+      jasmine.clock().tick(15001)
+      expect(failure).toBeInstanceOf(TimeoutError)
+    } finally {
+      jasmine.clock().uninstall()
+    }
+  })
+
+  it('lets one tab refresh at a time', async () => {
+    TestBed.configureTestingModule({})
+    const lock = TestBed.inject(REFRESH_LOCK)
+    const started: string[] = []
+    const first = new Subject<string>()
+    lock(() => {
+      started.push('first')
+      return first
+    }).subscribe()
+    const second = firstValueFrom(
+      lock(() => {
+        started.push('second')
+        return of('done')
+      })
+    )
+    await new Promise((resolve) => setTimeout(resolve, 20))
+    expect(started).toEqual(['first'])
+
+    first.complete()
+    expect(await second).toBe('done')
+    expect(started).toEqual(['first', 'second'])
   })
 
   it('signs out locally even when the server cannot be reached', async () => {

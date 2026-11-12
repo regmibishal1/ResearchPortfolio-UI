@@ -9,6 +9,11 @@
   Cache-Control: public, max-age=31536000, immutable
 /assets/*
   Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+# The search index's own scripts (pagefind.js and friends) keep the same name
+# across Pagefind upgrades, so they must not inherit the year-long rule above.
+/pagefind/*
+  ! Cache-Control
+  Cache-Control: public, max-age=3600
 
 # HSTS leaves out includeSubDomains on purpose: not every subdomain is
 # served over HTTPS. The CSP runs in report-only mode until the browser

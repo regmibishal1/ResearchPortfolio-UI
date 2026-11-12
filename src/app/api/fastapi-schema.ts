@@ -217,8 +217,9 @@ export interface paths {
          * Ingest Snapshot
          * @description Push an analysis snapshot into the stocks schema.
          *
-         *     Idempotent: re-posting the same (as_of_date, label) upserts the run row
-         *     and replaces every satellite row inside one transaction.
+         *     Idempotent: re-posting the same (as_of_date, label), unlabeled included,
+         *     upserts the run row and replaces every satellite row inside one
+         *     transaction.
          */
         post: operations["ingest_snapshot_stocks_ingest_post"];
         delete?: never;
@@ -1138,7 +1139,7 @@ export interface components {
             label: string | null;
             /** Metrics */
             metrics: {
-                [key: string]: number;
+                [key: string]: number | null;
             };
             /** N Events */
             n_events: number;
@@ -1197,7 +1198,7 @@ export interface components {
              * @default {}
              */
             metrics: {
-                [key: string]: unknown;
+                [key: string]: number | null;
             };
             /** N Events */
             n_events: number;

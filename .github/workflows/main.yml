@@ -8,6 +8,11 @@ on:
     branches:
       - main
 
+# Read-only token, and no credentials left in the checkout, so a dependency's
+# install script cannot push to the repository.
+permissions:
+  contents: read
+
 jobs:
   # The required check. Every step here is deterministic, so a failure
   # always means a real regression.
@@ -17,12 +22,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js 22.x
         uses: actions/setup-node@v7
         with:
           node-version: 22.x
-          cache: "yarn"
+          cache: 'yarn'
 
       - name: Install dependencies
         run: yarn install --immutable
@@ -75,12 +82,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js 22.x
         uses: actions/setup-node@v7
         with:
           node-version: 22.x
-          cache: "yarn"
+          cache: 'yarn'
 
       - name: Install dependencies
         run: yarn install --immutable

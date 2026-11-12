@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
-import { provideHttpClientTesting } from '@angular/common/http/testing'
-import { RouterModule } from '@angular/router'
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing'
+import { Router, RouterModule } from '@angular/router'
 
 import { NavbarComponent } from './navbar.component'
 import { AuthService } from '../../pages/auth/auth.service'
@@ -99,5 +99,24 @@ describe('NavbarComponent', () => {
     el.querySelector<HTMLAnchorElement>('.skip-link')!.click()
 
     expect(document.activeElement).toBe(el.querySelector('main'))
+  })
+
+  it('leaves the page on sign-out, whether or not the server answers', () => {
+    const auth = TestBed.inject(AuthService)
+    const navigate = spyOn(TestBed.inject(Router), 'navigate').and.resolveTo(true)
+    const httpMock = TestBed.inject(HttpTestingController)
+
+    auth.setSession({ access_token: 'access' })
+    component.onLogout()
+    httpMock.expectOne((r) => r.url.endsWith('/auth/logout')).flush({})
+    expect(navigate).toHaveBeenCalledWith(['/'])
+
+    navigate.calls.reset()
+    auth.setSession({ access_token: 'access' })
+    component.onLogout()
+    httpMock
+      .expectOne((r) => r.url.endsWith('/auth/logout'))
+      .flush(null, { status: 0, statusText: 'Network error' })
+    expect(navigate).toHaveBeenCalledWith(['/'])
   })
 })

@@ -12,7 +12,8 @@ export interface RunMeta {
   start_date: string
   end_date: string
   run_timestamp_utc: string
-  metrics: Record<string, number>
+  // A metric the evaluation could not compute comes back as null.
+  metrics: Record<string, number | null>
 }
 
 export interface SectorRow {
@@ -109,7 +110,9 @@ export class StocksService {
   }
 
   getCompany(ticker: string): Observable<CompanyDetailResponse> {
-    return this.http.get<CompanyDetailResponse>(`${this.apiUrl}/company/${ticker}`)
+    return this.http.get<CompanyDetailResponse>(
+      `${this.apiUrl}/company/${encodeURIComponent(ticker)}`
+    )
   }
 
   getTrackRecord(opts: { as_of_date?: string } = {}): Observable<TrackRecordResponse> {

@@ -79,6 +79,8 @@
                             </button>
                             <span class="hint">Until {{ link.expiresAt | date: 'shortTime' }}</span>
                           </div>
+                        } @else if (user.role === 'ADMIN') {
+                          <span class="hint">Admin token only</span>
                         } @else {
                           <button
                             type="button"

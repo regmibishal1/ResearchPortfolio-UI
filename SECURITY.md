@@ -18,14 +18,18 @@ Useful to include: the page or URL, what you did, what happened, and your browse
 
 ## What the site does with your data
 
-- The pages are static files, prerendered at build time. Reading the site sends nothing to
-  any API: project, blog and World Cup data are files on the same site, and site search runs
-  in your browser.
+- The pages are static files, prerendered at build time. Reading the site signed out sends
+  nothing to any API: project, blog and World Cup data are files on the same site, and site
+  search runs in your browser.
 - Cloudflare Web Analytics counts visits without cookies.
 - Accounts are by invitation. When you sign in, the short-lived access token is kept in
   memory only, and the refresh token is an HttpOnly cookie set by auth.bishalregmi.com that
   page scripts cannot read. The only thing stored in your browser is a `signed_in` flag.
 - Once password reset by email is turned on, the reset link is sent through Resend, and the
   token travels in the link's fragment, so it never reaches a server log.
-- The hidden `/stocks` page is the only page that calls api.bishalregmi.com. The API key in
-  the site's code is not a secret; it only keeps casual bots out.
+- While you are signed in, each page load asks auth.bishalregmi.com for a fresh access token.
+- The sign-in and forgot-password forms can show a Cloudflare Turnstile check, which loads from
+  challenges.cloudflare.com.
+- Two pages call api.bishalregmi.com: the hidden `/stocks` page, and `/admin`, which sends
+  the admin's access token to the API's `/manage` routes. The API key in the site's code is
+  not a secret; it only keeps casual bots out.

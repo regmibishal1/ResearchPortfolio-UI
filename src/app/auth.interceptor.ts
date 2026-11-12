@@ -2,7 +2,7 @@ import { HttpErrorResponse, HttpInterceptorFn, HttpRequest } from '@angular/comm
 import { inject } from '@angular/core'
 import { Router } from '@angular/router'
 import { catchError, switchMap, throwError } from 'rxjs'
-import { AuthService } from './pages/auth/auth.service'
+import { AuthService, sessionRejected } from './pages/auth/auth.service'
 import { environment } from '../environments/environment'
 
 // Requests that manage the session themselves: a 401 from these is an
@@ -14,12 +14,17 @@ const SESSION_PATHS = [
   '/auth/logout',
 ]
 
+// A base URL a build left empty matches no request, rather than every one.
+const under = (url: string, base: string) => base !== '' && url.startsWith(base)
+
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService)
   const router = inject(Router)
-  const toAuthApi = req.url.startsWith(environment.apiBaseUrl)
+  const toAuthApi = under(req.url, environment.apiBaseUrl)
   // The FastAPI's admin dashboard routes take the same sign-in token.
-  const wantsBearer = toAuthApi || req.url.startsWith(environment.modelApiUrl + '/manage')
+  const wantsBearer =
+    toAuthApi ||
+    (environment.modelApiUrl !== '' && req.url.startsWith(environment.modelApiUrl + '/manage'))
 
   // JWT Bearer: only ever sent to the AuthAPI and the FastAPI's /manage
   // routes, never to another host.
@@ -32,7 +37,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   // The key is embedded in the Angular build at Cloudflare Pages build time;
   // it is not user-specific and not truly secret, so it acts as a lightweight
   // gate against anonymous bot abuse. Real protection is CORS + CF rate limiting.
-  const isBackendRequest = toAuthApi || req.url.startsWith(environment.modelApiUrl)
+  const isBackendRequest = toAuthApi || under(req.url, environment.modelApiUrl)
   const withKey =
     isBackendRequest && environment.apiKey
       ? req.clone({ setHeaders: { 'X-API-Key': environment.apiKey } })
@@ -42,10 +47,12 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const base = toAuthApi ? withKey.clone({ withCredentials: true }) : withKey
 
   const managesSession = SESSION_PATHS.some((path) => req.url.includes(path))
+  // Only a refused refresh ends the session. When the AuthAPI cannot be
+  // reached the request fails, but the cookie may still be good next time.
   const renewOrEnd = () =>
     authService.refresh().pipe(
       catchError((refreshError: unknown) => {
-        authService.endSession(router.url)
+        if (sessionRejected(refreshError)) authService.endSession(router.url)
         return throwError(() => refreshError)
       })
     )

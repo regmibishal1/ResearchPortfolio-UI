@@ -4,6 +4,7 @@ import { of, throwError } from 'rxjs'
 
 import { AdminComponent } from './admin.component'
 import { ApiHealth, ManageService } from '../../services/manage.service'
+import { ToastService } from '../../shared/toast/toast.service'
 
 const health: ApiHealth = {
   counting_since: 1_791_600_000,
@@ -58,6 +59,14 @@ describe('AdminComponent', () => {
           role: 'ADMIN',
           openSessions: 2,
         },
+        {
+          username: 'guest',
+          firstname: 'Guest',
+          lastname: 'User',
+          email: 'guest@example.test',
+          role: 'USER',
+          openSessions: 0,
+        },
       ])
     )
     manage.allowedEmails.and.returnValue(of([]))
@@ -98,7 +107,36 @@ describe('AdminComponent', () => {
     fixture.detectChanges()
     const field = el.querySelector<HTMLInputElement>('.link-field')!
     expect(field.value).toBe('https://example.test/reset#token=x')
-    expect(manage.resetLink).toHaveBeenCalledWith('bishal')
+    expect(manage.resetLink).toHaveBeenCalledWith('guest')
+  })
+
+  it('offers no reset link for admin accounts', () => {
+    const adminRow = [...el.querySelectorAll('tbody tr')].find((r) =>
+      r.textContent!.includes('bishal')
+    )!
+    expect(adminRow.querySelector('button')).toBeNull()
+    expect(adminRow.textContent).toContain('Admin token only')
+  })
+
+  it("shows the server's reason when a reset link is refused", () => {
+    const toasts = TestBed.inject(ToastService)
+    spyOn(toasts, 'show')
+    manage.resetLink.and.returnValue(
+      throwError(
+        () =>
+          new HttpErrorResponse({
+            status: 403,
+            error: {
+              message: 'Reset links for admin accounts can only be created with the admin token.',
+            },
+          })
+      )
+    )
+    fixture.componentInstance.createResetLink('bishal')
+    expect(toasts.show).toHaveBeenCalledWith(
+      'Reset links for admin accounts can only be created with the admin token.',
+      6000
+    )
   })
 
   it('loads API health only when its tab opens, with server errors listed', async () => {

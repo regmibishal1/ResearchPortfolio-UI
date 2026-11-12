@@ -136,6 +136,13 @@
           }
         } @placeholder {
           <div class="explorer-placeholder">Loading the results...</div>
+        } @error {
+          <!-- Usually the site was updated while this tab was open. -->
+          <div class="explorer-placeholder">
+            The results could not load.&nbsp;<a [href]="'/project/' + project.id"
+              >Reload the page</a
+            >
+          </div>
         }
       </section>
     } @else if (project.image) {

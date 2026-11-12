@@ -128,6 +128,13 @@ describe('ZoomableImageComponent', () => {
     expect(zoomButton()).toBeDefined()
   })
 
+  it('lets the page scroll again when it is destroyed while open', () => {
+    component.open()
+    expect(document.body.style.overflow).toBe('hidden')
+    fixture.destroy()
+    expect(document.body.style.overflow).toBe('')
+  })
+
   it('closes on Escape only when open', () => {
     component.onEscape()
     expect(component.isOpen).toBe(false)

@@ -34,6 +34,8 @@ export class ProfileComponent implements OnInit {
 
   profile: UserProfile | null = null
   loadingProfile = true
+  /** The profile could not be loaded (the sign-in service was unreachable, say). */
+  loadFailed = false
 
   passwordForm: ChangePasswordRequest = {
     currentPassword: '',
@@ -53,6 +55,12 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.load()
+  }
+
+  load(): void {
+    this.loadingProfile = true
+    this.loadFailed = false
     this.userService
       .getProfile()
       .pipe(
@@ -64,10 +72,9 @@ export class ProfileComponent implements OnInit {
       .subscribe({
         next: (profile) => (this.profile = profile),
         // An expired session is renewed, or ended, by the interceptor; this
-        // only sees the requests that failed for another reason.
-        error: () => {
-          this.toasts.show('Could not load your profile. Try again in a moment.', 6000)
-        },
+        // only sees the requests that failed for another reason. Say so on
+        // the page, with a way to retry, rather than leaving it empty.
+        error: () => (this.loadFailed = true),
       })
   }
 

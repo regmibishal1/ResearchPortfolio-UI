@@ -100,10 +100,18 @@ const KO_ROUND_LABELS: Record<string, string> = {
   R16: 'Round of 16',
   QF: 'Quarter-final',
   SF: 'Semi-final',
+  Bronze: 'Third place',
   Final: 'Final',
 }
 
-const KO_ORDER = ['Round of 32', 'Round of 16', 'Quarter-final', 'Semi-final', 'Final']
+const KO_ORDER = [
+  'Round of 32',
+  'Round of 16',
+  'Quarter-final',
+  'Semi-final',
+  'Third place',
+  'Final',
+]
 
 interface EnrichedMatch extends PlayedMatch {
   round_label: string
@@ -386,7 +394,7 @@ export class WorldCupComponent implements OnInit, OnDestroy {
   // selected snapshot.
   get analyticsUnlocked(): boolean {
     const locked = this.isLatestDate
-      ? this.latest?.run.n_played_matches_locked ?? this.lockedCountForDate
+      ? (this.latest?.run.n_played_matches_locked ?? this.lockedCountForDate)
       : this.lockedCountForDate
     return locked >= 72
   }
@@ -395,6 +403,7 @@ export class WorldCupComponent implements OnInit, OnDestroy {
     this.rebuildDisplayedLeaderboard()
     this.rebuildLockedMatchesForDate()
     if (this.isLatestDate) {
+      this.bracketLoading = false
       if (this.latestBracket) {
         this.bracket = this.latestBracket
       }
@@ -414,14 +423,18 @@ export class WorldCupComponent implements OnInit, OnDestroy {
   }
 
   private fetchHistoricalBracket(): void {
+    const date = this.selectedDate
     this.bracketLoading = true
-    this.wc.getBracket({ as_of_date: this.selectedDate }).subscribe({
+    this.wc.getBracket({ as_of_date: date }).subscribe({
       next: (b) => {
+        // A late answer for a date that is no longer picked is dropped.
+        if (date !== this.selectedDate) return
         this.bracket = b
         this.bracketLoading = false
         this.cdr.markForCheck()
       },
       error: () => {
+        if (date !== this.selectedDate) return
         this.bracketLoading = false
         this.cdr.markForCheck()
       },

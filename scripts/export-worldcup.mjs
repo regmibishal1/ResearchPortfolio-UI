@@ -43,8 +43,9 @@ function write(rel, data) {
 }
 
 const t = { tournament: TOURNAMENT }
+const latest = await get('latest', { limit: '48' })
 write('latest.json', {
-  latest: await get('latest', { limit: '48' }),
+  latest,
   bracket: await get('bracket', t),
   played: await get('played-matches', t),
   reportCard: await get('report-card', t),
@@ -52,8 +53,17 @@ write('latest.json', {
   retrospective: await get('retrospective', t),
 })
 
+// Without a team list the history route returns only the top 10, which
+// leaves every other team at 0% on earlier snapshots.
+const teams = latest.leaderboard.map((row) => row.team)
 const history = {}
-for (const stage of STAGES) history[stage] = await get('history', { stage })
+for (const stage of STAGES) {
+  history[stage] = await get('history', { stage, teams: teams.join(',') })
+  const found = history[stage].series.length
+  if (found !== teams.length) {
+    throw new Error(`history for ${stage} has ${found} teams, expected ${teams.length}`)
+  }
+}
 write('history.json', history)
 
 const dates = [

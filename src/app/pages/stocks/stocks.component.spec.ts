@@ -103,6 +103,16 @@ describe('StocksComponent', () => {
     fixture.destroy()
   }))
 
+  it('shows a dash for a metric the evaluation could not compute', () => {
+    const component = TestBed.createComponent(StocksComponent).componentInstance
+    const cards = component['buildMetricCards']({
+      ...latest,
+      run: { ...run, metrics: { ...run.metrics, ic_mean: null } },
+    })
+    expect(cards[0].value).toBe('-')
+    expect(cards[1].value).toBe('0.89%')
+  })
+
   it('sorts the company table by the chosen column and toggles direction', () => {
     const fixture = TestBed.createComponent(StocksComponent)
     const cmp = fixture.componentInstance

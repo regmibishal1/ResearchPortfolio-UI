@@ -25,16 +25,23 @@ class Section<T> {
   readonly data = signal<T | null>(null)
   readonly error = signal('')
   readonly loading = signal(false)
+  /** Only the newest load may update the section; older answers are dropped. */
+  private latest = 0
 
   load(source: Observable<T>): void {
+    const id = ++this.latest
     this.loading.set(true)
     this.error.set('')
     source.subscribe({
       next: (value) => {
+        if (id !== this.latest) return
         this.data.set(value)
         this.loading.set(false)
       },
       error: (err: unknown) => {
+        if (id !== this.latest) return
+        // Old data under an error line would read as current.
+        this.data.set(null)
         this.error.set(describe(err))
         this.loading.set(false)
       },
@@ -145,10 +152,20 @@ export class AdminComponent {
 
   // Accounts
 
+  // Admin accounts are refused here (403 with the reason); their links come
+  // from the admin-token API only, so the table offers no button for them.
   createResetLink(username: string): void {
     this.manage.resetLink(username).subscribe({
       next: (link) => this.resetLinks.update((all) => ({ ...all, [username]: link })),
-      error: (err: unknown) => this.toasts.show(describe(err), 6000),
+      error: (err: unknown) => {
+        const reason = err instanceof HttpErrorResponse ? err.error?.message : undefined
+        this.toasts.show(
+          err instanceof HttpErrorResponse && err.status === 403 && typeof reason === 'string'
+            ? reason
+            : describe(err),
+          6000
+        )
+      },
     })
   }
 

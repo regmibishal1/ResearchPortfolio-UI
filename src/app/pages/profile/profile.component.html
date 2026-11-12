@@ -8,6 +8,13 @@
       </div>
     }
 
+    @if (!loadingProfile && !profile && loadFailed) {
+      <div class="loading-state" role="alert">
+        <p class="loading-text">Could not load your profile. The sign-in service may be busy.</p>
+        <button type="button" class="btn-secondary btn-md" (click)="load()">Try again</button>
+      </div>
+    }
+
     <!-- Content -->
     @if (!loadingProfile && profile) {
       <div class="profile-content">
