@@ -111,8 +111,8 @@ export class WcBracketComponent implements OnChanges {
       pairs.map((teams, i) => {
         const detail = details[i] ?? null
         const winner = detail?.played
-          ? detail.winner ?? null
-          : teams.find((t) => through.has(t)) ?? null
+          ? (detail.winner ?? null)
+          : (teams.find((t) => through.has(t)) ?? null)
         return { key: `${round}-${i + offset}`, round, teams, detail, winner }
       })
 
@@ -128,7 +128,9 @@ export class WcBracketComponent implements OnChanges {
           round: 'Bronze',
           teams: bronzeDetail.teams,
           detail: bronzeDetail,
-          winner: bronzeDetail.played ? bronzeDetail.winner : bronzeDetail.predicted_winner ?? null,
+          winner: bronzeDetail.played
+            ? bronzeDetail.winner
+            : (bronzeDetail.predicted_winner ?? null),
         }
       : null
 
