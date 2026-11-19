@@ -53,6 +53,13 @@ describe('PROJECTS ordering', () => {
     expect(PROJECTS.filter((p) => p.featured && !p.spotlight).length).toBe(4)
   })
 
+  it('features the shipped products', () => {
+    const featured = PROJECTS.filter((p) => p.featured).map((p) => p.id)
+    expect(featured).toContain('durpin')
+    expect(featured).toContain('showupmd')
+    expect(featured).not.toContain('mri-classification')
+  })
+
   it('labels a status badge for every project that has a status', () => {
     for (const p of PROJECTS.filter((p) => p.status)) {
       expect(statusText(p)).withContext(`'${p.id}' status`).toBeTruthy()

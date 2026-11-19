@@ -386,6 +386,7 @@ const PROJECT_DEFINITIONS: Project[] = [
       'Android and iPhone differ in small ways (audio, video decoders, gestures, notifications), and simulators cannot stand in for real phones: push delivery, for one, can only be tested on a device',
       'Google Play requires 12 testers opted in for 14 days in a row before a personal account can publish, which is a real gate for a small invite-only app',
     ],
+    featured: true,
   },
   {
     id: 'takeout-organizer',
@@ -473,7 +474,6 @@ const PROJECT_DEFINITIONS: Project[] = [
         'Only 15 Moderate scans in the test set, unknown label provenance, and checkpoints picked on test loss; a feasibility study, not a clinical result.',
       lastRun: 'Summer 2023 (report dated August 14, 2023).',
     },
-    featured: true,
   },
   {
     id: 'empathy-emotion',
