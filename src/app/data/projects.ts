@@ -245,6 +245,7 @@ const PROJECT_DEFINITIONS: Project[] = [
       'Coverage: 964 candidates on the November ballot (2,329 candidate records for 2026, primary included), all 188 General Assembly members, 26,548 bills across 11 sessions, and 756,222 individual legislator votes on 7,674 roll calls',
       '"Civvy" answers plain-English questions about Maryland bills from 17,499 embedded chunks (BGE-M3 and pgvector), with an open-weight model on one self-hosted GPU; regression suites of 90 tool-routing and 72 answer cases guard every change',
       'Address lookup with state autocomplete and a fallback chain (two Census services, TIGERweb, then state district layers) behind a circuit breaker, added after a Census outage the week before the election',
+      'Election Day, from 7 PM the night before to 7 PM on the day: 274 ballots started, 209 printed and 143 completed, 307 questions to Civvy and 12,147 candidate profile opens, while at least 90,946 requests reached the API',
       'Ballot Builder for a printable personal ballot, and 51 ballot question pages (3 statewide, 48 local) checked word for word against all 24 certified county ballots',
       'Election-night results from its own State Board scraper, polled every 2 minutes while the count came in, then a "What changed" view of every seat with a map',
       '27 scheduled jobs keep candidates, campaign finance (state and FEC), bills, votes and legislators current; anything found through web search goes to a human review queue, never straight to the site',
@@ -258,21 +259,15 @@ const PROJECT_DEFINITIONS: Project[] = [
       'Coverage and discovery matter as much as code. A candidate-match quiz was retired because too few candidates had answered the survey it relied on, and in October only 810 pages were indexed because list pages had no plain links to detail pages; a crawlable browse index fixed that',
     ],
     outcome:
-      'Live through the 2026 primary and general election: 90,946 requests reached its API in the 24 hours to 7 PM on Election Day.',
+      'Live through the 2026 primary and general election: 632 ballots started in its Ballot Builder and 1,363 questions asked to its AI assistant.',
     results: [
-      {
-        value: '67,302',
-        label: 'Anonymous counter events, July 11 to the evening of Election Day',
-      },
-      {
-        value: '90,946',
-        label: 'API requests in the 24 hours to 7 PM on Election Day (a lower bound)',
-      },
-      { value: '964', label: 'Candidates on the November ballot' },
-      { value: '26,548', label: 'Maryland bills across 11 sessions' },
+      { value: '632', label: 'Ballots started in the Ballot Builder, 403 of them printed' },
+      { value: '1,363', label: 'Questions asked to Civvy, the AI assistant' },
+      { value: '67,310', label: 'Candidate profile opens, across 2,333 candidates' },
+      { value: '16,698', label: 'Bill page opens, across 2,679 bills' },
     ],
     resultsNote:
-      'Counter events are anonymous actions such as profile opens, ballot steps and chat questions, not visitors; there are no accounts or cookies. The request count leaves out pages served from the edge cache.',
+      'Counts of anonymous actions from July 2026 to November 19, 2026, not people: one voter can start several ballots or open a profile many times. They are lower bounds, because browsers that send Global Privacy Control or Do Not Track are never counted, and there are no accounts or cookies.',
     featured: true,
     spotlight: true,
     resume: true,
