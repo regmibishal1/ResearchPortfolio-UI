@@ -59,7 +59,13 @@
       }
 
       <!-- ===== Actions: live site, report, code ===== -->
-      @if (project.demo || project.paper || project.repoLinks?.length || project.github) {
+      @if (
+        project.demo ||
+        project.links?.length ||
+        project.paper ||
+        project.repoLinks?.length ||
+        project.github
+      ) {
         <div class="actions">
           @if (project.demo) {
             @if (isExternal(project.demo)) {
@@ -75,6 +81,16 @@
             } @else {
               <a class="btn-primary btn-md" [routerLink]="project.demo">Open the dashboard</a>
             }
+          }
+          @for (link of project.links ?? []; track link.url) {
+            <a
+              class="btn-secondary btn-md"
+              [href]="link.url"
+              target="_blank"
+              rel="noopener noreferrer"
+              >{{ link.label
+              }}<span class="visually-hidden" data-pagefind-ignore> (opens in a new tab)</span></a
+            >
           }
           @if (project.paper) {
             <a

@@ -70,6 +70,8 @@ export interface Project {
   repoLinks?: RepoLink[]
   /** Live demo / site URL */
   demo?: string
+  /** Other places to get the work, such as an app store listing (detail page only) */
+  links?: RepoLink[]
   /** The written report, listed on About and linked from the detail page and cards. */
   paper?: Paper
   /** Screenshot shown as the card thumbnail and on the detail page */
@@ -218,11 +220,11 @@ const PROJECT_DEFINITIONS: Project[] = [
     id: 'showupmd',
     title: 'ShowUpMD: Maryland Civic Engagement App',
     shortDescription:
-      'Full-stack civic app for Maryland voters, with district lookup, candidate browser, legislation tracker, and an AI chat assistant powered by a RAG pipeline over real government data.',
+      'Civic app that carried Maryland voters through the 2026 primary and general election: district lookup, every candidate on the ballot, a ballot builder, a bill tracker, and an AI assistant over real government data.',
     seoDescription:
-      'Live civic app for Maryland voters: district lookup, candidates, a legislation tracker, and an AI assistant using RAG over 5+ government data sources.',
+      'Civic app for Maryland voters through the 2026 primary and general: district lookup, 964 November candidates, a ballot builder and an AI bill assistant.',
     description:
-      'Full-stack civic web app that helps Maryland residents prepare for the 2026 primary election. Enter your address to instantly see your congressional and state legislative districts, current representatives, every candidate on your ballot, and relevant legislation, all in one place. Features "Civvy", an AI chat assistant powered by a RAG pipeline (BGE-M3 embeddings + pgvector) that answers plain-English questions about Maryland bills. Data is ingested from 5+ government sources including the Maryland General Assembly API, OpenStates, Census Geocoder, and the MD State Board of Elections.',
+      'Full-stack civic web app that carried Maryland voters through the 2026 election cycle, from the June 23 primary to the November 3 general. Enter an address to see your congressional and state legislative districts, your representatives and how they voted, every candidate on your ballot, and the bills that matter, all in one place. The Ballot Builder turns that into a printable personal ballot, 51 ballot question pages were checked word for word against the 24 certified county ballots, and since the polls closed the site shows results from its own State Board scraper, labeled unofficial until certification. "Civvy", the AI assistant, answers plain-English questions about Maryland bills with a RAG pipeline (BGE-M3 embeddings and pgvector) and an open-weight model running on a single self-hosted GPU. Data comes from 11 publishers, five of them government sources (the State Board of Elections, the General Assembly, the Census Bureau, Maryland iMAP and the FEC), refreshed by 27 scheduled jobs. There are no accounts and no cookies; the app counts usage with its own anonymous counters. Built from April to November 2026 across 559 merged pull requests.',
     tags: ['Next.js', 'FastAPI', 'PostgreSQL', 'pgvector', 'AI/RAG', 'Cloudflare'],
     category: 'Full Stack',
     type: 'product',
@@ -233,13 +235,37 @@ const PROJECT_DEFINITIONS: Project[] = [
     demo: 'https://showupmd.org',
     status: 'live',
     highlights: [
-      '"Civvy" AI chat assistant answers plain-English questions about Maryland bills via a BGE-M3 + pgvector RAG pipeline',
-      'Address-based district lookup using the Census Geocoder returns congressional and state legislative districts instantly',
-      'Candidate browser and legislation tracker pulling live data from the Maryland General Assembly API and OpenStates',
-      'Data ingested and normalized from 5+ government sources including the MD State Board of Elections',
-      'Deployed on Cloudflare with Cloudflare Tunnel for real-IP propagation and end-to-end request tracing',
+      'Coverage: 964 candidates on the November ballot (2,329 candidate records for 2026, primary included), all 188 General Assembly members, 26,548 bills across 11 sessions, and 756,222 individual legislator votes on 7,674 roll calls',
+      '"Civvy" answers plain-English questions about Maryland bills from 17,499 embedded chunks (BGE-M3 and pgvector), with an open-weight model on one self-hosted GPU; regression suites of 90 tool-routing and 72 answer cases guard every change',
+      'Address lookup with state autocomplete and a fallback chain (two Census services, TIGERweb, then state district layers) behind a circuit breaker, added after a Census outage the week before the election',
+      'Ballot Builder for a printable personal ballot, and 51 ballot question pages (3 statewide, 48 local) checked word for word against all 24 certified county ballots',
+      'Election-night results from its own State Board scraper, polled every 2 minutes while the count came in, then a "What changed" view of every seat with a map',
+      '27 scheduled jobs keep candidates, campaign finance (state and FEC), bills, votes and legislators current; anything found through web search goes to a human review queue, never straight to the site',
+      'Cloudflare Pages Functions build a search-ready head for every page and serve the last good copy when the API is down; the API and Postgres are self-hosted behind Cloudflare',
+      'No accounts and no cookies: the app counts usage with anonymous daily counters, and browsers that send Global Privacy Control or Do Not Track are not counted at all',
     ],
-    outcome: 'Live at showupmd.org, built on data from 5+ Maryland government sources.',
+    lessons: [
+      'Know every quota in the request path. At 12:48 PM on Election Day the site hit the free plan cap of 100,000 Cloudflare Functions requests a day, and for 40 minutes API calls and detail pages returned a 404 until the paid plan went on. The API logged no errors because nothing reached it; an edge health check caught it two minutes in',
+      'Public sources move and fail at the worst times. On election night the State Board moved its results to a new host, and the scraper saw nothing until a fix shipped that evening; a Census outage a week earlier was routed around in under an hour by the new fallback chain',
+      'Small data mismatches have big effects: the app stored "St. Mary\'s County" where state data says "Saint Mary\'s County", so that county\'s results ballot showed 7 of its 21 contests until an audit after the election caught it',
+      'Coverage and discovery matter as much as code. A candidate-match quiz was retired because too few candidates had answered the survey it relied on, and in October only 810 pages were indexed because list pages had no plain links to detail pages; a crawlable browse index fixed that',
+    ],
+    outcome:
+      'Live through the 2026 primary and general election: 90,946 requests reached its API in the 24 hours to 7 PM on Election Day.',
+    results: [
+      {
+        value: '67,302',
+        label: 'Anonymous counter events, July 11 to the evening of Election Day',
+      },
+      {
+        value: '90,946',
+        label: 'API requests in the 24 hours to 7 PM on Election Day (a lower bound)',
+      },
+      { value: '964', label: 'Candidates on the November ballot' },
+      { value: '26,548', label: 'Maryland bills across 11 sessions' },
+    ],
+    resultsNote:
+      'Counter events are anonymous actions such as profile opens, ballot steps and chat questions, not visitors; there are no accounts or cookies. The request count leaves out pages served from the edge cache.',
     featured: true,
     spotlight: true,
   },
@@ -307,9 +333,11 @@ const PROJECT_DEFINITIONS: Project[] = [
     id: 'durpin',
     title: 'Durpin',
     shortDescription:
-      'A disposable camera app for one small group of friends: 27 shots a day, each one comes back face down, and only your friends ever see the ones you share.',
+      'A disposable camera app for one small group of friends: 27 shots a day, each one comes back face down, and only your friends ever see the ones you share. Now on the App Store.',
+    seoDescription:
+      'A disposable camera app for small groups of friends: 27 shots a day, each one face down until you turn it over. On the App Store, Android in testing.',
     description:
-      "Durpin is a disposable camera for a small group of friends. You get 27 shots a day with no preview, no retakes and no zoom. Each shot comes back face down in your Darkroom; turn it over to share it, keep it private, or toss it. There are no like counts, no strangers and no ads: friends send a heart or a vibe and nobody keeps score, comments stay between friends, and each friend's day is a single card that opens at the shots you have not seen yet. Invites are a favor rather than a toll: you hold five open invites at a time, and a slot frees up when one is used or expires after a week. The design keeps what made similar apps last, a reveal you cannot skip, and avoids what sank them, growth tricks and the cost of storing everyone's photos. The app is built with Expo and React Native in TypeScript, shoots through VisionCamera and renders its films on the phone, and it talks to a fully self-hosted Supabase backend behind Cloudflare, where Postgres row-level security and server-side checks keep the rules honest. Durpin is a work in progress: new test builds ship often, it is in private, invite-only testing with a small group of friends on Android and on iPhone through TestFlight, and it is not in the app stores.",
+      "Durpin is a disposable camera for a small group of friends. You get 27 shots a day with no preview, no retakes and no zoom. Each shot comes back face down in your Darkroom; turn it over to share it, keep it private, or toss it. There are no like counts, no strangers and no ads: friends send a heart or a vibe and nobody keeps score, comments stay between friends, and each friend's day is a single card that opens at the shots you have not seen yet. Invites are a favor rather than a toll: you hold five open invites at a time, and a slot frees up when one is used or expires after a week. The design keeps what made similar apps last, a reveal you cannot skip, and avoids what sank them, growth tricks and the cost of storing everyone's photos. The app is built with Expo and React Native in TypeScript, shoots through VisionCamera and renders its films on the phone, and it talks to a fully self-hosted Supabase backend behind Cloudflare, where Postgres row-level security and server-side checks keep the rules honest. Durpin 1.0 has been on the iPhone App Store since November 15, 2026, and the Android app is in a Google Play closed test on its way to a public release. It stays invite-only on both: you join through a friend who is already on it. New builds ship about once a week, and every server change is checked against the exact database calls each released build still makes, so an update never breaks an older copy of the app.",
     tags: ['React Native', 'Expo', 'TypeScript', 'Supabase', 'PostgreSQL'],
     category: 'Mobile',
     type: 'product',
@@ -317,9 +345,15 @@ const PROJECT_DEFINITIONS: Project[] = [
     icon: 'photo_camera',
     image: 'assets/projects/durpin-icon.webp',
     imageAlt: 'The Durpin app icon',
-    demo: 'https://durpin.us',
-    status: 'in-progress',
-    statusLabel: 'Work in progress',
+    demo: 'https://durpin.app',
+    links: [
+      { label: 'App Store', url: 'https://apps.apple.com/us/app/durpin/id6821778602' },
+      { label: 'Android testing', url: 'https://durpin.app/android' },
+    ],
+    status: 'live',
+    statusLabel: 'On the App Store',
+    outcome:
+      'Shipped to the iPhone App Store on November 15, 2026; the Android app is in a Google Play closed test.',
     highlights: [
       'The reveal is enforced on the server: shots on your own roll come back face down and friends only ever see the ones you share, so not even a modified app can peek',
       'Rules enforced on the server and hardened after a self-audit: row-level security on every table, tested as a matrix of who can see what, privileged helper functions kept off the public API, rate limits at the gateway, and deletes that really remove the files',
@@ -328,8 +362,18 @@ const PROJECT_DEFINITIONS: Project[] = [
       'Hearts with a "Liked by" list but no counts, comments with likes and one level of replies, a stories-style viewer that taps through every friend, an activity bell for likes, comments, replies, friend requests and joins, and push notifications',
       'Finding friends without giving up an address book: checking your contacts is your choice, they are hashed on the phone and nothing about them is kept, anyone can turn off being found in Settings, and friends can also connect through a QR friend link or an @username search',
       'Shared rolls that work as a live album for an event, where everyone on the roll sees each shot as it comes in and gets a note when the roll is done, plus a journal that fills itself, a monthly recap and a shot from a year ago today; photos can be exported and truly deleted',
-      'Never lose a shot: photos wait on the phone until they upload. Frequent test builds with a secret scan before every publish, source maps for readable crash reports, and an in-app update notice for sideloaded Android builds',
-      'Fully self-hosted Supabase (Postgres, auth, realtime, storage) on home hardware, reached only through a Cloudflare Tunnel and kept current through rehearsed, timed upgrades with a rollback plan, with self-hosted error tracking, uptime checks, a private members dashboard and nightly encrypted backups',
+      'A monthly recap video of your shots, cut on the phone with the native encoders, that you can share with friends or keep to yourself',
+      "Home screen widgets on Android and iPhone showing a friend's photo from today or how many shots wait in your darkroom, the chosen film shown live in the viewfinder before you shoot, and a face-down print of your own on your birthday",
+      'Never lose a shot: photos wait on the phone until they upload. In-app announcements and an update screen that sends each phone to the right store',
+      'A release gate for every build: a test sheet run on emulators, simulators and real phones, a secret scan before every publish, and a suite of about 450 server checks before any backend deploy',
+      'Old builds keep working: every server change is checked against the database calls each released version still makes, because old copies of an app stay in use for weeks',
+      'Fully self-hosted Supabase (Postgres, auth, realtime, storage) on home hardware, reached only through a Cloudflare Tunnel and kept current through rehearsed, timed upgrades with a rollback plan, with self-hosted error tracking, uptime checks and nightly encrypted backups',
+    ],
+    lessons: [
+      'Self-hosting keeps the running cost low, but every server change becomes a careful, scripted migration done one at a time with a written rollback, and that costs real time on each release',
+      'Old app versions live on for weeks after an update, so the server has to keep working for them; that one fact shaped the whole release process',
+      'Android and iPhone differ in small ways (audio, video decoders, gestures, notifications), and simulators cannot stand in for real phones: push delivery, for one, can only be tested on a device',
+      'Google Play requires 12 testers opted in for 14 days in a row before a personal account can publish, which is a real gate for a small invite-only app',
     ],
   },
   {

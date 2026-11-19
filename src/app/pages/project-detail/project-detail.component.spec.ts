@@ -62,7 +62,7 @@ describe('ProjectDetailComponent', () => {
   })
 
   it('skips the results section when a project has no measured results', () => {
-    const el = render('showupmd')
+    const el = render('research-portfolio')
     expect(headings(el)).not.toContain('Results')
   })
 
@@ -74,6 +74,16 @@ describe('ProjectDetailComponent', () => {
     expect(terms).toEqual(['Data', 'Model', 'Metric', 'Result', 'Known limits', 'Last run'])
 
     expect(headings(render('showupmd'))).not.toContain('Model card')
+  })
+
+  it('links to where the app can be installed, next to the live site', () => {
+    const links = Array.from(render('durpin').querySelectorAll<HTMLAnchorElement>('.actions a'))
+    expect(links.map((a) => a.getAttribute('href'))).toEqual([
+      'https://durpin.app',
+      'https://apps.apple.com/us/app/durpin/id6821778602',
+      'https://durpin.app/android',
+    ])
+    expect(links[1].textContent).toContain('App Store')
   })
 
   it('describes an app icon as an icon, and screenshots as screenshots', () => {
