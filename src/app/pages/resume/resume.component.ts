@@ -1,14 +1,7 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { SeoService } from '../../services/seo.service'
-import {
-  CERTIFICATIONS,
-  CONTACT,
-  EDUCATION,
-  EXPERIENCE,
-  RESUME_PDF,
-  SUMMARY,
-} from '../../data/resume'
+import { CERTIFICATIONS, CONTACT, EDUCATION, EXPERIENCE, RESUME_PDF } from '../../data/resume'
 import { SKILL_CATEGORIES } from '../../data/skills'
 import { PROJECTS, Project } from '../../data/projects'
 import { IconComponent } from '../../shared/icon/icon.component'
@@ -39,13 +32,12 @@ function mentions(text: string, skill: string): boolean {
 })
 export class ResumeComponent {
   readonly contact = CONTACT
-  readonly summary = SUMMARY
   readonly experience = EXPERIENCE
   readonly education = EDUCATION
   readonly certifications = CERTIFICATIONS
   readonly skillCategories = SKILL_CATEGORIES
   readonly pdf = `/${RESUME_PDF}`
-  readonly projects: Project[] = PROJECTS.filter((p) => p.featured)
+  readonly projects: Project[] = PROJECTS.filter((p) => p.resume)
 
   /** Skills that appear somewhere in the experience or projects, so each one finds something. */
   readonly filterSkills: string[] = [...new Set(SKILL_CATEGORIES.flatMap((c) => c.skills))].filter(
@@ -96,7 +88,7 @@ export class ResumeComponent {
   private projectMentions(project: Project, skill: string): boolean {
     return (
       project.tags.some((t) => mentions(t, skill)) ||
-      mentions(`${project.shortDescription} ${project.outcome ?? ''}`, skill)
+      mentions(`${project.shortDescription} ${project.resumeLine ?? project.outcome ?? ''}`, skill)
     )
   }
 }

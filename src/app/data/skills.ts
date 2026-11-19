@@ -37,6 +37,8 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
       'React',
       'Next.js',
       'Angular',
+      'React Native',
+      'Expo',
       'Redux',
       'FastAPI',
       'Django',
@@ -60,6 +62,7 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
     name: 'Cloud & DevOps',
     skills: [
       'AWS',
+      'Cloudflare',
       'Azure',
       'GCP',
       'Lambda',
@@ -72,6 +75,9 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
       'API Gateway',
       'IAM',
       'Athena',
+      'Cloudflare Pages',
+      'Cloudflare Workers',
+      'Cloudflare Tunnel',
       'Docker',
       'Kubernetes',
       'Terraform',
@@ -85,6 +91,7 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
     name: 'Databases & Data Platforms',
     skills: [
       'PostgreSQL',
+      'Supabase',
       'MySQL',
       'MongoDB',
       'SQLite',
@@ -115,6 +122,8 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
   {
     name: 'AI & Generative AI',
     skills: [
+      'AWS Kiro',
+      'AI Coding Agents',
       'Generative AI APIs',
       'OpenAI',
       'LangChain',

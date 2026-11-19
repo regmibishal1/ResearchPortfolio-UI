@@ -34,8 +34,6 @@
     </div>
   </header>
 
-  <p class="resume-summary">{{ summary }}</p>
-
   <!-- ===== Skill filter ===== -->
   <section class="skill-filter" aria-labelledby="filter-title">
     <h2 id="filter-title" class="filter-title">Highlight a skill</h2>
@@ -87,7 +85,9 @@
             </h3>
             <span class="entry-date">{{ project.period }}</span>
           </div>
-          <p class="entry-text">{{ project.outcome ?? project.shortDescription }}</p>
+          <p class="entry-text">
+            {{ project.resumeLine ?? project.outcome ?? project.shortDescription }}
+          </p>
           <p class="entry-tags">{{ project.tags.join(', ') }}</p>
         </article>
       }

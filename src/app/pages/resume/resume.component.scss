@@ -68,14 +68,6 @@
   }
 }
 
-.resume-summary {
-  max-width: 70ch;
-  margin: var(--space-5) 0 0;
-  color: var(--text-body);
-  font-size: var(--fs-lead);
-  line-height: var(--lh-body);
-}
-
 // ===== Skill filter =====
 .skill-filter {
   margin-top: var(--space-6);
@@ -294,7 +286,6 @@
   .resume-name,
   .resume-h2,
   .entry-title,
-  .resume-summary,
   .entry-points,
   .entry-text,
   .skill-row dt,

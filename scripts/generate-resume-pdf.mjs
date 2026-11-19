@@ -1,5 +1,5 @@
 // Writes the resume PDF from the same data as the /resume page
-// (src/app/data/resume.ts, skills.ts and the featured projects), so the
+// (src/app/data/resume.ts, skills.ts and the projects marked for the resume), so the
 // two never drift. Runs after ng build and writes into the built site.
 // The layout is plain text in Helvetica so applicant tracking systems can
 // read it.
@@ -9,7 +9,7 @@ import PDFDocument from 'pdfkit'
 import { loadData, root } from './lib/load-data.mjs'
 
 const SITE = 'https://bishalregmi.com'
-const { CONTACT, SUMMARY, EXPERIENCE, EDUCATION, CERTIFICATIONS, RESUME_PDF } =
+const { CONTACT, EXPERIENCE, EDUCATION, CERTIFICATIONS, RESUME_PDF } =
   await loadData('src/app/data/resume.ts')
 const { SKILL_CATEGORIES } = await loadData('src/app/data/skills.ts')
 const { PROJECTS } = await loadData('src/app/data/projects.ts')
@@ -71,8 +71,7 @@ const contactBits = [
   CONTACT.site,
 ]
 doc.text(contactBits.join('  |  '))
-doc.moveDown(0.5)
-doc.fontSize(9).text(SUMMARY, { width })
+doc.moveDown(0.2)
 
 section('Experience')
 for (const job of EXPERIENCE) {
@@ -83,13 +82,13 @@ for (const job of EXPERIENCE) {
 }
 
 section('Selected projects')
-for (const project of PROJECTS.filter((p) => p.featured)) {
+for (const project of PROJECTS.filter((p) => p.resume)) {
   heading(project.title, project.period)
   doc
     .font('Helvetica')
     .fontSize(8.75)
     .fillColor('#000')
-    .text(project.outcome ?? project.shortDescription, left, doc.y, { width })
+    .text(project.resumeLine ?? project.outcome ?? project.shortDescription, left, doc.y, { width })
   doc
     .fontSize(8.5)
     .fillColor(GREY)

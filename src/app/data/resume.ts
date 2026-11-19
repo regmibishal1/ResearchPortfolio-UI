@@ -38,6 +38,7 @@ export const EXPERIENCE: TimelineItem[] = [
       'Consolidated multiple business entities and asset types into a unified order modeling system, decommissioning legacy applications and reducing trade modeling errors by ~80%',
       'Delivered a Prophet-based cash forecasting tool for hundreds of investment accounts handling billions of dollars in cash flows, replacing manual calculations with no forecasting capability and giving traders better cash flow visibility',
       'Owned a React observability SPA for trade entry used by trading support and traders, and wrote a Python Lambda smoke test that cut system failure detection from over an hour to under 2 minutes',
+      'Build with AI tooling every day, including AWS Kiro, and worked on an AI project on the AWS stack; share the on-call rotation for the production trading systems my team owns',
     ],
   },
   {
@@ -70,7 +71,7 @@ export const CERTIFICATIONS: Certification[] = [
   { name: 'AWS Certified Solutions Architect', issuer: 'Amazon Web Services' },
 ]
 
-/** One line under the name, shared with the Home hero. */
+/** The line under the name on the Home hero. */
 export const SUMMARY =
   'Building scalable applications and extracting insights from data. Focused on full-stack development, machine learning, and distributed systems.'
 

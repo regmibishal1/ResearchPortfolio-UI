@@ -102,6 +102,10 @@ export interface Project {
   modelCard?: ModelCard
   /** Shown in Featured and in Home's selected work. */
   featured?: boolean
+  /** Listed under Selected projects on the resume page and in the resume PDF. */
+  resume?: boolean
+  /** What the resume says about the project, when the outcome alone undersells it. */
+  resumeLine?: string
   /**
    * The one project Home leads with. Exactly one public entry carries it
    * (projects.spec.ts enforces this), and never the World Cup project.
@@ -215,6 +219,9 @@ const PROJECT_DEFINITIONS: Project[] = [
       lastRun: 'Final snapshot on July 19, 2026, the day of the final.',
     },
     featured: true,
+    resume: true,
+    resumeLine:
+      'XGBoost and 2 million Monte Carlo runs, rerun daily for 33 days; called 67.3% of all 104 match results.',
   },
   {
     id: 'showupmd',
@@ -268,6 +275,9 @@ const PROJECT_DEFINITIONS: Project[] = [
       'Counter events are anonymous actions such as profile opens, ballot steps and chat questions, not visitors; there are no accounts or cookies. The request count leaves out pages served from the edge cache.',
     featured: true,
     spotlight: true,
+    resume: true,
+    resumeLine:
+      'Sole engineer: Next.js on Cloudflare Pages, self-hosted FastAPI and Postgres, an AI bill assistant, live for the 2026 election.',
   },
   {
     id: 'research-portfolio',
@@ -299,6 +309,9 @@ const PROJECT_DEFINITIONS: Project[] = [
     outcome:
       'Serves this whole site with no cloud bill: Cloudflare Pages up front, two APIs in Docker at home.',
     featured: true,
+    resume: true,
+    resumeLine:
+      'Angular on Cloudflare Pages; Spring Boot and FastAPI in Docker behind a Cloudflare Tunnel; CI on every PR, verified deploys.',
   },
   {
     id: 'multisource-downloader',
@@ -354,6 +367,9 @@ const PROJECT_DEFINITIONS: Project[] = [
     statusLabel: 'On the App Store',
     outcome:
       'Shipped to the iPhone App Store on November 15, 2026; the Android app is in a Google Play closed test.',
+    resume: true,
+    resumeLine:
+      'On the App Store since November 2026: React Native and Expo on self-hosted Supabase, with weekly gated releases.',
     highlights: [
       'The reveal is enforced on the server: shots on your own roll come back face down and friends only ever see the ones you share, so not even a modified app can peek',
       'Rules enforced on the server and hardened after a self-audit: row-level security on every table, tested as a matrix of who can see what, privileged helper functions kept off the public API, rate limits at the gateway, and deletes that really remove the files',
