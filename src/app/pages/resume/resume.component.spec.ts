@@ -35,6 +35,18 @@ describe('ResumeComponent', () => {
     ])
   })
 
+  it('lists the projects marked for the resume, with their resume line', () => {
+    const titles = [...el.querySelectorAll('.entry.project .entry-title')].map((t) =>
+      t.textContent!.trim()
+    )
+    expect(titles).toContain('Durpin')
+    expect(titles).not.toContain('Empathy and Emotion Prediction')
+    const durpin = [...el.querySelectorAll('.entry.project')].find((e) =>
+      e.textContent!.includes('Durpin')
+    )!
+    expect(durpin.querySelector('.entry-text')!.textContent).toContain('App Store')
+  })
+
   it('only offers skills that appear somewhere in the work', () => {
     expect(component.filterSkills.length).toBeGreaterThan(0)
     for (const skill of component.filterSkills) {

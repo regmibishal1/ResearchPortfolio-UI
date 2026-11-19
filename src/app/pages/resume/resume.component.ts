@@ -45,7 +45,7 @@ export class ResumeComponent {
   readonly certifications = CERTIFICATIONS
   readonly skillCategories = SKILL_CATEGORIES
   readonly pdf = `/${RESUME_PDF}`
-  readonly projects: Project[] = PROJECTS.filter((p) => p.featured)
+  readonly projects: Project[] = PROJECTS.filter((p) => p.resume)
 
   /** Skills that appear somewhere in the experience or projects, so each one finds something. */
   readonly filterSkills: string[] = [...new Set(SKILL_CATEGORIES.flatMap((c) => c.skills))].filter(
@@ -96,7 +96,7 @@ export class ResumeComponent {
   private projectMentions(project: Project, skill: string): boolean {
     return (
       project.tags.some((t) => mentions(t, skill)) ||
-      mentions(`${project.shortDescription} ${project.outcome ?? ''}`, skill)
+      mentions(`${project.shortDescription} ${project.resumeLine ?? project.outcome ?? ''}`, skill)
     )
   }
 }

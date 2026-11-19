@@ -87,7 +87,9 @@
             </h3>
             <span class="entry-date">{{ project.period }}</span>
           </div>
-          <p class="entry-text">{{ project.outcome ?? project.shortDescription }}</p>
+          <p class="entry-text">
+            {{ project.resumeLine ?? project.outcome ?? project.shortDescription }}
+          </p>
           <p class="entry-tags">{{ project.tags.join(', ') }}</p>
         </article>
       }

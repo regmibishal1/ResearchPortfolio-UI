@@ -1,5 +1,5 @@
 // Writes the resume PDF from the same data as the /resume page
-// (src/app/data/resume.ts, skills.ts and the featured projects), so the
+// (src/app/data/resume.ts, skills.ts and the projects marked for the resume), so the
 // two never drift. Runs after ng build and writes into the built site.
 // The layout is plain text in Helvetica so applicant tracking systems can
 // read it.
@@ -83,13 +83,13 @@ for (const job of EXPERIENCE) {
 }
 
 section('Selected projects')
-for (const project of PROJECTS.filter((p) => p.featured)) {
+for (const project of PROJECTS.filter((p) => p.resume)) {
   heading(project.title, project.period)
   doc
     .font('Helvetica')
     .fontSize(8.75)
     .fillColor('#000')
-    .text(project.outcome ?? project.shortDescription, left, doc.y, { width })
+    .text(project.resumeLine ?? project.outcome ?? project.shortDescription, left, doc.y, { width })
   doc
     .fontSize(8.5)
     .fillColor(GREY)
