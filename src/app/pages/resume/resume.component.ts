@@ -1,14 +1,7 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { SeoService } from '../../services/seo.service'
-import {
-  CERTIFICATIONS,
-  CONTACT,
-  EDUCATION,
-  EXPERIENCE,
-  RESUME_PDF,
-  SUMMARY,
-} from '../../data/resume'
+import { CERTIFICATIONS, CONTACT, EDUCATION, EXPERIENCE, RESUME_PDF } from '../../data/resume'
 import { SKILL_CATEGORIES } from '../../data/skills'
 import { PROJECTS, Project } from '../../data/projects'
 import { IconComponent } from '../../shared/icon/icon.component'
@@ -39,7 +32,6 @@ function mentions(text: string, skill: string): boolean {
 })
 export class ResumeComponent {
   readonly contact = CONTACT
-  readonly summary = SUMMARY
   readonly experience = EXPERIENCE
   readonly education = EDUCATION
   readonly certifications = CERTIFICATIONS

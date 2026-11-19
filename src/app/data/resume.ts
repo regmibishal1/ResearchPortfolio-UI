@@ -71,7 +71,7 @@ export const CERTIFICATIONS: Certification[] = [
   { name: 'AWS Certified Solutions Architect', issuer: 'Amazon Web Services' },
 ]
 
-/** One line under the name, shared with the Home hero. */
+/** The line under the name on the Home hero. */
 export const SUMMARY =
   'Building scalable applications and extracting insights from data. Focused on full-stack development, machine learning, and distributed systems.'
 
